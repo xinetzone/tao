@@ -1,0 +1,7 @@
+*.mo
+_build/
+*.bin
+api/
+*.log
+*.db
+.temp/

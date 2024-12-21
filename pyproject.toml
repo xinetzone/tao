@@ -1,0 +1,50 @@
+[project]
+name = "taolib"
+version = "0.8.1"
+description = "道法自然"
+authors = [
+    {name = "xinetzone", email = "735613050@qq.com"},
+]
+requires-python = ">=3.11"
+readme = "README.md"
+license = {file = "LICENSE"}
+maintainers = [
+  {name = "xinetzone", email = "735613050@qq.com"},
+]
+# 尽可能最小化依赖项，以减少不必要的包安装
+dependencies = []
+
+[project.urls]
+Home = "https://github.com/xinetzone/tao"
+
+[project.optional-dependencies]
+# 用于文档生成的依赖项
+doc = [
+  "sphinx-intl", # 用于翻译文档
+  "xyzstyle", # 用于文档主题风格
+  "myst-nb",
+  "sphinx-copybutton",
+  "sphinxcontrib-bibtex",
+  "sphinx-thebe",
+  "sphinx-design",
+  "sphinx-automodapi",
+  "sphinx-sitemap",
+  "sphinx-comments",
+  "sphinx-autoapi",
+]
+# 用于构建工作流的依赖项
+flows = [
+  "invoke", # 用于任务自动化
+  "tomlkit", # 用于解析 TOML 文件
+]
+# 用于 GUI 的依赖项
+gui = [
+  "PySide6",
+]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+distribution = true

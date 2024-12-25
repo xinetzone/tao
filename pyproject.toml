@@ -11,10 +11,7 @@ license = {file = "LICENSE"}
 maintainers = [
   {name = "xinetzone", email = "735613050@qq.com"},
 ]
-dependencies = [
-    "xyzstyle",
-    "sphinx",
-]
+dependencies = []
 
 [project.urls]
 Repository = "https://github.com/xinetzone/tao"
@@ -22,7 +19,9 @@ Documentation = "https://taolib.readthedocs.io/"
 
 [project.optional-dependencies]
 doc = [
-    "ablog",
+    "xyzstyle",
+    "sphinx",
+    # "ablog",
     "ipywidgets",
     "folium",
     "numpy",
@@ -36,10 +35,8 @@ doc = [
     "sphinx-examples",
     "sphinx-copybutton",
     "sphinx-contributors",
-    "sphinx-togglebutton",
     "sphinx-thebe",
     "sphinxcontrib-bibtex",
-    "sphinxcontrib-youtube",
     "sphinxext-opengraph",
     "sphinx-sitemap",
     "sphinx-autoapi",

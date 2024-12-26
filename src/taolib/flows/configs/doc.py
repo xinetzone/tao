@@ -5,7 +5,7 @@ else:
     from tomlkit import load # 需要安装 tomlkit
 from dataclasses import dataclass
 from pathlib import Path
-from taolib.utils.tree import Bunch
+# from taolib.utils.tree import Bunch
 
 @dataclass
 class Config:

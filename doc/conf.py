@@ -16,8 +16,8 @@ copyright = '2021, xinetzone' # 版权信息
 
 # == 国际化输出 =======================================================================================
 language = 'zh_CN'
-locale_dirs = ['../locales/']  # po files will be created in this directory
-# gettext_compact = False  # optional: avoid file concatenation in sub directories.
+locale_dirs = ['../locales/'] # 翻译文件的路径
+gettext_compact = False # 为每个翻译创建单独的 .po 文件。
 
 # 通用配置
 # =====================================================================================================
@@ -104,6 +104,10 @@ comments_config = {
 }
 
 # ===================== 可选 ==========================================================
+# 用户可以使用 BibTeX 格式的参考文献数据库，并在文档中插入引用和生成参考文献列表。
+# -------------------------------------------------------------------------------------
+extensions.append('sphinxcontrib.bibtex')
+bibtex_bibfiles = ['refs.bib']
 # 自动生成 API 文档的路径
 # -------------------------------------------------------------------------------------
 extensions.append("autoapi.extension")

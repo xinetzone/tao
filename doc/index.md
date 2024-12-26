@@ -7,7 +7,7 @@
 project/index
 fields/index
 libs/index
-contributing
+dev/index
 ```
 
 # 索引和表格

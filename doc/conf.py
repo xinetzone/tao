@@ -74,7 +74,7 @@ html_last_updated_fmt = '%Y-%m-%d, %H:%M:%S' # 文档的最后更新时间格式
 # 在此添加包含自定义静态文件（如样式表）的任何路径，相对于此目录。
 # 它们会在内置静态文件之后被复制，因此名为 "default.css" 的文件将覆盖内置的 "default.css"。
 html_static_path = ['_static']
-html_css_files = ["custom.css"]
+html_css_files = ["css/custom.css", "css/tippy.css"]
 
 # == 主题选项 ========================================================================================
 # 选项字典，影响所选主题的外观和感觉。这些选项是特定于主题的。
@@ -102,6 +102,24 @@ comments_config = {
       "optional": "config",
    }
 }
+
+# 展示丰富的悬停提示
+# -------------------------------------------------------------------------------------
+extensions.append("sphinx_tippy")
+# tippy_enable_mathjax = True
+# tippy_anchor_parent_selector = "div.content"
+# tippy_logo_svg = Path("tippy-logo.svg").read_text("utf8")
+# tippy_custom_tips = {
+#     "https://example.com": "<p>This is a custom tip for <a>example.com</a></p>",
+#     "https://atomiks.github.io/tippyjs": (
+#         f"{tippy_logo_svg}<p>Using Tippy.js, the complete tooltip, popover, dropdown, "
+#         "and menu solution for the web, powered by Popper.</p>"
+#     ),
+# }
+tippy_rtd_urls = [
+    "https://docs.readthedocs.io/en/stable/",
+    "https://www.sphinx-doc.org/zh-cn/master/",
+]
 
 # ===================== 可选 ==========================================================
 # 用户可以使用 BibTeX 格式的参考文献数据库，并在文档中插入引用和生成参考文献列表。

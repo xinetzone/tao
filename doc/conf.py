@@ -82,13 +82,14 @@ html_css_files = ["css/custom.css", "css/tippy.css"]
 html_theme_options = {
     "use_sidenotes": True,  # 启用侧边注释/页边注释。
     "repository_url": f"https://github.com/xinetzone/{project}",
-    "use_repository_button": True,  # 显示“在 GitHub 上查看”按钮。
+    "use_repository_button": True,  # 显示“在 GitHub 上查看”按钮
     "announcement": "👋欢迎进入编程视界！👋", # 公告横幅
-    "use_source_button": True,  # 显示“查看源代码”按钮。
-    "use_edit_page_button": True,  # 显示“编辑此页”按钮。
-    "use_issues_button": True,  # 显示“报告问题”按钮。
-    # 图标链接是一组图像和图标，每个图标都链接到一个页面或外部网站。
-    # 如果你希望展示社交媒体图标、GitHub 徽章或项目标志，它们会很有帮助。
+    "back_to_top_button": True,  # 显示“返回顶部”按钮
+    "use_source_button": True,  # 显示“查看源代码”按钮
+    "use_edit_page_button": True,  # 显示“编辑此页”按钮
+    "use_issues_button": True,  # 显示“报告问题”按钮
+    # 图标链接是一组图像和图标，每个图标都链接到一个页面或外部网站
+    # 如果你希望展示社交媒体图标、GitHub 徽章或项目标志，它们会很有帮助
     "icon_links": icon_links,
 }
 
@@ -214,11 +215,15 @@ myst_enable_extensions = [
     # "html_image",
     "colon_fence",
     # "smartquotes",
-    # "replacements",
+    "replacements",
     # "linkify",
-    # "substitution",
+    "substitution",
 ]
 
+# 添加版本切换器下拉菜单
+extensions.append("_ext.rtd_version")
+html_theme_options['primary_sidebar_end'] = ["version-switcher",]
+# 定制侧边栏
 html_sidebars = {
     "reference/blog/*": [
         "navbar-logo.html",
@@ -231,6 +236,3 @@ html_sidebars = {
         "sbt-sidebar-nav.html",
     ]
 }
-
-# 为 RTD 配置版本信息
-extensions.append("_ext.rtd_version")

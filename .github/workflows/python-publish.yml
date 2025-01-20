@@ -8,6 +8,9 @@
 
 name: Upload Python Package
 on:
+  push:
+    tags:
+      - v*
   release:
     types: [published]
 

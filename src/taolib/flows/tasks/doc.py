@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 import logging
 from shutil import rmtree
 from tempfile import mkdtemp
@@ -6,6 +7,8 @@ from invoke import task
 from invoke.context import Context
 
 logger = logging.getLogger(__name__)
+
+pty = sys.platform != 'win32'
 
 @task
 def clean(ctx: Context):
@@ -40,8 +43,7 @@ def build(ctx: Context,
         opts += " -n -W -T"
     cmd = f"sphinx-build {opts} {source} {target}"
     logger.info(f"{source} => {target}")
-    ctx.run(cmd, pty=True)
-
+    ctx.run(cmd, pty=pty)
 
 @task
 def intl(ctx: Context, language: str = 'en'):

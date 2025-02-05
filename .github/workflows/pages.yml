@@ -37,7 +37,7 @@ jobs:
       - name: 🐍 Set up Python
         uses: actions/setup-python@main
         with:
-          python-version: "3.12"
+          python-version: "3.13"
           cache: "pip"
           cache-dependency-path: "pyproject.toml"
       - name: 🔧 Build HTML

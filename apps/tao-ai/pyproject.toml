@@ -1,0 +1,18 @@
+[project]
+name = "tao-ai"
+version = "0.0.1"
+dependencies = [
+    "blacksheep[full]~=2.0.0",
+    "uvicorn",
+    'uvloop; platform_system != "Windows"',
+    "essentials-configuration[full]",
+    "MarkupSafe",
+    "pydantic",
+]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+distribution = true

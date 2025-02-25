@@ -5,4 +5,7 @@
 
 math/index
 compiler/index
+blacksheep/index
+tasks/index
+flows/index
 ```

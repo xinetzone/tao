@@ -5,6 +5,7 @@
 
 math/index
 compiler/index
+dependency-injection
 blacksheep/index
 tasks/index
 flows/index

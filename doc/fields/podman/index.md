@@ -5,5 +5,3 @@
 Podman 控制下的容器可以由 root 或非特权用户运行。Podman 使用 libpod 库管理整个容器生态系统，包括 Pod、容器、容器镜像和容器卷。Podman 专注于帮助您维护和修改 OCI 容器映像的所有命令和功能，例如拉取和标记。它允许您在生产环境中创建、运行和维护这些容器和容器镜像。
 
 [PodmanPy](https://podman-py.readthedocs.io/en/latest/) 是 Python3 模块，允许您编写 Python 脚本来访问由 Podman 服务维护的资源。它利用 Podman 服务 RESTful API。
-
-Podman 服务使用 URL 进行寻址，在该 URL 中，方案向客户端发出如何连接到服务的信号。支持的方案有：http+ssh、http+unix 或 tcp。格式为以下样式：

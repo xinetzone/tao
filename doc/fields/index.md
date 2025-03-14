@@ -12,4 +12,5 @@ flows/index
 cpolar/index
 podman/index
 wsl/index
+gitlab/index
 ```

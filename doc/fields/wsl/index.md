@@ -9,5 +9,5 @@ wsl --unregister Ubuntu
 
 ## 安装
 ```bash
- wsl.exe --install Ubuntu --location D:\wsl-task
+wsl.exe --install Ubuntu --location D:\wsl-task
 ```

@@ -15,3 +15,32 @@ sudo apt install podman
 ```bash
 pip install podman
 ```
+
+## 安装 Docker 工具(可选)
+已安装 Docker 工具的用户可跳过此步骤，未安装的用户请根据[官方手册进行安装](https://docs.docker.com/install/linux/docker-ce/ubuntu/)。
+
+````{attention}
+需要将用户添加到 docker 用户组：
+```bash
+# 创建 docker 用户组
+sudo groupadd docker
+# 把当前用户加入 docker 用户组
+sudo usermod -aG docker $USER
+# 更新激活 docker 用户组
+newgrp docker
+# 验证不需要 sudo 执行 docker 命令
+docker run hello-world
+```
+
+正确运行结果展示：
+```
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+719385e32844: Pull complete 
+Digest: 
+sha256:88ec0acaa3ec199d3b7eaf73588f4518c25f9d34f58ce9a0df68429c5a
+f48e8d
+Status: Downloaded newer image for hello-world:latest
+Hello from Docker!
+```
+````

@@ -28,19 +28,19 @@ sudo groupadd docker
 sudo usermod -aG docker $USER
 # 更新激活 docker 用户组
 newgrp docker
-# 验证不需要 sudo 执行 docker 命令
-docker run hello-world
 ```
+````
 
-正确运行结果展示：
-```
-Unable to find image 'hello-world:latest' locally
-latest: Pulling from library/hello-world
-719385e32844: Pull complete 
-Digest: 
-sha256:88ec0acaa3ec199d3b7eaf73588f4518c25f9d34f58ce9a0df68429c5a
-f48e8d
-Status: Downloaded newer image for hello-world:latest
-Hello from Docker!
+````{caution}
+如果中文乱码，请参考下文的 Dockerfile 中文环境配置。
+```bash
+# 安装中文字体
+RUN apt-get update && apt-get install -y fonts-wqy-microhei
+# 配置中文环境
+RUN apt-get install -y locales && \
+    locale-gen zh_CN.UTF-8 && \
+    update-locale LANG=zh_CN.UTF-8 LANGUAGE=zh_CN.UTF-8
+ENV LANG=zh_CN.UTF-8
+ENV LANGUAGE=zh_CN.UTF-8
 ```
 ````

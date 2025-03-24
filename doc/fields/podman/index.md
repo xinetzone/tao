@@ -37,10 +37,10 @@ newgrp docker
 # 安装中文字体
 RUN apt-get update && apt-get install -y fonts-wqy-microhei
 # 配置中文环境
-RUN apt-get install -y locales && \
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y locales locales-all && \
+    sed -i '/zh_CN.UTF-8/s/^# //g' /etc/locale.gen && \
     locale-gen zh_CN.UTF-8 && \
-    update-locale LANG=zh_CN.UTF-8 LANGUAGE=zh_CN.UTF-8
-ENV LANG=zh_CN.UTF-8
-ENV LANGUAGE=zh_CN.UTF-8
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 ```
 ````

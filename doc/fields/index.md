@@ -4,6 +4,7 @@
 :hidden:
 
 math/index
+health/index
 compiler/index
 dependency-injection
 blacksheep/index

@@ -5,5 +5,5 @@
 
 algebra/index
 analysis/index
+opt/index
 ```
-

@@ -4,6 +4,7 @@
 :hidden:
 
 math/index
+english/index
 health/index
 compiler/index
 dependency-injection

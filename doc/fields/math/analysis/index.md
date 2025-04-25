@@ -1,9 +1,7 @@
 # 现代分析
 
 ```{toctree}
-:maxdepth: 7
-:hidden:
-
+derivatives/index
 metrics/index
 ```
 

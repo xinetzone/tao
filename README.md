@@ -50,4 +50,3 @@ pip install taolib
 
 欢迎加入本项目的创作，创作规范请参阅：[Daobook demo 文档](https://daobook.github.io/.github/index.html)。
 
-排版尽可能遵循：[中文文案排版指北](https://github.com/sparanoid/chinese-copywriting-guidelines)。

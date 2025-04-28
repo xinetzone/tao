@@ -3,6 +3,7 @@
 ```{toctree}
 :hidden:
 
+aigc/index
 math/index
 english/index
 health/index

@@ -1,5 +1,5 @@
 # 微分
 
-```{centered}
+```{toctree}
 define
 ```

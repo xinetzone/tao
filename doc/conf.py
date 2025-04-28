@@ -33,6 +33,7 @@ extensions = [
     'sphinx_copybutton', # 为代码块添加复制按钮。
     "sphinx_comments", # 为 Sphinx 文档添加评论和注释功能。
     "sphinx.ext.napoleon", # 支持 Google 和 Numpy 风格的文档字符串
+    "sphinxcontrib.mermaid", # 支持 Mermaid 图表
 ]
 
 # 在此添加包含模板的任何路径，相对于此目录。

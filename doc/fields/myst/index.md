@@ -1,0 +1,5 @@
+# MyST Markdown
+
+```{toctree}
+install
+```

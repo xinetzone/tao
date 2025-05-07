@@ -4,6 +4,7 @@
 :hidden:
 
 aigc/index
+myst/index
 math/index
 english/index
 health/index

@@ -3,6 +3,7 @@
 ```{toctree}
 :hidden:
 
+zh-style-guide/index
 aigc/index
 myst/index
 math/index

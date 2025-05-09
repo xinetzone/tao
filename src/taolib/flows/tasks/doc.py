@@ -21,6 +21,7 @@ def clean(ctx: Context):
 
 @task(default=True)
 def build(ctx: Context,
+          builder="html",
           opts: str = "",
           language: str|None = None,
           source: str|None = None,
@@ -41,8 +42,8 @@ def build(ctx: Context,
         target = f'{target}/{language}'
     if nitpick:
         opts += " -n -W -T"
-    cmd = f"sphinx-build {opts} {source} {target}"
-    logger.info(f"{source} => {target}")
+    cmd = f"sphinx-build -b {builder} {opts} {source} {target}"
+    logger.info(f"{builder}@{source} => {target}")
     ctx.run(cmd, pty=pty)
 
 @task

@@ -46,7 +46,7 @@ jobs:
           apt-get update && sudo apt-get upgrade
           pip install --upgrade pip
           pip install .[doc,flows] --upgrade
-          conda install -c conda-forge pandoc compilers cppyy
+          conda install -c conda-forge pandoc compilers
           invoke doc
       - name: Setup Pages
         uses: actions/configure-pages@main

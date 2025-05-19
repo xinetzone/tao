@@ -3,7 +3,7 @@
 ```{toctree}
 :hidden:
 
-zh-style-guide/index
+jupyter-xeus/index
 aigc/index
 myst/index
 math/index
@@ -17,5 +17,6 @@ flows/index
 cpolar/index
 podman/index
 wsl/index
+zh-style-guide/index
 gitlab/index
 ```

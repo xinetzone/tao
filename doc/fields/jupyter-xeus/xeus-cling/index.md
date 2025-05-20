@@ -4,7 +4,11 @@
 
 安装
 ```bash
-mamba install -c conda-forge xeus-cling
+conda create -n cling
+conda activate cling
+conda install -c conda-forge xeus-cling
+conda install ipykernel
+conda install conda-forge::jupyter_client
 ```
 
 ## 安装内核规范

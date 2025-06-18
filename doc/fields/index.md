@@ -3,14 +3,16 @@
 ```{toctree}
 :hidden:
 
+aipy/index
+plotly/index
 jupyter-xeus/index
 aigc/index
 myst/index
 math/index
 english/index
 health/index
+life/index
 compiler/index
-dependency-injection
 blacksheep/index
 tasks/index
 flows/index

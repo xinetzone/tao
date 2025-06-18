@@ -3,12 +3,12 @@ channels:
     - conda-forge
 dependencies:
     - python
-    - pip
     - jupyter_server
     - jupyterlab_server
     - jupyterlite-xeus
     - jupyterlite-core
     - black
     - voici
+    - pip  # 显式声明 pip 依赖
     - pip:
         - .[doc]

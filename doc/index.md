@@ -8,7 +8,7 @@ project/index
 fields/index
 libs/index
 dev/index
-copywriting
+faqs/index
 ```
 
 # 索引和表格

@@ -9,6 +9,7 @@ conan new cmake_lib -d name=hello -d version=1.0 -o .temp
 ```
 
 这将创建具有以下结构的 Conan 包项目
+
 ```
 .temp
 ├── CMakeLists.txt
@@ -23,6 +24,7 @@ conan new cmake_lib -d name=hello -d version=1.0 -o .temp
     └── src
         └── example.cpp
 ```
+
 生成的文件是：
 
 - `conanfile.py`：在根文件夹中，有 `conanfile.py`，它是主要的 `recipe` 文件，负责定义如何构建和使用包。

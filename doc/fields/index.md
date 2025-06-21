@@ -1,8 +1,7 @@
 # 领域
 
 ```{toctree}
-:hidden:
-
+conan/index
 aipy/index
 plotly/index
 jupyter-xeus/index

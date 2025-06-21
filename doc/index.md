@@ -3,6 +3,7 @@
 
 ```{toctree}
 :hidden:
+:maxdepth: 7
 
 project/index
 fields/index

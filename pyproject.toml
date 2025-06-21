@@ -51,6 +51,7 @@ doc = [
 flows = [
     "invoke",
     "python-docx",
+    "conan",
 ]
 
 [build-system]

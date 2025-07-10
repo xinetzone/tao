@@ -31,6 +31,7 @@ doc = [
     "nbclient",
     "pandas",
     "plotly",
+    "kaleido",
     "anywidget[dev]", # https://pypi.org/project/anywidget/
     "ipywidgets",
     "sphinx-design",

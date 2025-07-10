@@ -18,3 +18,5 @@
 ```bash
 pip install conan
 ```
+
+更多信息见：[为什么在您的 C++ 工作流中采用 Conan](https://conan.org.cn/why-conan)。

@@ -4,4 +4,7 @@
 switch
 asyncio-subprocess
 asyncio-queue
+telnetlib3
+logger
+AsyncThreadManager
 ```

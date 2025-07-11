@@ -12,7 +12,7 @@ CMake 项目同时具有源目录和二进制目录的概念。源目录是 `CMa
 
 binary 目录是创建构建生成的所有内容的位置。它通常也称为 `build` 目录。出于后面章节中将明确的原因，CMake 通常使用术语 binary directory，但在开发人员中，术语 build directory 往往更常用。这本书倾向于使用后一个术语，因为它通常更直观。CMake、所选的构建工具（make、Visual Studio 等）、CTest 和 CPack 都将在构建目录及其下面的子目录中创建各种文件。可执行文件、库、测试输出和包都在 build 目录中创建。CMake 还在 build 目录中创建了名为 `CMakeCache.txt` 的特殊文件，用于存储信息以供以后运行时重用。开发人员通常不需要关心 `CMakeCache.txt` 文件，但后面的章节将讨论与此文件相关的情况。构建工具的项目文件（Xcode 或 Visual Studio 项目文件、Makefile 等）也在构建目录中创建，这些项目文件不应置于版本控制之下。`CMakeLists.txt` 文件是项目的规范描述，生成的项目文件应被视为构建输出的一部分。
 
-## 按照 CMake
+## 安装 CMake
 
 参考 [Modern CMake 安装](https://cliutils.gitlab.io/modern-cmake/chapters/intro/installing.html)：
 
@@ -51,8 +51,6 @@ cmake -G "Unix Makefiles" -B build
 如果 `build` 目录不存在，则会自动创建该目录。如果省略 `-G` 选项，CMake 将根据主机平台选择生成器。在 CMake 3.15 或更高版本中，`CMAKE_GENERATOR` 环境变量可用于指定不同的默认生成器。
 
 当 CMake 完成运行后，它将在 `build` 目录中保存 `CMakeCache.txt` 文件。CMake 使用此文件保存详细信息，以便在再次运行时，它可以重用第一次计算的信息并加快项目生成速度。如后面的章节所述，它还允许在运行之间保存开发人员选项。GUI 应用程序 `cmake-gui` 可用作运行 cmake 命令行工具的替代方法。
-
-更多信息见：[运行 CMake](https://modern-cmake-cn.github.io/Modern-CMake-zh_CN/chapters/intro/running.html)。
 
 ## Hello World
 

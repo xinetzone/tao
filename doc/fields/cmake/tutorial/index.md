@@ -3,7 +3,7 @@
 参考：[CMake 官方文档](https://cmake.org/cmake/help/latest/guide/tutorial/index.html) & [ttroy50/cmake-examples](https://github.com/ttroy50/cmake-examples)
 
 ```{toctree}
-install
+intro
 01-basic/index
 02-sub-projects/index
 03-code-generation/index

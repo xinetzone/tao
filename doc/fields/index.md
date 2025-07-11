@@ -1,8 +1,8 @@
 # 领域
 
 ```{toctree}
-cmake/index
 ninja/index
+cmake/index
 conan/index
 aipy/index
 plotly/index

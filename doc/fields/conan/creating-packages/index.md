@@ -1,6 +1,6 @@
 # 创建包
 
-本节将介绍如何使用 Conan recipe 创建 Conan 包。首先创建基本的 Conan recipe，用于打包简单的 C++ 库，你可以使用 `conan new` 命令来构建它的框架。然后，将解释你可以在 Conan recipe 中定义的各种方法以及它们的功能。
+本节将介绍如何使用 Conan recipe 创建 Conan 包。首先创建基本的 Conan recipe，用于打包简单的 C/C++ 库，你可以使用 `conan new` 命令来构建它的框架。然后，将解释你可以在 Conan recipe 中定义的各种方法以及它们的功能。
 
 - 使用 `source()` 方法从外部仓库获取源码并应用补丁。
 - 在 `requirements()` 方法中为 Conan 包添加依赖项。

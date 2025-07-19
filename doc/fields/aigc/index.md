@@ -1,0 +1,5 @@
+# AIGC
+
+```{toctree}
+deepseek/index
+```

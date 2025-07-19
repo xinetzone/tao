@@ -1,0 +1,65 @@
+[project]
+name = "taolib"
+version = "0.0.5"
+description = "道可道，非恒道"
+authors = [
+    {name = "xinetzone", email = "735613050@qq.com"},
+]
+requires-python = ">=3.10"
+readme = "README.md"
+license = {file = "LICENSE"}
+maintainers = [
+  {name = "xinetzone", email = "735613050@qq.com"},
+]
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/xinetzone/tao"
+Documentation = "https://taolib.readthedocs.io/"
+
+[project.optional-dependencies]
+doc = [
+    "xyzstyle",
+    "sphinx",
+    # "ablog",
+    "ipywidgets",
+    "folium",
+    "numpy",
+    "matplotlib",
+    "sphinx-comments",
+    "myst-nb",
+    "nbclient",
+    "pandas",
+    "plotly",
+    "kaleido",
+    "anywidget[dev]", # https://pypi.org/project/anywidget/
+    "ipywidgets",
+    "sphinx-design",
+    "sphinx-examples",
+    "sphinx-copybutton",
+    "sphinx-contributors",
+    "sphinx-thebe",
+    "sphinxcontrib-bibtex",
+    "sphinxext-opengraph",
+    "sphinx-sitemap",
+    "sphinx-autoapi>=3.4",
+    "graphviz",
+    "sphinx-intl", # 文档国际化
+    "sphinx-tippy",
+    "sphinxcontrib-mermaid",
+]
+
+flows = [
+    "invoke",
+    "python-docx",
+    "conan",
+    "cmake",
+    "podman",
+]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm]
+distribution = true

@@ -1,0 +1,5 @@
+# GitHub
+
+```{toctree}
+actions/index
+```

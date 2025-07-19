@@ -1,0 +1,24 @@
+{%- extends "layout.jinja" -%}
+{%- block title -%}
+  Hello Page!
+{%- endblock -%}
+{%- block description -%}
+  Project template to create web applications with MVC architecture using BlackSheep web framework.
+{%- endblock -%}
+{%- block css -%}
+  <link rel="stylesheet" href="/styles/public.css" />
+{%- endblock -%}
+{%- block body -%}
+  <div style="margin: 10em 2em;">
+    <h1>Hello, {{name}}!</h1>
+
+    <ul>
+      {% for sentence in sentences %}
+        <li><a href="{{ sentence.url }}">{{ sentence.text }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+{%- endblock -%}
+{%- block js -%}
+
+{%- endblock -%}

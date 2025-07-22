@@ -15,5 +15,13 @@
 
 ```{toctree}
 create-your-first-package
+handle-sources-in-packages
+add-dependencies-to-packages
+preparing-the-build
+configure-options-settings
+build-packages
+package-method
+define-package-information
+test-conan-packages
 ```
 

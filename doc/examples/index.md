@@ -4,4 +4,6 @@
 
 ```{toctree}
 cmake/index
+conan/index
+conan-tools/index
 ```

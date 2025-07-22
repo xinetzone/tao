@@ -147,7 +147,7 @@ $ conan profile path default
 ````{admonition} 自定义编译器配置
 :class: tip
 
-如果您想修改 Conan profile 以使用非默认的编译器，您需要更改 compiler 设置，并使用 [tools.build:compiler_executables 配置](https://docs.conan.org.cn/2/reference/tools/cmake/cmaketoolchain.html#conan-cmake-toolchain-conf) 明确告诉 Conan 在哪里找到它。
+如果您想修改 Conan profile 以使用非默认的编译器，您需要更改 compiler 设置，并使用 [`tools.build:compiler_executables` 配置](https://docs.conan.org.cn/2/reference/tools/cmake/cmaketoolchain.html#conan-cmake-toolchain-conf) 明确告诉 Conan 在哪里找到它。
 ````
 
 使用 Conan 来安装 Zlib 并生成 CMake 需要用于查找此库和构建项目的文件。将在 `build` 文件夹中生成这些文件。为此，请运行：

@@ -10,4 +10,7 @@
 intro
 consuming-packages/index
 creating-packages/index
+developing-packages/index
+features
+cmake-conan/index
 ```

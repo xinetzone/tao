@@ -1,4 +1,4 @@
-# 使用 Conan 管理构建工具链
+# 将构建工具作为 Conan 包使用
 
 ```{topic} 典型应用场景
 :class: border-bottom

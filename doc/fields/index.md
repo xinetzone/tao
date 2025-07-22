@@ -3,11 +3,13 @@
 收录各种各样的包和工具。
 
 ```{toctree}
+pkg-config/index
 ninja/index
 cmake/index
 cibuildwheel/index
 scikit-build-core/index
 conan/index
+protobuf/index
 git/index
 github/index
 aipy/index

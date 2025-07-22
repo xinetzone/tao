@@ -43,7 +43,7 @@ pip install conan -i https://pypi.tuna.tsinghua.edu.cn/simple
 # conda install conda-forge::libprotobuf
 # conda install anaconda::gflags
 # conda install conda-forge::glog
-conda install conda-forge::boost anaconda::openblas
+conda install anaconda::openblas
 # conda install conda-forge::libgfortran
 # conda install conda-forge::hdf5
 # pip install scikit-image protobuf==3.20.3 numpy==1.26.3 -i https://pypi.tuna.tsinghua.edu.cn/simple

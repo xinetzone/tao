@@ -3,4 +3,5 @@
 ```{toctree}
 pkg-config
 pkgconfiglite
+pkgconf
 ```

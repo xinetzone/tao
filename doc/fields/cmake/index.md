@@ -7,12 +7,13 @@
 
 ```{toctree}
 intro/index
+concepts
 basics/index
 features/index
 projects/index
 testing/index
 install/index
 packages/index
-concepts
+Converting-Existing-Systems-To-CMake
 books
 ```

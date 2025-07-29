@@ -3,6 +3,7 @@
 收录各种各样的包和工具。
 
 ```{toctree}
+nuitka/index
 pkg-config/index
 ninja/index
 cmake/index

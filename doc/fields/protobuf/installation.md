@@ -126,8 +126,8 @@ conda install conda-forge::libprotobuf-static
 **示例工作流**：  
 ```bash
 # 1. 创建conda环境，安装C++库+protoc（指定版本）
-conda create -n proto_env python=3.12
-conda activate proto_env
+conda create -n proto-env python=3.12
+conda activate proto-env
 conda install -c conda-forge libprotobuf=3.20.3 # 含开发头文件
 
 # 2. 安装Python绑定（与C++版本对齐）
@@ -156,3 +156,22 @@ dependencies:
   - pip: # Include pip dependencies last
     - protobuf==3.20.3
 ```
+
+### 配合 Conan 使用
+
+此时可以使用最新版本的 Protobuf 库。
+```bash
+# 1. 创建conda环境，安装C++库+protoc（指定版本）
+conda create -n proto-env python=3.12
+conda activate proto-env
+conda install -c conda-forge libprotobuf # 含开发头文件
+
+# 2. 安装Python绑定（与C++版本对齐）
+pip install protobuf
+
+# 3. 验证（C++编译器+Python库）
+protoc --version  # 应显示最新版本
+python -c "import google.protobuf; print(google.protobuf.__version__)"  # 应显示最新版本
+```
+
+详细说明请参考 [使用相同的依赖作为 `requires` 和 `tool_requires`](https://xinetzone.github.io/tao/examples/conan/graph/tool-requires-using-protobuf.html)。

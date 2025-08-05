@@ -11,6 +11,7 @@ cibuildwheel/index
 scikit-build-core/index
 conan/index
 protobuf/index
+pybind11/index
 git/index
 github/index
 aipy/index

@@ -2,6 +2,7 @@
 
 ```{toctree}
 A-basic/index
+B-advanced/index
 ```
 
 ## 项目结构说明

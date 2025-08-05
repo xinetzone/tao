@@ -19,8 +19,7 @@ pip install protobuf -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 ```bash
 conda install -c conda-forge ninja
-pip install cmake -i https://pypi.tuna.tsinghua.edu.cn/simple
-pip install conan -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install cmake conan -i https://pypi.tuna.tsinghua.edu.cn/simple
 ```
 
 ## 生成 Python 代码

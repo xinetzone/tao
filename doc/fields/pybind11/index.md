@@ -6,4 +6,5 @@
 ```{toctree}
 intro
 installing
+basics
 ```

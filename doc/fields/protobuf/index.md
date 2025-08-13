@@ -8,4 +8,5 @@ best-practices/index
 python-tutorial/index
 cmake-protobuf-generate
 caffeproto/index
+text-format
 ```

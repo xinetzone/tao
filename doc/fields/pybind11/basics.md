@@ -56,7 +56,7 @@ c++ -O3 -Wall -shared -std=c++11 -fPIC $(python3 -m pybind11 --includes) example
 
 编译上述 C++代码将生成可被 Python 导入的二进制模块文件。假设编译后的模块位于当前目录，以下交互式 Python 会话展示了如何加载和执行示例：
 
-```python
+```bash
 $ python
 Python 3.9.10 (main, Jan 15 2022, 11:48:04)
 [Clang 13.0.0 (clang-1300.0.29.3)] on darwin

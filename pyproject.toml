@@ -1,6 +1,6 @@
 [project]
 name = "taolib"
-version = "0.0.7"
+version = "0.0.8"
 description = "道可道，非恒道"
 authors = [
     {name = "xinetzone", email = "735613050@qq.com"},
@@ -22,18 +22,13 @@ Documentation = "https://taolib.readthedocs.io/"
 [project.optional-dependencies]
 doc = [
   "xyzstyle",
-  "invoke",
-  "xyzstyle",
   "sphinx",
   # "ablog",
   "ipywidgets",
   "folium",
-  "numpy",
-  "matplotlib",
   "sphinx-comments",
   "myst-nb",
   "nbclient",
-  "pandas",
   "plotly",
   "kaleido",
   "anywidget[dev]", # https://pypi.org/project/anywidget/
@@ -53,3 +48,9 @@ doc = [
   "sphinxcontrib-mermaid",
 ]
 
+flows = [
+  "invoke",
+  "pandas",
+  "numpy",
+  "matplotlib",
+]

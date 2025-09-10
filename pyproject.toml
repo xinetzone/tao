@@ -12,6 +12,16 @@ maintainers = [
   {name = "xinetzone", email = "735613050@qq.com"},
 ]
 dependencies = [
+  
+]
+
+[project.urls]
+Repository = "https://github.com/xinetzone/tao"
+Documentation = "https://taolib.readthedocs.io/"
+
+[project.optional-dependencies]
+doc = [
+  "xyzstyle",
   "invoke",
   "xyzstyle",
   "sphinx",
@@ -41,14 +51,5 @@ dependencies = [
   "sphinx-intl", # 文档国际化
   "sphinx-tippy",
   "sphinxcontrib-mermaid",
-]
-
-[project.urls]
-Repository = "https://github.com/xinetzone/tao"
-Documentation = "https://taolib.readthedocs.io/"
-
-[project.optional-dependencies]
-doc = [
-    "xyzstyle",
 ]
 

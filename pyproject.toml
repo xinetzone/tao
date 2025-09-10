@@ -13,6 +13,34 @@ maintainers = [
 ]
 dependencies = [
   "invoke",
+  "xyzstyle",
+  "sphinx",
+  # "ablog",
+  "ipywidgets",
+  "folium",
+  "numpy",
+  "matplotlib",
+  "sphinx-comments",
+  "myst-nb",
+  "nbclient",
+  "pandas",
+  "plotly",
+  "kaleido",
+  "anywidget[dev]", # https://pypi.org/project/anywidget/
+  "ipywidgets",
+  "sphinx-design",
+  "sphinx-examples",
+  "sphinx-copybutton",
+  "sphinx-contributors",
+  "sphinx-thebe",
+  "sphinxcontrib-bibtex",
+  "sphinxext-opengraph",
+  "sphinx-sitemap",
+  "sphinx-autoapi>=3.4",
+  "graphviz",
+  "sphinx-intl", # 文档国际化
+  "sphinx-tippy",
+  "sphinxcontrib-mermaid",
 ]
 
 [project.urls]

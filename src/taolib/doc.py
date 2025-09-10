@@ -234,7 +234,6 @@ def create_docs(
     return main_namespace
 
 
-# 保留向后兼容性
 def sites(source: str = 'doc', target: str = '.temp/html', children: str = '') -> Collection:
     """创建文档站点配置集合。
     

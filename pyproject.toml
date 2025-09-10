@@ -11,7 +11,9 @@ license = {file = "LICENSE"}
 maintainers = [
   {name = "xinetzone", email = "735613050@qq.com"},
 ]
-dependencies = []
+dependencies = [
+  "invoke",
+]
 
 [project.urls]
 Repository = "https://github.com/xinetzone/tao"

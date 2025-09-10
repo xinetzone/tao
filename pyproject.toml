@@ -1,0 +1,24 @@
+[project]
+name = "taolib"
+version = "0.0.6"
+description = "道可道，非恒道"
+authors = [
+    {name = "xinetzone", email = "735613050@qq.com"},
+]
+requires-python = ">=3.12"
+readme = "README.md"
+license = {file = "LICENSE"}
+maintainers = [
+  {name = "xinetzone", email = "735613050@qq.com"},
+]
+dependencies = []
+
+[project.urls]
+Repository = "https://github.com/xinetzone/tao"
+Documentation = "https://taolib.readthedocs.io/"
+
+[project.optional-dependencies]
+doc = [
+    "xyzstyle",
+]
+

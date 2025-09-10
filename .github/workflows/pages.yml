@@ -1,0 +1,94 @@
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy static content to Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  # Single deploy job since we're just deploying
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@main
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+      - name: Checkout
+        uses: actions/checkout@main
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@main
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: "pyproject.toml"
+      - name: Install Font
+        run: |
+          # 安装字体配置工具
+          sudo apt-get install -y fontconfig
+          
+          # 克隆字体仓库并构建
+          git clone https://github.com/subframe7536/maple-font --depth 1 -b variable
+          cd maple-font
+          pip install foundrytools-cli ttfautohint-py glyphsLib -i https://mirrors.aliyun.com/pypi/simple/
+          
+          # 构建同时支持中文的字体变体
+          python build.py --cn-both
+          
+          # 创建系统字体目录并复制字体文件
+          sudo mkdir -p /usr/share/fonts/truetype/maple
+          sudo cp dist/*.ttf /usr/share/fonts/truetype/maple/
+          
+          # 刷新字体缓存
+          sudo fc-cache -f -v
+          
+          # 验证字体是否成功安装
+          echo "已安装的Maple字体列表："
+          fc-list | grep -i maple
+          
+          # 创建字体配置文件，确保字体可被应用程序找到
+          echo "<?xml version='1.0'?>"
+          echo "<!DOCTYPE fontconfig SYSTEM 'fonts.dtd'>"
+          echo "<fontconfig>"
+          echo "  <dir>/usr/share/fonts/truetype/maple</dir>"
+          echo "</fontconfig>" | sudo tee /etc/fonts/conf.d/99-maple.conf
+          
+          # 再次刷新字体缓存确保配置生效
+          sudo fc-cache -f -v
+      - name: 🔧 Build HTML
+        run: |
+          sudo apt-get install graphviz
+          apt-get update && sudo apt-get upgrade
+          pip install --upgrade pip
+          pip install .[doc,flows] --upgrade
+          conda install -c conda-forge pandoc compilers podman
+          invoke doc
+      - name: Setup Pages
+        uses: actions/configure-pages@main
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@main
+        with:
+          # Upload entire repository
+          path: 'doc/_build/html/'
+      - name: 🚀 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@main
+        # uses: peaceiris/actions-gh-pages@v3.6.1

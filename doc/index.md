@@ -1,4 +1,10 @@
-```{include} ../README.md
+# taolib
+
+```{toctree}
+:hidden:
+
+readme
+InsightHub/index
 ```
 
 # 索引和表格

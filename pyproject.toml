@@ -27,8 +27,8 @@ doc = [
   "sphinx-comments",
   "myst-nb",
   "nbclient",
-  "plotly",
-  "kaleido",
+  # "plotly",
+  # "kaleido",
   "anywidget[dev]", # https://pypi.org/project/anywidget/
   "ipywidgets",
   "sphinx-design",

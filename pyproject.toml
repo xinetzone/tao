@@ -52,3 +52,15 @@ flows = [
   "numpy",
   "matplotlib",
 ]
+
+maple_font = [
+  # 核心依赖 - 直接用于maple-font项目功能
+  "fonttools>=4.0.0",   # 字体处理的核心库
+  "ttfautohint-py>=0.5.0",  # 用于自动调整字体
+  "ufo2ft>=2.0.0",      # 字体格式转换工具
+  "brotli>=1.0.0",      # fonttools的压缩依赖
+  "requests>=2.0.0",    # 可能用于下载字体文件
+  "foundrytools-cli>=2.0.2",
+  "glyphslib>=6.10.1", # 用于处理glyphs文件（仅在使用自定义字形时需要）
+  "python-minifier>=2.11.3",
+]

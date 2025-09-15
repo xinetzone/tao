@@ -46,6 +46,9 @@ jobs:
           apt-get update && sudo apt-get upgrade
           pip install --upgrade pip
           pip install -ve .[doc,flows,maple-font] --upgrade
+          git clone --recursive https://github.com/subframe7536/maple-font.git
+          cd maple-font
+          python build.py --cn-both
           conda install -c conda-forge pandoc compilers podman
           invoke doc
       - name: Setup Pages

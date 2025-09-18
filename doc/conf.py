@@ -97,9 +97,9 @@ copybutton_selector = ":not(.prompt) > div.highlight pre"
 
 # === HTML Output Configuration ===
 # HTML主题设置
-html_theme = 'xyzstyle'  # 使用的主题名称
+html_theme = 'mystx'  # 使用的主题名称
 html_logo = "_static/images/logo.jpg"
-html_title = "Sphinx xyzstyle Theme"
+html_title = "Sphinx mystx Theme"
 html_copy_source = True
 html_favicon = "_static/images/favicon.jpg"
 html_last_updated_fmt = '%Y-%m-%d, %H:%M:%S'  # 文档的最后更新时间格式

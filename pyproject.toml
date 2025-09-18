@@ -19,7 +19,7 @@ Documentation = "https://taolib.readthedocs.io/"
 
 [project.optional-dependencies]
 doc = [
-  "xyzstyle",
+  "mystx",
   "sphinx",
   # "ablog",
   "ipywidgets",

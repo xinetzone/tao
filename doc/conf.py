@@ -40,7 +40,7 @@ gettext_compact = False  # 为每个翻译创建单独的.po文件
 # 扩展模块列表
 extensions = [
     # 内容格式与展示
-    "myst_nb",  # 支持Markdown和Jupyter笔记本
+    "mystx",  # 支持Markdown和Jupyter笔记本
     "sphinx_design",  # 提供现代化UI组件
     "sphinx.ext.napoleon",  # 支持Google和NumPy风格的文档字符串
     "sphinxcontrib.mermaid",  # 支持Mermaid图表

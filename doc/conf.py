@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Sphinx configuration file for the 'tao' project documentation.
 
 This file configures the Sphinx documentation generator for the tao project.
@@ -22,22 +24,18 @@ def get_project_root():
 
 ROOT = get_project_root()
 sys.path.extend([str(ROOT/'doc')])
-
-# === Local Imports ===
-from utils.links import icon_links
-
-# === Project Information ===
-project = 'tao'  # 项目名称
-author = 'xinetzone'  # 文档作者
+from taolib import get_version  # 引入获取版本号的函数
+# ================================= 项目基本信息 =================================
+project = "tao"  # 文档项目名称
+author = "xinetzone"    # 文档作者
+release = get_version("taolib")  # 获取taolib主题的版本号
 copyright = '2021, xinetzone'  # 版权信息
+# ================================= 国际化与本地化设置 ==============================
+language = 'zh_CN'       # 文档语言（中文简体）
+locale_dirs = ['../locales/']  # 翻译文件存放目录
+gettext_compact = False  # 是否合并子目录的PO文件（False表示不合并）
 
-# === Internationalization ===
-language = 'zh_CN'
-locale_dirs = ['../locales/']  # 翻译文件路径
-gettext_compact = False  # 为每个翻译创建单独的.po文件
-
-# === Core Configuration ===
-# 扩展模块列表
+# ================================= 扩展插件配置 =================================
 extensions = [
     # 内容格式与展示
     "mystx",  # 支持Markdown和Jupyter笔记本
@@ -64,18 +62,46 @@ extensions = [
     "autoapi.extension",  # 自动生成API文档
     'sphinx_contributors',  # 渲染GitHub仓库贡献者列表
     "sphinx_sitemap",  # 生成站点地图
-    
-    # 自定义扩展
-    "_ext.rtd_version",  # 版本切换器下拉菜单
 ]
 
-# 模板路径
-templates_path = ['_templates']
+# ================================= 文档构建配置 =================================
+# 排除文件和目录模式
+exclude_patterns = [
+    "_build",      # 构建输出目录
+    "Thumbs.db",   # 缩略图数据库
+    ".DS_Store",    # macOS 系统文件
+]
 
-# 排除文件模式
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+# 静态资源目录，用于存放CSS、JavaScript、图片等
+html_static_path = ["_static"]
 
-# === Cross-Reference Configuration ===
+# 文档的最后更新时间格式
+html_last_updated_fmt = '%Y-%m-%d, %H:%M:%S'
+
+# ================================= 主题与外观配置 ================================
+html_theme = 'mystx'            # 使用的主题名称
+html_title = "taolib"  # 文档标题
+html_logo = "_static/images/logo.jpg"  # 文档logo
+html_favicon = "_static/images/favicon.jpg"  # 文档favicon
+html_copy_source = True  # 是否在文档中包含源文件链接
+
+# ================================= thebe 交互式功能配置 =================================
+use_thebe = True  # 是否开启Thebe功能（默认关闭）
+thebe_config = {
+    "repository_url": f"https://github.com/xinetzone/{project}",
+    "repository_branch": "main",
+    "selector": "div.highlight",
+    # "selector": ".thebe",
+    # "selector_input": "",
+    # "selector_output": "",
+    # "codemirror-theme": "blackboard",  # Doesn't currently work
+    # "always_load": True,  # To load thebe on every page
+}
+
+# ================================= 版本切换器配置 =================================
+version_switcher_json_url = "https://taolib.readthedocs.io/zh-cn/latest/_static/switcher.json"
+
+# === 交叉引用配置 ===
 # 链接到其他项目的文档
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3.12", None),
@@ -89,57 +115,11 @@ extlinks = {
     'xinetzone': ('https://xinetzone.github.io/%s', 'xinetzone %s'),
 }
 
-# === Copy Button Configuration ===
+# === Copy Button 配置 ===
 # 跳过Pygments生成的所有提示符
 copybutton_exclude = '.linenos, .gp'
 # 使用:not()排除复制按钮出现在笔记本单元格编号上
 copybutton_selector = ":not(.prompt) > div.highlight pre"
-
-# === HTML Output Configuration ===
-# HTML主题设置
-html_theme = 'mystx'  # 使用的主题名称
-html_logo = "_static/images/logo.jpg"
-html_title = "Sphinx mystx Theme"
-html_copy_source = True
-html_favicon = "_static/images/favicon.jpg"
-html_last_updated_fmt = '%Y-%m-%d, %H:%M:%S'  # 文档的最后更新时间格式
-
-# 静态文件路径
-html_static_path = ['_static']
-html_css_files = ["css/custom.css", "css/tippy.css"]
-
-# === Theme Options ===
-html_theme_options = {
-    # 界面功能
-    "use_sidenotes": True,  # 启用侧边注释/页边注释
-    "back_to_top_button": True,  # 显示"返回顶部"按钮
-    
-    # 仓库相关按钮
-    "repository_url": f"https://github.com/xinetzone/{project}",
-    "use_repository_button": True,  # 显示"在GitHub上查看"按钮
-    "use_source_button": True,  # 显示"查看源代码"按钮
-    "use_edit_page_button": True,  # 显示"编辑此页"按钮
-    "use_issues_button": True,  # 显示"报告问题"按钮
-    
-    # 其他界面元素
-    "announcement": "👋欢迎进入编程视界！👋",  # 公告横幅
-    "icon_links": icon_links,  # 图标链接
-    
-    # 交互式功能
-    "repository_branch": "main",
-    "path_to_docs": "doc",
-    "launch_buttons": {
-        "binderhub_url": "https://mybinder.org",
-        "colab_url": "https://colab.research.google.com/",
-        "deepnote_url": "https://deepnote.com/",
-        "notebook_interface": "jupyterlab",
-        "thebe": True,
-        # "jupyterhub_url": "https://datahub.berkeley.edu",  # For testing
-    },
-    
-    # 版本切换器
-    "primary_sidebar_end": ["version-switcher"],
-}
 
 # === Comments Configuration ===
 comments_config = {
@@ -183,19 +163,6 @@ inheritance_graph_attrs = dict(
     fontsize=14,
     ratio="compress",
 )
-
-# === Thebe Configuration ===
-thebe_config = {
-    "repository_url": f"https://github.com/xinetzone/{project}",
-    "repository_branch": "main",
-    "selector": "div.highlight",
-    # "selector": ".thebe",
-    # "selector_input": "",
-    # "selector_output": "",
-    # "codemirror-theme": "blackboard",  # Doesn't currently work
-    # "always_load": True,  # To load thebe on every page
-}
-
 # === Sitemap Configuration ===
 sitemap_url_scheme = "{lang}{version}{link}"
 

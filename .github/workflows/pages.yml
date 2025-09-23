@@ -49,7 +49,7 @@ jobs:
           git clone --recursive https://github.com/xinetzone/maple-font.git
           cd maple-font
           pip install -ve .
-          # maple-font build --full
+          maple-font build --full
           conda install -c conda-forge pandoc compilers podman
       - name: 🔧 Build HTML
         run: |

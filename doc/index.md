@@ -5,6 +5,7 @@
 
 readme
 InsightHub/index
+notes/index
 ```
 
 # 索引和表格

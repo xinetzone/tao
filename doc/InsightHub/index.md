@@ -4,4 +4,5 @@
 pygallery <https://daobook.github.io/pygallery>
 Matplotlib/index
 maple-mono/index
+chaos/index
 ```

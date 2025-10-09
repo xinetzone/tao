@@ -4,34 +4,25 @@
     "type": "split",
     "children": [
       {
-        "id": "22f0998551701180",
+        "id": "a14901ca08262b98",
         "type": "tabs",
         "children": [
           {
-            "id": "7cb6d3e518939e30",
+            "id": "07968a073a48be13",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Clippings/obsidian程序下载.md",
+                "file": "Clippings/index.md",
                 "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
+                "source": false
               },
               "icon": "lucide-file",
-              "title": "obsidian程序下载"
+              "title": "index"
             }
           }
-        ]
+        ],
+        "stacked": true
       }
     ],
     "direction": "vertical"
@@ -160,6 +151,32 @@
               "icon": "lucide-list",
               "title": "obsidian程序下载 的大纲"
             }
+          },
+          {
+            "id": "d39d15fc645b8d14",
+            "type": "leaf",
+            "state": {
+              "type": "footnotes",
+              "state": {
+                "file": "Clippings/正则表达式.md"
+              },
+              "icon": "lucide-file-signature",
+              "title": "脚注"
+            }
+          },
+          {
+            "id": "1ca06f527a01e252",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "添加笔记属性"
+            }
           }
         ]
       }
@@ -176,16 +193,28 @@
       "daily-notes:打开/创建今天的日记": false,
       "templates:插入模板": false,
       "command-palette:打开命令面板": false,
-      "bases:创建新数据库": false
+      "bases:创建新数据库": false,
+      "publish:发布更改": false,
+      "workspaces:管理工作区布局": false,
+      "audio-recorder:开始/结束录音": false,
+      "random-note:开始漫游笔记": false,
+      "zk-prefixer:创建时间戳笔记": false
     }
   },
-  "active": "7cb6d3e518939e30",
+  "active": "07968a073a48be13",
   "lastOpenFiles": [
+    "Clippings/正则表达式.md",
+    "index.md",
+    "Clippings/the-art-of-command-lineREADME-zh.md at master · jlevythe-art-of-command-line.md",
+    "Clippings/index.md",
+    "Clippings/工作流初探.md",
+    "Clippings/obsidian程序下载.md",
+    "Clippings/tasks语法快速参考.md",
+    "Clippings/obsidian最佳实践.md",
+    "Tasks Plugin - 查看并检查您的状态 2025-09-30 10-25-48.md",
+    "202509301023.md",
     "Clippings/从小“跟妈妈睡”和“不跟妈妈睡”的孩子，长大后有啥区别？.md",
     "Clippings/从小“跟妈妈睡”和“不跟妈妈睡”的孩子，长大后有啥区别？ 1.md",
-    "Clippings/obsidian程序下载.md",
-    "index.md",
-    "Clippings/index.md",
     "未命名.canvas",
     "未命名.base",
     "Clippings"

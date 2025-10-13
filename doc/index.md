@@ -6,7 +6,6 @@
 readme
 InsightHub/index
 notebook/index
-anywidget-init
 test-anywidget
 ```
 

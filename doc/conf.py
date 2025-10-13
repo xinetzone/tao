@@ -57,6 +57,7 @@ extensions = [
     "sphinx_comments",  # 添加评论和注释功能
     "sphinx_tippy",  # 展示丰富的悬停提示
     "sphinx_thebe",  # 配置交互式启动按钮
+    "nbsphinx",  # 支持Jupyter组件
     
     # API文档与站点管理
     "autoapi.extension",  # 自动生成API文档
@@ -70,6 +71,7 @@ exclude_patterns = [
     "_build",      # 构建输出目录
     "Thumbs.db",   # 缩略图数据库
     ".DS_Store",    # macOS 系统文件
+    "**.ipynb_checkpoints",  # Jupyter 笔记本检查点目录
 ]
 
 # 静态资源目录，用于存放CSS、JavaScript、图片等
@@ -208,6 +210,27 @@ suppress_warnings = [
     "autoapi.python_import_resolution", 
     "autoapi.not_readable",
 ]
+nb_execution_mode = "cache"
+# nb_ipywidgets_js = {
+#     # "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js": {
+#     #     "integrity": "sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=",
+#     #     "crossorigin": "anonymous",
+#     # },
+#     "https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@*/dist/embed-amd.js": {
+#         "data-jupyter-widgets-cdn": "https://cdn.jsdelivr.net/npm/",
+#         "crossorigin": "anonymous",
+#     },
+#     "https://cdn.jsdelivr.net/npm/anywidget@*/dist/index.js": {
+#         "integrity": "sha256-1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+#         "crossorigin": "anonymous",
+#     }
+# }
+# html_js_files = [
+#     # "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js",
+#     "https://cdn.jsdelivr.net/npm/anywidget@*/dist/index.js"
+# ]
+nb_execution_allow_errors = True
+nb_execution_excludepatterns = ["InsightHub/maple-mono/**"]
 
 # 数字编号配置
 numfig = True
@@ -226,14 +249,14 @@ myst_enable_extensions = [
     "substitution",
 ]
 
-# === LaTeX 字体配置 ===
-# 确保LaTeX能正确显示中文和特殊符号
-latex_engine = 'xelatex'  # 使用xelatex引擎支持UTF-8
-latex_elements = {
-    'preamble': r"""
-\usepackage{xeCJK}
-\setCJKmainfont{Maple Mono NF CN}
-\setCJKsansfont{WenQuanYi Micro Hei}
-\setCJKmonofont{Maple Mono NF CN}
-"""
-}
+# # === LaTeX 字体配置 ===
+# # 确保LaTeX能正确显示中文和特殊符号
+# latex_engine = 'xelatex'  # 使用xelatex引擎支持UTF-8
+# latex_elements = {
+#     'preamble': r"""
+# \usepackage{xeCJK}
+# \setCJKmainfont{Maple Mono NF CN}
+# \setCJKsansfont{WenQuanYi Micro Hei}
+# \setCJKmonofont{Maple Mono NF CN}
+# """
+# }

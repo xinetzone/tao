@@ -20,17 +20,17 @@ Documentation = "https://taolib.readthedocs.io/"
 [project.optional-dependencies]
 doc = [
   "mystx",
+  "notebook>=7.0",
+  "anywidget[dev]>=0.9.13",
+  "ipywidgets>=8",
   "sphinx",
   # "ablog",
-  "ipywidgets",
+  "nbsphinx",
   "folium",
   "sphinx-comments",
-  "myst-nb",
   "nbclient",
-  # "plotly",
+  "plotly",
   # "kaleido",
-  "anywidget[dev]", # https://pypi.org/project/anywidget/
-  "ipywidgets",
   "sphinx-design",
   "sphinx-examples",
   "sphinx-copybutton",

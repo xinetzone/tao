@@ -6,6 +6,8 @@
 readme
 InsightHub/index
 notebook/index
+anywidget-init
+test-anywidget
 ```
 
 # 索引和表格

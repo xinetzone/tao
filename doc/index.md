@@ -4,6 +4,7 @@
 :hidden:
 
 readme
+configs/index
 InsightHub/index
 notebook/index
 ```

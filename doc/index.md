@@ -7,6 +7,7 @@ readme
 configs/index
 InsightHub/index
 notebook/index
+test-anywidget
 ```
 
 # 索引和表格

@@ -2,8 +2,9 @@
 
 ```{toctree}
 pygallery <https://daobook.github.io/pygallery>
-Matplotlib/index
 maple-mono/index
+Matplotlib/index
+Trae/index
 zeromq/index
 chaos/index
 ```

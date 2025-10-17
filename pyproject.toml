@@ -44,6 +44,8 @@ doc = [
   "sphinx-intl", # 文档国际化
   "sphinx-tippy",
   "sphinxcontrib-mermaid",
+  # AI
+  "iflow-cli-sdk",
 ]
 
 flows = [

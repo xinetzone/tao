@@ -230,7 +230,10 @@ nb_execution_mode = "cache"
 #     "https://cdn.jsdelivr.net/npm/anywidget@*/dist/index.js"
 # ]
 nb_execution_allow_errors = True
-nb_execution_excludepatterns = ["InsightHub/maple-mono/**"]
+nb_execution_excludepatterns = [
+    "InsightHub/maple-mono/**",
+    "InsightHub/iFlow/**",
+]
 
 # 数字编号配置
 numfig = True
@@ -248,15 +251,3 @@ myst_enable_extensions = [
     # "linkify",
     "substitution",
 ]
-
-# # === LaTeX 字体配置 ===
-# # 确保LaTeX能正确显示中文和特殊符号
-# latex_engine = 'xelatex'  # 使用xelatex引擎支持UTF-8
-# latex_elements = {
-#     'preamble': r"""
-# \usepackage{xeCJK}
-# \setCJKmainfont{Maple Mono NF CN}
-# \setCJKsansfont{WenQuanYi Micro Hei}
-# \setCJKmonofont{Maple Mono NF CN}
-# """
-# }

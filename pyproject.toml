@@ -20,6 +20,7 @@ Documentation = "https://taolib.readthedocs.io/"
 [project.optional-dependencies]
 doc = [
   "mystx",
+  "myst-nb",
   "notebook>=7.0",
   "anywidget[dev]>=0.9.13",
   "ipywidgets>=8",

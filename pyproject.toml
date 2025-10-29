@@ -21,6 +21,7 @@ Documentation = "https://taolib.readthedocs.io/"
 doc = [
   "mystx",
   "myst-nb",
+  "sphinx-book-theme",
   "notebook>=7.0",
   "anywidget[dev]>=0.9.13",
   "ipywidgets>=8",

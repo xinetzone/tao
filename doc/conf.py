@@ -188,13 +188,16 @@ sitemap_locales = [None]  # 语言列表
 # === Custom Sidebars ===
 extensions.append("ablog")
 html_sidebars = {
-    "blog/posts/*": [
+    "blog/**/**": [
         "navbar-logo.html",
         "search-field.html",
         "ablog/postcard.html",
         "ablog/recentposts.html",
         "ablog/tagcloud.html",
         "ablog/categories.html",
+        "ablog/authors.html",
+        "ablog/languages.html",
+        "ablog/locations.html",
         "ablog/archives.html",
     ]
 }

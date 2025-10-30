@@ -1,10 +1,13 @@
 # 博客
 
+```{button-link} ./archive.html
+:color: primary
+阅读博文
+```
+
 ```{postlist}
 :list-style: circle
-:category: Manual
 :date: "%Y-%m-%d"
 :format: "{title} - {date}"
 :excerpts:
-:sort:
 ```

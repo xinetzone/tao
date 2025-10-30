@@ -327,3 +327,358 @@ dlls:
 - **路径控制**：通过 `relative_path` 指定 DLL 所在目录。
 - **平台适配**：通过 `when` 条件表达式实现跨平台兼容。
 - **推荐方式**：页面明确建议使用 `from_filenames`，而不是 `by_code`，因为前者更稳定、易维护。
+
+这段话出现在你正在浏览的 Nuitka 包配置文档中，属于对 **EXEs 配置项**的说明。它解释了 Nuitka 如何处理可执行文件（EXE）与 DLL 文件的关系，并提供了配置方法。我们来逐句拆解，并结合页面内容深入理解它的含义。
+
+## ✅EXE 配置
+
+```yaml
+dlls:
+  - from_filenames:
+      prefixes:
+        - 'subprocess'
+      executable: 'yes'
+  - from_filenames:
+      prefixes:
+        - ''  # first match decides
+```
+
+✅ 第一项：
+- `prefixes: ['subprocess']`：表示查找以 `subprocess` 开头的文件。
+- `executable: 'yes'`：告诉 Nuitka，这个文件是一个 EXE，而不是普通 DLL。
+
+⚠️ 第二项：
+- `prefixes: ['']`：空前缀表示匹配第一个找到的文件。
+
+🧠 总结：
+- Nuitka 把 EXE 文件当作特殊的 DLL 文件处理。
+- 默认 DLL 是不可执行的，只有加上 `executable: yes` 才会被当作 EXE。
+- 这种设计让 DLL 和 EXE 的配置方式保持一致，简化了打包逻辑。
+
+## 🧹 Anti-Bloat：去除不必要的依赖或代码
+
+👉 如果你想在编译时修改某些模块的代码，比如去掉测试代码、日志模块或不必要的依赖，可以使用 `anti-bloat` 配置项。
+
+字段功能如下：
+
+| 字段名 | 作用 |
+|--------|------|
+| `description` | 描述这个去膨胀操作的目的 |
+| `context` | 指定在哪个上下文中应用（通常为空） |
+| `module_code` | 替换整个模块的代码 |
+| `replacements_plain` | 用字符串替换方式修改代码 |
+| `replacements_re` | 用正则表达式替换代码 |
+| `replacements` | 用表达式替换代码 |
+| `change_function` | 替换某个函数的定义，如设为 `un-callable` |
+| `append_result` / `append_plain` | 向模块追加代码 |
+| `when` | 条件表达式，控制在哪些平台或版本下启用
+
+📎这种方式可以用来**精简打包体积、避免不必要的依赖**，尤其适用于大型包如 `matplotlib`、`scipy`。
+
+### 🧠 示例分析
+
+```yaml
+- description: 'remove tests'
+  module_code: 'from hello import world'
+  change_function:
+    'get_extension': 'un-callable'
+```
+
+📌 说明：
+- 将整个模块替换为一行代码 `from hello import world`。
+- 把 `get_extension` 函数设为不可调用（`un-callable`），防止它被执行。
+
+## 🔍 Implicit-Imports：处理动态导入的模块
+
+👉 有些包在运行时动态导入模块（比如插件机制），Nuitka 静态分析时无法识别这些依赖。你可以用 `implicit-imports` 显式声明它们。
+
+字段功能如下：
+
+| 字段名 | 作用 |
+|--------|------|
+| `depends` | 指定该模块依赖的其他模块 |
+| `pre-import-code` / `post-import-code` | 在导入前后执行的代码 |
+| `no-auto-follow` | 告诉 Nuitka 不要自动跟踪某些导入 |
+| `when` | 条件表达式，控制在哪些平台或版本下启用
+
+### 🧠 示例分析
+
+#### ✅ `cv2` 的隐式依赖：
+
+```yaml
+- module-name: 'cv2'
+  depends:
+    - 'cv2.cv2'
+    - 'numpy'
+    - 'numpy.core'
+  pre-import-code:
+    - |
+      import os
+      os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = os.path.join(os.path.dirname(__file__), 'qt/plugins')
+      os.environ['QT_QPA_FONTDIR'] = os.path.join(os.path.dirname(__file__), 'qt/fonts')
+  when: 'linux and standalone'
+```
+
+📌 说明：
+- 显式声明 `cv2` 依赖的模块。
+- 在导入前设置环境变量，确保 Qt 插件和字体路径正确。
+
+#### ✅ `tqdm.std` 的去膨胀配置：
+
+```yaml
+- module-name: 'tqdm.std'
+  anti-bloat:
+    - no-auto-follow:
+        'pandas': 'ignore'
+```
+
+📌 说明：
+- `tqdm` 会尝试注册 `pandas` 的方法，但如果 `pandas` 没有安装也不会报错。
+- 所以可以告诉 Nuitka：**不要因为 `tqdm` 导入了 `pandas` 就自动打包 `pandas`**。
+
+你贴出的内容来自 Nuitka 包配置文档的两个部分：**Options（选项提示）** 和 **Import-Hacks（导入黑科技）**。我们来逐句解释它们的含义，并结合页面内容理解它们在实际打包过程中的作用。
+
+---
+
+## ⚙️ Options：模块运行所需的编译选项提示
+
+👉 如果某个模块在特定平台或模式下需要特定的编译选项（比如必须启用 GUI 模式或打包为 macOS bundle），你可以在这里声明这些要求。Nuitka 会在编译时发出提示或警告，帮助用户避免运行时崩溃。
+
+---
+
+### 🧰 示例解析
+
+```yaml
+- module-name: 'wx'
+  options:
+    checks:
+      - description: 'wx will crash in console mode during startup'
+        console: 'yes'
+        when: 'macos'
+      - description: 'wx requires program to be in bundle form'
+        macos_bundle: 'yes'
+        when: 'macos'
+```
+
+📌 说明：
+- `wx` 是一个 GUI 框架，在 macOS 上如果以控制台模式运行会直接崩溃。
+- 所以配置中要求：
+  - 必须启用 GUI 模式（`console: yes`）
+  - 必须打包为 macOS bundle（`macos_bundle: yes`）
+
+📎 这些配置不会自动修改编译行为，而是**提示用户**必须设置这些选项，否则程序可能无法运行。
+
+---
+
+### 🧠 字段功能总结
+
+| 字段名 | 作用 |
+|--------|------|
+| `description` | 描述这个选项的目的 |
+| `console` | 是否启用控制台窗口（yes/no/recommend） |
+| `macos_bundle` | 是否打包为 macOS 应用（yes/no/recommend） |
+| `macos_bundle_as_onefile` | 是否将 bundle 打包为单文件 |
+| `support_info` | 提示级别（info/warning/error） |
+| `when` | 条件表达式，控制在哪些平台或模式下启用 |
+
+---
+
+## 🧪 Import-Hacks：解决特殊导入行为
+
+👉 有些包会在运行时修改 `sys.path`，或使用 Nuitka 无法静态分析的导入方式。你可以用 `import-hacks` 显式告诉 Nuitka 如何处理这些导入。
+
+### 🧰 示例解析
+
+```yaml
+- module-name: 'tkinterweb'
+  import-hacks:
+    - global-sys-path:
+        - ''
+```
+
+📌 说明：
+- `tkinterweb` 包中有如下代码：
+  ```python
+  sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+  ```
+- 这会把包目录加入全局导入路径，使得包内模块可以被绝对导入。
+- Nuitka 编译时无法自动识别这种行为，所以需要通过 `global-sys-path` 显式声明：**将当前目录加入导入路径**。
+
+📎这种 hack 很少见，但对某些包是必须的。
+
+你贴出的内容来自 Nuitka 包配置文档的 **Variables（变量）** 和 **Constants（常量）** 部分，它们是 Nuitka 配置系统中非常强大的机制，用于在编译时动态获取包信息，并在配置中灵活使用。我们来逐句解析，并结合页面内容理解它们的作用和使用方式。
+
+## 🧠 Variables：编译时动态获取信息
+
+👉 你可以在配置文件中使用变量来获取包的运行信息，比如版本、模块属性等，并在 `when` 条件或其他字段中使用。
+
+👉 所有变量都通过 `get_variable("变量名")` 来访问，Nuitka 会记录和缓存这些变量的使用情况。
+
+### 🧰 示例解析
+
+```yaml
+variables:
+  setup_code: 'import whatever'
+  declarations:
+    'variable1_name': 'whatever.something()'
+    'variable2_name': 'whatever.something2()'
+```
+
+📌 说明：
+- `setup_code`：在编译时执行一次，用于准备变量获取的上下文。
+- `declarations`：定义变量名和对应的表达式。
+- 使用方式：在其他配置字段中通过 `get_variable("variable1_name")` 引用。
+
+## 🔒 Constants：跨平台或通用值的定义
+
+👉 常量用于定义跨平台的值，比如路径后缀、平台标识等，避免在多个地方重复写 `when` 条件。
+
+### 🧰 示例解析
+
+#### ✅ 示例 1：定义平台后缀
+
+```yaml
+constants:
+  - declarations:
+      'suffix': '_Windows'
+    when: "win32"
+  - declarations:
+      'suffix': '_Linux'
+    when: "linux"
+  - declarations:
+      'suffix': '_MacOS'
+    when: "macos"
+
+implicit-imports:
+  depends:
+    - '"package_name_%s" % get_variable("suffix")'
+```
+
+📌 说明：
+- 根据平台定义不同的后缀。
+- 在 `depends` 中动态拼接模块名，实现平台适配。
+
+---
+
+#### ✅ 示例 2：Torch 包的模块筛选
+
+```yaml
+constants:
+  declarations:
+    'torch_config_module_candidates': '[m for m in iterate_modules("torch") if m.split(".")[-1] in ("config", "_config")]'
+
+variables:
+  setup_code: 'import importlib'
+  declarations:
+    'torch_config_modules': 'dict((m,importlib.import_module(m)._compile_ignored_keys) for m in torch_config_module_candidates if hasattr(importlib.import_module(m), "_compile_ignored_keys"))'
+```
+
+📌 说明：
+- 使用 `iterate_modules("torch")` 获取所有子模块。
+- 通过常量筛选出以 `.config` 或 `._config` 结尾的模块。
+- 使用变量导入这些模块并提取 `_compile_ignored_keys` 属性。
+
+你贴出的内容来自 Nuitka 包配置文档的“表达式与条件判断”部分，它详细介绍了如何在配置文件中使用布尔表达式、平台判断、版本检测等机制来控制配置项的启用。我们来逐步拆解，并结合页面内容理解它的用途和实际写法。
+
+---
+
+## 🧠 表达式（Expression）：控制配置启用的核心机制
+
+### 📌 示例表达式
+
+```yaml
+when: "macos and python3_or_higher"
+```
+
+📌 含义：
+- 仅当当前操作系统是 macOS 且 Python 版本为 3 或更高时，才启用该配置项。
+- 这是 Nuitka 配置中最常见的条件控制方式，适用于 `data-files`、`dlls`、`anti-bloat`、`options` 等字段。
+
+---
+
+## 🧩 可用变量分类
+
+### ✅ 操作系统判断（OS Indications）
+
+| 变量名 | 含义 |
+|--------|------|
+| `macos` | 当前平台是 macOS |
+| `win32` | 当前平台是 Windows |
+| `linux` | 当前平台是 Linux |
+
+---
+
+### ✅ 编译模式判断（Compilation Modes）
+
+| 变量名 | 含义 |
+|--------|------|
+| `standalone` | 是否启用了独立打包模式（包括 onefile 和 app） |
+| `onefile` | 是否启用了单文件打包模式 |
+| `module_mode` | 是否启用了模块模式 |
+| `deployment` | 是否启用了部署模式 |
+| `onefile_cached` | 是否启用了 onefile 缓存机制 |
+
+📎 大多数配置是针对 `standalone` 模式的，`onefile` 只在特殊情况下使用。
+
+---
+
+### ✅ Python 版本判断（Python Versions）
+
+| 变量名 | 含义 |
+|--------|------|
+| `before_python3` | 是否是 Python 2 |
+| `python3_or_higher` | 是否是 Python 3 或更高版本 |
+| `python310_or_higher` | 是否是 Python 3.10 或更高版本 |
+| `before_python310` | 是否是 Python 3.10 之前的版本 |
+
+---
+
+### ✅ Python 发行版判断（Python Flavors）
+
+| 变量名 | 含义 |
+|--------|------|
+| `anaconda` | 是否是 Anaconda Python（不建议直接使用） |
+| `debian_python` | 是否是 Debian 系统自带的 Python |
+
+📎 建议：使用 `is_conda_package("包名")` 来判断某个包是否来自 conda，而不是判断整个 Python 环境。
+
+---
+
+### ✅ 包版本判断（Package Versions）
+
+```yaml
+version("rich") is not None and version("rich") >= (10, 2, 2)
+```
+
+📌 含义：
+- 如果 `rich` 包已安装，且版本不低于 10.2.2，则启用该配置。
+
+---
+
+### ✅ Anti-Bloat 插件变量
+
+| 变量名 | 含义 |
+|--------|------|
+| `use_setuptools` | 是否启用了 setuptools |
+| `use_pytest` | 是否启用了 pytest |
+| `use_unittest` | 是否启用了 unittest |
+| `use_ipython` | 是否启用了 IPython |
+| `use_dask` | 是否启用了 dask |
+
+📎 这些变量主要用于 `anti-bloat` 配置，但也可以在其他地方使用。
+
+---
+
+### ✅ 其他辅助函数
+
+- `get_variable("变量名")`：用于访问在 `variables` 中定义的变量。
+- `experimental("flag-name")`：用于判断是否启用了某个实验性功能。
+- `iterate_modules("包名")`：列出某个包下的所有子模块。
+
+---
+
+### ✅ 总结
+
+- Nuitka 的配置系统支持丰富的条件表达式，帮助你根据平台、版本、模式等动态启用配置。
+- 所有表达式都写在 `when:` 字段中，语法接近 Python 的布尔表达式。
+- 页面强调：这些表达式不需要执行实际代码，只是用于条件判断，**安全且高效**。

@@ -1,5 +1,4 @@
 ---
-title: "Databricks开源限流方案，抛弃redis，性能提升10倍"
 source: "https://mp.weixin.qq.com/s/VLkB6OWtLa_bn9OBeQvVHQ?from=industrynews&color_scheme=light#rd"
 author:
   - "[[winkrun]]"
@@ -9,6 +8,8 @@ description:
 tags:
   - "clippings"
 ---
+
+# Databricks开源限流方案，抛弃redis，性能提升10倍
 ![cover_image](https://mmbiz.qpic.cn/mmbiz_jpg/aaN2xdFqa4EnpvgWHR4Uhvn3dWB7HeNiagN4UYBS87lzPABiaWSnicvF9e1LqJdaNapx10QXqIFiaxRbph83kNPz7Q/0?wx_fmt=jpeg)
 
 原创 winkrun [AI工程化](https://mp.weixin.qq.com/s/) *2025年10月05日 05:33*

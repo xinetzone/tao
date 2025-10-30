@@ -6,6 +6,7 @@
 readme
 configs/index
 InsightHub/index
+blog/index
 notebook/index
 test-anywidget
 ```

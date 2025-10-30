@@ -25,6 +25,14 @@ def get_project_root():
 ROOT = get_project_root()
 sys.path.extend([str(ROOT/'doc')])
 from taolib import get_version  # 引入获取版本号的函数
+
+# === 注入本地修复版 sphinx_tippy 扩展路径 ===
+# 说明：为修复 Wikipedia 抓取告警，优先加载仓库内修复版扩展。
+# 路径计算：从 tao 项目根(ROOT)回到 client，再进入 doc/tests/sphinx-tippy/src。
+TIPPY_LOCAL_SRC = ROOT.parent / "doc" / "tests" / "sphinx-tippy" / "src"
+if TIPPY_LOCAL_SRC.exists():
+    # 将本地扩展源码路径插入到 sys.path 前部，确保优先导入
+    sys.path.insert(0, str(TIPPY_LOCAL_SRC))
 # ================================= 项目基本信息 =================================
 project = "tao"  # 文档项目名称
 author = "xinetzone"    # 文档作者
@@ -178,8 +186,9 @@ elif os.environ.get("GITHUB_ACTIONS"):
 sitemap_locales = [None]  # 语言列表
 
 # === Custom Sidebars ===
+extensions.append("ablog")
 html_sidebars = {
-    "reference/blog/*": [
+    "blog/posts/*": [
         "navbar-logo.html",
         "search-field.html",
         "ablog/postcard.html",
@@ -187,7 +196,6 @@ html_sidebars = {
         "ablog/tagcloud.html",
         "ablog/categories.html",
         "ablog/archives.html",
-        "sbt-sidebar-nav.html",
     ]
 }
 

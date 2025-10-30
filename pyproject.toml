@@ -26,7 +26,7 @@ doc = [
   "anywidget[dev]>=0.9.13",
   "ipywidgets>=8",
   "sphinx",
-  # "ablog",
+  "ablog",
   "nbsphinx",
   "folium",
   "sphinx-comments",

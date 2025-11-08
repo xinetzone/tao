@@ -16,8 +16,8 @@ build:
     # golang: "1.17"
     # python: "mambaforge-latest"
 
-conda:
-  environment: dev-environment.yml
+# conda:
+#   environment: dev-environment.yml
 
 # Build documentation in the docs/ directory with Sphinx
 sphinx:

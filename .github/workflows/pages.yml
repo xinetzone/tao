@@ -45,7 +45,7 @@ jobs:
           sudo apt-get install graphviz
           apt-get update && sudo apt-get upgrade
           pip install --upgrade pip
-          pip install -ve .[doc,flows] --upgrade
+          pip install -ve .[doc,dev] --upgrade
           git clone --recursive https://github.com/xinetzone/maple-font.git
           cd maple-font
           pip install -ve .

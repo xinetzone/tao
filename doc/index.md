@@ -8,7 +8,7 @@ nature/index
 life/index
 cultivate/index
 authenticity/index
-records/index
+blog/index
 ```
 
 # 索引和表格

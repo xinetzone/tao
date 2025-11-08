@@ -3,8 +3,8 @@ blogpost: true
 date: Oct 30, 2025
 author: xinetzone
 location: World
-category: 教程, 器
-tags: Nuitka
+category: tool
+tags: Nuitka, 教程
 language: Chinese
 ---
 

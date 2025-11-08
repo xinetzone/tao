@@ -1,7 +1,7 @@
 # 主题选项配置
 [html_theme_options]
 # 公告栏设置
-announcement = "👋欢迎进入编程视界！👋"
+announcement = "👋你好，世界！👋"
 
 # 仓库相关设置
 repository_url = "https://github.com/xinetzone/tao"  # 仓库地址

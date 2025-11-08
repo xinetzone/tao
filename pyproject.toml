@@ -1,6 +1,6 @@
 [project]
 name = "taolib"
-version = "0.2.0"
+version = "0.5.0"
 description = "道可道，非恒道"
 authors = [
     {name = "xinetzone", email = "735613050@qq.com"},
@@ -50,7 +50,7 @@ doc = [
   "iflow-cli-sdk",
 ]
 
-flows = [
+dev = [
   "invoke",
   "pandas",
   "numpy",

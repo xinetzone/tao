@@ -37,3 +37,4 @@ python:
       path: .
       extra_requirements:
         - doc
+        - dev

@@ -1,14 +1,14 @@
-# taolib
+```{include} ../README.md
+```
 
 ```{toctree}
 :hidden:
 
-readme
-configs/index
-InsightHub/index
-blog/index
-notebook/index
-test-anywidget
+nature/index
+life/index
+cultivate/index
+authenticity/index
+records/index
 ```
 
 # 索引和表格

@@ -1,8 +1,8 @@
-# 博客
+# 忆
 
 ```{button-link} ./archive.html
 :color: primary
-阅读博文
+日志
 ```
 
 ```{postlist}

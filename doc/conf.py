@@ -115,8 +115,6 @@ version_switcher_json_url = "https://taolib.readthedocs.io/zh-cn/latest/_static/
 # 链接到其他项目的文档
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3.12", None),
-    "sphinx": ("https://daobook.github.io/sphinx/", None),
-    "pst": ("https://daobook.github.io/pydata-sphinx-theme/", None),
 }
 
 # 缩短外部链接

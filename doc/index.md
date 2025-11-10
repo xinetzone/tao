@@ -4,10 +4,7 @@
 ```{toctree}
 :hidden:
 
-nature/index
-life/index
 cultivate/index
-authenticity/index
 blog/index
 ```
 

@@ -32,7 +32,6 @@ doc = [
   "sphinx-comments",
   "nbclient",
   "plotly",
-  # "kaleido",
   "sphinx-design",
   "sphinx-examples",
   "sphinx-copybutton",

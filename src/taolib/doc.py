@@ -11,6 +11,12 @@ from shutil import rmtree
 from tempfile import mkdtemp
 from invoke import task, Context
 
+
+def _get_sphinx_paths(ctx: Context, source: str | None, target: str | None) -> tuple[str, str]:
+    src = source or getattr(ctx.sphinx, "source", "doc")
+    dst = target or getattr(ctx.sphinx, "target", "doc/_build/html")
+    return src, dst
+
 logger = logging.getLogger(__name__)
 
 # 在非 Windows 平台上使用 pty
@@ -35,7 +41,9 @@ def build(ctx: Context,
           language: str | None = None,
           source: str | None = None,
           target: str | None = None,
-          nitpick: bool = False) -> None:
+          nitpick: bool = False,
+          jobs: str = "auto",
+          keep_going: bool = True) -> None:
     """构建项目的 Sphinx 文档。
     
     Args:
@@ -46,17 +54,18 @@ def build(ctx: Context,
         source: 源目录，覆盖配置设置
         target: 输出目录，覆盖配置设置
         nitpick: 是否启用更严格的警告/错误检查"""
-    source = source or ctx.sphinx.source
-    target = target or ctx.sphinx.target
+    source, target = _get_sphinx_paths(ctx, source, target)
     
-    # 处理语言选项
     if language:
-        opts = f'-D language={language}'
-        target = f'{target}/{language}'
+        opts = f"{opts} -D language={language}".strip()
+        target = f"{target}/{language}"
         
-    # 处理严格模式选项
     if nitpick:
-        opts += " -n -W -T"
+        opts = f"{opts} -n -W -T".strip()
+
+    opts = f"{opts} -j {jobs}".strip()
+    if keep_going:
+        opts = f"{opts} --keep-going".strip()
         
     # 执行构建命令
     cmd = f"sphinx-build -b {builder} {opts} {source} {target}"
@@ -76,14 +85,12 @@ def intl(ctx: Context, language: str = 'en') -> None:
     target = Path(ctx.sphinx.target).parent / 'gettext'
     
     if language == 'en':
-        # 英语是源语言，需要重新生成 POT 文件
-        clean(ctx)
+        if target.exists():
+            rmtree(target)
         build(ctx, target=target, opts=opts)
     elif language:
-        # 确保 POT 文件已生成
-        if not Path(target).exists():
+        if not target.exists():
             build(ctx, target=target, opts=opts)
-        # 更新指定语言的翻译
         ctx.run(f'sphinx-intl update -p {target} -l {language}')
         # 以下代码已注释掉，因为当前项目可能不需要
         # for DIR in ['pages', 'posts', 'shop']:
@@ -109,13 +116,16 @@ def doctest(ctx: Context) -> None:
 
 @task
 def tree(ctx: Context) -> None:
-    """使用 'tree' 程序显示文档内容结构。
-    
-    Args:
-        ctx: Invoke 上下文对象，包含 sphinx 配置信息"""
-    # 定义需要忽略的文件和目录模式
     ignore = ".git|*.pyc|*.swp|dist|*.egg-info|_static|_build|_templates"
-    ctx.run(f'tree -Ca -I "{ignore}" {ctx.sphinx.source}')
+    try:
+        ctx.run(f'tree -Ca -I "{ignore}" {ctx.sphinx.source}', pty=PTY)
+    except Exception:
+        root = Path(ctx.sphinx.source)
+        for p in sorted(root.rglob("*")):
+            rel = p.relative_to(root)
+            if any(part in ignore.split("|") for part in rel.parts):
+                continue
+            print(rel)
 
 
 # 文档站点配置集合创建函数
@@ -132,8 +142,8 @@ def create_docs(project_configs: Union[List[Dict[str, str]], Dict[str, Dict[str,
     ...
 
 def create_docs(
-    source: Union[str, List[Dict[str, str]], Dict[str, Dict[str, str]], None] = None, 
-    target: str = '.temp/html', 
+    source: Union[str, List[Dict[str, str]], Dict[str, Dict[str, str]], None] = None,
+    target: str = 'doc/_build/html',
     children: str = ''
 ) -> Collection:
     """创建文档站点配置集合。
@@ -183,7 +193,7 @@ def create_docs(
             # 获取项目配置，提供默认值
             name = config.get('name', f'doc_{i+1}')
             proj_source = config.get('source', 'doc')
-            proj_target = config.get('target', f'.temp/html/{name}')
+            proj_target = config.get('target', f'doc/_build/html/{name}')
             proj_children = config.get('children', '')
             
             # 创建项目特定的子命令集合
@@ -209,7 +219,7 @@ def create_docs(
         for name, config in project_configs.items():
             # 获取项目配置
             proj_source = config.get('source', 'doc')
-            proj_target = config.get('target', f'.temp/html/{name}')
+            proj_target = config.get('target', f'doc/_build/html/{name}')
             proj_children = config.get('children', '')
             
             # 创建项目特定的子命令集合
@@ -234,7 +244,7 @@ def create_docs(
     return main_namespace
 
 
-def sites(source: str = 'doc', target: str = '.temp/html', children: str = '') -> Collection:
+def sites(source: str = 'doc', target: str = 'doc/_build/html', children: str = '') -> Collection:
     """创建文档站点配置集合。
     
     为不同的文档站点创建配置好的 Invoke 集合，用于构建 Sphinx 文档。

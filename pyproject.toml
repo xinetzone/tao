@@ -1,6 +1,6 @@
 [project]
 name = "taolib"
-version = "0.5.0"
+version = "0.5.1"
 description = "道可道，非恒道"
 authors = [
     {name = "xinetzone", email = "735613050@qq.com"},
@@ -55,13 +55,3 @@ dev = [
   "numpy",
   "matplotlib",
 ]
-
-[build-system]
-requires = ["setuptools>=61", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools]
-package-dir = {"" = "src"}
-
-[tool.setuptools.packages.find]
-where = ["src"]

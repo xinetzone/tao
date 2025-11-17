@@ -33,35 +33,30 @@ jobs:
         with:
           egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
       - name: 🐍 Set up Python
-        uses: actions/setup-python@main
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: "pip"
           cache-dependency-path: "pyproject.toml"
-      - name: 🔧 PyPI 配置
+      - name: 🔧 环境与依赖
         run: |
-          sudo apt-get install graphviz
-          apt-get update && sudo apt-get upgrade
-          pip install --upgrade pip
-          pip install -ve .[doc,dev] --upgrade
-          git clone --recursive https://github.com/xinetzone/maple-font.git
-          cd maple-font
-          pip install -ve .
-          maple-font build --full
-          conda install -c conda-forge pandoc compilers podman
+          sudo apt-get update
+          sudo apt-get install -y graphviz
+          python -m pip install --upgrade pip
+          pip install .[doc,dev] --upgrade
       - name: 🔧 Build HTML
         run: |
           invoke doc
       - name: Setup Pages
-        uses: actions/configure-pages@main
+        uses: actions/configure-pages@v5
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@main
+        uses: actions/upload-pages-artifact@v2
         with:
           # Upload entire repository
           path: 'doc/_build/html/'
       - name: 🚀 Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@main
+        uses: actions/deploy-pages@v4
         # uses: peaceiris/actions-gh-pages@v3.6.1

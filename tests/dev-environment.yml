@@ -11,4 +11,4 @@ dependencies:
     - voici
     - pip  # 显式声明 pip 依赖
     - pip:
-        - .[doc]
+        - .[doc,dev]

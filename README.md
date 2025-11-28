@@ -4,6 +4,7 @@
 [![PyPI][pypi-badge]][pypi-link]
 [![GitHub issues][issue-badge]][issue-link]
 [![GitHub forks][fork-badge]][fork-link]
+![atom star](https://gitcode.com/flexloop/flexloop/star/badge.svg)
 [![GitHub stars][star-badge]][star-link]
 [![GitHub license][license-badge]][license-link]
 [![contributors][contributor-badge]][contributor-link]
@@ -36,14 +37,62 @@
 [download-badge]: https://pepy.tech/badge/taolib
 [download-link]: https://pepy.tech/project/taolib
 
-## PyPI
+## 以终为始
 
-支持 PyPI：
+- [ ] 以数学、物理、化学、编程、英语、大模型为主题逐步展开知识记录以及应用。
+- [ ] 搭建开源友好的知识传播平台。
+
+## 安装
+
+- 环境要求：`Python >= 3.10`
+- 从 PyPI 安装：
 
 ```sh
 pip install taolib
 ```
 
-## 欢迎共创
+- 从源码安装（可用于开发与本地调试）：
 
-欢迎加入本项目的创作，创作规范请参阅：[Daobook demo 文档](https://daobook.github.io/.github/index.html)。
+```sh
+git clone https://gitcode.com/flexloop/flexloop.git
+cd flexloop
+pip install -e .
+```
+
+可选：安装开发与文档相关依赖：
+
+```sh
+pip install -e "[doc,dev]"
+```
+
+## 使用说明
+
+详细 API 与示例代码：
+- [RTD 在线文档](https://taolib.readthedocs.io/zh-cn/latest/)。
+- 或者在本地构建并查看文档：
+    ```sh
+    pip install -e .[doc]
+    python -m invoke doc.clean
+    python -m invoke doc
+    ```
+    生成的 HTML 文档将在 `doc/_build/html` 目录下。
+
+
+## 问题与反馈
+
+- 提交 [Issue](https://gitcode.com/flexloop/flexloop/issues)
+- 参与[讨论](https://gitcode.com/flexloop/flexloop/discussions)与改进，欢迎提出建议或 [PR](https://gitcode.com/flexloop/flexloop/pulls)。
+
+## 贡献
+
+- Fork 仓库并创建分支（如 `feature/<topic>` 或 `fix/<issue>`）。
+- 保持代码风格与类型检查通过，补充必要测试与文档。
+- 提交 PR 时说明动机、改动点、影响范围与验证方式。
+
+## 维护者
+
+- [xinetzone@github](https://github.com/xinetzone) / [flexloop@atomgit](https://gitcode.com/flexloop/flexloop)
+
+## 使用许可
+
+- 许可证信息请查看 `LICENSE` 文件。

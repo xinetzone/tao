@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """Sphinx configuration file for the 'tao' project documentation.
 
 This file configures the Sphinx documentation generator for the tao project.
@@ -21,66 +23,112 @@ def get_project_root():
     return Path(__file__).resolve().parents[1]
 
 ROOT = get_project_root()
-sys.path.extend([str(ROOT/'doc')])
+try:
+    from importlib.metadata import version as _pkg_version
+    release = _pkg_version("taolib")
+except Exception:
+    release = os.environ.get("TAOLIB_VERSION", "0.0.0")
 
-# === Local Imports ===
-from utils.links import icon_links
-
-# === Project Information ===
-project = 'tao'  # 项目名称
-author = 'xinetzone'  # 文档作者
+# === 注入本地修复版 sphinx_tippy 扩展路径 ===
+# 说明：为修复 Wikipedia 抓取告警，优先加载仓库内修复版扩展。
+# 路径计算：从 tao 项目根(ROOT)回到 client，再进入 doc/tests/sphinx-tippy/src。
+TIPPY_LOCAL_SRC = ROOT.parent / "doc" / "tests" / "sphinx-tippy" / "src"
+if TIPPY_LOCAL_SRC.exists():
+    # 将本地扩展源码路径插入到 sys.path 前部，确保优先导入
+    sys.path.insert(0, str(TIPPY_LOCAL_SRC))
+# ================================= 项目基本信息 =================================
+project = "tao"
+author = "xinetzone"
 copyright = '2021, xinetzone'  # 版权信息
+# ================================= 国际化与本地化设置 ==============================
+language = 'zh_CN'       # 文档语言（中文简体）
+locale_dirs = ['../locales/']  # 翻译文件存放目录
+gettext_compact = False  # 是否合并子目录的PO文件（False表示不合并）
 
-# === Internationalization ===
-language = 'zh_CN'
-locale_dirs = ['../locales/']  # 翻译文件路径
-gettext_compact = False  # 为每个翻译创建单独的.po文件
+# ================================= 扩展插件配置 =================================
+import importlib.util as _ilut
 
-# === Core Configuration ===
-# 扩展模块列表
-extensions = [
+def _has(mod: str) -> bool:
+    return _ilut.find_spec(mod) is not None
+
+_exts = [
     # 内容格式与展示
-    "myst_nb",  # 支持Markdown和Jupyter笔记本
+    "mystx",  # 支持Markdown和Jupyter笔记本
     "sphinx_design",  # 提供现代化UI组件
     "sphinx.ext.napoleon",  # 支持Google和NumPy风格的文档字符串
     "sphinxcontrib.mermaid",  # 支持Mermaid图表
     
     # 代码相关
-    "sphinx.ext.viewcode",  # 添加到高亮源代码的链接
-    'sphinx_copybutton',  # 为代码块添加复制按钮
+    "sphinx.ext.viewcode",
+    'sphinx_copybutton',
     
     # 链接与引用
-    "sphinx.ext.extlinks",  # 缩短外部链接
-    "sphinx.ext.intersphinx",  # 链接到其他文档
-    'sphinxcontrib.bibtex',  # 支持BibTeX参考文献
-    "sphinx.ext.graphviz",  # 嵌入Graphviz图
+    "sphinx.ext.extlinks",
+    "sphinx.ext.intersphinx",
+    'sphinxcontrib.bibtex',
+    "sphinx.ext.graphviz",
     
     # 交互功能
-    "sphinx_comments",  # 添加评论和注释功能
-    "sphinx_tippy",  # 展示丰富的悬停提示
-    "sphinx_thebe",  # 配置交互式启动按钮
+    "sphinx_comments",
+    "sphinx_tippy",
+    "sphinx_thebe",
+    "nbsphinx",
     
     # API文档与站点管理
-    "autoapi.extension",  # 自动生成API文档
-    'sphinx_contributors',  # 渲染GitHub仓库贡献者列表
-    "sphinx_sitemap",  # 生成站点地图
-    
-    # 自定义扩展
-    "_ext.rtd_version",  # 版本切换器下拉菜单
+    "autoapi.extension",
+    'sphinx_contributors',
+    "sphinx_sitemap",
+]
+extensions = [e for e in _exts if _has(e)]
+
+# ================================= 文档构建配置 =================================
+# 排除文件和目录模式
+exclude_patterns = [
+    "_build",      # 构建输出目录
+    "Thumbs.db",   # 缩略图数据库
+    ".DS_Store",    # macOS 系统文件
+    "**.ipynb_checkpoints",  # Jupyter 笔记本检查点目录
 ]
 
-# 模板路径
-templates_path = ['_templates']
+# 静态资源目录，用于存放CSS、JavaScript、图片等
+html_static_path = ["_static"]
+html_css_files = ["local.css"]
 
-# 排除文件模式
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+# 文档的最后更新时间格式
+html_last_updated_fmt = '%Y-%m-%d, %H:%M:%S'
 
-# === Cross-Reference Configuration ===
+# ================================= 主题与外观配置 ================================
+if _has('mystx'):
+    html_theme = 'mystx'
+elif _has('sphinx_book_theme'):
+    html_theme = 'sphinx_book_theme'
+else:
+    html_theme = 'alabaster'
+html_title = "taolib"  # 文档标题
+html_logo = "_static/images/logo.jpg"  # 文档logo
+html_favicon = "_static/images/favicon.jpg"  # 文档favicon
+html_copy_source = True  # 是否在文档中包含源文件链接
+
+# ================================= thebe 交互式功能配置 =================================
+use_thebe = True  # 是否开启Thebe功能（默认关闭）
+thebe_config = {
+    "repository_url": f"https://github.com/xinetzone/{project}",
+    "repository_branch": "main",
+    "selector": "div.highlight",
+    # "selector": ".thebe",
+    # "selector_input": "",
+    # "selector_output": "",
+    # "codemirror-theme": "blackboard",  # Doesn't currently work
+    # "always_load": True,  # To load thebe on every page
+}
+
+# ================================= 版本切换器配置 =================================
+version_switcher_json_url = "https://taolib.readthedocs.io/zh-cn/latest/_static/switcher.json"
+
+# === 交叉引用配置 ===
 # 链接到其他项目的文档
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3.12", None),
-    "sphinx": ("https://daobook.github.io/sphinx/", None),
-    "pst": ("https://daobook.github.io/pydata-sphinx-theme/", None),
 }
 
 # 缩短外部链接
@@ -89,57 +137,11 @@ extlinks = {
     'xinetzone': ('https://xinetzone.github.io/%s', 'xinetzone %s'),
 }
 
-# === Copy Button Configuration ===
+# === Copy Button 配置 ===
 # 跳过Pygments生成的所有提示符
 copybutton_exclude = '.linenos, .gp'
 # 使用:not()排除复制按钮出现在笔记本单元格编号上
 copybutton_selector = ":not(.prompt) > div.highlight pre"
-
-# === HTML Output Configuration ===
-# HTML主题设置
-html_theme = 'xyzstyle'  # 使用的主题名称
-html_logo = "_static/images/logo.jpg"
-html_title = "Sphinx xyzstyle Theme"
-html_copy_source = True
-html_favicon = "_static/images/favicon.jpg"
-html_last_updated_fmt = '%Y-%m-%d, %H:%M:%S'  # 文档的最后更新时间格式
-
-# 静态文件路径
-html_static_path = ['_static']
-html_css_files = ["css/custom.css", "css/tippy.css"]
-
-# === Theme Options ===
-html_theme_options = {
-    # 界面功能
-    "use_sidenotes": True,  # 启用侧边注释/页边注释
-    "back_to_top_button": True,  # 显示"返回顶部"按钮
-    
-    # 仓库相关按钮
-    "repository_url": f"https://github.com/xinetzone/{project}",
-    "use_repository_button": True,  # 显示"在GitHub上查看"按钮
-    "use_source_button": True,  # 显示"查看源代码"按钮
-    "use_edit_page_button": True,  # 显示"编辑此页"按钮
-    "use_issues_button": True,  # 显示"报告问题"按钮
-    
-    # 其他界面元素
-    "announcement": "👋欢迎进入编程视界！👋",  # 公告横幅
-    "icon_links": icon_links,  # 图标链接
-    
-    # 交互式功能
-    "repository_branch": "main",
-    "path_to_docs": "doc",
-    "launch_buttons": {
-        "binderhub_url": "https://mybinder.org",
-        "colab_url": "https://colab.research.google.com/",
-        "deepnote_url": "https://deepnote.com/",
-        "notebook_interface": "jupyterlab",
-        "thebe": True,
-        # "jupyterhub_url": "https://datahub.berkeley.edu",  # For testing
-    },
-    
-    # 版本切换器
-    "primary_sidebar_end": ["version-switcher"],
-}
 
 # === Comments Configuration ===
 comments_config = {
@@ -168,11 +170,22 @@ tippy_rtd_urls = [
 #     ),
 # }
 
+# === 主题选项加载（从 _config.toml） ===
+html_theme_options = {}
+try:
+    import tomllib as _tomllib
+    cfg_path = Path(__file__).parent / "_config.toml"
+    if cfg_path.exists():
+        _cfg = _tomllib.loads(cfg_path.read_text('utf-8'))
+        html_theme_options = _cfg.get('html_theme_options', {})
+except Exception:
+    pass
+
 # === BibTeX Configuration ===
 bibtex_bibfiles = ['refs.bib']
 
 # === AutoAPI Configuration ===
-autoapi_dirs = [f"../src/{project}lib"]
+autoapi_dirs = [str(ROOT / "src" / "taolib")]
 autoapi_root = "autoapi"
 autoapi_generate_api_docs = False
 
@@ -183,42 +196,32 @@ inheritance_graph_attrs = dict(
     fontsize=14,
     ratio="compress",
 )
-
-# === Thebe Configuration ===
-thebe_config = {
-    "repository_url": f"https://github.com/xinetzone/{project}",
-    "repository_branch": "main",
-    "selector": "div.highlight",
-    # "selector": ".thebe",
-    # "selector_input": "",
-    # "selector_output": "",
-    # "codemirror-theme": "blackboard",  # Doesn't currently work
-    # "always_load": True,  # To load thebe on every page
-}
-
 # === Sitemap Configuration ===
 sitemap_url_scheme = "{lang}{version}{link}"
 
-# 环境特定的sitemap配置
-if not os.environ.get("READTHEDOCS"):
+if os.environ.get("GITHUB_ACTIONS"):
+    html_baseurl = os.environ.get("SITEMAP_URL_BASE", "https://xinetzone.github.io/")
+elif not os.environ.get("READTHEDOCS"):
     html_baseurl = os.environ.get("SITEMAP_URL_BASE", "http://127.0.0.1:8000/")
     sitemap_url_scheme = "{link}"
-elif os.environ.get("GITHUB_ACTIONS"):
-    html_baseurl = os.environ.get("SITEMAP_URL_BASE", "https://xinetzone.github.io/")
 
 sitemap_locales = [None]  # 语言列表
 
 # === Custom Sidebars ===
+if _has('ablog'):
+    extensions.append("ablog")
 html_sidebars = {
-    "reference/blog/*": [
+    "blog/**": [
         "navbar-logo.html",
         "search-field.html",
         "ablog/postcard.html",
         "ablog/recentposts.html",
         "ablog/tagcloud.html",
         "ablog/categories.html",
+        "ablog/authors.html",
+        "ablog/languages.html",
+        "ablog/locations.html",
         "ablog/archives.html",
-        "sbt-sidebar-nav.html",
     ]
 }
 
@@ -241,6 +244,30 @@ suppress_warnings = [
     "autoapi.python_import_resolution", 
     "autoapi.not_readable",
 ]
+nb_execution_mode = "cache"
+# nb_ipywidgets_js = {
+#     # "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js": {
+#     #     "integrity": "sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=",
+#     #     "crossorigin": "anonymous",
+#     # },
+#     "https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@*/dist/embed-amd.js": {
+#         "data-jupyter-widgets-cdn": "https://cdn.jsdelivr.net/npm/",
+#         "crossorigin": "anonymous",
+#     },
+#     "https://cdn.jsdelivr.net/npm/anywidget@*/dist/index.js": {
+#         "integrity": "sha256-1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
+#         "crossorigin": "anonymous",
+#     }
+# }
+# html_js_files = [
+#     # "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js",
+#     "https://cdn.jsdelivr.net/npm/anywidget@*/dist/index.js"
+# ]
+nb_execution_allow_errors = True
+nb_execution_excludepatterns = [
+    "InsightHub/maple-mono/**",
+    "InsightHub/iFlow/**",
+]
 
 # 数字编号配置
 numfig = True
@@ -259,14 +286,8 @@ myst_enable_extensions = [
     "substitution",
 ]
 
-# === LaTeX 字体配置 ===
-# 确保LaTeX能正确显示中文和特殊符号
-latex_engine = 'xelatex'  # 使用xelatex引擎支持UTF-8
-latex_elements = {
-    'preamble': r"""
-\usepackage{xeCJK}
-\setCJKmainfont{Maple Mono NF CN}
-\setCJKsansfont{WenQuanYi Micro Hei}
-\setCJKmonofont{Maple Mono NF CN}
-"""
-}
+# === 构建严格模式（可选） ===
+nitpicky = os.environ.get("SPHINX_NITPICK", "").lower() in {"1", "true", "yes"}
+
+# === 模板路径（如存在） ===
+templates_path = ["_templates"]

@@ -1,7 +1,7 @@
 ---
 blogpost: true
 date: Oct 31, 2025
-author: xinetzone
+author: flexloop
 location: World
 category: tool
 tags: Nuitka, 教程

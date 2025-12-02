@@ -1,6 +1,6 @@
 ---
 blogpost: true
-author: xinetzone
+author: flexloop
 location: World
 category: technique
 tags: Nuitka, 教程

@@ -4,6 +4,7 @@
 ```{toctree}
 :hidden:
 
+libs/index
 cultivate/index
 blog/index
 ```

@@ -1,6 +1,6 @@
 [project]
 name = "taolib"
-version = "0.5.1"
+version = "0.5.2"
 description = "道可道，非恒道"
 authors = [
     {name = "xinetzone", email = "735613050@qq.com"},

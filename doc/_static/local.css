@@ -1,44 +1,76 @@
 /* ================================= 响应式设计优化 ================================= */
 
+/* 基础样式优化 */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
 /* 移动设备通用样式 */
 @media (max-width: 768px) {
     /* 优化字体大小和行间距 */
     body {
         font-size: 16px;
         line-height: 1.8;
+        color: #333;
     }
     
     /* 优化标题样式 */
     h1 {
         font-size: 2rem;
         line-height: 1.3;
+        margin: 1.5rem 0 1rem;
+        font-weight: 700;
     }
     
     h2 {
         font-size: 1.75rem;
         line-height: 1.4;
+        margin: 1.25rem 0 0.875rem;
+        font-weight: 600;
     }
     
     h3 {
         font-size: 1.5rem;
         line-height: 1.5;
+        margin: 1.125rem 0 0.75rem;
+        font-weight: 600;
     }
     
     h4 {
         font-size: 1.25rem;
+        margin: 1rem 0 0.625rem;
+        font-weight: 600;
     }
     
     h5 {
         font-size: 1.1rem;
+        margin: 0.875rem 0 0.5rem;
+        font-weight: 600;
     }
     
     h6 {
         font-size: 1rem;
+        margin: 0.75rem 0 0.375rem;
+        font-weight: 600;
+    }
+    
+    /* 优化段落样式 */
+    p {
+        margin: 0 0 1rem;
+        font-size: 1rem;
+        line-height: 1.8;
     }
     
     /* 优化内容容器宽度 */
     .bd-content {
         padding: 0 1rem;
+        max-width: 100%;
     }
     
     /* 优化侧边栏行为 */
@@ -48,10 +80,30 @@
     }
     
     /* 增大点击区域 */
-    a, button {
+    a, button, .btn {
         min-height: 44px;
         min-width: 44px;
-        padding: 0.5rem;
+        padding: 0.5rem 1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0.125rem;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    
+    /* 优化链接样式 */
+    a {
+        color: #0066cc;
+        text-decoration: none;
+        position: relative;
+    }
+    
+    a:hover, a:focus {
+        text-decoration: underline;
+        outline: 2px solid #0066cc;
+        outline-offset: 2px;
     }
     
     /* 优化代码块显示 */
@@ -60,10 +112,18 @@
         line-height: 1.6;
         overflow-x: auto;
         padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 4px;
+        background-color: #f6f8fa;
+        border: 1px solid #e1e4e8;
     }
     
     code {
         font-size: 0.9rem;
+        padding: 0.125rem 0.25rem;
+        background-color: #f6f8fa;
+        border-radius: 3px;
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
     }
     
     /* 优化表格显示 */
@@ -72,34 +132,68 @@
         overflow-x: auto;
         white-space: nowrap;
         max-width: 100%;
+        margin: 1rem 0;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+    }
+    
+    th, td {
+        padding: 0.75rem;
+        text-align: left;
+        border: 1px solid #e1e4e8;
+        min-width: 80px;
+    }
+    
+    th {
+        background-color: #f6f8fa;
+        font-weight: 600;
     }
     
     /* 优化列表样式 */
     ul, ol {
         padding-left: 1.5rem;
+        margin: 1rem 0;
+    }
+    
+    li {
+        margin-bottom: 0.5rem;
+        line-height: 1.7;
     }
     
     /* 优化引用样式 */
     blockquote {
         margin: 1rem 0;
-        padding: 0.5rem 1rem;
+        padding: 0.75rem 1rem 0.75rem 1.5rem;
+        border-left: 4px solid #0066cc;
+        background-color: #f0f7ff;
+        font-style: italic;
+        line-height: 1.7;
     }
     
     /* 优化 admonition样式 */
     .admonition {
         margin: 1rem 0;
         padding: 1rem;
+        border-radius: 4px;
+        border: 1px solid #e1e4e8;
     }
     
     /* 优化图片显示 */
     img {
         max-width: 100%;
         height: auto;
+        display: block;
+        margin: 1rem 0;
+        border-radius: 4px;
     }
     
     /* 优化导航元素 */
     .navbar-nav {
         font-size: 1rem;
+    }
+    
+    .navbar-nav > li {
+        margin: 0.25rem 0;
     }
     
     /* 优化搜索框 */
@@ -108,9 +202,123 @@
         min-width: 44px;
     }
     
+    .search-input {
+        min-height: 44px;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        width: 100%;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    
     /* 优化页脚样式 */
     .bd-footer {
         padding: 1rem;
+        margin-top: 2rem;
+        border-top: 1px solid #e1e4e8;
+        text-align: center;
+    }
+    
+    /* 优化表单元素 */
+    input, select, textarea {
+        min-height: 44px;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        width: 100%;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+    }
+    
+    /* 优化按钮 */
+    button, .btn {
+        background-color: #0066cc;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+    
+    button:hover, button:focus, .btn:hover, .btn:focus {
+        background-color: #0052a3;
+        outline: 2px solid #0052a3;
+        outline-offset: 2px;
+    }
+    
+    /* 优化代码复制按钮 */
+    .copybtn {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 0.5rem;
+        margin: 0.25rem;
+        background-color: #f6f8fa;
+        color: #333;
+        border: 1px solid #e1e4e8;
+    }
+    
+    /* 优化图片容器 */
+    .figure {
+        margin: 1.5rem 0;
+    }
+    
+    /* 优化figcaption样式 */
+    figcaption {
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-top: 0.5rem;
+        color: #666;
+        text-align: center;
+    }
+    
+    /* 优化响应式图片 */
+    .responsive-img {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    /* 优化视频容器 */
+    .video-container {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0;
+        overflow: hidden;
+        max-width: 100%;
+        margin: 1rem 0;
+        border-radius: 4px;
+    }
+    
+    /* 优化表格单元格内容换行 */
+    td {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+        max-width: 200px;
+    }
+    
+    /* 优化列表项间距 */
+    li > ul, li > ol {
+        margin: 0.5rem 0 0;
+    }
+    
+    /* 优化分隔线 */
+    hr {
+        margin: 1.5rem 0;
+        border: none;
+        border-top: 1px solid #e1e4e8;
+    }
+    
+    /* 优化工具提示 */
+    .tooltip {
+        font-size: 0.875rem;
+        padding: 0.5rem;
+        max-width: 250px;
+    }
+    
+    /* 优化标签 */
+    .badge {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        margin: 0.125rem;
     }
 }
 
@@ -125,10 +333,16 @@
     /* 优化容器宽度 */
     .bd-content {
         padding: 0 1.5rem;
+        max-width: 100%;
     }
     
     /* 优化代码块 */
     pre {
+        font-size: 0.95rem;
+    }
+    
+    /* 优化表格 */
+    table {
         font-size: 0.95rem;
     }
 }
@@ -137,20 +351,23 @@
 @media (max-width: 480px) {
     /* 进一步优化字体大小 */
     body {
-        font-size: 15px;
+        font-size: 16px;
         line-height: 1.9;
     }
     
     h1 {
         font-size: 1.75rem;
+        margin: 1.25rem 0 0.875rem;
     }
     
     h2 {
         font-size: 1.5rem;
+        margin: 1.125rem 0 0.75rem;
     }
     
     h3 {
         font-size: 1.3rem;
+        margin: 1rem 0 0.625rem;
     }
     
     /* 优化内容边距 */
@@ -162,82 +379,226 @@
     pre {
         font-size: 0.85rem;
         padding: 0.75rem;
+        margin: 0.75rem 0;
     }
     
     /* 优化表格 */
     table {
         font-size: 0.85rem;
+        margin: 0.75rem 0;
+    }
+    
+    th, td {
+        padding: 0.5rem;
+        min-width: 70px;
+    }
+    
+    /* 优化段落 */
+    p {
+        margin: 0 0 0.875rem;
+        font-size: 1rem;
+    }
+    
+    /* 优化列表 */
+    ul, ol {
+        margin: 0.875rem 0;
+    }
+    
+    /* 优化引用 */
+    blockquote {
+        margin: 0.875rem 0;
+        padding: 0.5rem 0.75rem 0.5rem 1.25rem;
+    }
+    
+    /* 优化图片 */
+    img {
+        margin: 0.875rem 0;
+    }
+    
+    /* 优化按钮和链接 */
+    a, button, .btn {
+        padding: 0.4375rem 0.875rem;
+        margin: 0.0625rem;
+    }
+}
+
+/* 超大屏幕手机样式 */
+@media (max-width: 360px) {
+    body {
+        font-size: 15px;
+    }
+    
+    h1 {
+        font-size: 1.6rem;
+    }
+    
+    h2 {
+        font-size: 1.4rem;
+    }
+    
+    h3 {
+        font-size: 1.2rem;
+    }
+    
+    pre {
+        font-size: 0.8rem;
+        padding: 0.625rem;
+    }
+    
+    code {
+        font-size: 0.8rem;
     }
 }
 
 /* 优化代码块滚动 */
 .highlight {
     overflow-x: auto;
+    margin: 1rem 0;
+    border-radius: 4px;
 }
 
 /* 优化长文本换行 */
-p, li, dd {
+p, li, dd, td, th {
     word-wrap: break-word;
     overflow-wrap: break-word;
 }
 
-/* 优化链接样式 */
-a {
-    text-decoration-thickness: 2px;
+/* 优化焦点样式 */
+:focus {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
 }
 
-/* 优化按钮样式 */
-.btn {
-    min-height: 44px;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
+/* 优化触摸反馈 */
+button, a, .btn, input, select, textarea {
+    -webkit-tap-highlight-color: rgba(0, 102, 204, 0.3);
 }
 
-/* 优化表单元素 */
-input, select, textarea {
-    min-height: 44px;
-    padding: 0.5rem;
-    font-size: 1rem;
+/* 优化滚动条 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
 
-/* 优化代码复制按钮 */
-.copybtn {
-    min-height: 36px;
-    min-width: 36px;
-    padding: 0.25rem;
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
 }
 
-/* 优化图片容器 */
-.figure {
-    margin: 1.5rem 0;
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
 }
 
-/* 优化figcaption样式 */
-figcaption {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    margin-top: 0.5rem;
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
 }
 
-/* 优化视频容器 */
-.video-container {
-    position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
-    overflow: hidden;
-    max-width: 100%;
+/* 优化打印样式 */
+@media print {
+    body {
+        font-size: 12pt;
+        line-height: 1.5;
+    }
+    
+    pre, code {
+        font-size: 10pt;
+    }
 }
 
-.video-container iframe, .video-container object, .video-container embed {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+    body {
+        color: #000;
+        background-color: #fff;
+    }
+    
+    a {
+        color: #0000ee;
+    }
+    
+    pre {
+        background-color: #f0f0f0;
+        border: 1px solid #000;
+    }
+    
+    blockquote {
+        border-left-color: #000;
+        background-color: #f0f0f0;
+    }
 }
 
-/* 优化响应式图片 */
-.responsive-img {
-    max-width: 100%;
-    height: auto;
+/* 减少动画偏好支持 */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* 优化暗模式支持 */
+@media (prefers-color-scheme: dark) {
+    body {
+        color: #e1e4e8;
+        background-color: #24292e;
+    }
+    
+    pre {
+        background-color: #2d333b;
+        border-color: #444d56;
+    }
+    
+    code {
+        background-color: #2d333b;
+        color: #e1e4e8;
+    }
+    
+    table {
+        color: #e1e4e8;
+    }
+    
+    th {
+        background-color: #2d333b;
+        border-color: #444d56;
+    }
+    
+    td {
+        border-color: #444d56;
+    }
+    
+    blockquote {
+        background-color: #2d333b;
+        border-left-color: #0366d6;
+        color: #e1e4e8;
+    }
+    
+    .admonition {
+        background-color: #2d333b;
+        border-color: #444d56;
+        color: #e1e4e8;
+    }
+    
+    a {
+        color: #58a6ff;
+    }
+    
+    button, .btn {
+        background-color: #238636;
+        color: #ffffff;
+    }
+    
+    button:hover, button:focus, .btn:hover, .btn:focus {
+        background-color: #2ea043;
+    }
+    
+    input, select, textarea {
+        background-color: #2d333b;
+        border-color: #444d56;
+        color: #e1e4e8;
+    }
+    
+    hr {
+        border-top-color: #444d56;
+    }
 }

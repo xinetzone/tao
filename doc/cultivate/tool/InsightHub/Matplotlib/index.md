@@ -1,5 +1,0 @@
-# Matplotlib
-
-```{toctree}
-start
-```

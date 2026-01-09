@@ -1,4 +1,4 @@
-# 库
+# 资源
 
 ```{toctree}
 :hidden:

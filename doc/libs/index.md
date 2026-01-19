@@ -4,4 +4,6 @@
 :hidden:
 
 english/index
+alltheory/index
+jupyterlite/index
 ```

@@ -47,6 +47,11 @@ doc = [
   "sphinxcontrib-mermaid",
   # AI
   "iflow-cli-sdk",
+  # "libarchive-c",
+  # "jupyterlite-core >=0.2,<0.8",
+  # "jupyterlite-xeus-python",
+  # "jupyterlite-sphinx",
+  # "jupyterlite-xeus"
 ]
 
 dev = [

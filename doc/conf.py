@@ -191,11 +191,37 @@ autoapi_generate_api_docs = False
 
 # === Graphviz Configuration ===
 graphviz_output_format = "svg"
-inheritance_graph_attrs = dict(
-    rankdir="LR",
-    fontsize=14,
-    ratio="compress",
-)
+# inheritance_graph_attrs = dict(
+#     rankdir="LR",
+#     fontsize=14,
+#     ratio="compress",
+# )
+
+# === Mermaid Configuration ===
+# 确保 Mermaid 图表在加载时初始化，并使用最大宽度
+mermaid_init_js = """
+// 自定义错误处理
+mermaid.parseError = function(err, hash) {
+    console.error('Mermaid rendering error:', err);
+    // 可以在此处添加逻辑将错误显示在页面上，或者仅记录
+    // 默认情况下 Mermaid 会显示语法错误
+};
+
+mermaid.initialize({
+    startOnLoad: true,
+    theme: 'default',
+    securityLevel: 'loose',
+    flowchart: { useMaxWidth: true, htmlLabels: true },
+    gantt: { useMaxWidth: true },
+    sequence: { useMaxWidth: true },
+    journey: { useMaxWidth: true },
+    er: { useMaxWidth: true },
+    pie: { useMaxWidth: true },
+    requirement: { useMaxWidth: true },
+    gitGraph: { useMaxWidth: true },
+});
+"""
+
 # === Sitemap Configuration ===
 sitemap_url_scheme = "{lang}{version}{link}"
 

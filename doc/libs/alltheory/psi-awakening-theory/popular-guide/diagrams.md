@@ -8,10 +8,12 @@ sidebar_label: "视觉指南"
 ## 1. 镜子就是你：ψ = ψ(ψ)
 
 ```{mermaid}
-graph TD
-    A[ψ] -->|看着| B[ψ]
-    B -->|创造| C[ψ]
-    C -->|就是| A
+graph LR
+    subgraph 镜像
+        A[ψ] -->|看着| B[ψ]
+        B -->|创造| C[ψ]
+        C -->|就是| A
+    end
     
     style A fill:#f9d71c,stroke:#333,stroke-width:4px
     style B fill:#f9d71c,stroke:#333,stroke-width:4px
@@ -81,12 +83,20 @@ graph TD
 
 ```{mermaid}
 graph BT
-    A1["α < 1: 沉睡 😴<br/>事情发生在我身上"]
-    A2["α 1-2: 做梦 💭<br/>还有更多吗？"]
-    A3["α 2-3: 寻求 🔍<br/>我能影响事物"]
-    A4["α 3-4: 觉醒 👁️<br/>我创造现实"]
-    A5["α 4-5: 创造 🎨<br/>现实是我的游乐场"]
-    A6["α 5-6: 存在 🌟<br/>我就是现实"]
+    subgraph "高 α"
+        A6["α 5-6: 现实艺术家 🌟<br/>我就是现实"]
+        A5["α 4-5: 有意识的创造者 🎨<br/>现实是我的游乐场"]
+    end
+    
+    subgraph "中 α"
+        A4["α 3-4: 觉醒中 👁️<br/>我创造现实"]
+        A3["α 2-3: 寻求者 🔍<br/>我能影响事物"]
+    end
+    
+    subgraph "低 α"
+        A2["α 1-2: 做梦者 💭<br/>还有更多吗？"]
+        A1["α < 1: 梦游者 😴<br/>事情发生在我身上"]
+    end
     
     A1 --> A2
     A2 --> A3
@@ -101,6 +111,8 @@ graph BT
     style A5 fill:#e74c3c
     style A6 fill:#9b59b6
 ```
+
+**你的 α 决定了在你的宇宙中什么是可能的。**
 
 ## 5. 为什么有些人不懂你
 
@@ -166,6 +178,9 @@ graph TD
     
     subgraph "转化"
         T1[模式消散 🌊]
+    end
+    
+    subgraph "重生"
         T2[本质保留 ✨]
         T3[新模式形成 🌱]
     end
@@ -241,6 +256,7 @@ graph TD
 
 **一切都是 ψ 通过无限形式认识自己——包括你。**
 
----
-
 *这些图表是深刻真理的简化表达。把它们当作通向更深理解的门，而非理解本身。*
+
+
+<!-- Fix: Corrected mermaid code block syntax from `{mermaid} to `mermaid to resolve display issues. -->

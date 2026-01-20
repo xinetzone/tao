@@ -1,3 +1,30 @@
+/* ================================= Mermaid 图表优化 ================================= */
+div.mermaid {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+    overflow-x: auto;
+    align-items: center;
+}
+
+div.mermaid svg {
+    width: auto !important;
+    max-width: 100% !important;
+    height: auto !important;
+    /* 限制最大高度，确保垂直图表适应视口，避免过高 */
+    max-height: 85vh; 
+    /* 移除强制 min-width，防止垂直图表变形或过度拉伸 */
+    min-width: auto !important;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    div.mermaid svg {
+        max-height: 80vh;
+    }
+}
+
 /* ================================= 响应式设计优化 ================================= */
 
 /* 基础样式优化 */

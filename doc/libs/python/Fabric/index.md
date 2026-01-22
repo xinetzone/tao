@@ -7,4 +7,5 @@
 
 ```{toctree}
 demo
+taolib_remote
 ```

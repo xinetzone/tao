@@ -60,3 +60,7 @@ dev = [
   "numpy",
   "matplotlib",
 ]
+
+test = [
+  "coverage>=7",
+]

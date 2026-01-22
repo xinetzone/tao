@@ -135,6 +135,7 @@ __pypackages__/
 
 # API
 docs/api/
+doc/api/
 
 # Sphinx
 output/

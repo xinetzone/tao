@@ -85,7 +85,17 @@ def build(ctx: Context,
     # 执行构建命令
     cmd = f"sphinx-build -b {builder} {opts} {source} {target}"
     logger.info(f"{builder}@{source} => {target}")
-    ctx.run(cmd, pty=PTY)
+    try:
+        ctx.run(cmd, pty=PTY)
+    except ValueError as e:
+        # 在 Windows 上，Invoke 处理 KeyboardInterrupt 时可能会遇到 stdin 已关闭的情况
+        # 此时会抛出 ValueError: I/O operation on closed file
+        if sys.platform == 'win32' and "closed file" in str(e):
+            logger.warning("构建被用户中断")
+        else:
+            raise
+    except KeyboardInterrupt:
+        logger.warning("构建被用户中断")
 
 @task
 def intl(ctx: Context, language: str = 'en') -> None:

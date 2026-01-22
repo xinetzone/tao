@@ -1,4 +1,4 @@
-# taolib.remote：可复用的远端执行接口
+# taolib.remote：可复用的远端执行接口(暂不稳定)
 
 文档版本：2026.01  
 最后修改：2026-01-22  
@@ -118,12 +118,13 @@ print(report.probe_ok)        # 探测结果（可能为 None）
 
 ```python
 from taolib.remote import probe_remote, DEFAULT_PROBE_CMD
+conda_activate_cmd = "source /media/pc/data/lxw/envs/anaconda3a/bin/activate py313"
 
 report = probe_remote(
     {"host": "example.com", "user": "alice", "connect_kwargs": {"key_filename": "~/.ssh/id_rsa"}},
     probe_cmd=DEFAULT_PROBE_CMD,
     tools_env_cmd=":",
-    conda_activate_cmd=":",
+    conda_activate_cmd=conda_activate_cmd,
     run_kwargs={"hide": True, "warn": True, "timeout": 30},
     raise_on_conda_missing=True,
     raise_on_probe_failure=True,
@@ -138,37 +139,6 @@ from taolib.remote import remote_prefixes
 with remote_prefixes(connection, ":", ":"):
     res = connection.run("python -V", hide=True)
     assert res.ok
-```
-
-### 测试中注入假连接（无远端依赖）
-
-```python
-from dataclasses import dataclass
-from typing import Any
-from taolib.remote import probe_remote
-
-@dataclass
-class FakeRunResult:
-    stdout: str
-    ok: bool
-
-class FakeConn:
-    def prefix(self, cmd: str):
-        from contextlib import nullcontext
-        return nullcontext()
-    def run(self, cmd: str, **kwargs: Any) -> FakeRunResult:
-        if "uname" in cmd:
-            return FakeRunResult(stdout="Linux fake 5.10", ok=True)
-        if "command -v conda" in cmd:
-            return FakeRunResult(stdout="", ok=True)
-        return FakeRunResult(stdout="Python 3.11.0", ok=True)
-
-def fake_factory(**ssh: Any):
-    return FakeConn()
-
-cfg = {"host": "fake", "user": "tester"}
-report = probe_remote(cfg, connection_factory=fake_factory)
-assert report.probe_attempted and report.probe_ok is True
 ```
 
 ## 最佳实践
@@ -188,11 +158,10 @@ assert report.probe_attempted and report.probe_ok is True
 ## 配置示例（ssh.toml）
 
 ```toml
-[ssh]
 host = "example.com"
 user = "alice"
 port = 22
-[ssh.connect_kwargs]
+[connect_kwargs]
 key_filename = "~/.ssh/id_rsa"
 # password = "请勿提交到仓库，改用密钥或外部管理"
 ```

@@ -1,5 +1,6 @@
 """连接抽象与工厂函数（默认按需导入 fabric）。"""
 from collections.abc import Callable
+from functools import lru_cache
 from typing import Any, ContextManager, Protocol
 
 from .errors import RemoteDependencyError
@@ -20,6 +21,7 @@ class ConnectionLike(Protocol):
 ConnectionFactory = Callable[..., ConnectionLike]
 
 
+@lru_cache(maxsize=1)
 def fabric_connection_factory() -> ConnectionFactory:
     """获取 Fabric Connection 工厂。"""
     try:

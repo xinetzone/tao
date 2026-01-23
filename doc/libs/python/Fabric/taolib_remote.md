@@ -144,12 +144,19 @@ Fabric 的 `Connection.run` 默认是无状态的。`taolib.remote` 提供了上
   - 在 `with` 块内的所有 `run` 调用都会自动附加指定的前缀命令（如 `source script.sh && ...`）。
   - 支持嵌套和多个前缀叠加。
 
-```python
-from taolib.remote import remote_prefixes
+下面是直接配合 Fabric 的 `Connection` 的示例（`ssh.toml` 按你的环境填写）。
 
-# 假设 conn 是一个 Fabric 连接对象
-with remote_prefixes(conn, "source ~/.bashrc", "conda activate py310"):
-    # 实际执行：source ~/.bashrc && conda activate py310 && python -V
+```python
+from fabric import Connection
+from taolib.remote import load_ssh_config, remote_prefixes
+
+ssh_config = load_ssh_config("ssh.toml")
+conn = Connection(**ssh_config)
+
+tools_env_cmd = "source /path/to/conda.sh"
+conda_activate_cmd = "conda activate py310"
+
+with remote_prefixes(conn, tools_env_cmd, conda_activate_cmd):
     conn.run("python -V")
 ```
 

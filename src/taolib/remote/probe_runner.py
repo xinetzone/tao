@@ -87,6 +87,45 @@ class RemoteProber:
                 )
 
             with remote_prefixes(conn, self.commands.tools_env_cmd, self.commands.conda_activate_cmd):
+                combined_probe_cmd = (
+                    f"{self.commands.check_conda_cmd} >/dev/null 2>&1 || exit 127; {self.commands.probe_cmd}"
+                )
+                combined_result = run_remote_handling_interrupt(
+                    conn,
+                    combined_probe_cmd,
+                    **{"warn": True, **merged_run_kwargs},
+                )
+                if getattr(combined_result, "ok", False):
+                    return RemoteProbeReport(
+                        uname=uname,
+                        conda_available=True,
+                        probe_attempted=True,
+                        probe_ok=True,
+                    )
+
+                exited = getattr(combined_result, "exited", None)
+                if exited == 127:
+                    if self.options.raise_on_conda_missing:
+                        raise RemoteExecutionError(
+                            "conda 不可用或未找到",
+                            command=self.commands.check_conda_cmd,
+                        )
+                    return RemoteProbeReport(
+                        uname=uname,
+                        conda_available=False,
+                        probe_attempted=False,
+                        probe_ok=None,
+                    )
+                if exited is not None:
+                    if self.options.raise_on_probe_failure:
+                        raise RemoteExecutionError("探测命令执行失败", command=self.commands.probe_cmd)
+                    return RemoteProbeReport(
+                        uname=uname,
+                        conda_available=True,
+                        probe_attempted=True,
+                        probe_ok=False,
+                    )
+
                 conda_result = run_remote_handling_interrupt(
                     conn,
                     self.commands.check_conda_cmd,
@@ -105,18 +144,13 @@ class RemoteProber:
                         probe_ok=None,
                     )
 
-                probe_result = run_remote_handling_interrupt(
-                    conn,
-                    self.commands.probe_cmd,
-                    **{"warn": True, **merged_run_kwargs},
-                )
-                if self.options.raise_on_probe_failure and not getattr(probe_result, "ok", False):
+                if self.options.raise_on_probe_failure:
                     raise RemoteExecutionError("探测命令执行失败", command=self.commands.probe_cmd)
                 return RemoteProbeReport(
                     uname=uname,
                     conda_available=True,
                     probe_attempted=True,
-                    probe_ok=bool(getattr(probe_result, "ok", False)),
+                    probe_ok=False,
                 )
 
 

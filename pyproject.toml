@@ -19,6 +19,7 @@ Documentation = "https://taolib.readthedocs.io/"
 
 [project.optional-dependencies]
 doc = [
+  "invoke",
   "mystx",
   "myst-nb",
   "sphinx-book-theme",

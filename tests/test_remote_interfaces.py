@@ -31,6 +31,7 @@ from taolib.remote import (
 class FakeResult:
     stdout: str = ""
     ok: bool = True
+    exited: int = 0
 
 
 class FakeConnection:
@@ -65,13 +66,24 @@ class FakeConnection:
 
     def run(self, command: str, **kwargs: Any) -> FakeResult:
         self.runs.append((list(self.prefix_stack), command, dict(kwargs)))
+        if "|| exit 127" in command and ">/dev/null" in command:
+            if "command -v conda" in command and DEFAULT_PROBE_CMD in command:
+                if not self.conda_ok:
+                    return FakeResult(stdout="", ok=False, exited=127)
+                if self.probe_ok:
+                    return FakeResult(stdout="", ok=True, exited=0)
+                return FakeResult(stdout="", ok=False, exited=1)
         if command == "uname -a":
-            return FakeResult(stdout=self.uname_stdout, ok=True)
+            return FakeResult(stdout=self.uname_stdout, ok=True, exited=0)
         if command == "command -v conda":
-            return FakeResult(stdout="/usr/bin/conda\n" if self.conda_ok else "", ok=self.conda_ok)
+            return FakeResult(
+                stdout="/usr/bin/conda\n" if self.conda_ok else "",
+                ok=self.conda_ok,
+                exited=0 if self.conda_ok else 1,
+            )
         if command == DEFAULT_PROBE_CMD:
-            return FakeResult(stdout="", ok=self.probe_ok)
-        return FakeResult(stdout="", ok=True)
+            return FakeResult(stdout="", ok=self.probe_ok, exited=0 if self.probe_ok else 1)
+        return FakeResult(stdout="", ok=True, exited=0)
 
 
 class TestConfig(unittest.TestCase):
@@ -159,10 +171,9 @@ class TestProbe(unittest.TestCase):
         self.assertTrue(report.probe_ok)
         ran_commands = [c for _, c, _ in conn.runs]
         self.assertIn("uname -a", ran_commands)
-        self.assertIn("command -v conda", ran_commands)
-        self.assertIn(DEFAULT_PROBE_CMD, ran_commands)
+        self.assertTrue(any("command -v conda" in c and "|| exit 127" in c for c in ran_commands))
 
-        probe_call = next(item for item in conn.runs if item[1] == DEFAULT_PROBE_CMD)
+        probe_call = next(item for item in conn.runs if "|| exit 127" in item[1] and DEFAULT_PROBE_CMD in item[1])
         prefixes, _, _ = probe_call
         self.assertGreaterEqual(len(prefixes), 2)
 
@@ -173,6 +184,16 @@ class TestProbe(unittest.TestCase):
                 connection_factory=lambda **kw: FakeConnection(conda_ok=True, probe_ok=False, **kw),
                 raise_on_probe_failure=True,
             )
+
+    def test_probe_remote_reports_probe_failure_when_not_raising(self) -> None:
+        report = probe_remote(
+            {"host": "h", "user": "u"},
+            connection_factory=lambda **kw: FakeConnection(conda_ok=True, probe_ok=False, **kw),
+            raise_on_probe_failure=False,
+        )
+        self.assertTrue(report.conda_available)
+        self.assertTrue(report.probe_attempted)
+        self.assertFalse(report.probe_ok)
 
     def test_probe_remote_empty_uname_raises(self) -> None:
         with self.assertRaises(RemoteExecutionError):
@@ -198,12 +219,14 @@ class TestProbe(unittest.TestCase):
         class CustomConnection(FakeConnection):
             def run(self, command: str, **kwargs: Any) -> FakeResult:
                 self.runs.append((list(self.prefix_stack), command, dict(kwargs)))
+                if "|| exit 127" in command and "echo conda" in command and "echo probe" in command:
+                    return FakeResult(stdout="", ok=True, exited=0)
                 if command == "echo uname":
-                    return FakeResult(stdout="Linux custom 1.0\n", ok=True)
+                    return FakeResult(stdout="Linux custom 1.0\n", ok=True, exited=0)
                 if command == "echo conda":
-                    return FakeResult(stdout="/usr/bin/conda\n", ok=True)
+                    return FakeResult(stdout="/usr/bin/conda\n", ok=True, exited=0)
                 if command == "echo probe":
-                    return FakeResult(stdout="", ok=True)
+                    return FakeResult(stdout="", ok=True, exited=0)
                 return super().run(command, **kwargs)
 
         conn = CustomConnection(conda_ok=True, probe_ok=True, host="h", user="u")
@@ -222,11 +245,8 @@ class TestProbe(unittest.TestCase):
         self.assertTrue(report.conda_available)
         ran_commands = [c for _, c, _ in conn.runs]
         self.assertIn("echo uname", ran_commands)
-        self.assertIn("echo conda", ran_commands)
-        self.assertIn("echo probe", ran_commands)
-
-        probe_call = next(item for item in conn.runs if item[1] == "echo probe")
-        prefixes, _, _ = probe_call
+        combined_call = next(item for item in conn.runs if "echo conda" in item[1] and "echo probe" in item[1])
+        prefixes, _, _ = combined_call
         self.assertEqual(prefixes, ["export X=1", "export Y=1"])
 
 

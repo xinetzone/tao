@@ -71,10 +71,11 @@ pip install -e "[doc,dev]"
 - [RTD 在线文档](https://taolib.readthedocs.io/zh-cn/latest/)。
 - 或者在本地构建并查看文档：
     ```sh
-    pip install -e .[doc]
+    pip install -e ".[doc]"
     python -m invoke doc.clean
     python -m invoke doc
     ```
+    提示：若 `inv` 命令不可用，请优先使用 `python -m invoke`（或确认已安装 `invoke` 且虚拟环境已激活）。
     生成的 HTML 文档将在 `doc/_build/html` 目录下。
 
 

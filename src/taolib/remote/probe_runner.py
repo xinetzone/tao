@@ -55,7 +55,7 @@ def run_remote_handling_interrupt(connection: ConnectionLike, command: str, **kw
 class RemoteProber:
     """远端探测执行器（可注入连接工厂，便于测试与扩展）。"""
 
-    connection_factory: ConnectionFactory
+    connection_factory: ConnectionFactory | None = None
     commands: RemoteProbeCommands = RemoteProbeCommands()
     options: RemoteProbeRunOptions = RemoteProbeRunOptions()
 
@@ -64,7 +64,11 @@ class RemoteProber:
         ssh_kwargs = dict(ssh_config)
         merged_run_kwargs = self.options.merged_run_kwargs()
 
-        with self.connection_factory(**ssh_kwargs) as conn:
+        factory = self.connection_factory
+        if factory is None or factory is fabric_connection_factory:
+            factory = fabric_connection_factory()
+
+        with factory(**ssh_kwargs) as conn:
             uname_result = run_remote_handling_interrupt(
                 conn,
                 self.commands.uname_cmd,

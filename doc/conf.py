@@ -64,6 +64,9 @@ TIPPY_LOCAL_SRC = ROOT.parent / "doc" / "tests" / "sphinx-tippy" / "src"  # 本�
 if TIPPY_LOCAL_SRC.exists():
     # 将本地扩展源码路径插入到 sys.path 前部，确保优先导入
     sys.path.insert(0, str(TIPPY_LOCAL_SRC))  # 修改模块搜索路径（只改变导入优先级，不改变功能）
+MYSTX_LOCAL_SRC = ROOT.parent / "doc" / "mystx" / "src"
+if MYSTX_LOCAL_SRC.exists():
+    sys.path.insert(0, str(MYSTX_LOCAL_SRC))
 # ================================= 项目基本信息 =================================
 project = "tao"  # 项目名：用于标题、仓库链接拼接等（Sphinx 内置变量）
 author = "xinetzone"  # 作者信息：用于文档元数据展示
@@ -89,8 +92,12 @@ def _has(mod: str) -> bool:
         # 当父包缺失或命名空间解析异常时，统一视为不可用
         return False
 
+MYST_PARSER_ENABLED = _has("myst_parser")
+MYSTX_ENABLED = _has("mystx") and _has("myst_nb")
+
 _exts = [
     # 内容格式与展示
+    "myst_parser",
     "mystx",  # 支持 Markdown/Notebook（可选主题/解析增强，存在则启用）
     "sphinx_design",  # 提供现代化 UI 组件（卡片、网格、按钮等）
     "sphinx.ext.napoleon",  # 解析 Google/NumPy 风格 docstring
@@ -120,6 +127,12 @@ _exts = [
 # extensions 是 Sphinx 的核心配置项：列出启用的扩展模块。
 # 这里采用“可用即启用”的策略：环境安装了哪些扩展，就加载哪些，增强构建的可移植性。
 extensions = [e for e in _exts if _has(e)]  # 过滤不可用扩展，避免构建报错
+if not MYSTX_ENABLED and "mystx" in extensions:
+    extensions.remove("mystx")
+if not MYST_PARSER_ENABLED and "myst_parser" in extensions:
+    extensions.remove("myst_parser")
+if MYSTX_ENABLED and "myst_parser" in extensions:
+    extensions.remove("myst_parser")
 
 # ================================= 文档构建配置 =================================
 # 排除文件和目录模式
@@ -130,6 +143,9 @@ exclude_patterns = [
     "**.ipynb_checkpoints",  # Jupyter 笔记本检查点目录
 ]
 
+master_doc = "index"
+source_suffix = {".rst": "restructuredtext"}
+
 # 静态资源目录，用于存放CSS、JavaScript、图片等
 html_static_path = ["_static"]  # 静态资源目录列表：相对 doc/ 的路径
 html_css_files = ["local.css"]  # 额外加载的 CSS 文件：位于 html_static_path 下
@@ -138,7 +154,7 @@ html_css_files = ["local.css"]  # 额外加载的 CSS 文件：位于 html_stati
 html_last_updated_fmt = '%Y-%m-%d, %H:%M:%S'  # 页面“最后更新”时间显示格式
 
 # ================================= 主题与外观配置 ================================
-if _has('mystx'):
+if MYSTX_ENABLED:
     html_theme = 'mystx'  # 优先使用 mystx 主题（若已安装）
 elif _has('sphinx_book_theme'):
     html_theme = 'sphinx_book_theme'  # 次选 sphinx-book-theme（常用于书籍风格文档）
@@ -287,23 +303,39 @@ else:
 sitemap_locales = [None]  # sitemap 语言列表：None 表示使用当前 language 或不区分
 
 # === Custom Sidebars ===
-if _has('ablog'):
-    # ablog 可选：若安装则启用博客侧边栏模板。未安装时不影响普通文档构建。
+ABLOG_ENABLED = _has("ablog")
+if ABLOG_ENABLED and "ablog" not in extensions:
     extensions.append("ablog")
-html_sidebars = {
-    "blog/**": [
-        "navbar-logo.html",
-        "search-field.html",
-        "ablog/postcard.html",
-        "ablog/recentposts.html",
-        "ablog/tagcloud.html",
-        "ablog/categories.html",
-        "ablog/authors.html",
-        "ablog/languages.html",
-        "ablog/locations.html",
-        "ablog/archives.html",
-    ]
-}
+if ABLOG_ENABLED:
+    if html_theme in {"mystx", "sphinx_book_theme"}:
+        html_sidebars = {
+            "blog/**": [
+                "navbar-logo.html",
+                "search-field.html",
+                "ablog/postcard.html",
+                "ablog/recentposts.html",
+                "ablog/tagcloud.html",
+                "ablog/categories.html",
+                "ablog/authors.html",
+                "ablog/languages.html",
+                "ablog/locations.html",
+                "ablog/archives.html",
+            ]
+        }
+    else:
+        html_sidebars = {
+            "blog/**": [
+                "searchbox.html",
+                "ablog/postcard.html",
+                "ablog/recentposts.html",
+                "ablog/tagcloud.html",
+                "ablog/categories.html",
+                "ablog/authors.html",
+                "ablog/languages.html",
+                "ablog/locations.html",
+                "ablog/archives.html",
+            ]
+        }
 
 # === Additional Configuration ===
 # 忽略特定警告
@@ -366,9 +398,26 @@ myst_enable_extensions = [
     # "linkify",
     "substitution",  # 支持替换语法（类似 RST substitution）
 ]
+myst_footnote_transition = False
 
 # === 构建严格模式（可选） ===
 nitpicky = os.environ.get("SPHINX_NITPICK", "").lower() in {"1", "true", "yes"}  # 严格引用检查开关（环境变量控制）
 
 # === 模板路径（如存在） ===
 templates_path = ["_templates"]  # Jinja2 模板目录：用于覆盖/扩展主题模板
+
+def setup(app):
+    from docutils import nodes
+    from docutils.transforms import Transform
+
+    class TransitionSanitizer(Transform):
+        default_priority = 100
+
+        def apply(self):
+            for node in list(self.document.traverse(nodes.transition)):
+                parent = node.parent
+                if not isinstance(parent, (nodes.document, nodes.section)):
+                    raw = nodes.raw("", "<hr/>", format="html")
+                    node.replace_self(raw)
+
+    app.add_transform(TransitionSanitizer)

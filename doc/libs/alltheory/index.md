@@ -6,4 +6,5 @@
 :hidden:
 
 psi-awakening-theory/index
+psi-popular-guide/index
 ```

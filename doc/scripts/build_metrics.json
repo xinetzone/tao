@@ -1,0 +1,14 @@
+{
+  "baseline": 88.96,
+  "threshold": 15,
+  "history": [
+    {
+      "timestamp": "2026-04-07T21:53:24.504325",
+      "size": 88.96,
+      "baseline": 88.96,
+      "difference": -0.0,
+      "threshold": 15,
+      "alert": false
+    }
+  ]
+}

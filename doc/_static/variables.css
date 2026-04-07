@@ -1,0 +1,87 @@
+/* ================================= CSS 设计变量 ================================= */
+/* 所有颜色值与原 local.css 硬编码值完全一致，确保视觉零差异 */
+
+:root {
+    /* 文字颜色 */
+    --color-text: #333;
+    --color-text-secondary: #666;
+
+    /* 背景颜色 */
+    --color-bg: #fff;
+    --color-bg-secondary: #f6f8fa;
+
+    /* 边框 */
+    --color-border: #e1e4e8;
+    --color-border-input: #ddd;
+
+    /* 强调色 / 链接 */
+    --color-accent: #0066cc;
+    --color-accent-hover: #0052a3;
+    --color-link: #16181a;
+
+    /* 代码 */
+    --color-code-bg: #f6f8fa;
+
+    /* 引用 */
+    --color-quote-bg: #f0f7ff;
+    --color-quote-border: #0066cc;
+
+    /* 按钮 */
+    --color-btn-bg: #0066cc;
+    --color-btn-text: #fff;
+    --color-btn-hover: #0052a3;
+
+    /* 滚动条 */
+    --color-scrollbar-track: #f1f1f1;
+    --color-scrollbar-thumb: #c1c1c1;
+    --color-scrollbar-thumb-hover: #a8a8a8;
+
+    /* 触摸反馈 */
+    --color-tap-highlight: rgba(0, 102, 204, 0.3);
+}
+
+/* 暗色模式 */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-text: #e1e4e8;
+        --color-text-secondary: #999;
+
+        --color-bg: #24292e;
+        --color-bg-secondary: #2d333b;
+
+        --color-border: #444d56;
+        --color-border-input: #444d56;
+
+        --color-accent: #58a6ff;
+        --color-accent-hover: #79c0ff;
+        --color-link: #58a6ff;
+
+        --color-code-bg: #2d333b;
+
+        --color-quote-bg: #2d333b;
+        --color-quote-border: #0366d6;
+
+        --color-btn-bg: #238636;
+        --color-btn-text: #fff;
+        --color-btn-hover: #2ea043;
+
+        --color-scrollbar-track: #2d333b;
+        --color-scrollbar-thumb: #555;
+        --color-scrollbar-thumb-hover: #777;
+
+        --color-tap-highlight: rgba(88, 166, 255, 0.3);
+    }
+}
+
+/* 高对比度模式 */
+@media (prefers-contrast: high) {
+    :root {
+        --color-text: #000;
+        --color-bg: #fff;
+        --color-accent: #0000ee;
+        --color-code-bg: #f0f0f0;
+        --color-border: #000;
+        --color-quote-bg: #f0f0f0;
+        --color-quote-border: #000;
+    }
+}

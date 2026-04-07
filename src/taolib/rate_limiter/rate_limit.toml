@@ -1,0 +1,45 @@
+# 限流中间件配置文件
+# 将此文件放在项目根目录或 config/ 目录下
+# 可通过环境变量 TAOLIB_RATE_LIMIT_CONFIG 指定自定义路径
+
+[rate_limit]
+enabled = true
+default_limit = 100            # 默认每分钟 100 次请求
+window_seconds = 60            # 滑动窗口 60 秒
+redis_url = "redis://localhost:6379/1"
+mongo_violation_ttl_days = 90  # 违规记录保留 90 天
+
+# 白名单配置
+[rate_limit.whitelist]
+ips = ["127.0.0.1", "10.0.0.0/8"]
+user_ids = ["admin-user-id"]
+bypass_paths = ["/health", "/docs", "/openapi.json"]
+
+# 路径级限流规则
+# 配置查询接口（GET 请求）
+[rate_limit.path_rules."/api/v1/configs"]
+limit = 50
+window_seconds = 60
+methods = ["GET"]
+description = "配置查询接口"
+
+# 登录接口（防暴力破解）
+[rate_limit.path_rules."/api/v1/auth/token"]
+limit = 5
+window_seconds = 60
+methods = ["POST"]
+description = "登录接口（防暴力破解）"
+
+# 审计日志查询（计算密集型）
+[rate_limit.path_rules."/api/v1/audit"]
+limit = 30
+window_seconds = 60
+methods = ["GET"]
+description = "审计日志查询（计算密集型）"
+
+# 配置创建/更新/删除接口
+[rate_limit.path_rules."/api/v1/configs/post"]
+limit = 10
+window_seconds = 60
+methods = ["POST", "PUT", "PATCH", "DELETE"]
+description = "配置修改接口"

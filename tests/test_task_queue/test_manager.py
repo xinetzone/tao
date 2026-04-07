@@ -118,7 +118,7 @@ class TestManagerStartStop:
             mgr._retry_poller_task.cancel()
             try:
                 await mgr._retry_poller_task
-            except asyncio.CancelledError, Exception:
+            except (asyncio.CancelledError, Exception):
                 pass
 
     @pytest.mark.asyncio
@@ -141,7 +141,7 @@ class TestManagerStartStop:
             mgr._retry_poller_task.cancel()
             try:
                 await mgr._retry_poller_task
-            except asyncio.CancelledError, Exception:
+            except (asyncio.CancelledError, Exception):
                 pass
 
     @pytest.mark.asyncio
@@ -165,7 +165,7 @@ class TestManagerStartStop:
             mgr._retry_poller_task.cancel()
             try:
                 await mgr._retry_poller_task
-            except asyncio.CancelledError, Exception:
+            except (asyncio.CancelledError, Exception):
                 pass
 
     @pytest.mark.asyncio
@@ -188,7 +188,7 @@ class TestManagerStartStop:
             mgr._retry_poller_task.cancel()
             try:
                 await mgr._retry_poller_task
-            except asyncio.CancelledError, Exception:
+            except (asyncio.CancelledError, Exception):
                 pass
 
     @pytest.mark.asyncio

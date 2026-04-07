@@ -33,7 +33,7 @@ def truncate_snapshot(
 
     try:
         raw = json.dumps(doc, default=str, ensure_ascii=False)
-    except TypeError, ValueError:
+    except (TypeError, ValueError):
         return {"_id": doc.get("_id", "unknown"), "__truncated__": True}
 
     if len(raw.encode("utf-8")) <= max_bytes:
@@ -54,7 +54,7 @@ def truncate_snapshot(
         result[key] = value
         try:
             candidate = json.dumps(result, default=str, ensure_ascii=False)
-        except TypeError, ValueError:
+        except (TypeError, ValueError):
             result.pop(key)
             continue
 

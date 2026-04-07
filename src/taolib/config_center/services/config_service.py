@@ -2,6 +2,8 @@
 
 实现配置管理的核心业务逻辑，包括 CRUD、缓存集成和事件发布。
 """
+from __future__ import annotations
+
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 

@@ -75,7 +75,7 @@ class RedisMessageBuffer:
         for raw in reversed(raw_messages):  # LPUSH 是头部插入，reversed 得到时间正序
             try:
                 messages.append(PushMessage.from_dict(json.loads(raw)))
-            except json.JSONDecodeError, KeyError:
+            except (json.JSONDecodeError, KeyError):
                 logger.warning("跳过无法解析的离线消息: %s", raw[:100])
         return messages
 
@@ -97,7 +97,7 @@ class RedisMessageBuffer:
                     messages.append(msg)
                     if len(messages) >= limit:
                         break
-            except json.JSONDecodeError, KeyError:
+            except (json.JSONDecodeError, KeyError):
                 continue
         return messages
 

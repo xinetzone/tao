@@ -1,5 +1,7 @@
 """连接抽象与工厂函数（默认按需导入 fabric）。"""
 
+from __future__ import annotations
+
 from collections.abc import Callable, Iterator
 from functools import lru_cache
 from typing import Any, Protocol

@@ -2,6 +2,8 @@
 
 定义消息、连接信息、在线状态等核心数据类型。
 """
+from __future__ import annotations
+
 import uuid
 from collections import deque
 from dataclasses import dataclass, field

@@ -52,7 +52,7 @@ doc = [
   # "jupyterlite-xeus"
 ]
 
-dev = ["invoke", "pandas", "numpy", "matplotlib"]
+dev = ["invoke", "pandas", "numpy", "matplotlib>=3.10.0"]
 
 test = ["pytest>=7.0", "pytest-cov", "coverage", "pytest-asyncio>=0.23"]
 
@@ -269,12 +269,15 @@ select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"src/taolib/analytics/server/api/*" = ["ANN"]
-"src/taolib/config_center/server/api/*" = ["ANN"]
-"src/taolib/email_service/server/api/*" = ["ANN"]
-"src/taolib/oauth/server/api/*" = ["ANN"]
-"src/taolib/qrcode/server/api/*" = ["ANN"]
-"src/taolib/task_queue/server/api/*" = ["ANN"]
+"src/taolib/testing/analytics/server/api/*" = ["ANN"]
+"src/taolib/testing/config_center/server/api/*" = ["ANN"]
+"src/taolib/testing/email_service/server/api/*" = ["ANN"]
+"src/taolib/testing/oauth/server/api/*" = ["ANN"]
+"src/taolib/testing/qrcode/server/api/*" = ["ANN"]
+"src/taolib/testing/task_queue/server/api/*" = ["ANN"]
+"src/taolib/testing/data_sync/server/api/*" = ["ANN"]
+"src/taolib/testing/file_storage/server/api/*" = ["ANN"]
+"src/taolib/testing/rate_limiter/api/*" = ["ANN"]
 "tests/*" = ["ANN", "S101"]
 
 [tool.pytest.ini_options]

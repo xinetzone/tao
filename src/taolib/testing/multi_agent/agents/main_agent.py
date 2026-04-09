@@ -97,7 +97,8 @@ class SubAgentWrapper(BaseAgent):
                 task.status = TaskStatus.FAILED
 
         finally:
-            await self.complete_task(task.status == TaskStatus.COMPLETED, task.result)
+            success = task.status == TaskStatus.COMPLETED
+            await self.complete_task(success, task.result)
 
 
 class MainAgent(BaseAgent):

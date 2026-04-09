@@ -14,8 +14,6 @@ from taolib.testing.multi_agent.agents.templates import get_all_templates
 from taolib.testing.multi_agent.errors import AgentError, ModelUnavailableError, TaskError
 from taolib.testing.multi_agent.llm import LLMManager, get_llm_manager
 from taolib.testing.logging_config import get_logger
-
-logger = get_logger(__name__)
 from taolib.testing.multi_agent.models import (
     AgentCreate,
     AgentDocument,
@@ -30,6 +28,8 @@ from taolib.testing.multi_agent.models import (
     TaskResult,
     TaskStatus,
 )
+
+logger = get_logger(__name__)
 
 
 class MainAgent(BaseAgent):

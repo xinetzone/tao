@@ -32,6 +32,74 @@ from taolib.testing.multi_agent.models import (
 logger = get_logger(__name__)
 
 
+class SubAgentWrapper(BaseAgent):
+    """子智能体包装器。"""
+
+    def __init__(self, document: AgentDocument, llm_manager: LLMManager):
+        """初始化子智能体包装器。
+
+        Args:
+            document: 智能体文档
+            llm_manager: LLM管理器
+        """
+        super().__init__(document)
+        self._llm_manager = llm_manager
+
+    async def _handle_message(self, message: Message) -> None:
+        """处理接收到的消息。
+
+        Args:
+            message: 接收到的消息
+        """
+        pass
+
+    async def execute_task(self, task: TaskDocument) -> None:
+        """执行任务。
+
+        Args:
+            task: 要执行的任务
+        """
+        try:
+            task.status = TaskStatus.IN_PROGRESS
+
+            # 使用LLM执行任务
+            try:
+                system_prompt = None
+                if self._document.config.system_prompt:
+                    system_prompt = self._document.config.system_prompt
+
+                result = await self._llm_manager.generate(
+                    prompt=task.user_input or task.description,
+                    system_prompt=system_prompt,
+                    temperature=self._document.config.temperature,
+                )
+
+                task.result = TaskResult(
+                    success=True,
+                    summary=result[:500] if len(result) > 500 else result,
+                    details={"full_output": result},
+                )
+                task.status = TaskStatus.COMPLETED
+
+            except ModelUnavailableError:
+                task.result = TaskResult(
+                    success=False,
+                    summary="没有可用的模型",
+                    errors=["No model available"],
+                )
+                task.status = TaskStatus.FAILED
+            except Exception as e:
+                task.result = TaskResult(
+                    success=False,
+                    summary=f"执行失败: {str(e)}",
+                    errors=[str(e)],
+                )
+                task.status = TaskStatus.FAILED
+
+        finally:
+            await self.complete_task(task.status == TaskStatus.COMPLETED, task.result)
+
+
 class MainAgent(BaseAgent):
     """主智能体。"""
 
@@ -400,71 +468,3 @@ class MainAgent(BaseAgent):
             await agent.destroy()
 
         await self.destroy()
-
-
-class SubAgentWrapper(BaseAgent):
-    """子智能体包装器。"""
-
-    def __init__(self, document: AgentDocument, llm_manager: LLMManager):
-        """初始化子智能体包装器。
-
-        Args:
-            document: 智能体文档
-            llm_manager: LLM管理器
-        """
-        super().__init__(document)
-        self._llm_manager = llm_manager
-
-    async def _handle_message(self, message: Message) -> None:
-        """处理接收到的消息。
-
-        Args:
-            message: 接收到的消息
-        """
-        pass
-
-    async def execute_task(self, task: TaskDocument) -> None:
-        """执行任务。
-
-        Args:
-            task: 要执行的任务
-        """
-        try:
-            task.status = TaskStatus.IN_PROGRESS
-
-            # 使用LLM执行任务
-            try:
-                system_prompt = None
-                if self._document.config.system_prompt:
-                    system_prompt = self._document.config.system_prompt
-
-                result = await self._llm_manager.generate(
-                    prompt=task.user_input or task.description,
-                    system_prompt=system_prompt,
-                    temperature=self._document.config.temperature,
-                )
-
-                task.result = TaskResult(
-                    success=True,
-                    summary=result[:500] if len(result) > 500 else result,
-                    details={"full_output": result},
-                )
-                task.status = TaskStatus.COMPLETED
-
-            except ModelUnavailableError:
-                task.result = TaskResult(
-                    success=False,
-                    summary="没有可用的模型",
-                    errors=["No model available"],
-                )
-                task.status = TaskStatus.FAILED
-            except Exception as e:
-                task.result = TaskResult(
-                    success=False,
-                    summary=f"执行失败: {str(e)}",
-                    errors=[str(e)],
-                )
-                task.status = TaskStatus.FAILED
-
-        finally:
-            await self.complete_task(task.status == TaskStatus.COMPLETED, task.result)

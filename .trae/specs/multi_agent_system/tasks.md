@@ -11,7 +11,7 @@
 - **Acceptance Criteria Addressed**: FR-1, FR-6, FR-7
 - **Test Requirements**:
   - `programmatic` TR-1.1: 所有核心数据模型通过类型检查和验证
-  - `human-judgement` TR-1.2: 架构设计文档通过技术评审
+  - `human-judgment` TR-1.2: 架构设计文档通过技术评审
 - **Notes**: 复用taolib现有模块的数据模型设计模式
 
 ## [x] Task 2: 实现免费大模型集成层
@@ -114,7 +114,7 @@
   - 实现智能体管理界面
 - **Acceptance Criteria Addressed**: FR-8, AC-6
 - **Test Requirements**:
-  - `human-judgement` TR-8.1: UI可用性测试
+  - `human-judgment` TR-8.1: UI可用性测试
   - `programmatic` TR-8.2: 前后端集成测试
 - **Notes**: 优先考虑使用React或Vue,保持与taolib现有风格一致
 
@@ -145,7 +145,7 @@
 - **Test Requirements**:
   - `programmatic` TR-10.1: 集成测试完整通过
   - `programmatic` TR-10.2: 测试覆盖率报告≥80%
-  - `human-judgement` TR-10.3: 文档完整性评审
+  - `human-judgment` TR-10.3: 文档完整性评审
 - **Notes**: 文档应包含快速上手指南
 
 ## [x] Task 11: 性能优化与最终验收
@@ -161,5 +161,5 @@
   - `programmatic` TR-11.1: 主智能体决策响应时间≤5秒
   - `programmatic` TR-11.2: 子智能体创建时间≤10秒
   - `programmatic` TR-11.3: 并发稳定性验证
-  - `human-judgement` TR-11.4: 最终产品验收
+  - `human-judgment` TR-11.4: 最终产品验收
 - **Notes**: 在Windows、Linux、macOS上分别测试

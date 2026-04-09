@@ -232,3 +232,14 @@ class LoadBalancer:
             list[ModelInstance]: 实例列表
         """
         return list(self._instances.values())
+
+    def get_provider(self, instance_id: str) -> Optional[BaseLLMProvider]:
+        """获取指定实例ID的提供商。
+
+        Args:
+            instance_id: 实例ID
+
+        Returns:
+            Optional[BaseLLMProvider]: 提供商实例，如果不存在则返回None
+        """
+        return self._providers.get(instance_id)

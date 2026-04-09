@@ -13,6 +13,9 @@ from taolib.testing.multi_agent.agents.base import BaseAgent
 from taolib.testing.multi_agent.agents.templates import get_all_templates
 from taolib.testing.multi_agent.errors import AgentError, ModelUnavailableError, TaskError
 from taolib.testing.multi_agent.llm import LLMManager, get_llm_manager
+from taolib.testing.logging_config import get_logger
+
+logger = get_logger(__name__)
 from taolib.testing.multi_agent.models import (
     AgentCreate,
     AgentDocument,
@@ -95,7 +98,8 @@ class MainAgent(BaseAgent):
                 await self._check_completed_tasks()
                 await asyncio.sleep(0.1)
             except Exception as e:
-                print(f"Main loop error: {e}")
+                logger.error(f"主循环异常: {e}", exc_info=True)
+                await asyncio.sleep(1)
 
     async def _process_task_queue(self) -> None:
         """处理任务队列。"""
@@ -115,7 +119,7 @@ class MainAgent(BaseAgent):
                 try:
                     await async_task
                 except Exception as e:
-                    print(f"Task {task_id} failed: {e}")
+                    logger.error(f"任务 {task_id} 执行失败: {e}", exc_info=True)
 
         for task_id in completed_task_ids:
             del self._running_tasks[task_id]
@@ -129,11 +133,11 @@ class MainAgent(BaseAgent):
         if message.message_type == MessageType.TASK_COMPLETE:
             task_id = message.payload.task_id
             if task_id and task_id in self._running_tasks:
-                print(f"Task {task_id} completed")
+                logger.info(f"任务 {task_id} 已完成")
         elif message.message_type == MessageType.TASK_ERROR:
             task_id = message.payload.task_id
             if task_id:
-                print(f"Task {task_id} error: {message.payload.data}")
+                logger.error(f"任务 {task_id} 出错: {message.payload.data}")
 
     async def execute_task(self, task: TaskDocument) -> None:
         """执行任务。

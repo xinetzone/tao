@@ -83,7 +83,7 @@ class LLMManager:
         """
         if instance_id is not None:
             # 使用指定实例
-            provider = self._load_balancer._providers.get(instance_id)
+            provider = self._load_balancer.get_provider(instance_id)
             if provider is None:
                 raise ModelUnavailableError(f"Provider {instance_id} not found")
             selected_id = instance_id
@@ -134,7 +134,7 @@ class LLMManager:
         """
         if instance_id is not None:
             # 使用指定实例
-            provider = self._load_balancer._providers.get(instance_id)
+            provider = self._load_balancer.get_provider(instance_id)
             if provider is None:
                 raise ModelUnavailableError(f"Provider {instance_id} not found")
             selected_id = instance_id
@@ -166,7 +166,7 @@ class LLMManager:
             bool: 是否健康
         """
         if instance_id is not None:
-            provider = self._load_balancer._providers.get(instance_id)
+            provider = self._load_balancer.get_provider(instance_id)
             if provider is None:
                 return False
             return await provider.health_check()

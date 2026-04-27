@@ -1,0 +1,41 @@
+/* Sphinx 道德经 - 自定义样式 */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap');
+
+:root {
+    --tao-color-primary: #2c3e50;
+    --tao-color-secondary: #34495e;
+    --tao-color-accent: #8b4513;
+    --tao-bg-light: #f8f9fa;
+}
+
+body {
+    font-family: 'Noto Serif SC', 'Times New Roman', serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--tao-color-primary);
+    font-family: 'Noto Serif SC', serif;
+}
+
+div.admonition.note {
+    border-left-color: var(--tao-color-accent);
+}
+
+div.admonition.note p.admonition-title {
+    background-color: rgba(139, 69, 19, 0.1);
+    color: var(--tao-color-accent);
+}
+
+div.highlight {
+    background-color: var(--tao-bg-light);
+}
+
+/* 中文引用块样式 */
+blockquote {
+    background-color: var(--tao-bg-light);
+    border-left: 4px solid var(--tao-color-accent);
+    padding: 1em 2em;
+    margin: 1em 0;
+    font-style: italic;
+}

@@ -11,7 +11,7 @@ license = { file = "LICENSE" }
 maintainers = [{ name = "xinetzone", email = "735613050@qq.com" }]
 name = "taolib"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.13"
 
 [project.urls]
 Documentation = "https://taolib.readthedocs.io/"
@@ -245,7 +245,7 @@ package-dir = "src"
 [tool.ruff]
 exclude = [".git", ".venv", "doc/_build", ".pytest_cache", "__pycache__"]
 line-length = 88
-target-version = "py314"
+target-version = "py313"
 
 [tool.ruff.lint]
 ignore = [

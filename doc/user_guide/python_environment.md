@@ -1,6 +1,6 @@
 # Python 环境
 
-执行 Python 相关测试和代码运行时，默认使用路径为 `${PYTHON_ENV_DIR:-C:\Users\XMICUser\.conda\envs\py314}` 的 Python 环境（Python 3.14）。
+执行 Python 相关测试和代码运行时，默认使用路径为 `${PYTHON_ENV_DIR:-~/.conda/envs/py314}` 的 Python 环境（Python 3.14）。
 
 ## Python 3.14 新特性
 
@@ -13,4 +13,4 @@
 
 ## Qoder 规范中的 Python 环境
 
-执行 Python 测试和代码运行时，默认使用 `${PYTHON_ENV_DIR:-C:\Users\XMICUser\.conda\envs\py314}` 环境。
+执行 Python 测试和代码运行时，默认使用 `${PYTHON_ENV_DIR:-~/.conda/envs/py314}` 环境。

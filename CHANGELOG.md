@@ -7,6 +7,14 @@
 
 ## [未发布]
 
+### 修改
+
+- **目录结构优化**：
+  - 将文档文件组织到 `doc/` 目录的子目录中
+  - 创建 `doc/user_guide/`、`doc/api_reference/`、`doc/developer_guide/`、`doc/architecture/` 目录
+  - 创建 `configs/` 目录用于存放配置文件
+  - 更新 README.md 和 AGENTS.md 中的文档链接
+
 ## [0.5.5] - 2026-04-06
 
 本版本是一次重大功能扩展，将 taolib 从单一配置管理库升级为企业级全栈微服务平台。

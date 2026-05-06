@@ -72,7 +72,7 @@ config-server = [
   "taolib[auth-server]",
   "uvicorn[standard]>=0.30.0",
   "motor>=3.6.0",
-  "pydantic>=2.0",
+  "pydantic[email]>=2.0",
   "pydantic-settings>=2.0",
   "jsonschema>=4.20.0",
 ]

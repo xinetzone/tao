@@ -71,7 +71,7 @@ class TestSyncJobCreate:
         assert sample_job_create.failure_action == FailureAction.SKIP
 
     def test_job_name_required(self) -> None:
-        with pytest.raises(Exception):  # Pydantic 验证错误
+        with pytest.raises(ValueError):  # Pydantic 验证错误
             SyncJobCreate(
                 name="",  # 空名称
                 source=SyncConnectionConfig(database="src"),

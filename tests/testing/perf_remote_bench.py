@@ -11,14 +11,14 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from statistics import mean, median
-from typing import Any
+from typing import Any, Self
 
 _ROOT = Path(__file__).resolve().parents[1]
 _SRC = _ROOT / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from taolib.testing.remote import (
+from taolib.testing.remote import (  # noqa: E402
     DEFAULT_PROBE_CMD,
     RemoteExecutionError,
     RemoteProbeCommands,
@@ -54,7 +54,7 @@ class FakeConnectionLatency:
         self.prefix_stack: list[str] = []
         self.run_count = 0
 
-    def __enter__(self) -> FakeConnectionLatency:
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, exc_type: object, exc: object, tb: object) -> None:
@@ -355,7 +355,7 @@ def bench_concurrent_probes(*, n_threads: int = 4, iters: int = 50) -> dict[str,
                 user="u",
             )
             prober = RemoteProber(
-                connection_factory=lambda **kw: conn,
+                connection_factory=lambda *, c=conn: c,
                 commands=commands,
                 options=options,
             )

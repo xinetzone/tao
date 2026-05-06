@@ -64,8 +64,6 @@ class OllamaProvider(BaseLLMProvider):
 
             return is_healthy
         except Exception as e:
-            from datetime import UTC, datetime
-
             self._stats.last_error_at = datetime.now(UTC)
             self._stats.last_error_message = str(e)
             return False

@@ -179,12 +179,11 @@ default_limit = 888
         if "TAOLIB_RATE_LIMIT_CONFIG" in env_copy:
             del env_copy["TAOLIB_RATE_LIMIT_CONFIG"]
 
-        with patch.dict(os.environ, env_copy, clear=True):
-            # Mock Path.exists to return False for all default paths
-            with patch("pathlib.Path.exists", return_value=False):
-                config = load_rate_limit_config()
-                assert config.default_limit == 100
-                assert config.window_seconds == 60
+        with patch.dict(os.environ, env_copy, clear=True), \
+             patch("pathlib.Path.exists", return_value=False):
+            config = load_rate_limit_config()
+            assert config.default_limit == 100
+            assert config.window_seconds == 60
 
 
 

@@ -72,11 +72,11 @@ class TestTaskCreate:
         assert task.tags == ["report", "urgent"]
 
     def test_create_validation_empty_type(self):
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             TaskCreate(task_type="")
 
     def test_create_validation_max_retries(self):
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             TaskCreate(task_type="test", max_retries=-1)
 
 

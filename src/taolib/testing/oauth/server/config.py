@@ -3,6 +3,8 @@
 使用 pydantic-settings 定义 OAuth 服务的所有配置项。
 """
 
+from typing import Self
+
 from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -66,7 +68,7 @@ class OAuthSettings(BaseSettings):
     cors_origins: list[str] = Field(default=["*"], description="允许的 CORS 源")
 
     @model_validator(mode="after")
-    def _validate_secrets(self) -> OAuthSettings:
+    def _validate_secrets(self) -> Self:
         if self.jwt_secret and len(self.jwt_secret) < 32:
             msg = "jwt_secret 长度必须 >= 32 字符"
             raise ValueError(msg)

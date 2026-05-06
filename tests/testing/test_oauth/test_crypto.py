@@ -6,6 +6,7 @@ from taolib.testing.oauth.crypto.token_encryption import (
     TokenEncryptor,
     generate_encryption_key,
 )
+from taolib.testing.oauth.errors import OAuthTokenDecryptionError
 
 
 class TestGenerateEncryptionKey:
@@ -44,7 +45,7 @@ class TestTokenEncryptor:
         other_key = generate_encryption_key()
         encryptor2 = TokenEncryptor(other_key)
 
-        with pytest.raises(Exception):
+        with pytest.raises(OAuthTokenDecryptionError):
             encryptor2.decrypt(encrypted)
 
     def test_encrypt_empty_string(self, encryption_key):

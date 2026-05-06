@@ -167,6 +167,11 @@ assets/images/originals/
 *.log
 debug.log
 
+# Temporary test/lint output files
+ruff_*.txt
+test_result*.txt
+*_output.txt
+
 # Windows 设备文件
 nul
 

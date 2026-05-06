@@ -4,6 +4,8 @@
 """
 
 
+from typing import ClassVar
+
 from taolib.testing.multi_agent.llm.protocols import BaseLLMProvider
 from taolib.testing.multi_agent.models import ModelConfig, ModelProvider
 
@@ -11,7 +13,7 @@ from taolib.testing.multi_agent.models import ModelConfig, ModelProvider
 class ModelRegistry:
     """LLM模型注册表。"""
 
-    _providers: dict[ModelProvider, type[BaseLLMProvider]] = {}
+    _providers: ClassVar[dict[ModelProvider, type[BaseLLMProvider]]] = {}
 
     @classmethod
     def register(cls, provider_type: ModelProvider, provider_class: type[BaseLLMProvider]) -> None:

@@ -56,8 +56,8 @@ class TestGetRateLimiter:
         limiter = app_with_state.state.rate_limiter
 
         @app_with_state.get("/test-limiter-id")
-        async def test_endpoint(l: RateLimiter = Depends(get_rate_limiter)):
-            return {"is_same": l is limiter}
+        async def test_endpoint(dep_limiter: RateLimiter = Depends(get_rate_limiter)):
+            return {"is_same": dep_limiter is limiter}
 
         client = TestClient(app_with_state)
         response = client.get("/test-limiter-id")

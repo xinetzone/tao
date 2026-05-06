@@ -37,7 +37,6 @@ from taolib.testing.multi_agent.models import (
     AgentDocument,
     AgentResponse,
     AgentStatus,
-    AgentTemplate,
     AgentType,
     AgentUpdate,
     LoadBalanceConfig,

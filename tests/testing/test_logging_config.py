@@ -13,7 +13,7 @@ _SRC = _ROOT / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from taolib.testing.logging_config import (
+from taolib.testing.logging_config import (  # noqa: E402
     RemoteLogHandler,
     SensitiveDataFilter,
     configure_logging,

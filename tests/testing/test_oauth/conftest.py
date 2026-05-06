@@ -113,7 +113,7 @@ class MockMongoCollection:
             if self._matches_filter(doc, filter):
                 if "$set" in update:
                     doc.update(update["$set"])
-                return doc.copy() if return_document else doc.copy()
+                return doc.copy()
         return None
 
     async def update_one(

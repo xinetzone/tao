@@ -12,7 +12,7 @@ _SRC = _ROOT / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from taolib.testing.remote import (
+from taolib.testing.remote import (  # noqa: E402
     DEFAULT_PROBE_CMD,
     RemoteConfigError,
     RemoteExecutionError,

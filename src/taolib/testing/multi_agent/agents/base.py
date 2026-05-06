@@ -79,7 +79,7 @@ class BaseAgent(ABC):
         """
         await self._handle_message(message)
 
-    async def _on_message_sent(self, message: Message) -> None:
+    async def _on_message_sent(self, message: Message) -> None:  # noqa: B027
         """消息发送后的回调。
 
         Args:
@@ -124,7 +124,7 @@ class BaseAgent(ABC):
 
         await self._on_task_assigned(task)
 
-    async def _on_task_assigned(self, task: TaskDocument) -> None:
+    async def _on_task_assigned(self, task: TaskDocument) -> None:  # noqa: B027
         """任务分配后的回调。
 
         Args:
@@ -158,7 +158,7 @@ class BaseAgent(ABC):
         self._document.current_task_id = None
         self._document.last_active_at = datetime.now(UTC)
 
-    async def _on_task_completed(
+    async def _on_task_completed(  # noqa: B027
         self, task: TaskDocument, success: bool, result: Any | None
     ) -> None:
         """任务完成后的回调。
@@ -197,6 +197,6 @@ class BaseAgent(ABC):
 
         await self._on_destroy()
 
-    async def _on_destroy(self) -> None:
+    async def _on_destroy(self) -> None:  # noqa: B027
         """智能体销毁前的回调。"""
         pass

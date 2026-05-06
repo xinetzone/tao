@@ -17,13 +17,21 @@ _SRC = _ROOT / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from taolib.testing.config_center.cache.config_cache import InMemoryConfigCache
-from taolib.testing.config_center.models.user import UserDocument
-from taolib.testing.config_center.repository.audit_repo import AuditLogRepository
-from taolib.testing.config_center.repository.config_repo import ConfigRepository
-from taolib.testing.config_center.repository.version_repo import VersionRepository
-from taolib.testing.config_center.server.api.router import api_router
-from taolib.testing.config_center.server.dependencies import (
+from taolib.testing.config_center.cache.config_cache import (  # noqa: E402
+    InMemoryConfigCache,
+)
+from taolib.testing.config_center.models.user import UserDocument  # noqa: E402
+from taolib.testing.config_center.repository.audit_repo import (  # noqa: E402
+    AuditLogRepository,
+)
+from taolib.testing.config_center.repository.config_repo import (  # noqa: E402
+    ConfigRepository,
+)
+from taolib.testing.config_center.repository.version_repo import (  # noqa: E402
+    VersionRepository,
+)
+from taolib.testing.config_center.server.api.router import api_router  # noqa: E402
+from taolib.testing.config_center.server.dependencies import (  # noqa: E402
     get_audit_repo,
     get_cache,
     get_config_repo,

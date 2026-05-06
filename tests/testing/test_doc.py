@@ -11,10 +11,10 @@ _SRC = _ROOT / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from invoke.collection import Collection
-from invoke.context import Context
+from invoke.collection import Collection  # noqa: E402
+from invoke.context import Context  # noqa: E402
 
-from taolib.testing.doc import (
+from taolib.testing.doc import (  # noqa: E402
     ProjectConfig,
     ProjectConfigValidator,
     _build_sphinx_opts,

@@ -1,0 +1,269 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (e.g. 1.2.3, no 'v' prefix)"
+        required: true
+        type: string
+      prerelease:
+        description: "Mark as pre-release"
+        required: false
+        default: false
+        type: boolean
+      dry_run:
+        description: "Dry run (skip actual release creation)"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate Version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.parse.outputs.version }}
+      tag: ${{ steps.parse.outputs.tag }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate version format
+        id: parse
+        run: |
+          VERSION="${{ inputs.version }}"
+          # 移除可能的前缀 'v'
+          VERSION="${VERSION#v}"
+
+          # 验证 SemVer 格式
+          if ! echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$'; then
+            echo "::error::Invalid version format: $VERSION. Expected SemVer (e.g. 1.2.3 or 1.2.3-alpha.1)"
+            exit 1
+          fi
+
+          TAG="v${VERSION}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "::notice::Parsed version: ${VERSION}, tag: ${TAG}"
+
+      - name: Check tag does not already exist
+        run: |
+          TAG="${{ steps.parse.outputs.tag }}"
+          if git tag -l | grep -q "^${TAG}$"; then
+            echo "::error::Tag ${TAG} already exists. Please choose a different version."
+            exit 1
+          fi
+          echo "::notice::Tag ${TAG} is available."
+
+      - name: Verify clean working tree
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::Working tree is not clean. Commit or stash changes before releasing."
+            exit 1
+          fi
+          echo "::notice::Working tree is clean."
+
+  changelog:
+    name: Generate Changelog
+    runs-on: ubuntu-latest
+    needs: validate
+    outputs:
+      changelog: ${{ steps.generate.outputs.changelog }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog from conventional commits
+        id: generate
+        run: |
+          VERSION="${{ needs.validate.outputs.version }}"
+          TAG="${{ needs.validate.outputs.version }}"
+          PREVIOUS_TAG=$(git tag --sort=-version:refname | head -1 || echo "")
+
+          echo "Generating changelog for ${TAG}..."
+          echo "Previous tag: ${PREVIOUS_TAG:-none}"
+
+          # 基于 conventional commits 生成变更日志
+          if [ -n "$PREVIOUS_TAG" ]; then
+            COMMIT_RANGE="${PREVIOUS_TAG}..HEAD"
+          else
+            COMMIT_RANGE="HEAD"
+          fi
+
+          # 分类提交
+          FEAT_COMMITS=$(git log "$COMMIT_RANGE" --pretty=format:"- %s (%h)" --grep="^feat" 2>/dev/null || true)
+          FIX_COMMITS=$(git log "$COMMIT_RANGE" --pretty=format:"- %s (%h)" --grep="^fix" 2>/dev/null || true)
+          REFACTOR_COMMITS=$(git log "$COMMIT_RANGE" --pretty=format:"- %s (%h)" --grep="^refactor" 2>/dev/null || true)
+          PERF_COMMITS=$(git log "$COMMIT_RANGE" --pretty=format:"- %s (%h)" --grep="^perf" 2>/dev/null || true)
+          DOCS_COMMITS=$(git log "$COMMIT_RANGE" --pretty=format:"- %s (%h)" --grep="^docs" 2>/dev/null || true)
+          CHORE_COMMITS=$(git log "$COMMIT_RANGE" --pretty=format:"- %s (%h)" --grep="^chore" 2>/dev/null || true)
+          CI_COMMITS=$(git log "$COMMIT_RANGE" --pretty=format:"- %s (%h)" --grep="^ci" 2>/dev/null || true)
+          TEST_COMMITS=$(git log "$COMMIT_RANGE" --pretty=format:"- %s (%h)" --grep="^test" 2>/dev/null || true)
+          OTHER_COMMITS=$(git log "$COMMIT_RANGE" --pretty=format:"- %s (%h)" --invert-grep --grep="^feat\|^fix\|^refactor\|^perf\|^docs\|^chore\|^ci\|^test" 2>/dev/null || true)
+
+          # 构建变更日志
+          {
+            echo "## ${TAG} ($(date +%Y-%m-%d))"
+            echo ""
+            if [ -n "$FEAT_COMMITS" ]; then
+              echo "### Features"
+              echo ""
+              echo "$FEAT_COMMITS"
+              echo ""
+            fi
+            if [ -n "$FIX_COMMITS" ]; then
+              echo "### Bug Fixes"
+              echo ""
+              echo "$FIX_COMMITS"
+              echo ""
+            fi
+            if [ -n "$REFACTOR_COMMITS" ]; then
+              echo "### Refactoring"
+              echo ""
+              echo "$REFACTOR_COMMITS"
+              echo ""
+            fi
+            if [ -n "$PERF_COMMITS" ]; then
+              echo "### Performance"
+              echo ""
+              echo "$PERF_COMMITS"
+              echo ""
+            fi
+            if [ -n "$DOCS_COMMITS" ]; then
+              echo "### Documentation"
+              echo ""
+              echo "$DOCS_COMMITS"
+              echo ""
+            fi
+            if [ -n "$TEST_COMMITS" ]; then
+              echo "### Tests"
+              echo ""
+              echo "$TEST_COMMITS"
+              echo ""
+            fi
+            if [ -n "$CI_COMMITS" ]; then
+              echo "### CI"
+              echo ""
+              echo "$CI_COMMITS"
+              echo ""
+            fi
+            if [ -n "$CHORE_COMMITS" ]; then
+              echo "### Maintenance"
+              echo ""
+              echo "$CHORE_COMMITS"
+              echo ""
+            fi
+            if [ -n "$OTHER_COMMITS" ]; then
+              echo "### Other Changes"
+              echo ""
+              echo "$OTHER_COMMITS"
+              echo ""
+            fi
+            if [ -z "$FEAT_COMMITS" ] && [ -z "$FIX_COMMITS" ] && [ -z "$REFACTOR_COMMITS" ] && [ -z "$PERF_COMMITS" ] && [ -z "$OTHER_COMMITS" ]; then
+              echo "_No significant changes in this release._"
+              echo ""
+            fi
+          } > CHANGELOG_RELEASE.md
+
+          # 将内容写入 GITHUB_OUTPUT（多行需要特殊处理）
+          {
+            echo "changelog<<EOF"
+            cat CHANGELOG_RELEASE.md
+            echo ""
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+          echo "::notice::Changelog generated successfully."
+          cat CHANGELOG_RELEASE.md
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [validate, changelog]
+    if: inputs.dry_run == false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: "pip"
+          cache-dependency-path: "pyproject.toml"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
+
+      - name: Run tests before release
+        run: pytest tests/ -v --tb=short
+
+      - name: Create git tag
+        run: |
+          TAG="${{ needs.validate.outputs.tag }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "$TAG" -m "Release $TAG"
+          git push origin "$TAG"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.validate.outputs.tag }}
+          name: Release ${{ needs.validate.outputs.tag }}
+          body: ${{ needs.changelog.outputs.changelog }}
+          prerelease: ${{ inputs.prerelease }}
+          draft: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release summary
+        run: |
+          echo "::notice::Release ${{ needs.validate.outputs.tag }} created successfully."
+          echo "::notice::Pre-release: ${{ inputs.prerelease }}"
+          echo "::notice::The python-publish workflow will be triggered automatically by the release event."
+
+  dry-run-summary:
+    name: Dry Run Summary
+    runs-on: ubuntu-latest
+    needs: [validate, changelog]
+    if: inputs.dry_run == true
+
+    steps:
+      - name: Print dry run summary
+        run: |
+          echo "========================================="
+          echo "  DRY RUN - No release will be created"
+          echo "========================================="
+          echo ""
+          echo "Version: ${{ needs.validate.outputs.version }}"
+          echo "Tag:     ${{ needs.validate.outputs.tag }}"
+          echo "Pre-release: ${{ inputs.prerelease }}"
+          echo ""
+          echo "--- Changelog Preview ---"
+          echo ""
+          echo "${{ needs.changelog.outputs.changelog }}"
+          echo ""
+          echo "========================================="
+          echo "To create the actual release, re-run this"
+          echo "workflow with dry_run set to false."
+          echo "========================================="

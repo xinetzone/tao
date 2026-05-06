@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import sys
 import tempfile
 import unittest
@@ -7,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Self
 
 _ROOT = Path(__file__).resolve().parents[1]
 _SRC = _ROOT / "src"
@@ -51,7 +49,7 @@ class FakeConnection:
         self.prefix_stack: list[str] = []
         self.runs: list[tuple[list[str], str, dict[str, Any]]] = []
 
-    def __enter__(self) -> FakeConnection:
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, exc_type: object, exc: object, tb: object) -> None:

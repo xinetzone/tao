@@ -9,6 +9,20 @@ description: |
 
 Use this skill for raw Linear GraphQL work during Symphony agent sessions.
 
+## Goals
+
+- Perform Linear GraphQL operations (queries, mutations) via the `linear_graphql` client.
+- Manage Linear issues, comments, and attachments programmatically.
+- Discover unfamiliar API shapes through schema introspection.
+
+## Steps
+
+1. Identify the operation type: query, mutation, or introspection.
+2. Construct the GraphQL document with only needed fields.
+3. Execute via `linear_graphql` tool with optional variables.
+4. Check for `errors` array in the response and handle failures.
+5. For uploads, follow the three-step flow: `fileUpload` → `curl PUT` → `commentCreate`.
+
 ## Primary tool
 
 Use the `linear_graphql` client tool exposed by Symphony's agent session.

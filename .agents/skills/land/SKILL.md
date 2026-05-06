@@ -120,8 +120,13 @@ Exit codes:
   trigger a fresh CI run. Detect the updated PR head, pull locally, merge
   `origin/main` if needed, add a real author commit, and force-push to retrigger
   CI, then restart the checks loop.
+- If all jobs fail with corrupted pnpm lockfile errors on the merge commit, the
+  remediation is to fetch latest `origin/main`, merge, force-push, and rerun CI.
 - If mergeability is `UNKNOWN`, wait and re-check.
 - Do not merge while review comments (human or agent review) are outstanding.
+- Agent review jobs retry on failure and are non-blocking; use the presence of
+  `## Agent Review` (or `## Codex Review`) issue comments (not job status) as the
+  signal that review feedback is available.
 - Do not enable auto-merge; this repo has no required checks so auto-merge can
   skip tests.
 - If the remote PR branch advanced due to your own prior force-push or merge,

@@ -9,7 +9,13 @@ description:
 
 # Pull
 
-## Workflow
+## Goals
+
+- Sync a feature branch with `origin/main` via merge (not rebase).
+- Resolve merge conflicts using best practices.
+- Keep the working tree in a clean, reviewable state.
+
+## Steps
 
 1. Verify git status is clean or commit/stash changes before merging.
 2. Ensure rerere is enabled locally:

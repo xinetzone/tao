@@ -8,7 +8,10 @@ import logging
 from collections.abc import Callable
 from typing import Any
 
-from taolib.testing.data_sync.pipeline.protocols import TransformContext, TransformResult
+from taolib.testing.data_sync.pipeline.protocols import (
+    TransformContext,
+    TransformResult,
+)
 from taolib.testing.data_sync.pipeline.utils import truncate_snapshot
 
 logger = logging.getLogger(__name__)

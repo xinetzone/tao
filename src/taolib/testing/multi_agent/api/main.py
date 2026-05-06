@@ -10,20 +10,21 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 from taolib.testing.multi_agent.agents import (
-    AgentFactory,
     get_agent_factory,
     get_all_templates,
 )
-from taolib.testing.multi_agent.skills import get_preset_skills
-from taolib.testing.multi_agent.llm import LLMManager, LoadBalanceConfig, LoadBalanceStrategy
+from taolib.testing.multi_agent.llm import (
+    LLMManager,
+    LoadBalanceConfig,
+    LoadBalanceStrategy,
+)
 from taolib.testing.multi_agent.models import (
     AgentCreate,
     AgentResponse,
     TaskCreate,
     TaskResponse,
 )
-from taolib.testing.multi_agent.skills import get_skill_manager
-
+from taolib.testing.multi_agent.skills import get_preset_skills, get_skill_manager
 
 # 全局管理器
 llm_manager: LLMManager | None = None
@@ -85,7 +86,6 @@ async def create_agent(agent_create: AgentCreate):
 @app.get("/agents/templates")
 async def list_agent_templates():
     """列出智能体模板。"""
-    from taolib.testing.multi_agent.agents import get_all_templates
 
     templates = get_all_templates()
     return [
@@ -132,8 +132,9 @@ async def execute_skill(request: ExecuteSkillRequest):
 async def create_task(task_create: TaskCreate):
     """创建任务。"""
     # 这里简化处理,实际应该使用主智能体
-    from taolib.testing.multi_agent.models import TaskDocument
     import uuid
+
+    from taolib.testing.multi_agent.models import TaskDocument
 
     task_doc = TaskDocument(
         _id=str(uuid.uuid4()),

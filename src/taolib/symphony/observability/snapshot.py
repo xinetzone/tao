@@ -4,8 +4,6 @@
 快照包含运行中的 worker、重试队列、令牌汇总和配置参数。
 """
 
-from __future__ import annotations
-
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from typing import Any
@@ -23,6 +21,8 @@ class SystemSnapshot:
         rate_limits: 当前速率限制状态（可能为 None）。
         poll_interval_ms: 当前轮询间隔（毫秒）。
         max_concurrent_agents: 最大并发代理数。
+        poll_check_in_progress: 是否正在执行轮询检查。
+        next_poll_due_at_ms: 下次轮询到期时间（单调时钟毫秒）。
         generated_at: 快照生成时间（ISO 8601）。
     """
 
@@ -33,6 +33,8 @@ class SystemSnapshot:
     rate_limits: dict[str, Any] | None
     poll_interval_ms: int
     max_concurrent_agents: int
+    poll_check_in_progress: bool = False
+    next_poll_due_at_ms: float | None = None
     generated_at: str = field(
         default_factory=lambda: datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
     )
@@ -55,6 +57,8 @@ class RunningEntry:
     session_id: str | None = None
     codex_input_tokens: int = 0
     codex_output_tokens: int = 0
+    worker_host: str | None = None
+    workspace_path: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """转换为字典。"""
@@ -68,7 +72,10 @@ class RetryEntry:
     issue_id: str
     identifier: str
     attempt: int
+    delay_type: str = "failure"
     error: str | None = None
+    worker_host: str | None = None
+    workspace_path: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """转换为字典。"""
@@ -111,6 +118,8 @@ class SnapshotGenerator:
                 "last_event": getattr(entry, "last_codex_event", None),
                 "started_at": self._format_datetime(getattr(entry, "started_at", None)),
                 "session_id": getattr(entry, "session_id", None),
+                "worker_host": getattr(entry, "worker_host", None),
+                "workspace_path": getattr(entry, "workspace_path", None),
             }
             for issue_id, entry in state.running.items()
         ]
@@ -120,7 +129,10 @@ class SnapshotGenerator:
                 "issue_id": getattr(entry, "issue_id", ""),
                 "identifier": getattr(entry, "identifier", ""),
                 "attempt": getattr(entry, "attempt", 0),
+                "delay_type": getattr(entry, "delay_type", "failure"),
                 "error": getattr(entry, "error", None),
+                "worker_host": getattr(entry, "worker_host", None),
+                "workspace_path": getattr(entry, "workspace_path", None),
             }
             for entry in state.retry_attempts.values()
         ]
@@ -136,6 +148,8 @@ class SnapshotGenerator:
             rate_limits=getattr(state, "codex_rate_limits", None),
             poll_interval_ms=getattr(state, "poll_interval_ms", 0),
             max_concurrent_agents=getattr(state, "max_concurrent_agents", 0),
+            poll_check_in_progress=getattr(state, "poll_check_in_progress", False),
+            next_poll_due_at_ms=getattr(state, "next_poll_due_at_ms", None),
         )
 
     @staticmethod

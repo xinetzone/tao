@@ -85,7 +85,7 @@ class TestEventTypes:
         )
         try:
             event.email_id = "e2"
-            assert False, "Should be frozen"
+            raise AssertionError("Should be frozen")
         except AttributeError:
             pass  # Expected for frozen dataclass
 

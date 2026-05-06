@@ -85,7 +85,7 @@ def test_basic_functionality() -> None:
     from taolib.testing.config_center.models.enums import ConfigValueType, Environment
 
     # Test model creation
-    doc = ConfigDocument(
+    ConfigDocument(
         id="test-1",
         key="test.key",
         environment=Environment.DEVELOPMENT,

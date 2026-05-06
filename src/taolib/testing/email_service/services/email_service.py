@@ -14,11 +14,17 @@ from taolib.testing.email_service.models.email import (
     EmailDocument,
     EmailResponse,
 )
-from taolib.testing.email_service.models.enums import EmailStatus, EmailType, TrackingEventType
+from taolib.testing.email_service.models.enums import (
+    EmailStatus,
+    EmailType,
+    TrackingEventType,
+)
 from taolib.testing.email_service.providers.failover import ProviderFailoverManager
 from taolib.testing.email_service.queue.protocol import EmailQueueProtocol
 from taolib.testing.email_service.repository.email_repo import EmailRepository
-from taolib.testing.email_service.services.subscription_service import SubscriptionService
+from taolib.testing.email_service.services.subscription_service import (
+    SubscriptionService,
+)
 from taolib.testing.email_service.services.template_service import TemplateService
 from taolib.testing.email_service.services.tracking_service import TrackingService
 

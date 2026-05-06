@@ -4,7 +4,7 @@
 当前实现为 Linear GraphQL 查询工具。
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 __all__ = ["DynamicTool", "LinearGraphQLTool", "ToolResult"]
 

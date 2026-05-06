@@ -264,7 +264,7 @@ class TestRBACService:
 
     def test_system_roles_structure(self) -> None:
         """测试系统角色结构完整性。"""
-        for role_name, role_data in RBACService.SYSTEM_ROLES.items():
+        for _role_name, role_data in RBACService.SYSTEM_ROLES.items():
             assert "description" in role_data
             assert "permissions" in role_data
             assert "environment_scope" in role_data

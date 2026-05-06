@@ -5,10 +5,24 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from taolib.testing.email_service.models.email import EmailCreate, EmailDocument, EmailRecipient
-from taolib.testing.email_service.models.enums import EmailPriority, EmailStatus, EmailType
-from taolib.testing.email_service.models.template import TemplateCreate, TemplateDocument
-from taolib.testing.email_service.providers.protocol import ProviderHealthStatus, SendResult
+from taolib.testing.email_service.models.email import (
+    EmailCreate,
+    EmailDocument,
+    EmailRecipient,
+)
+from taolib.testing.email_service.models.enums import (
+    EmailPriority,
+    EmailStatus,
+    EmailType,
+)
+from taolib.testing.email_service.models.template import (
+    TemplateCreate,
+    TemplateDocument,
+)
+from taolib.testing.email_service.providers.protocol import (
+    ProviderHealthStatus,
+    SendResult,
+)
 
 
 class MockMongoCollection:

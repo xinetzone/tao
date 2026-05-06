@@ -6,21 +6,22 @@
 import asyncio
 import time
 import uuid
-from typing import Any, Dict, List, Optional
 from datetime import UTC, datetime
+from typing import Any
 
+from taolib.testing.logging_config import get_logger
 from taolib.testing.multi_agent.agents.base import BaseAgent
 from taolib.testing.multi_agent.agents.templates import get_all_templates
-from taolib.testing.multi_agent.errors import AgentError, ModelUnavailableError, TaskError
+from taolib.testing.multi_agent.errors import (
+    ModelUnavailableError,
+    TaskError,
+)
 from taolib.testing.multi_agent.llm import LLMManager, get_llm_manager
-from taolib.testing.logging_config import get_logger
 from taolib.testing.multi_agent.models import (
     AgentCreate,
     AgentDocument,
     AgentStatus,
-    AgentType,
     Message,
-    MessagePayload,
     MessageType,
     SubTask,
     TaskDocument,
@@ -91,7 +92,7 @@ class SubAgentWrapper(BaseAgent):
             except Exception as e:
                 task.result = TaskResult(
                     success=False,
-                    summary=f"执行失败: {str(e)}",
+                    summary=f"执行失败: {e!s}",
                     errors=[str(e)],
                 )
                 task.status = TaskStatus.FAILED
@@ -107,7 +108,7 @@ class MainAgent(BaseAgent):
     def __init__(
         self,
         document: AgentDocument,
-        llm_manager: Optional[LLMManager] = None,
+        llm_manager: LLMManager | None = None,
     ):
         """初始化主智能体。
 
@@ -117,11 +118,11 @@ class MainAgent(BaseAgent):
         """
         super().__init__(document)
         self._llm_manager = llm_manager or get_llm_manager()
-        self._sub_agents: Dict[str, BaseAgent] = {}
-        self._task_queue: List[TaskDocument] = []
-        self._running_tasks: Dict[str, asyncio.Task] = {}
+        self._sub_agents: dict[str, BaseAgent] = {}
+        self._task_queue: list[TaskDocument] = []
+        self._running_tasks: dict[str, asyncio.Task] = {}
         self._is_running = False
-        self._main_loop_task: Optional[asyncio.Task] = None
+        self._main_loop_task: asyncio.Task | None = None
 
     async def initialize(self) -> None:
         """初始化主智能体。"""
@@ -273,14 +274,14 @@ class MainAgent(BaseAgent):
             task.status = TaskStatus.FAILED
             task.result = TaskResult(
                 success=False,
-                summary=f"任务执行失败: {str(e)}",
+                summary=f"任务执行失败: {e!s}",
                 errors=[str(e)],
             )
             task.completed_at = datetime.now(UTC)
             await self.complete_task(False, None)
             raise TaskError(f"Task execution failed: {e}")
 
-    async def _analyze_task(self, task: TaskDocument) -> Dict[str, Any]:
+    async def _analyze_task(self, task: TaskDocument) -> dict[str, Any]:
         """分析任务。
 
         Args:
@@ -291,17 +292,6 @@ class MainAgent(BaseAgent):
         """
         try:
             # 使用LLM分析任务
-            analysis_prompt = f"""请分析以下任务,并提供:
-1. 任务类型
-2. 需要的能力
-3. 建议的执行步骤
-4. 可能的子任务分解
-
-任务: {task.name}
-描述: {task.description}
-用户输入: {task.user_input}
-
-请以JSON格式返回分析结果。"""
 
             # 这里简化处理,实际应该调用LLM
             return {
@@ -317,8 +307,8 @@ class MainAgent(BaseAgent):
             }
 
     async def _decompose_task(
-        self, task: TaskDocument, analysis: Dict[str, Any]
-    ) -> List[SubTask]:
+        self, task: TaskDocument, analysis: dict[str, Any]
+    ) -> list[SubTask]:
         """分解任务为子任务。
 
         Args:
@@ -331,7 +321,7 @@ class MainAgent(BaseAgent):
         subtasks = []
 
         # 如果分析结果中有子任务,使用它们
-        if "subtasks" in analysis and analysis["subtasks"]:
+        if analysis.get("subtasks"):
             for i, subtask_info in enumerate(analysis["subtasks"]):
                 subtask = SubTask(
                     id=str(uuid.uuid4()),
@@ -352,7 +342,7 @@ class MainAgent(BaseAgent):
 
         return subtasks
 
-    async def _execute_subtasks(self, subtasks: List[SubTask]) -> List[TaskResult]:
+    async def _execute_subtasks(self, subtasks: list[SubTask]) -> list[TaskResult]:
         """执行子任务。
 
         Args:
@@ -404,7 +394,7 @@ class MainAgent(BaseAgent):
 
         return results
 
-    async def _select_agent_for_subtask(self, subtask: SubTask) -> Optional[BaseAgent]:
+    async def _select_agent_for_subtask(self, subtask: SubTask) -> BaseAgent | None:
         """为子任务选择合适的智能体。
 
         Args:
@@ -421,7 +411,7 @@ class MainAgent(BaseAgent):
         return None
 
     async def _aggregate_results(
-        self, task: TaskDocument, subtask_results: List[TaskResult]
+        self, task: TaskDocument, subtask_results: list[TaskResult]
     ) -> TaskResult:
         """聚合子任务结果。
 

@@ -47,7 +47,7 @@ class TestRateLimiterPathRules:
     def test_method_filtering(self, limiter_with_rules):
         """Test method-based rule filtering."""
         # GET request to auth/token should use default rule (POST only)
-        limit, window = limiter_with_rules._get_rule_for_path(
+        limit, _window = limiter_with_rules._get_rule_for_path(
             "/api/v1/auth/token", "GET"
         )
         assert limit == 100  # Default rule
@@ -68,7 +68,7 @@ class TestRateLimiterCheckLimit:
     async def test_limit_exceeded(self, limiter):
         """Test request exceeds limit."""
         # Fill up the limit
-        for i in range(10):
+        for _i in range(10):
             await limiter.record_request("user:test", "/api/test", "GET")
 
         # Next request should fail
@@ -82,7 +82,7 @@ class TestRateLimiterCheckLimit:
     async def test_different_identifiers_independent(self, limiter):
         """Test that different identifiers have independent limits."""
         # User 1 makes 10 requests
-        for i in range(10):
+        for _i in range(10):
             await limiter.record_request("user:1", "/api/test", "GET")
 
         # User 2 should still have full limit

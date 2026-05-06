@@ -12,7 +12,7 @@ import structlog
 
 def configure_logging(
     level: str = "info",
-    format: str = "json",  # noqa: A002
+    format: str = "json",
     output: str = "stderr",
 ) -> None:
     """配置 structlog。

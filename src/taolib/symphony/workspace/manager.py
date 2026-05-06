@@ -8,8 +8,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from ..errors import HookError
-from .hooks import HookTimeoutError, run_hook
+from .hooks import run_hook
 from .security import assert_within_root, sanitize_identifier
 
 __all__ = ["Workspace", "WorkspaceManager"]

@@ -7,7 +7,7 @@
 import asyncio
 import shlex
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import asyncssh
 
@@ -89,7 +89,7 @@ class LocalTransport(AgentTransport):
         )
         try:
             await asyncio.wait_for(proc.wait(), timeout=timeout_ms / 1000)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             proc.kill()
             await proc.wait()
             raise
@@ -134,7 +134,7 @@ class SSHTransport(AgentTransport):
         process = await self._conn.create_process(full_cmd)
         try:
             result = await asyncio.wait_for(process.wait(), timeout=timeout_ms / 1000)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             process.close()
             raise
         return result.exit_status

@@ -5,7 +5,7 @@
 
 from typing import Any
 
-from taolib.testing.multi_agent.models import SkillParameter, SkillType
+from taolib.testing.multi_agent.models import SkillParameter
 from taolib.testing.multi_agent.skills.protocols import BaseSkill, SkillExecutionContext
 
 

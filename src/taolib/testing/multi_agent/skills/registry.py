@@ -7,7 +7,6 @@ import importlib
 import inspect
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Type
 
 from taolib.testing.multi_agent.errors import SkillError
 from taolib.testing.multi_agent.skills.protocols import BaseSkill, Skill
@@ -18,9 +17,9 @@ class SkillRegistry:
 
     def __init__(self):
         """初始化技能注册表。"""
-        self._skills: Dict[str, Skill] = {}
-        self._skill_classes: Dict[str, Type[Skill]] = {}
-        self._skill_paths: Dict[str, Path] = {}
+        self._skills: dict[str, Skill] = {}
+        self._skill_classes: dict[str, type[Skill]] = {}
+        self._skill_paths: dict[str, Path] = {}
 
     def register_skill(self, skill: Skill) -> None:
         """注册技能实例。
@@ -36,7 +35,7 @@ class SkillRegistry:
 
         self._skills[skill.id] = skill
 
-    def register_skill_class(self, skill_class: Type[Skill]) -> None:
+    def register_skill_class(self, skill_class: type[Skill]) -> None:
         """注册技能类。
 
         Args:
@@ -61,7 +60,7 @@ class SkillRegistry:
 
         self._skill_classes[skill_id] = skill_class
 
-    def get_skill(self, skill_id: str) -> Optional[Skill]:
+    def get_skill(self, skill_id: str) -> Skill | None:
         """获取技能实例。
 
         Args:
@@ -72,7 +71,7 @@ class SkillRegistry:
         """
         return self._skills.get(skill_id)
 
-    def get_skill_class(self, skill_id: str) -> Optional[Type[Skill]]:
+    def get_skill_class(self, skill_id: str) -> type[Skill] | None:
         """获取技能类。
 
         Args:
@@ -102,7 +101,7 @@ class SkillRegistry:
 
         return skill_class(**kwargs)
 
-    def get_all_skills(self) -> List[Skill]:
+    def get_all_skills(self) -> list[Skill]:
         """获取所有已注册的技能实例。
 
         Returns:
@@ -110,7 +109,7 @@ class SkillRegistry:
         """
         return list(self._skills.values())
 
-    def get_all_skill_classes(self) -> Dict[str, Type[Skill]]:
+    def get_all_skill_classes(self) -> dict[str, type[Skill]]:
         """获取所有已注册的技能类。
 
         Returns:
@@ -131,7 +130,7 @@ class SkillRegistry:
         if skill_id in self._skill_paths:
             del self._skill_paths[skill_id]
 
-    def load_skill_from_file(self, file_path: Path, skill_class_name: Optional[str] = None) -> str:
+    def load_skill_from_file(self, file_path: Path, skill_class_name: str | None = None) -> str:
         """从文件加载技能。
 
         Args:
@@ -163,7 +162,7 @@ class SkillRegistry:
             skill_class = getattr(module, skill_class_name, None)
         else:
             # 自动查找继承自Skill的类
-            for name, obj in inspect.getmembers(module, inspect.isclass):
+            for _name, obj in inspect.getmembers(module, inspect.isclass):
                 if (
                     issubclass(obj, Skill)
                     and obj is not Skill
@@ -187,7 +186,7 @@ class SkillRegistry:
 
         return skill_id or skill_class.__name__
 
-    def load_skills_from_directory(self, directory: Path) -> List[str]:
+    def load_skills_from_directory(self, directory: Path) -> list[str]:
         """从目录加载所有技能。
 
         Args:
@@ -221,7 +220,7 @@ class SkillRegistry:
 
 
 # 全局注册表实例
-_global_registry: Optional[SkillRegistry] = None
+_global_registry: SkillRegistry | None = None
 
 
 def get_skill_registry() -> SkillRegistry:

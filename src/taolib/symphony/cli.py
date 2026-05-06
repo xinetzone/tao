@@ -17,25 +17,25 @@ app = typer.Typer(name="symphony", help="Symphony 编排服务")
 
 @app.command()
 def run(
-    workflow: Path = typer.Argument(  # noqa: B008
+    workflow: Path = typer.Argument(
         ...,
         exists=True,
         readable=True,
         help="WORKFLOW.md 文件路径",
     ),
-    port: int | None = typer.Option(  # noqa: B008
+    port: int | None = typer.Option(
         None,
         "--port",
         "-p",
         help="HTTP 服务端口（覆盖配置文件）",
     ),
-    config: Path | None = typer.Option(  # noqa: B008
+    config: Path | None = typer.Option(
         None,
         "--config",
         "-c",
         help="symphony.toml 配置文件路径",
     ),
-    logs_root: Path = typer.Option(  # noqa: B008
+    logs_root: Path = typer.Option(
         Path("./log"),
         "--logs-root",
         "-l",
@@ -53,7 +53,7 @@ def run(
         typer.echo(f"配置解析失败: {exc}", err=True)
         raise typer.Exit(code=1) from exc
 
-    typer.echo(f"Symphony 编排服务启动中...")
+    typer.echo("Symphony 编排服务启动中...")
     typer.echo(f"  工作流: {workflow}")
     typer.echo(f"  跟踪器: {resolved.tracker.kind} ({resolved.tracker.project_slug})")
     typer.echo(f"  工作区根目录: {resolved.workspace.root}")
@@ -68,7 +68,7 @@ def run(
 
 @app.command()
 def validate(
-    workflow: Path = typer.Argument(  # noqa: B008
+    workflow: Path = typer.Argument(
         ...,
         exists=True,
         readable=True,

@@ -93,7 +93,7 @@ class TestSubmitTask:
 
     @pytest.mark.asyncio
     async def test_submit_with_idempotency_key_unique(self):
-        svc, repo, queue = _make_service()
+        svc, repo, _queue = _make_service()
         repo.find_by_idempotency_key.return_value = None
         repo.create.return_value = _make_task_doc()
 
@@ -123,7 +123,7 @@ class TestSubmitTask:
 
     @pytest.mark.asyncio
     async def test_submit_without_idempotency_key(self):
-        svc, repo, queue = _make_service()
+        svc, repo, _queue = _make_service()
         repo.create.return_value = _make_task_doc()
 
         task_create = TaskCreate(
@@ -208,7 +208,7 @@ class TestRetryTask:
         updated_task = _make_task_doc(status=TaskStatus.PENDING, retry_count=0)
         repo.update_status.return_value = updated_task
 
-        result = await svc.retry_task("task-001")
+        await svc.retry_task("task-001")
 
         repo.update_status.assert_awaited_once()
         queue.remove_from_failed.assert_awaited_once_with("task-001")
@@ -264,7 +264,7 @@ class TestCancelTask:
         repo.get_by_id.return_value = _make_task_doc(status=TaskStatus.PENDING)
         repo.update_status.return_value = _make_task_doc(status=TaskStatus.CANCELLED)
 
-        result = await svc.cancel_task("task-001")
+        await svc.cancel_task("task-001")
         repo.update_status.assert_awaited_once()
 
     @pytest.mark.asyncio
@@ -273,7 +273,7 @@ class TestCancelTask:
         repo.get_by_id.return_value = _make_task_doc(status=TaskStatus.RETRYING)
         repo.update_status.return_value = _make_task_doc(status=TaskStatus.CANCELLED)
 
-        result = await svc.cancel_task("task-001")
+        await svc.cancel_task("task-001")
         repo.update_status.assert_awaited_once()
 
     @pytest.mark.asyncio
@@ -333,7 +333,7 @@ class TestListTasks:
         svc, repo, _ = _make_service()
         repo.find_by_filters.return_value = [_make_task_doc(status=TaskStatus.FAILED)]
 
-        result = await svc.list_tasks(status=TaskStatus.FAILED)
+        await svc.list_tasks(status=TaskStatus.FAILED)
         repo.find_by_filters.assert_awaited_once_with(
             status=TaskStatus.FAILED, task_type=None, priority=None, skip=0, limit=100
         )

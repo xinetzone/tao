@@ -2,7 +2,8 @@
 
 定义编排器运行时所需的内部数据结构，包括：
 - RunningEntry：活跃 worker 的运行时跟踪条目
-- RetryEntry：计划重试条目
+- RetryMeta：重试调度元数据（传递给 _schedule_retry）
+- RetryEntry：计划重试条目（含 retry_token 防过期重试）
 - CodexTotals：聚合令牌消耗与运行时统计
 - OrchestratorState：编排器单一权威内存状态
 
@@ -10,12 +11,11 @@
 此处仅定义编排器私有的运行时状态。
 """
 
-from dataclasses import dataclass, field
-from datetime import datetime
-from typing import Any
-
 import asyncio
-
+import uuid
+from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from typing import Any
 
 # ============================================================================
 # 运行时数据结构
@@ -52,6 +52,8 @@ class RunningEntry:
     worker_task: asyncio.Task = field(default=None)  # type: ignore[assignment]
     identifier: str = ""
     issue_state: str = ""
+    worker_host: str | None = None
+    workspace_path: str | None = None
     session_id: str | None = None
     codex_app_server_pid: str | None = None
     last_codex_event: str | None = None
@@ -65,7 +67,29 @@ class RunningEntry:
     last_reported_total_tokens: int = 0
     turn_count: int = 0
     retry_attempt: int | None = None
-    started_at: datetime = field(default_factory=datetime.utcnow)
+    started_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+
+
+@dataclass
+class RetryMeta:
+    """重试调度元数据。
+
+    由 _on_worker_done 构建，传递给 _schedule_retry，
+    携带 worker 退出时的运行上下文。
+
+    Attributes:
+        identifier: 人类可读标识符
+        delay_type: 重试类型（"continuation" 续运 | "failure" 故障）
+        error: 失败原因（None 表示续运重试）
+        worker_host: 退出 worker 的运行主机
+        workspace_path: 退出 worker 的工作区路径
+    """
+
+    identifier: str = ""
+    delay_type: str = "failure"  # "continuation" | "failure"
+    error: str | None = None
+    worker_host: str | None = None
+    workspace_path: str | None = None
 
 
 @dataclass
@@ -74,6 +98,7 @@ class RetryEntry:
 
     对应规范 §4.1.7 Retry Entry。
     当 worker 退出后，编排器根据退出原因创建重试条目。
+    retry_token 用于防止过期重试（参考 Elixir make_ref() 模式）。
 
     Attributes:
         issue_id: 稳定的跟踪器内部 ID
@@ -81,7 +106,11 @@ class RetryEntry:
         attempt: 重试尝试序号（从 1 开始）
         due_at_ms: 单调时钟时间戳（毫秒），重试到期时间
         timer_handle: asyncio 计时器句柄，用于取消重试
+        retry_token: 防过期重试令牌（每次调度唯一）
+        delay_type: 重试类型（"continuation" | "failure"）
         error: 失败原因（None 表示续运重试）
+        worker_host: 退出 worker 的运行主机
+        workspace_path: 退出 worker 的工作区路径
     """
 
     issue_id: str = ""
@@ -89,7 +118,11 @@ class RetryEntry:
     attempt: int = 1
     due_at_ms: float = 0.0  # 单调时钟时间戳
     timer_handle: asyncio.TimerHandle = field(default=None)  # type: ignore[assignment]
+    retry_token: uuid.UUID = field(default_factory=uuid.uuid4)
+    delay_type: str = "failure"  # "continuation" | "failure"
     error: str | None = None
+    worker_host: str | None = None
+    workspace_path: str | None = None
 
 
 @dataclass
@@ -131,6 +164,8 @@ class OrchestratorState:
 
     poll_interval_ms: int = 30_000
     max_concurrent_agents: int = 10
+    poll_check_in_progress: bool = False  # 仪表板渲染："checking now..."
+    next_poll_due_at_ms: float | None = None  # 仪表板：下次轮询倒计时
     running: dict[str, RunningEntry] = field(default_factory=dict)
     claimed: set[str] = field(default_factory=set)
     retry_attempts: dict[str, RetryEntry] = field(default_factory=dict)

@@ -2,7 +2,11 @@
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from taolib.testing.file_storage.models.bucket import BucketCreate, BucketResponse, BucketUpdate
+from taolib.testing.file_storage.models.bucket import (
+    BucketCreate,
+    BucketResponse,
+    BucketUpdate,
+)
 from taolib.testing.file_storage.services.bucket_service import BucketService
 
 router = APIRouter()

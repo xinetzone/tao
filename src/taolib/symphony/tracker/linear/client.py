@@ -13,12 +13,10 @@
 import logging
 
 from gql import Client
-from gql.transport.httpx import HTTPXAsyncTransport
 
 from taolib.symphony.tracker.base import TrackerClient
 from taolib.symphony.tracker.errors import (
     LinearAPIRequestError,
-    LinearAPIStatusError,
     LinearGraphQLError,
     LinearMissingCursorError,
 )
@@ -230,7 +228,7 @@ class LinearClient(TrackerClient):
         if isinstance(result, dict) and "errors" in result:
             errors = result["errors"]
             raise LinearGraphQLError(
-                f"Linear GraphQL 响应包含错误",
+                "Linear GraphQL 响应包含错误",
                 errors=errors,
             )
 

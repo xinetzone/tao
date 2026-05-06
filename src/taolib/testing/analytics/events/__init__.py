@@ -3,7 +3,10 @@
 导出所有内部事件类型。
 """
 
-from taolib.testing.analytics.events.types import AnalyticsQueryEvent, EventsReceivedEvent
+from taolib.testing.analytics.events.types import (
+    AnalyticsQueryEvent,
+    EventsReceivedEvent,
+)
 
 __all__ = [
     "EventsReceivedEvent",

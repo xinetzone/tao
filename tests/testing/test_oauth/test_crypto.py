@@ -2,7 +2,10 @@
 
 import pytest
 
-from taolib.testing.oauth.crypto.token_encryption import TokenEncryptor, generate_encryption_key
+from taolib.testing.oauth.crypto.token_encryption import (
+    TokenEncryptor,
+    generate_encryption_key,
+)
 
 
 class TestGenerateEncryptionKey:

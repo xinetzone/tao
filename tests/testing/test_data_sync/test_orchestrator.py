@@ -407,7 +407,7 @@ class TestSyncOrchestratorErrorHandling:
         """测试创建日志。"""
         job = create_sample_job()
 
-        log = await orchestrator._create_log(job)
+        await orchestrator._create_log(job)
 
         assert orchestrator._log_repo.create.called
         call_args = orchestrator._log_repo.create.call_args[0][0]

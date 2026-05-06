@@ -5,15 +5,14 @@
 
 import pytest
 
-from taolib.testing.multi_agent.llm import LoadBalancer, LLMManager
+from taolib.testing.multi_agent.llm import LLMManager, LoadBalancer
+from taolib.testing.multi_agent.llm.ollama_provider import OllamaProvider
 from taolib.testing.multi_agent.models import (
     LoadBalanceConfig,
     LoadBalanceStrategy,
     ModelConfig,
     ModelProvider,
-    ModelStatus,
 )
-from taolib.testing.multi_agent.llm.ollama_provider import OllamaProvider
 
 
 class TestLoadBalancer:

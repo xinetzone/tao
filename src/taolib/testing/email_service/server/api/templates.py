@@ -66,7 +66,10 @@ async def preview_template(
     request: Request,
 ):
     """预览模板渲染结果。"""
-    from taolib.testing.email_service.errors import TemplateNotFoundError, TemplateRenderError
+    from taolib.testing.email_service.errors import (
+        TemplateNotFoundError,
+        TemplateRenderError,
+    )
 
     try:
         rendered = await request.app.state.template_service.render_template(

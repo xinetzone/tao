@@ -16,13 +16,17 @@ from taolib.testing.email_service.providers.ses import SESProvider
 from taolib.testing.email_service.providers.smtp import SMTPProvider
 from taolib.testing.email_service.queue.redis_queue import RedisEmailQueue
 from taolib.testing.email_service.repository.email_repo import EmailRepository
-from taolib.testing.email_service.repository.subscription_repo import SubscriptionRepository
+from taolib.testing.email_service.repository.subscription_repo import (
+    SubscriptionRepository,
+)
 from taolib.testing.email_service.repository.template_repo import TemplateRepository
 from taolib.testing.email_service.repository.tracking_repo import TrackingRepository
 from taolib.testing.email_service.services.bounce_handler import BounceHandler
 from taolib.testing.email_service.services.email_service import EmailService
 from taolib.testing.email_service.services.queue_processor import QueueProcessor
-from taolib.testing.email_service.services.subscription_service import SubscriptionService
+from taolib.testing.email_service.services.subscription_service import (
+    SubscriptionService,
+)
 from taolib.testing.email_service.services.template_service import TemplateService
 from taolib.testing.email_service.services.tracking_service import TrackingService
 from taolib.testing.email_service.template.engine import TemplateEngine

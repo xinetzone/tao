@@ -9,7 +9,9 @@ class TestConfigureMatplotlibFonts:
 
     def test_configure_with_default_params(self):
         """Test configuration with default parameters."""
-        from taolib.testing.plot.configs.matplotlib_font import configure_matplotlib_fonts
+        from taolib.testing.plot.configs.matplotlib_font import (
+            configure_matplotlib_fonts,
+        )
 
         with (
             patch("matplotlib.font_manager.findSystemFonts") as mock_find,
@@ -27,15 +29,17 @@ class TestConfigureMatplotlibFonts:
 
     def test_configure_with_custom_font_directory(self, tmp_path: Path):
         """Test configuration with custom font directory."""
-        from taolib.testing.plot.configs.matplotlib_font import configure_matplotlib_fonts
+        from taolib.testing.plot.configs.matplotlib_font import (
+            configure_matplotlib_fonts,
+        )
 
         font_dir = tmp_path / "fonts"
         font_dir.mkdir()
 
         with (
             patch("matplotlib.font_manager.findSystemFonts") as mock_find,
-            patch("matplotlib.font_manager.fontManager.addfont") as mock_add,
-            patch("matplotlib.pyplot.rcParams") as mock_rcParams,
+            patch("matplotlib.font_manager.fontManager.addfont"),
+            patch("matplotlib.pyplot.rcParams"),
         ):
             mock_find.return_value = [str(font_dir / "test.ttf")]
 
@@ -49,7 +53,9 @@ class TestConfigureMatplotlibFonts:
 
     def test_configure_nonexistent_directory(self):
         """Test configuration with non-existent directory."""
-        from taolib.testing.plot.configs.matplotlib_font import configure_matplotlib_fonts
+        from taolib.testing.plot.configs.matplotlib_font import (
+            configure_matplotlib_fonts,
+        )
 
         with patch.object(Path, "exists", return_value=False):
             result = configure_matplotlib_fonts(font_directory="/nonexistent/path")
@@ -58,7 +64,9 @@ class TestConfigureMatplotlibFonts:
 
     def test_configure_empty_font_directory(self, tmp_path: Path):
         """Test configuration with empty font directory."""
-        from taolib.testing.plot.configs.matplotlib_font import configure_matplotlib_fonts
+        from taolib.testing.plot.configs.matplotlib_font import (
+            configure_matplotlib_fonts,
+        )
 
         font_dir = tmp_path / "empty_fonts"
         font_dir.mkdir()
@@ -75,7 +83,9 @@ class TestConfigureMatplotlibFonts:
 
     def test_configure_handles_font_load_error(self):
         """Test that font load errors are handled gracefully."""
-        from taolib.testing.plot.configs.matplotlib_font import configure_matplotlib_fonts
+        from taolib.testing.plot.configs.matplotlib_font import (
+            configure_matplotlib_fonts,
+        )
 
         with (
             patch("matplotlib.font_manager.findSystemFonts") as mock_find,
@@ -93,7 +103,9 @@ class TestConfigureMatplotlibFonts:
 
     def test_configure_with_custom_target_fonts(self):
         """Test configuration with custom target fonts."""
-        from taolib.testing.plot.configs.matplotlib_font import configure_matplotlib_fonts
+        from taolib.testing.plot.configs.matplotlib_font import (
+            configure_matplotlib_fonts,
+        )
 
         custom_fonts = ["Font A", "Font B"]
 

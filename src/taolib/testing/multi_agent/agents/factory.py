@@ -4,7 +4,6 @@
 """
 
 import uuid
-from typing import Dict, Optional, Type
 
 from taolib.testing.multi_agent.agents.base import BaseAgent
 from taolib.testing.multi_agent.agents.main_agent import MainAgent, SubAgentWrapper
@@ -27,15 +26,15 @@ from taolib.testing.multi_agent.models import (
 class AgentFactory:
     """智能体工厂。"""
 
-    def __init__(self, llm_manager: Optional[LLMManager] = None):
+    def __init__(self, llm_manager: LLMManager | None = None):
         """初始化智能体工厂。
 
         Args:
             llm_manager: LLM管理器,如果为None则使用全局管理器
         """
         self._llm_manager = llm_manager or get_llm_manager()
-        self._templates: Dict[str, AgentTemplate] = {}
-        self._agent_classes: Dict[AgentType, Type[BaseAgent]] = {
+        self._templates: dict[str, AgentTemplate] = {}
+        self._agent_classes: dict[AgentType, type[BaseAgent]] = {
             AgentType.MAIN: MainAgent,
             AgentType.SUB: SubAgentWrapper,
         }
@@ -52,7 +51,7 @@ class AgentFactory:
         """
         self._templates[template.id] = template
 
-    def get_template(self, template_id: str) -> Optional[AgentTemplate]:
+    def get_template(self, template_id: str) -> AgentTemplate | None:
         """获取智能体模板。
 
         Args:
@@ -63,7 +62,7 @@ class AgentFactory:
         """
         return self._templates.get(template_id)
 
-    def get_all_templates(self) -> Dict[str, AgentTemplate]:
+    def get_all_templates(self) -> dict[str, AgentTemplate]:
         """获取所有模板。
 
         Returns:
@@ -72,7 +71,7 @@ class AgentFactory:
         return self._templates.copy()
 
     async def create_agent(
-        self, agent_create: AgentCreate, agent_id: Optional[str] = None
+        self, agent_create: AgentCreate, agent_id: str | None = None
     ) -> BaseAgent:
         """创建智能体。
 
@@ -118,7 +117,7 @@ class AgentFactory:
         return agent
 
     async def create_agent_from_template(
-        self, template_id: str, agent_name: Optional[str] = None, agent_id: Optional[str] = None
+        self, template_id: str, agent_name: str | None = None, agent_id: str | None = None
     ) -> BaseAgent:
         """从模板创建智能体。
 
@@ -150,7 +149,7 @@ class AgentFactory:
         return await self.create_agent(agent_create, agent_id)
 
     async def create_main_agent(
-        self, name: str = "主智能体", agent_id: Optional[str] = None
+        self, name: str = "主智能体", agent_id: str | None = None
     ) -> MainAgent:
         """创建主智能体。
 
@@ -194,7 +193,7 @@ class AgentFactory:
 
 
 # 全局工厂实例
-_global_factory: Optional[AgentFactory] = None
+_global_factory: AgentFactory | None = None
 
 
 def get_agent_factory() -> AgentFactory:

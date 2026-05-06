@@ -4,8 +4,8 @@
 """
 
 from datetime import UTC, datetime
-from typing import Any
 from enum import StrEnum
+from typing import Any
 from uuid import uuid4
 
 from pydantic import BaseModel, Field

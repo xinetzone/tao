@@ -77,7 +77,7 @@ class TestAccountService:
         )
 
         # Second call finds existing
-        conn2, is_new2 = await service.find_or_create_connection(
+        _conn2, is_new2 = await service.find_or_create_connection(
             user_info=user_info, token_data={"access_token": "token-2"}
         )
         assert is_new2 is False

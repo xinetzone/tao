@@ -4,9 +4,7 @@
 """
 
 import random
-import time
 from datetime import UTC, datetime
-from typing import Optional
 
 from taolib.testing.multi_agent.errors import ModelUnavailableError
 from taolib.testing.multi_agent.llm.protocols import BaseLLMProvider
@@ -21,7 +19,7 @@ from taolib.testing.multi_agent.models import (
 class LoadBalancer:
     """LLM模型负载均衡器。"""
 
-    def __init__(self, config: Optional[LoadBalanceConfig] = None):
+    def __init__(self, config: LoadBalanceConfig | None = None):
         """初始化负载均衡器。
 
         Args:
@@ -59,7 +57,7 @@ class LoadBalancer:
         """
         available = []
         for instance_id, provider in self._providers.items():
-            instance = self._instances[instance_id]
+            self._instances[instance_id]
             state = self._circuit_breaker_states[instance_id]
 
             # 检查熔断器状态
@@ -214,7 +212,7 @@ class LoadBalancer:
             else:
                 instance.status = ModelStatus.UNAVAILABLE
 
-    def get_instance_stats(self, instance_id: str) -> Optional[ModelInstance]:
+    def get_instance_stats(self, instance_id: str) -> ModelInstance | None:
         """获取实例统计信息。
 
         Args:
@@ -233,7 +231,7 @@ class LoadBalancer:
         """
         return list(self._instances.values())
 
-    def get_provider(self, instance_id: str) -> Optional[BaseLLMProvider]:
+    def get_provider(self, instance_id: str) -> BaseLLMProvider | None:
         """获取指定实例ID的提供商。
 
         Args:

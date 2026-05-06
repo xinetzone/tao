@@ -12,7 +12,10 @@ from taolib.testing.file_storage.models.enums import (
     ThumbnailSize,
     UploadStatus,
 )
-from taolib.testing.file_storage.models.file import FileMetadataCreate, FileMetadataUpdate
+from taolib.testing.file_storage.models.file import (
+    FileMetadataCreate,
+    FileMetadataUpdate,
+)
 from taolib.testing.file_storage.models.stats import BucketStatsResponse
 from taolib.testing.file_storage.models.thumbnail import ThumbnailInfo
 from taolib.testing.file_storage.models.upload import UploadSessionCreate

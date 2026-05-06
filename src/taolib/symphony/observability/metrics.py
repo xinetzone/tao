@@ -4,9 +4,7 @@
 优先使用绝对线程总计（thread/tokenUsage/updated），跟踪增量避免重复计数。
 """
 
-from __future__ import annotations
-
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
 

@@ -3,7 +3,7 @@
 统一管理所有LLM模型提供商,提供统一的接口。
 """
 
-from typing import AsyncGenerator, Optional
+from collections.abc import AsyncGenerator
 
 from taolib.testing.multi_agent.errors import (
     LLMError,
@@ -15,7 +15,6 @@ from taolib.testing.multi_agent.llm.registry import ModelRegistry
 from taolib.testing.multi_agent.models import (
     LoadBalanceConfig,
     ModelConfig,
-    ModelProvider,
 )
 
 
@@ -23,16 +22,16 @@ class LLMManager:
     """LLM模型管理器。"""
 
     def __init__(
-        self, load_balance_config: Optional[LoadBalanceConfig] = None):
+        self, load_balance_config: LoadBalanceConfig | None = None):
         """初始化LLM管理器。
 
         Args:
             load_balance_config: 负载均衡配置
         """
         self._load_balancer = LoadBalancer(load_balance_config)
-        self._default_provider: Optional[BaseLLMProvider] = None
+        self._default_provider: BaseLLMProvider | None = None
 
-    def add_model(self, config: ModelConfig, instance_id: Optional[str] = None) -> str:
+    def add_model(self, config: ModelConfig, instance_id: str | None = None) -> str:
         """添加一个模型。
 
         Args:
@@ -61,7 +60,7 @@ class LLMManager:
         temperature: float | None = None,
         max_tokens: int | None = None,
         system_prompt: str | None = None,
-        instance_id: Optional[str] = None,
+        instance_id: str | None = None,
         **kwargs,
     ) -> str:
         """生成文本。
@@ -112,9 +111,9 @@ class LLMManager:
         temperature: float | None = None,
         max_tokens: int | None = None,
         system_prompt: str | None = None,
-        instance_id: Optional[str] = None,
+        instance_id: str | None = None,
         **kwargs,
-    ) -> AsyncGenerator[str, None]:
+    ) -> AsyncGenerator[str]:
         """流式生成文本。
 
         Args:
@@ -156,7 +155,7 @@ class LLMManager:
             self._load_balancer.record_failure(selected_id)
             raise LLMError(f"Stream generation failed: {e}")
 
-    async def health_check(self, instance_id: Optional[str] = None) -> bool:
+    async def health_check(self, instance_id: str | None = None) -> bool:
         """健康检查。
 
         Args:
@@ -203,7 +202,7 @@ class LLMManager:
 
 
 # 全局管理器实例
-_default_manager: Optional[LLMManager] = None
+_default_manager: LLMManager | None = None
 
 
 def get_llm_manager() -> LLMManager:

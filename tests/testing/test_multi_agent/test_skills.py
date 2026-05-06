@@ -9,11 +9,11 @@ from taolib.testing.multi_agent.errors import SkillError
 from taolib.testing.multi_agent.models import SkillParameter, SkillStatus
 from taolib.testing.multi_agent.skills import (
     BaseSkill,
+    CodeGenerationSkill,
     SkillExecutionContext,
     SkillManager,
     SkillRegistry,
     TextSummarizationSkill,
-    CodeGenerationSkill,
     get_preset_skills,
     get_skill_manager,
     get_skill_registry,

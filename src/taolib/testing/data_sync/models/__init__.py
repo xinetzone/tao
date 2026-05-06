@@ -4,7 +4,12 @@
 """
 
 from taolib.testing.data_sync.models.checkpoint import SyncCheckpoint
-from taolib.testing.data_sync.models.enums import FailureAction, SyncMode, SyncScope, SyncStatus
+from taolib.testing.data_sync.models.enums import (
+    FailureAction,
+    SyncMode,
+    SyncScope,
+    SyncStatus,
+)
 from taolib.testing.data_sync.models.failure import FailureRecordDocument
 from taolib.testing.data_sync.models.job import (
     SyncConnectionConfig,

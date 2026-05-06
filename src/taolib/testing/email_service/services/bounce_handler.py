@@ -7,7 +7,9 @@ import logging
 
 from taolib.testing.email_service.models.enums import BounceType, TrackingEventType
 from taolib.testing.email_service.repository.email_repo import EmailRepository
-from taolib.testing.email_service.services.subscription_service import SubscriptionService
+from taolib.testing.email_service.services.subscription_service import (
+    SubscriptionService,
+)
 from taolib.testing.email_service.services.tracking_service import TrackingService
 
 logger = logging.getLogger(__name__)

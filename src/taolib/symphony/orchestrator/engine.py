@@ -15,17 +15,18 @@ Orchestrator 是 Symphony 服务的核心组件，拥有轮询节拍和内存中
 
 import asyncio
 import time
+import uuid
 from datetime import UTC, datetime
 from typing import Any
 
 import structlog
 
-from taolib.symphony.config.schema import AgentConfig, SymphonyConfig
+from taolib.symphony.config.schema import SymphonyConfig
 from taolib.symphony.orchestrator.scheduler import Scheduler
 from taolib.symphony.orchestrator.state import (
-    CodexTotals,
     OrchestratorState,
     RetryEntry,
+    RetryMeta,
     RunningEntry,
 )
 from taolib.symphony.tracker.base import TrackerClient
@@ -134,7 +135,7 @@ class Orchestrator:
         self._running = False
 
         # 取消所有重试计时器
-        for issue_id, retry_entry in list(self.state.retry_attempts.items()):
+        for _issue_id, retry_entry in list(self.state.retry_attempts.items()):
             retry_entry.timer_handle.cancel()
         self.state.retry_attempts.clear()
 
@@ -190,40 +191,49 @@ class Orchestrator:
         4. 按分派优先级排序问题
         5. 在槽位可用时分派符合条件的问题
         """
-        # 1. 对账
-        await self._reconcile_running_issues()
-
-        # 2. 分派预检验证
+        # 设置轮询状态（供仪表板渲染）
+        self.state.poll_check_in_progress = True
         try:
-            self._validate_dispatch_config()
-        except DispatchValidationError as exc:
-            logger.error("dispatch_validation_failed_tick", reasons=exc.reasons)
-            return
+            # 1. 对账
+            await self._reconcile_running_issues()
 
-        # 3. 获取候选问题
-        try:
-            candidates = await self._tracker.fetch_candidate_issues()
-        except Exception:
-            logger.exception("fetch_candidates_failed")
-            return
+            # 2. 分派预检验证
+            try:
+                self._validate_dispatch_config()
+            except DispatchValidationError as exc:
+                logger.error("dispatch_validation_failed_tick", reasons=exc.reasons)
+                return
 
-        if not candidates:
-            logger.debug("no_candidates")
-            return
+            # 3. 获取候选问题
+            try:
+                candidates = await self._tracker.fetch_candidate_issues()
+            except Exception:
+                logger.exception("fetch_candidates_failed")
+                return
 
-        # 4 & 5. 排序并分派
-        dispatchable = self._scheduler.filter_dispatchable(
-            candidates, self.state, self._config.agent
-        )
+            if not candidates:
+                logger.debug("no_candidates")
+                return
 
-        for issue in dispatchable:
-            self._dispatch_issue(issue, attempt=None)
+            # 4 & 5. 排序并分派
+            dispatchable = self._scheduler.filter_dispatchable(
+                candidates, self.state, self._config.agent
+            )
 
-        if dispatchable:
-            logger.info(
-                "dispatched_issues",
-                count=len(dispatchable),
-                identifiers=[i.identifier for i in dispatchable],
+            for issue in dispatchable:
+                self._dispatch_issue(issue, attempt=None)
+
+            if dispatchable:
+                logger.info(
+                    "dispatched_issues",
+                    count=len(dispatchable),
+                    identifiers=[i.identifier for i in dispatchable],
+                )
+        finally:
+            self.state.poll_check_in_progress = False
+            # 设置下次轮询到期时间
+            self.state.next_poll_due_at_ms = (
+                time.monotonic() * 1000 + self.state.poll_interval_ms
             )
 
     # ====================================================================
@@ -259,6 +269,18 @@ class Orchestrator:
             existing = self.state.retry_attempts.pop(issue.id)
             existing.timer_handle.cancel()
 
+        # 防竞态调度：分派前重新验证 Issue 有效性
+        if not self._revalidate_issue_for_dispatch(issue):
+            logger.warning(
+                "dispatch_skip_revalidation_failed",
+                issue_id=issue.id,
+                issue_identifier=issue.identifier,
+            )
+            return
+
+        # 选择 worker 主机（SSH 扩展：最小负载选择）
+        worker_host = self._select_worker_host()
+
         # 创建命名 worker task（Python 3.14 内省支持）
         task = asyncio.create_task(
             self._run_worker(issue, attempt),
@@ -267,11 +289,12 @@ class Orchestrator:
         task.add_done_callback(lambda t: self._on_worker_done(issue.id, t))
 
         # 更新状态
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
         self.state.running[issue.id] = RunningEntry(
             worker_task=task,
             identifier=issue.identifier,
             issue_state=issue.state,
+            worker_host=worker_host,
             retry_attempt=attempt if attempt is not None else None,
             started_at=now,
         )
@@ -288,6 +311,7 @@ class Orchestrator:
             issue_identifier=issue.identifier,
             attempt=attempt,
             task_name=task.get_name(),
+            worker_host=worker_host,
         )
 
     # ====================================================================
@@ -339,7 +363,7 @@ class Orchestrator:
                 return
 
             entry.last_codex_event = event
-            entry.last_codex_timestamp = datetime.utcnow()
+            entry.last_codex_timestamp = datetime.now(UTC)
 
             # 提取消息摘要
             if "message" in payload:
@@ -396,8 +420,8 @@ class Orchestrator:
         """Worker 完成回调：续运重试或故障指数退避重试。
 
         对应规范 §7.3 转换触发器 — Worker Exit：
-        - 正常退出：安排续运重试（attempt 1，1 秒延迟）
-        - 异常退出：安排指数退避重试
+        - 正常退出：安排续运重试（delay_type="continuation"，1 秒延迟）
+        - 异常退出：安排指数退避重试（delay_type="failure"）
 
         此回调在事件循环线程中执行，可安全修改 state。
 
@@ -410,7 +434,7 @@ class Orchestrator:
             return
 
         # 更新运行时统计
-        elapsed = (datetime.utcnow() - entry.started_at).total_seconds()
+        elapsed = (datetime.now(UTC) - entry.started_at).total_seconds()
         self.state.codex_totals.seconds_running += elapsed
 
         identifier = entry.identifier
@@ -428,10 +452,14 @@ class Orchestrator:
             log.info("worker_normal_exit_scheduling_continuation")
             self._schedule_retry(
                 issue_id=issue_id,
-                identifier=identifier,
                 attempt=1,
-                is_continuation=True,
-                error=None,
+                meta=RetryMeta(
+                    identifier=identifier,
+                    delay_type="continuation",
+                    error=None,
+                    worker_host=entry.worker_host,
+                    workspace_path=entry.workspace_path,
+                ),
             )
         else:
             # 异常退出：指数退避重试（规范 §7.3 Worker Exit abnormal）
@@ -444,10 +472,14 @@ class Orchestrator:
             )
             self._schedule_retry(
                 issue_id=issue_id,
-                identifier=identifier,
                 attempt=next_attempt,
-                is_continuation=False,
-                error=error_msg,
+                meta=RetryMeta(
+                    identifier=identifier,
+                    delay_type="failure",
+                    error=error_msg,
+                    worker_host=entry.worker_host,
+                    workspace_path=entry.workspace_path,
+                ),
             )
 
     # ====================================================================
@@ -457,60 +489,69 @@ class Orchestrator:
     def _schedule_retry(
         self,
         issue_id: str,
-        identifier: str,
         attempt: int,
-        is_continuation: bool,
-        error: str | None,
+        meta: RetryMeta,
     ) -> None:
         """安排一次重试。
 
         对应规范 §8.4 重试和退避。
 
         退避公式：
-        - 续运重试：固定 1000 ms 延迟
-        - 故障重试：delay = min(10000 * 2^(attempt-1), max_retry_backoff_ms)
+        - 续运重试（delay_type="continuation"）：固定 1000 ms 延迟
+        - 故障重试（delay_type="failure"）：delay = min(10000 * 2^(attempt-1), max_retry_backoff_ms)
+
+        retry_token 用于防止过期重试（参考 Elixir make_ref() 模式）：
+        当同一 Issue 被重新调度时，旧计时器的 token 将不匹配，
+        避免过期回调触发重复分派。
 
         Args:
             issue_id: 问题 ID
-            identifier: 人类可读标识符
             attempt: 重试尝试序号
-            is_continuation: 是否为续运重试
-            error: 失败原因
+            meta: 重试调度元数据
         """
         # 取消同一问题的现有重试计时器
         existing = self.state.retry_attempts.get(issue_id)
         if existing is not None:
             existing.timer_handle.cancel()
 
+        is_continuation = meta.delay_type == "continuation"
         delay_ms = self._compute_retry_delay_ms(attempt, is_continuation)
         due_at_ms = time.monotonic() * 1000 + delay_ms
+
+        # 生成唯一 retry_token
+        token = uuid.uuid4()
 
         # 使用事件循环的 call_later 安排重试触发
         loop = asyncio.get_running_loop()
         timer_handle = loop.call_later(
             delay_ms / 1000,
             lambda: asyncio.create_task(
-                self._on_retry_timer(issue_id),
-                name=f"retry:{identifier}:{attempt}",
+                self._on_retry_timer(issue_id, token),
+                name=f"retry:{meta.identifier}:{attempt}",
             ),
         )
 
         self.state.retry_attempts[issue_id] = RetryEntry(
             issue_id=issue_id,
-            identifier=identifier,
+            identifier=meta.identifier,
             attempt=attempt,
             due_at_ms=due_at_ms,
             timer_handle=timer_handle,
-            error=error,
+            retry_token=token,
+            delay_type=meta.delay_type,
+            error=meta.error,
+            worker_host=meta.worker_host,
+            workspace_path=meta.workspace_path,
         )
 
         logger.debug(
             "retry_scheduled",
             issue_id=issue_id,
-            issue_identifier=identifier,
+            issue_identifier=meta.identifier,
             attempt=attempt,
             delay_ms=delay_ms,
-            is_continuation=is_continuation,
+            delay_type=meta.delay_type,
+            retry_token=str(token)[:8],
         )
 
     def _compute_retry_delay_ms(self, attempt: int, is_continuation: bool) -> int:
@@ -534,22 +575,36 @@ class Orchestrator:
             self._config.agent.max_retry_backoff_ms,
         )
 
-    async def _on_retry_timer(self, issue_id: str) -> None:
+    async def _on_retry_timer(self, issue_id: str, retry_token: uuid.UUID) -> None:
         """重试计时器触发回调。
 
         对应规范 §16.6 on_retry_timer：
-        1. 获取活跃候选问题
-        2. 按 issue_id 查找特定问题
-        3. 如果未找到，释放声明
-        4. 如果找到且仍符合候选条件，分派
-        5. 如果找到但不再活跃，释放声明
-        6. 如果槽位不可用，以错误重新排队
+        1. 验证 retry_token（防过期重试）
+        2. 获取活跃候选问题
+        3. 按 issue_id 查找特定问题
+        4. 如果未找到，释放声明
+        5. 如果找到且仍符合候选条件，分派
+        6. 如果找到但不再活跃，释放声明
+        7. 如果槽位不可用，以错误重新排队
 
         Args:
             issue_id: 触发重试的问题 ID
+            retry_token: 重试令牌，不匹配则跳过（防止过期重试）
         """
         retry_entry = self.state.retry_attempts.pop(issue_id, None)
         if retry_entry is None:
+            return
+
+        # retry_token 验证：不匹配则跳过（过期或已被新重试替换）
+        if retry_entry.retry_token != retry_token:
+            logger.debug(
+                "retry_token_mismatch_skipping",
+                issue_id=issue_id,
+                expected=str(retry_token)[:8],
+                actual=str(retry_entry.retry_token)[:8],
+            )
+            # 放回重试条目（token 不匹配意味着有更新的重试已调度）
+            self.state.retry_attempts[issue_id] = retry_entry
             return
 
         identifier = retry_entry.identifier
@@ -563,10 +618,14 @@ class Orchestrator:
             log.exception("retry_poll_failed")
             self._schedule_retry(
                 issue_id=issue_id,
-                identifier=identifier,
                 attempt=attempt + 1,
-                is_continuation=False,
-                error="retry poll failed",
+                meta=RetryMeta(
+                    identifier=identifier,
+                    delay_type="failure",
+                    error="retry poll failed",
+                    worker_host=retry_entry.worker_host,
+                    workspace_path=retry_entry.workspace_path,
+                ),
             )
             return
 
@@ -599,10 +658,14 @@ class Orchestrator:
             log.warning("retry_no_slots_requeuing")
             self._schedule_retry(
                 issue_id=issue_id,
-                identifier=identifier,
                 attempt=attempt + 1,
-                is_continuation=False,
-                error="no available orchestrator slots",
+                meta=RetryMeta(
+                    identifier=identifier,
+                    delay_type="failure",
+                    error="no available orchestrator slots",
+                    worker_host=retry_entry.worker_host,
+                    workspace_path=retry_entry.workspace_path,
+                ),
             )
             return
 
@@ -639,7 +702,7 @@ class Orchestrator:
         if stall_timeout_ms <= 0:
             return
 
-        now = datetime.utcnow()
+        now = datetime.now(UTC)
         stalled_ids: list[str] = []
 
         for issue_id, entry in self.state.running.items():
@@ -742,7 +805,7 @@ class Orchestrator:
                 pass
 
         # 更新运行时统计
-        elapsed = (datetime.utcnow() - entry.started_at).total_seconds()
+        elapsed = (datetime.now(UTC) - entry.started_at).total_seconds()
         self.state.codex_totals.seconds_running += elapsed
 
         # 移除运行条目
@@ -793,6 +856,95 @@ class Orchestrator:
                     "startup_workspace_cleanup_failed",
                     issue_identifier=issue.identifier,
                 )
+
+    # ====================================================================
+    # 运行时配置刷新
+    # ====================================================================
+
+    def _refresh_runtime_config(self) -> None:
+        """从最新配置刷新运行时参数（支持 WORKFLOW.md 热重载）。
+
+        配置由 WorkflowStore/Watcher 管理热重载，
+        此方法将最新配置值同步到编排器状态。
+        """
+        self.state.poll_interval_ms = self._config.polling.interval_ms
+        self.state.max_concurrent_agents = self._config.agent.max_concurrent_agents
+
+    # ====================================================================
+    # 可观测性快照
+    # ====================================================================
+
+    def snapshot(self) -> dict[str, Any]:
+        """可观测性：生成当前状态快照（供 HTTP API 和仪表板使用）。
+
+        委托 SnapshotGenerator 生成快照，包含：
+        - 运行中的 worker 信息
+        - 重试队列条目
+        - 令牌汇总
+        - 配置参数
+        - 轮询状态
+        """
+        from taolib.symphony.observability.snapshot import SnapshotGenerator
+
+        gen = SnapshotGenerator()
+        system_snapshot = gen.generate(self.state)
+        result = system_snapshot.to_dict()
+
+        # 补充 poll 状态信息
+        result["poll_check_in_progress"] = self.state.poll_check_in_progress
+        result["next_poll_due_at_ms"] = self.state.next_poll_due_at_ms
+
+        return result
+
+    # ====================================================================
+    # 分派验证与主机选择
+    # ====================================================================
+
+    def _revalidate_issue_for_dispatch(self, issue: Issue) -> bool:
+        """分派前重新验证 Issue 有效性（防竞态调度）。
+
+        在 _dispatch_issue 中调用，确保从 filter_dispatchable 到
+        实际分派之间状态未发生变化。
+
+        Args:
+            issue: 待验证的问题
+
+        Returns:
+            True 表示验证通过，可以分派
+        """
+        # 再次检查是否已被其他路径分派
+        if issue.id in self.state.running:
+            return False
+        if issue.id in self.state.claimed:
+            return False
+        if issue.id in self.state.retry_attempts:
+            return False
+
+        # 检查是否有基本字段
+        return not (not issue.id or not issue.identifier or not issue.title or not issue.state)
+
+    def _select_worker_host(self) -> str | None:
+        """SSH 场景下最小负载主机选择。
+
+        从配置的 ssh_hosts 中选择当前运行 worker 数最少的主机。
+        本地执行时返回 None。
+
+        Returns:
+            选中的主机地址，或 None 表示本地执行
+        """
+        ssh_hosts = self._config.worker.ssh_hosts
+        if not ssh_hosts:
+            return None
+
+        # 统计每个主机的当前运行数
+        host_counts: dict[str, int] = dict.fromkeys(ssh_hosts, 0)
+        for entry in self.state.running.values():
+            if entry.worker_host in host_counts:
+                host_counts[entry.worker_host] += 1
+
+        # 选择最小负载主机
+        min_host = min(ssh_hosts, key=lambda h: host_counts[h])
+        return min_host
 
     # ====================================================================
     # 配置验证

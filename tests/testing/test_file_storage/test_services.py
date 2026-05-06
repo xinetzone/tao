@@ -254,7 +254,7 @@ class TestBucketService:
 
     @pytest.mark.asyncio
     async def test_delete_bucket_force(self):
-        svc, repo, backend = self._make_service()
+        svc, repo, _backend = self._make_service()
         repo.get_by_id.return_value = _make_bucket_doc(file_count=5)
         repo.delete.return_value = True
 
@@ -404,7 +404,7 @@ class TestFileService:
         data = MagicMock()
         data.model_dump.return_value = {}
 
-        result = await svc.update_metadata("file-001", data)
+        await svc.update_metadata("file-001", data)
         deps["file_repo"].update.assert_not_awaited()
 
     @pytest.mark.asyncio
@@ -480,7 +480,7 @@ class TestFileService:
             "storage_backend"
         ].generate_presigned_url.return_value = "https://s3.example.com/signed"
 
-        result = await svc.get_file_url("file-001", expires_in=7200)
+        await svc.get_file_url("file-001", expires_in=7200)
         deps["storage_backend"].generate_presigned_url.assert_awaited_once()
 
     @pytest.mark.asyncio
@@ -711,7 +711,7 @@ class TestUploadService:
 
     @pytest.mark.asyncio
     async def test_cleanup_expired_sessions(self):
-        svc, upload_repo, chunk_repo, _, _, backend = self._make_service()
+        svc, upload_repo, _chunk_repo, _, _, _backend = self._make_service()
         expired_sessions = [
             _make_upload_session("sess-1"),
             _make_upload_session("sess-2"),
@@ -791,7 +791,7 @@ class TestLifecycleService:
         version_doc = _make_version(version_number=1)
         deps["version_repo"].create.return_value = version_doc
 
-        result = await svc.create_file_version("file-001")
+        await svc.create_file_version("file-001")
         create_call = deps["version_repo"].create.call_args[0][0]
         assert create_call["version_number"] == 1
 
@@ -1318,12 +1318,12 @@ class TestBucketServiceEdgeCases:
 
         from taolib.testing.file_storage.models.bucket import BucketUpdate
 
-        result = await svc.update_bucket("nonexistent", BucketUpdate(description="x"))
+        await svc.update_bucket("nonexistent", BucketUpdate(description="x"))
         bucket_repo.update.assert_called_once()
 
     @pytest.mark.asyncio
     async def test_delete_bucket_force_with_zero_files(self):
-        svc, bucket_repo, storage_backend = self._make_service()
+        svc, bucket_repo, _storage_backend = self._make_service()
         bucket_repo.get_by_id.return_value = _make_bucket_doc(file_count=0)
         bucket_repo.delete.return_value = True
 

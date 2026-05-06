@@ -4,7 +4,10 @@ from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, status
 from fastapi.responses import StreamingResponse
 
 from taolib.testing.file_storage.models.enums import AccessLevel, MediaType
-from taolib.testing.file_storage.models.file import FileMetadataResponse, FileMetadataUpdate
+from taolib.testing.file_storage.models.file import (
+    FileMetadataResponse,
+    FileMetadataUpdate,
+)
 from taolib.testing.file_storage.services.file_service import FileService
 
 router = APIRouter()

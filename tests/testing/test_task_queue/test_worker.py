@@ -212,7 +212,7 @@ class TestProcessTaskFailure:
         async def handle(params):
             raise ValueError("detailed error message")
 
-        worker, queue, repo = _make_worker(registry)
+        worker, _queue, repo = _make_worker(registry)
         task_doc = _make_task_doc(
             task_type="error_info_task",
             retry_count=0,
@@ -305,7 +305,7 @@ class TestWorkerLifecycle:
         async def handle(params):
             return {}
 
-        worker, queue, repo = _make_worker(registry)
+        worker, _queue, repo = _make_worker(registry)
         task_doc = _make_task_doc(task_type="tracking_task")
         repo.get_by_id.return_value = task_doc
 
@@ -383,7 +383,7 @@ class TestRunLoop:
     @pytest.mark.asyncio
     async def test_run_loop_handles_cancelled_error(self):
         """CancelledError 导致循环退出。"""
-        worker, queue, repo = _make_worker()
+        worker, queue, _repo = _make_worker()
         queue.dequeue.side_effect = asyncio.CancelledError
         worker._running = True
 
@@ -395,7 +395,7 @@ class TestRunLoop:
     @pytest.mark.asyncio
     async def test_run_loop_handles_unexpected_error(self):
         """意外异常后 sleep(1) 然后继续。"""
-        worker, queue, repo = _make_worker()
+        worker, queue, _repo = _make_worker()
         call_count = 0
 
         async def dequeue_side_effect(timeout=5.0):
@@ -440,7 +440,7 @@ class TestRunLoop:
     @pytest.mark.asyncio
     async def test_start_sets_running_and_cleans_up(self):
         """start() 设置 _running=True，退出后设为 False。"""
-        worker, queue, repo = _make_worker()
+        worker, queue, _repo = _make_worker()
 
         async def dequeue_side_effect(timeout=5.0):
             worker._running = False

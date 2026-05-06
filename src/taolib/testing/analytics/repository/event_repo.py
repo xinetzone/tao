@@ -8,9 +8,9 @@ from typing import Any
 
 from motor.motor_asyncio import AsyncIOMotorCollection
 
+from taolib.testing._base.repository import AsyncRepository
 from taolib.testing.analytics.models.enums import EventType
 from taolib.testing.analytics.models.event import EventDocument
-from taolib.testing._base.repository import AsyncRepository
 
 
 class EventRepository(AsyncRepository[EventDocument]):

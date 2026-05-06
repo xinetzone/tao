@@ -9,6 +9,7 @@
     from taolib.symphony.cli import app as cli_app
 """
 
+from taolib.symphony.config.schema import SymphonyConfig
 from taolib.symphony.errors import (
     AgentError,
     ConfigError,
@@ -20,7 +21,6 @@ from taolib.symphony.errors import (
     WorkflowLoadError,
     WorkspaceError,
 )
-from taolib.symphony.config.schema import SymphonyConfig
 
 __version__ = "0.1.0"
 

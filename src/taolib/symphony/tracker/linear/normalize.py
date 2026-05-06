@@ -8,7 +8,7 @@
 - 日期 → ISO 8601 字符串解析为 datetime
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from taolib.symphony.tracker.models import Issue
 
@@ -102,7 +102,7 @@ def _parse_datetime(raw: str | None) -> datetime | None:
         dt = datetime.fromisoformat(raw)
         # 确保 timezone-aware
         if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=timezone.utc)
+            dt = dt.replace(tzinfo=UTC)
         return dt
     except (ValueError, TypeError):
         return None

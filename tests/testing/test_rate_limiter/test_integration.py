@@ -44,7 +44,7 @@ class TestRateLimitIntegration:
         client = TestClient(app)
 
         # 发送 5 个请求（应该都成功）
-        for i in range(5):
+        for _i in range(5):
             response = client.get("/api/test")
             assert response.status_code == 200
             assert "X-RateLimit-Limit" in response.headers
@@ -106,7 +106,7 @@ class TestWhitelistIntegration:
         client = TestClient(app)
 
         # 发送多个请求到 bypass 路径
-        for i in range(10):
+        for _i in range(10):
             response = client.get("/health")
             assert response.status_code == 200
 
@@ -117,7 +117,7 @@ class TestWhitelistIntegration:
         client = TestClient(app)
 
         # 同一个路径的请求共享计数器
-        for i in range(5):
+        for _i in range(5):
             response = client.get("/api/test")
             assert response.status_code == 200
 
@@ -146,7 +146,7 @@ class TestPathRulesIntegration:
         client = TestClient(app)
 
         # /api/test 使用默认规则（100次）
-        for i in range(10):
+        for _i in range(10):
             response = client.get("/api/test")
             assert response.status_code == 200
 
@@ -169,7 +169,7 @@ class TestSlidingWindowBehavior:
         client = TestClient(app)
 
         # 填满限流
-        for i in range(3):
+        for _i in range(3):
             response = client.get("/api/test")
             assert response.status_code == 200
 

@@ -4,7 +4,7 @@
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional, Protocol, runtime_checkable
+from typing import Any
 
 from taolib.testing.multi_agent.models import SkillParameter
 
@@ -14,7 +14,7 @@ class SkillExecutionContext:
 
     def __init__(
         self,
-        parameters: Dict[str, Any],
+        parameters: dict[str, Any],
         llm_provider: Any = None,
         agent: Any = None,
     ):
@@ -28,7 +28,7 @@ class SkillExecutionContext:
         self.parameters = parameters
         self.llm_provider = llm_provider
         self.agent = agent
-        self.state: Dict[str, Any] = {}
+        self.state: dict[str, Any] = {}
 
 
 class Skill(ABC):
@@ -70,7 +70,7 @@ class Skill(ABC):
         """
         pass
 
-    def validate_parameters(self, parameters: Dict[str, Any]) -> tuple[bool, list[str]]:
+    def validate_parameters(self, parameters: dict[str, Any]) -> tuple[bool, list[str]]:
         """验证参数。
 
         Args:

@@ -9,7 +9,11 @@ from taolib.testing.config_center.models.config import (
     ConfigDocument,
     ConfigUpdate,
 )
-from taolib.testing.config_center.models.enums import ConfigStatus, ConfigValueType, Environment
+from taolib.testing.config_center.models.enums import (
+    ConfigStatus,
+    ConfigValueType,
+    Environment,
+)
 from taolib.testing.config_center.services.config_service import ConfigService
 
 

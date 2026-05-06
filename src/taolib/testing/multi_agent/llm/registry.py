@@ -3,7 +3,6 @@
 管理和注册所有可用的LLM模型提供商。
 """
 
-from typing import Type
 
 from taolib.testing.multi_agent.llm.protocols import BaseLLMProvider
 from taolib.testing.multi_agent.models import ModelConfig, ModelProvider
@@ -12,10 +11,10 @@ from taolib.testing.multi_agent.models import ModelConfig, ModelProvider
 class ModelRegistry:
     """LLM模型注册表。"""
 
-    _providers: dict[ModelProvider, Type[BaseLLMProvider]] = {}
+    _providers: dict[ModelProvider, type[BaseLLMProvider]] = {}
 
     @classmethod
-    def register(cls, provider_type: ModelProvider, provider_class: Type[BaseLLMProvider]) -> None:
+    def register(cls, provider_type: ModelProvider, provider_class: type[BaseLLMProvider]) -> None:
         """注册模型提供商。
 
         Args:
@@ -25,7 +24,7 @@ class ModelRegistry:
         cls._providers[provider_type] = provider_class
 
     @classmethod
-    def get_provider_class(cls, provider_type: ModelProvider) -> Type[BaseLLMProvider]:
+    def get_provider_class(cls, provider_type: ModelProvider) -> type[BaseLLMProvider]:
         """获取模型提供商类。
 
         Args:

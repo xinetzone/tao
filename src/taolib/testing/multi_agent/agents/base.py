@@ -4,15 +4,14 @@
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional
 from datetime import UTC, datetime
+from typing import Any
 
 from taolib.testing.multi_agent.errors import AgentError
 from taolib.testing.multi_agent.models import (
     AgentDocument,
     AgentStatus,
     Message,
-    MessageType,
     TaskDocument,
     TaskStatus,
 )
@@ -29,7 +28,7 @@ class BaseAgent(ABC):
         """
         self._document = document
         self._status = document.status
-        self._current_task: Optional[TaskDocument] = None
+        self._current_task: TaskDocument | None = None
         self._message_queue: list[Message] = []
 
     @property
@@ -53,7 +52,7 @@ class BaseAgent(ABC):
         return self._document
 
     @property
-    def current_task(self) -> Optional[TaskDocument]:
+    def current_task(self) -> TaskDocument | None:
         """获取当前任务。"""
         return self._current_task
 
@@ -133,7 +132,7 @@ class BaseAgent(ABC):
         """
         pass
 
-    async def complete_task(self, success: bool, result: Optional[Any] = None) -> None:
+    async def complete_task(self, success: bool, result: Any | None = None) -> None:
         """完成当前任务。
 
         Args:
@@ -160,7 +159,7 @@ class BaseAgent(ABC):
         self._document.last_active_at = datetime.now(UTC)
 
     async def _on_task_completed(
-        self, task: TaskDocument, success: bool, result: Optional[Any]
+        self, task: TaskDocument, success: bool, result: Any | None
     ) -> None:
         """任务完成后的回调。
 

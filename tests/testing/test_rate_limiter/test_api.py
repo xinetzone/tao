@@ -8,7 +8,11 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from taolib.testing.rate_limiter.api.router import router
-from taolib.testing.rate_limiter.models import RealtimeStats, TopUserEntry, ViolationStatsEntry
+from taolib.testing.rate_limiter.models import (
+    RealtimeStats,
+    TopUserEntry,
+    ViolationStatsEntry,
+)
 from taolib.testing.rate_limiter.stats import RateLimitStatsService
 
 

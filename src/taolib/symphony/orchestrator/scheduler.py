@@ -17,7 +17,7 @@
 from datetime import datetime
 
 from taolib.symphony.config.schema import AgentConfig
-from taolib.symphony.orchestrator.state import OrchestratorState, RunningEntry
+from taolib.symphony.orchestrator.state import OrchestratorState
 from taolib.symphony.tracker.models import Issue
 
 
@@ -132,10 +132,7 @@ class Scheduler:
             return False
 
         # 不已在重试队列中
-        if issue.id in state.retry_attempts:
-            return False
-
-        return True
+        return issue.id not in state.retry_attempts
 
     def filter_dispatchable(
         self,

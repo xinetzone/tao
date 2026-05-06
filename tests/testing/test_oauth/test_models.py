@@ -21,7 +21,10 @@ from taolib.testing.oauth.models.enums import (
     OAuthProvider,
 )
 from taolib.testing.oauth.models.profile import OAuthUserInfo, OnboardingData
-from taolib.testing.oauth.models.session import OAuthSessionDocument, OAuthSessionResponse
+from taolib.testing.oauth.models.session import (
+    OAuthSessionDocument,
+    OAuthSessionResponse,
+)
 
 
 class TestEnums:

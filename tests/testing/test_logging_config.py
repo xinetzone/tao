@@ -92,7 +92,7 @@ class TestConfigureLogging(unittest.TestCase):
             logging.CRITICAL,
         ]
 
-        for level, expected in zip(levels, expected_levels):
+        for level, expected in zip(levels, expected_levels, strict=False):
             logging.root.handlers.clear()
             configure_logging(level=level)
             logger = get_logger(f"test_{level}")

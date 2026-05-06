@@ -3,9 +3,8 @@
 集成Ollama本地运行的大模型,无需API KEY。
 """
 
-import asyncio
 import time
-from typing import AsyncGenerator
+from collections.abc import AsyncGenerator
 from datetime import UTC, datetime
 
 import httpx
@@ -16,7 +15,7 @@ from taolib.testing.multi_agent.errors import (
     ModelUnavailableError,
 )
 from taolib.testing.multi_agent.llm.protocols import BaseLLMProvider
-from taolib.testing.multi_agent.models import ModelConfig, ModelStatus
+from taolib.testing.multi_agent.models import ModelConfig
 
 
 class OllamaProvider(BaseLLMProvider):
@@ -49,7 +48,6 @@ class OllamaProvider(BaseLLMProvider):
         Returns:
             bool: 服务是否健康
         """
-        from datetime import UTC, datetime
 
         try:
             client = await self._get_client()
@@ -157,7 +155,7 @@ class OllamaProvider(BaseLLMProvider):
         max_tokens: int | None = None,
         system_prompt: str | None = None,
         **kwargs,
-    ) -> AsyncGenerator[str, None]:
+    ) -> AsyncGenerator[str]:
         """使用Ollama流式生成文本。
 
         Args:

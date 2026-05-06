@@ -31,7 +31,10 @@ from taolib.testing.file_storage.models.stats import (
     StorageOverviewResponse,
     UploadStatsResponse,
 )
-from taolib.testing.file_storage.models.thumbnail import ThumbnailDocument, ThumbnailInfo
+from taolib.testing.file_storage.models.thumbnail import (
+    ThumbnailDocument,
+    ThumbnailInfo,
+)
 from taolib.testing.file_storage.models.upload import (
     ChunkRecord,
     UploadSessionCreate,

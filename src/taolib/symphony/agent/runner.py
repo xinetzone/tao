@@ -7,9 +7,9 @@
 
 import asyncio
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any, Protocol
-from collections.abc import Callable
 
 from .appserver import AppServerClient, AppServerError
 from .events import AppServerEvent, TurnResult
@@ -174,7 +174,7 @@ class AgentRunner:
         except AppServerError as e:
             logger.error("Issue %s: AppServer 错误: %s", issue.identifier, e)
             last_result = TurnResult(success=False, error=str(e))
-        except asyncio.TimeoutError:
+        except TimeoutError:
             logger.error("Issue %s: 运行超时", issue.identifier)
             last_result = TurnResult(success=False, error="运行超时")
         except Exception as e:

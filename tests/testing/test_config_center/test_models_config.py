@@ -12,7 +12,11 @@ from taolib.testing.config_center.models.config import (
     ConfigResponse,
     ConfigUpdate,
 )
-from taolib.testing.config_center.models.enums import ConfigStatus, ConfigValueType, Environment
+from taolib.testing.config_center.models.enums import (
+    ConfigStatus,
+    ConfigValueType,
+    Environment,
+)
 
 
 class TestConfigBase:
@@ -190,7 +194,7 @@ class TestConfigResponse:
 
     def test_response_from_attributes(self) -> None:
         """测试 from_attributes 配置。"""
-        now = datetime.now(tz=UTC)
+        datetime.now(tz=UTC)
         doc = ConfigDocument(
             id="config-123",
             key="database.host",

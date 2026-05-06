@@ -8,7 +8,6 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
-
 from taolib.testing.site.auth import SessionManager, hash_password, verify_password
 from taolib.testing.site.config import SiteConfig
 from taolib.testing.site.database import Base
@@ -139,7 +138,6 @@ def app():
     from fastapi import FastAPI, Request
     from fastapi.staticfiles import StaticFiles
     from fastapi.templating import Jinja2Templates
-
     from taolib.testing.site.app import _datefmt, _now, _shortdate
 
     application = FastAPI(title=config.site_title, docs_url=None, redoc_url=None)
@@ -425,7 +423,7 @@ class TestArticleServices:
     def test_get_all_articles(self, seeded_db):
         create_article(seeded_db, title="A1", content="c", status="published")
         create_article(seeded_db, title="A2", content="c", status="draft")
-        articles, total = get_all_articles(seeded_db)
+        _articles, total = get_all_articles(seeded_db)
         assert total == 2
 
     def test_get_all_articles_filter_status(self, seeded_db):
@@ -490,7 +488,7 @@ class TestArticleServices:
         create_article(
             seeded_db, title="Java Guide", content="learn java", status="published"
         )
-        articles, total = get_published_articles(seeded_db, search="python")
+        _articles, total = get_published_articles(seeded_db, search="python")
         assert total == 1
 
     def test_get_published_articles_pagination(self, seeded_db):
@@ -581,7 +579,7 @@ class TestCommentServices:
             content="c2",
             auto_approve=True,
         )
-        comments, total = get_all_comments(seeded_db, status="pending")
+        _comments, total = get_all_comments(seeded_db, status="pending")
         assert total == 1
 
     def test_get_pending_comments_count(self, seeded_db):
@@ -612,7 +610,7 @@ class TestContactMessageServices:
     def test_get_messages(self, db_session):
         create_contact_message(db_session, name="A", email="a@t.com", message="m1")
         create_contact_message(db_session, name="B", email="b@t.com", message="m2")
-        messages, total = get_contact_messages(db_session)
+        _messages, total = get_contact_messages(db_session)
         assert total == 2
 
     def test_mark_read(self, db_session):
@@ -630,7 +628,7 @@ class TestContactMessageServices:
             db_session, name="T", email="t@t.com", message="hi"
         )
         assert delete_contact_message(db_session, msg.id) is True
-        messages, total = get_contact_messages(db_session)
+        _messages, total = get_contact_messages(db_session)
         assert total == 0
 
     def test_delete_message_not_found(self, db_session):

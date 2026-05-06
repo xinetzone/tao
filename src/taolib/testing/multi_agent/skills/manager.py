@@ -4,7 +4,7 @@
 """
 
 from datetime import UTC, datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from taolib.testing.multi_agent.errors import SkillError
 from taolib.testing.multi_agent.llm import LLMManager, get_llm_manager
@@ -16,7 +16,6 @@ from taolib.testing.multi_agent.models import (
     SkillTestResult,
 )
 from taolib.testing.multi_agent.skills.protocols import (
-    BaseSkill,
     Skill,
     SkillExecutionContext,
 )
@@ -31,8 +30,8 @@ class SkillManager:
 
     def __init__(
         self,
-        registry: Optional[SkillRegistry] = None,
-        llm_manager: Optional[LLMManager] = None,
+        registry: SkillRegistry | None = None,
+        llm_manager: LLMManager | None = None,
     ):
         """初始化技能管理器。
 
@@ -42,10 +41,10 @@ class SkillManager:
         """
         self._registry = registry or get_skill_registry()
         self._llm_manager = llm_manager or get_llm_manager()
-        self._skill_documents: Dict[str, SkillDocument] = {}
-        self._execution_history: List[Dict[str, Any]] = []
+        self._skill_documents: dict[str, SkillDocument] = {}
+        self._execution_history: list[dict[str, Any]] = []
 
-    def register_skill(self, skill: Skill, document: Optional[SkillDocument] = None) -> None:
+    def register_skill(self, skill: Skill, document: SkillDocument | None = None) -> None:
         """注册技能。
 
         Args:
@@ -71,7 +70,7 @@ class SkillManager:
 
         self._skill_documents[skill.id] = document
 
-    def get_skill(self, skill_id: str) -> Optional[Skill]:
+    def get_skill(self, skill_id: str) -> Skill | None:
         """获取技能。
 
         Args:
@@ -82,7 +81,7 @@ class SkillManager:
         """
         return self._registry.get_skill(skill_id)
 
-    def get_skill_document(self, skill_id: str) -> Optional[SkillDocument]:
+    def get_skill_document(self, skill_id: str) -> SkillDocument | None:
         """获取技能文档。
 
         Args:
@@ -93,7 +92,7 @@ class SkillManager:
         """
         return self._skill_documents.get(skill_id)
 
-    def list_skills(self, status: Optional[SkillStatus] = None) -> List[SkillDocument]:
+    def list_skills(self, status: SkillStatus | None = None) -> list[SkillDocument]:
         """列出技能。
 
         Args:
@@ -110,7 +109,7 @@ class SkillManager:
     async def execute_skill(
         self,
         skill_id: str,
-        parameters: Dict[str, Any],
+        parameters: dict[str, Any],
         agent: Any = None,
     ) -> Any:
         """执行技能。
@@ -176,7 +175,7 @@ class SkillManager:
     async def test_skill(
         self,
         skill_id: str,
-        test_cases: List[Dict[str, Any]],
+        test_cases: list[dict[str, Any]],
     ) -> SkillTestResult:
         """测试技能。
 
@@ -189,7 +188,7 @@ class SkillManager:
         """
         passed = 0
         failed = 0
-        results: List[Dict[str, Any]] = []
+        results: list[dict[str, Any]] = []
 
         for i, test_case in enumerate(test_cases):
             parameters = test_case.get("parameters", {})
@@ -235,7 +234,7 @@ class SkillManager:
     async def evaluate_skill(
         self,
         skill_id: str,
-        test_cases: Optional[List[Dict[str, Any]]] = None,
+        test_cases: list[dict[str, Any]] | None = None,
     ) -> SkillEvaluation:
         """评估技能。
 
@@ -286,8 +285,8 @@ class SkillManager:
     async def discover_skills(
         self,
         task_description: str,
-        existing_skills: Optional[List[str]] = None,
-    ) -> List[str]:
+        existing_skills: list[str] | None = None,
+    ) -> list[str]:
         """发现完成任务所需的技能。
 
         Args:
@@ -357,9 +356,9 @@ class SkillManager:
 
     def get_execution_history(
         self,
-        skill_id: Optional[str] = None,
+        skill_id: str | None = None,
         limit: int = 100,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """获取执行历史。
 
         Args:
@@ -378,7 +377,7 @@ class SkillManager:
 
 
 # 全局管理器实例
-_global_manager: Optional[SkillManager] = None
+_global_manager: SkillManager | None = None
 
 
 def get_skill_manager() -> SkillManager:

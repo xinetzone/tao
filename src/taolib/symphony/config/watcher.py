@@ -6,8 +6,8 @@
 
 import logging
 import time
-from pathlib import Path
 from collections.abc import Callable
+from pathlib import Path
 
 from watchdog.events import FileModifiedEvent, FileSystemEventHandler
 from watchdog.observers import Observer

@@ -8,7 +8,11 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
-from taolib.testing.multi_agent.models.enums import ModelProvider, ModelStatus, LoadBalanceStrategy
+from taolib.testing.multi_agent.models.enums import (
+    LoadBalanceStrategy,
+    ModelProvider,
+    ModelStatus,
+)
 
 
 class ModelConfig(BaseModel):

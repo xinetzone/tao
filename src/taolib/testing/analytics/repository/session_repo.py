@@ -8,8 +8,8 @@ from typing import Any
 
 from motor.motor_asyncio import AsyncIOMotorCollection
 
-from taolib.testing.analytics.models.event import SessionDocument
 from taolib.testing._base.repository import AsyncRepository
+from taolib.testing.analytics.models.event import SessionDocument
 
 
 class SessionRepository(AsyncRepository[SessionDocument]):

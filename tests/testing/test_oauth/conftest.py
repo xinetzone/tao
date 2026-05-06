@@ -94,7 +94,7 @@ class MockMongoCollection:
                 results.sort(key=lambda x: x.get(field, ""), reverse=(order == -1))
         return results[0]
 
-    def find(self, filter: dict[str, Any] = None, **kwargs: Any) -> MockCursor:
+    def find(self, filter: dict[str, Any] | None = None, **kwargs: Any) -> MockCursor:
         filter = filter or {}
         results = []
         for doc in self._documents.values():
@@ -109,7 +109,7 @@ class MockMongoCollection:
         return_document: bool = False,
         **kwargs: Any,
     ) -> dict[str, Any] | None:
-        for doc_id, doc in self._documents.items():
+        for _doc_id, doc in self._documents.items():
             if self._matches_filter(doc, filter):
                 if "$set" in update:
                     doc.update(update["$set"])
@@ -126,7 +126,7 @@ class MockMongoCollection:
         mock_result.modified_count = 0
         mock_result.upserted_id = None
 
-        for doc_id, doc in self._documents.items():
+        for _doc_id, doc in self._documents.items():
             if self._matches_filter(doc, filter):
                 if "$set" in update:
                     doc.update(update["$set"])
@@ -223,7 +223,7 @@ class MockRedis:
     async def get(self, key: str) -> str | None:
         return self._data.get(key)
 
-    async def set(self, key: str, value: str, ex: int = None) -> bool:
+    async def set(self, key: str, value: str, ex: int | None = None) -> bool:
         self._data[key] = value
         if ex:
             self._ttl[key] = ex

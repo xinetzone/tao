@@ -4,7 +4,8 @@
 """
 
 from abc import ABC, abstractmethod
-from typing import AsyncGenerator, Protocol, runtime_checkable
+from collections.abc import AsyncGenerator
+from typing import Protocol, runtime_checkable
 
 from taolib.testing.multi_agent.models import ModelConfig, ModelStats
 
@@ -65,7 +66,7 @@ class LLMProvider(Protocol):
         max_tokens: int | None = None,
         system_prompt: str | None = None,
         **kwargs,
-    ) -> AsyncGenerator[str, None]:
+    ) -> AsyncGenerator[str]:
         """流式生成文本。
 
         Args:
@@ -133,7 +134,7 @@ class BaseLLMProvider(ABC):
         max_tokens: int | None = None,
         system_prompt: str | None = None,
         **kwargs,
-    ) -> AsyncGenerator[str, None]:
+    ) -> AsyncGenerator[str]:
         """流式生成文本。"""
         ...
 

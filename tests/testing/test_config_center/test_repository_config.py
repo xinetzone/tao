@@ -5,7 +5,11 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 
 from taolib.testing.config_center.models.config import ConfigDocument
-from taolib.testing.config_center.models.enums import ConfigStatus, ConfigValueType, Environment
+from taolib.testing.config_center.models.enums import (
+    ConfigStatus,
+    ConfigValueType,
+    Environment,
+)
 from taolib.testing.config_center.repository.config_repo import ConfigRepository
 
 

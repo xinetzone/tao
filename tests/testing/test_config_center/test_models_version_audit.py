@@ -11,7 +11,11 @@ from taolib.testing.config_center.models.audit import (
     AuditLogDocument,
     AuditLogResponse,
 )
-from taolib.testing.config_center.models.enums import AuditAction, AuditStatus, ChangeType
+from taolib.testing.config_center.models.enums import (
+    AuditAction,
+    AuditStatus,
+    ChangeType,
+)
 from taolib.testing.config_center.models.version import (
     ConfigVersionBase,
     ConfigVersionCreate,

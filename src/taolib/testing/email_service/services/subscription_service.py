@@ -12,7 +12,9 @@ from taolib.testing.email_service.models.subscription import (
     SubscriptionDocument,
     SubscriptionResponse,
 )
-from taolib.testing.email_service.repository.subscription_repo import SubscriptionRepository
+from taolib.testing.email_service.repository.subscription_repo import (
+    SubscriptionRepository,
+)
 
 
 class SubscriptionService:

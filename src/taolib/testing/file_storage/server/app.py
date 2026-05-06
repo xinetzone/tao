@@ -28,7 +28,9 @@ from taolib.testing.file_storage.storage.s3_backend import S3StorageBackend
 # 可选缩略图生成器
 _thumbnail_generator = None
 try:
-    from taolib.testing.file_storage.processing.thumbnail import PillowThumbnailGenerator
+    from taolib.testing.file_storage.processing.thumbnail import (
+        PillowThumbnailGenerator,
+    )
 
     _thumbnail_generator = PillowThumbnailGenerator()
 except ImportError:

@@ -528,7 +528,7 @@ def validate_correctness(*, latency_ms: float = 3.0) -> dict[str, Any]:
     prober = RemoteProber(
         connection_factory=lambda **kw: conn_new, commands=commands, options=options
     )
-    report_new = prober.probe({"host": "h", "user": "u"})
+    prober.probe({"host": "h", "user": "u"})
 
     conn_legacy = FakeConnectionLatency(
         latency_s=latency_s, conda_ok=True, probe_ok=True, host="h", user="u"

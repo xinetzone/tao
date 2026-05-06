@@ -124,8 +124,20 @@ symphony/
 ```python
 import typer
 from pathlib import Path
+from typing import Any, Callable
 
 app = typer.Typer(name="symphony", help="Symphony orchestration service")
+
+# 依赖注入：可替换的运行时依赖（便于测试）
+class CLIDeps:
+    """可替换的运行时依赖（参考 Elixir CLI deps 模式）"""
+    file_exists: Callable[[Path], bool] = lambda p: p.is_file()
+    set_workflow_path: Callable[[Path], None] = ...
+    set_logs_root: Callable[[Path], None] = ...
+    set_server_port: Callable[[int | None], None] = ...
+    ensure_started: Callable[[], Any] = ...
+
+_default_deps = CLIDeps()
 
 @app.command()
 def run(
@@ -136,10 +148,28 @@ def run(
     port: int | None = typer.Option(None, help="Enable HTTP server on this port"),
     logs_root: Path = typer.Option(Path("./log"), help="Log output directory"),
     config: Path | None = typer.Option(None, help="Path to symphony.toml"),
+    accept_risks: bool = typer.Option(False,
+        "--accept-risks",
+        help="Acknowledge that Codex will run without the usual guardrails",
+    ),
+    deps: CLIDeps = typer.Option(None, hidden=True),  # 测试注入点
 ):
     """Start the Symphony orchestration service."""
+    deps = deps or _default_deps
+
+    # 安全确认：非限制模式需显式确认（参考 Elixir acknowledgement 开关）
+    if not accept_risks:
+        codex_policy = ...  # 从配置读取 approval_policy
+        if codex_policy in ("never", "on-failure"):
+            typer.echo(
+                "WARNING: Codex will run with minimal guardrails.\n"
+                "To proceed, start with --accept-risks",
+                err=True,
+            )
+            raise typer.Exit(code=1)
+
     # 验证 workflow 文件存在
-    if not workflow.exists():
+    if not deps.file_exists(workflow):
         typer.echo(f"Error: workflow file not found: {workflow}", err=True)
         raise typer.Exit(code=1)
     # 启动服务...
@@ -373,6 +403,7 @@ class LinearClient(TrackerClient):
 class Orchestrator:
     state: OrchestratorState
     config: SymphonyConfig
+    _running: bool = True
 
     async def run(self):
         """§16.1: 服务启动"""
@@ -382,16 +413,26 @@ class Orchestrator:
         await self._tick()
         # 周期性 tick
         while self._running:
-            await asyncio.sleep(self.state.poll_interval_ms / 1000)
+            interval = self.state.poll_interval_ms / 1000
+            self.state.next_poll_due_at_ms = time.monotonic() * 1000 + self.state.poll_interval_ms
+            await asyncio.sleep(interval)
             await self._tick()
 
     async def _tick(self):
         """§16.2: 轮询和分派节拍"""
+        self.state.poll_check_in_progress = True
+        self._notify_observers()
+
+        # 每次 tick 刷新运行时配置（支持 WORKFLOW.md 热重载）
+        self._refresh_runtime_config()
+
+        # 对账：先检测停顿，再刷新 Issue 状态
         self.state = await self._reconcile_running_issues()
 
         validation = self._validate_dispatch_config()
         if not validation.ok:
             logger.error("dispatch_validation_failed", error=validation.error)
+            self.state.poll_check_in_progress = False
             self._notify_observers()
             return
 
@@ -399,6 +440,7 @@ class Orchestrator:
             issues = await self.tracker.fetch_candidate_issues()
         except LinearError as e:
             logger.error("tracker_fetch_failed", error=str(e))
+            self.state.poll_check_in_progress = False
             self._notify_observers()
             return
 
@@ -408,16 +450,167 @@ class Orchestrator:
             if self._should_dispatch(issue):
                 self._dispatch_issue(issue, attempt=None)
 
+        self.state.poll_check_in_progress = False
         self._notify_observers()
 
-    def _dispatch_issue(self, issue: Issue, attempt: int | None):
+    def _dispatch_issue(self, issue: Issue, attempt: int | None,
+                        preferred_worker_host: str | None = None):
         """§16.4: 分派一个问题"""
+        # 分派前重新验证 Issue 状态（防止竞态调度）
+        refreshed = self._revalidate_issue_for_dispatch(issue)
+        if refreshed is None:
+            return
+
+        worker_host = self._select_worker_host(preferred_worker_host)
+        if worker_host == :no_worker_capacity:
+            logger.debug("no_worker_slots", issue=issue.identifier)
+            return
+
         task = asyncio.create_task(
-            self._run_worker(issue, attempt),
+            self._run_worker(issue, attempt, worker_host=worker_host),
             name=f"worker:{issue.identifier}",  # 3.14 asyncio 内省
         )
         task.add_done_callback(lambda t: self._on_worker_exit(issue.id, t))
-        # 更新状态...
+
+        self.state.running[issue.id] = RunningEntry(
+            worker_task=task,
+            identifier=issue.identifier,
+            issue=issue,
+            worker_host=worker_host,
+            started_at=datetime.utcnow(),
+        )
+        self.state.claimed.add(issue.id)
+        self.state.retry_attempts.pop(issue.id, None)
+
+        logger.info("issue_dispatched",
+            issue_id=issue.id, issue_identifier=issue.identifier,
+            attempt=attempt, worker_host=worker_host or "local")
+
+    def _on_worker_exit(self, issue_id: str, task: asyncio.Task):
+        """Worker 退出处理：区分正常完成和异常退出"""
+        entry = self.state.running.pop(issue_id, None)
+        if entry is None:
+            return
+
+        self._record_session_completion_totals(entry)
+        session_id = entry.session_id or "n/a"
+
+        try:
+            task.result()  # 如有异常会在此抛出
+        except Exception as exc:
+            # 异常退出 → 故障重试（指数退避）
+            next_attempt = (entry.retry_attempt or 0) + 1
+            logger.warning("agent_task_failed",
+                issue_id=issue_id, session_id=session_id, error=str(exc))
+            self._schedule_issue_retry(issue_id, next_attempt, RetryMeta(
+                identifier=entry.identifier, error=f"agent exited: {exc}",
+                worker_host=entry.worker_host, workspace_path=entry.workspace_path,
+            ))
+        else:
+            # 正常退出 → 续运重试（固定 1s）
+            # 正常完成 ≠ Issue 已 Done，需续运检查
+            logger.info("agent_task_completed",
+                issue_id=issue_id, session_id=session_id)
+            self.state.completed.add(issue_id)
+            self._schedule_issue_retry(issue_id, 1, RetryMeta(
+                identifier=entry.identifier, delay_type="continuation",
+                worker_host=entry.worker_host, workspace_path=entry.workspace_path,
+            ))
+
+        self._notify_observers()
+
+    def _schedule_issue_retry(self, issue_id: str, attempt: int, meta: RetryMeta):
+        """调度重试，使用 retry_token 防止过期重试触发"""
+        # 取消已有的重试计时器
+        old = self.state.retry_attempts.get(issue_id)
+        if old and old.timer_handle:
+            old.timer_handle.cancel()
+
+        retry_token = uuid.uuid4()  # 防过期：仅 token 匹配时执行
+        delay_ms = self._compute_retry_delay_ms(attempt, meta.delay_type == "continuation")
+        due_at_ms = time.monotonic() * 1000 + delay_ms
+
+        loop = asyncio.get_running_loop()
+        timer_handle = loop.call_later(
+            delay_ms / 1000,
+            lambda: asyncio.create_task(
+                self._on_retry_timer(issue_id, retry_token)
+            ),
+        )
+
+        self.state.retry_attempts[issue_id] = RetryEntry(
+            issue_id=issue_id,
+            identifier=meta.identifier,
+            attempt=attempt,
+            due_at_ms=due_at_ms,
+            timer_handle=timer_handle,
+            retry_token=retry_token,
+            delay_type=meta.delay_type,
+            error=meta.error,
+            worker_host=meta.worker_host,
+            workspace_path=meta.workspace_path,
+        )
+
+        error_suffix = f" error={meta.error}" if meta.error else ""
+        logger.warning("retry_scheduled",
+            issue_id=issue_id, identifier=meta.identifier,
+            attempt=attempt, delay_ms=delay_ms, **{k: v for k, v in [
+                ("error", meta.error)] if v})
+
+    async def _on_retry_timer(self, issue_id: str, retry_token: uuid.UUID):
+        """重试计时器回调：token 不匹配则跳过（防止过期重试）"""
+        entry = self.state.retry_attempts.get(issue_id)
+        if entry is None or entry.retry_token != retry_token:
+            return  # 过期或已被新重试替换
+        # ... 查询 Issue 状态并决定重试/释放/清理
+
+    def _refresh_runtime_config(self):
+        """从最新配置刷新运行时参数（支持 WORKFLOW.md 热重载）"""
+        # 配置由 WorkflowStore/Watcher 管理热重载
+        self.state.poll_interval_ms = self.config.polling.interval_ms
+        self.state.max_concurrent_agents = self.config.agent.max_concurrent_agents
+
+    def snapshot(self) -> dict:
+        """可观测性：生成当前状态快照（供 HTTP API 和仪表板使用）"""
+        now = datetime.utcnow()
+        now_ms = time.monotonic() * 1000
+        return {
+            "running": [
+                {
+                    "issue_id": eid, "identifier": e.identifier,
+                    "state": e.issue.state,
+                    "worker_host": e.worker_host,
+                    "workspace_path": e.workspace_path,
+                    "session_id": e.session_id,
+                    "codex_input_tokens": e.codex_input_tokens,
+                    "codex_output_tokens": e.codex_output_tokens,
+                    "codex_total_tokens": e.codex_total_tokens,
+                    "turn_count": e.turn_count,
+                    "started_at": e.started_at.isoformat(),
+                    "runtime_seconds": max(0, (now - e.started_at).seconds),
+                    "last_codex_event": e.last_codex_event,
+                    "last_codex_message": e.last_codex_message,
+                    "last_codex_timestamp": e.last_codex_timestamp.isoformat() if e.last_codex_timestamp else None,
+                }
+                for eid, e in self.state.running.items()
+            ],
+            "retrying": [
+                {
+                    "issue_id": eid, "attempt": e.attempt,
+                    "due_in_ms": max(0, e.due_at_ms - now_ms),
+                    "identifier": e.identifier, "error": e.error,
+                    "worker_host": e.worker_host,
+                }
+                for eid, e in self.state.retry_attempts.items()
+            ],
+            "codex_totals": dataclasses.asdict(self.state.codex_totals),
+            "rate_limits": self.state.codex_rate_limits,
+            "polling": {
+                "checking": self.state.poll_check_in_progress,
+                "next_poll_in_ms": max(0, (self.state.next_poll_due_at_ms or 0) - now_ms),
+                "poll_interval_ms": self.state.poll_interval_ms,
+            },
+        }
 ```
 
 **状态模型 (`orchestrator/state.py`)：**
@@ -428,15 +621,17 @@ class RunningEntry:
     worker_task: asyncio.Task
     identifier: str
     issue: Issue
+    worker_host: str | None = None       # SSH 扩展：工作器主机
+    workspace_path: str | None = None    # 工作区路径（运行时上报）
     session_id: str | None = None
     codex_app_server_pid: str | None = None
     last_codex_event: str | None = None
-    last_codex_timestamp: datetime | None = None
+    last_codex_timestamp: datetime | None = None  # 停顿检测依据
     last_codex_message: str | None = None
     codex_input_tokens: int = 0
     codex_output_tokens: int = 0
     codex_total_tokens: int = 0
-    last_reported_input_tokens: int = 0
+    last_reported_input_tokens: int = 0   # Token 增量核算
     last_reported_output_tokens: int = 0
     last_reported_total_tokens: int = 0
     turn_count: int = 0
@@ -444,13 +639,26 @@ class RunningEntry:
     started_at: datetime = field(default_factory=datetime.utcnow)
 
 @dataclass
+class RetryMeta:
+    """重试调度元数据（不存储在 state 中，仅在调度时传递）"""
+    identifier: str
+    delay_type: str = "failure"           # "continuation" | "failure"
+    error: str | None = None
+    worker_host: str | None = None
+    workspace_path: str | None = None
+
+@dataclass
 class RetryEntry:
     issue_id: str
     identifier: str
     attempt: int
-    due_at_ms: float          # monotonic clock
+    due_at_ms: float                      # monotonic clock
     timer_handle: asyncio.TimerHandle
+    retry_token: uuid.UUID                # 防过期重试（参考 Elixir retry_token）
+    delay_type: str = "failure"           # "continuation" | "failure"
     error: str | None = None
+    worker_host: str | None = None        # SSH 扩展：重试目标主机
+    workspace_path: str | None = None     # 重试时复用工作区
 
 @dataclass
 class CodexTotals:
@@ -463,6 +671,8 @@ class CodexTotals:
 class OrchestratorState:
     poll_interval_ms: int
     max_concurrent_agents: int
+    poll_check_in_progress: bool = False  # 仪表板渲染："checking now…"
+    next_poll_due_at_ms: float | None = None  # 仪表板：下次轮询倒计时
     running: dict[str, RunningEntry] = field(default_factory=dict)
     claimed: set[str] = field(default_factory=set)
     retry_attempts: dict[str, RetryEntry] = field(default_factory=dict)
@@ -508,7 +718,7 @@ class WorkspaceManager:
         workspace_key = self._sanitize(identifier)
         workspace_path = self._root / workspace_key
 
-        # 安全不变量 2：路径必须在根内
+        # 安全不变量：路径必须在根内
         self._assert_within_root(workspace_path)
 
         created_now = not workspace_path.exists()
@@ -524,10 +734,40 @@ class WorkspaceManager:
         return re.sub(r'[^A-Za-z0-9._-]', '_', identifier)
 
     def _assert_within_root(self, path: Path):
-        """§9.5 安全不变量 2"""
-        resolved = path.resolve()
-        if not str(resolved).startswith(str(self._root)):
+        """安全不变量：路径规范化后必须在根内（含符号链接解析）"""
+        canonical_path = canonicalize(path)
+        canonical_root = canonicalize(self._root)
+
+        if canonical_path == canonical_root:
+            raise WorkspaceSecurityError(f"Workspace equals root: {path}")
+        if not str(canonical_path).startswith(str(canonical_root) + os.sep):
+            # 检查是否通过符号链接逃逸
+            expanded_path = path.resolve()
+            if not str(expanded_path).startswith(str(self._root) + os.sep):
+                raise WorkspaceSecurityError(
+                    f"Path escapes workspace root via symlink: {path}")
             raise WorkspaceSecurityError(f"Path escapes workspace root: {path}")
+
+def canonicalize(path: Path) -> Path:
+    """逐段解析符号链接，返回规范化绝对路径（参考 Elixir PathSafety.canonicalize）
+
+    与 Path.resolve() 的区别：resolve() 仅解析最终目标，
+    本函数逐段解析，确保中间符号链接不逃逸根目录。
+    """
+    parts = path.resolve().parts
+    resolved = Path(parts[0])  # 根路径（/ 或 C:\）
+    for segment in parts[1:]:
+        candidate = resolved / segment
+        if candidate.is_symlink():
+            target = Path(os.readlink(candidate))
+            if not target.is_absolute():
+                target = resolved / target
+            resolved = canonicalize(target)  # 递归解析符号链接链
+        elif candidate.exists():
+            resolved = candidate
+        else:
+            resolved = candidate  # 不存在的路径段保持原样
+    return resolved
 ```
 
 #### G. Agent Runner + Transport 抽象 (`agent/`)
@@ -864,4 +1104,4 @@ class RunningEntry:
 8. **SSH 扩展**：asyncssh AgentTransport + 主机调度
 9. **HTTP 扩展**：FastAPI 仪表板 + JSON API
 10. **linear_graphql 工具**：客户端侧工具扩展
-11. **测试套件**：单元测试 + 集成测试 + 设计契约验证
+11. **测试套件**：单元测试 + 集成测试 + 设计契约验证 + 快照测试（参考 Elixir status_dashboard_snapshot_test）

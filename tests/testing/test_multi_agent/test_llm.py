@@ -4,16 +4,14 @@
 """
 
 import pytest
-import pytest_asyncio
 
+from taolib.testing.multi_agent.llm import ModelRegistry
+from taolib.testing.multi_agent.llm.ollama_provider import OllamaProvider
+from taolib.testing.multi_agent.llm.protocols import BaseLLMProvider
 from taolib.testing.multi_agent.models import (
     ModelConfig,
     ModelProvider,
-    ModelStatus,
 )
-from taolib.testing.multi_agent.llm import ModelRegistry
-from taolib.testing.multi_agent.llm.protocols import BaseLLMProvider
-from taolib.testing.multi_agent.llm.ollama_provider import OllamaProvider
 
 
 class TestModelRegistry:

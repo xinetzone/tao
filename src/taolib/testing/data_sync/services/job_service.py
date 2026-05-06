@@ -8,7 +8,11 @@ from datetime import UTC, datetime
 from typing import Any
 
 from taolib.testing.data_sync.errors import SyncJobNotFoundError
-from taolib.testing.data_sync.models.job import SyncJobCreate, SyncJobDocument, SyncJobUpdate
+from taolib.testing.data_sync.models.job import (
+    SyncJobCreate,
+    SyncJobDocument,
+    SyncJobUpdate,
+)
 from taolib.testing.data_sync.repository.job_repo import SyncJobRepository
 
 logger = logging.getLogger(__name__)

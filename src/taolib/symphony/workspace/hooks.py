@@ -42,7 +42,7 @@ async def run_hook(script: str, cwd: Path, timeout_ms: int) -> int:
     )
     try:
         await asyncio.wait_for(proc.wait(), timeout=timeout_ms / 1000)
-    except asyncio.TimeoutError:
+    except TimeoutError:
         proc.kill()
         await proc.wait()
         raise HookTimeoutError(f"Hook timed out after {timeout_ms}ms") from None

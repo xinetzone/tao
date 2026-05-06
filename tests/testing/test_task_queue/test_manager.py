@@ -100,7 +100,7 @@ class TestManagerStartStop:
 
     @pytest.mark.asyncio
     async def test_start_sets_running(self):
-        mgr, queue, repo, _ = _make_manager(num_workers=1)
+        mgr, queue, _repo, _ = _make_manager(num_workers=1)
         queue.get_running_task_ids.return_value = []
 
         # Patch TaskWorker.start to avoid real event loop work
@@ -123,7 +123,7 @@ class TestManagerStartStop:
 
     @pytest.mark.asyncio
     async def test_start_creates_workers(self):
-        mgr, queue, repo, _ = _make_manager(num_workers=2)
+        mgr, queue, _repo, _ = _make_manager(num_workers=2)
         queue.get_running_task_ids.return_value = []
 
         with patch("taolib.testing.task_queue.worker.manager.TaskWorker") as MockWorker:
@@ -146,7 +146,7 @@ class TestManagerStartStop:
 
     @pytest.mark.asyncio
     async def test_start_idempotent(self):
-        mgr, queue, repo, _ = _make_manager(num_workers=1)
+        mgr, queue, _repo, _ = _make_manager(num_workers=1)
         queue.get_running_task_ids.return_value = []
 
         with patch("taolib.testing.task_queue.worker.manager.TaskWorker") as MockWorker:
@@ -170,7 +170,7 @@ class TestManagerStartStop:
 
     @pytest.mark.asyncio
     async def test_start_calls_recover(self):
-        mgr, queue, repo, _ = _make_manager(num_workers=1)
+        mgr, queue, _repo, _ = _make_manager(num_workers=1)
         queue.get_running_task_ids.return_value = []
 
         with patch("taolib.testing.task_queue.worker.manager.TaskWorker") as MockWorker:
@@ -193,7 +193,7 @@ class TestManagerStartStop:
 
     @pytest.mark.asyncio
     async def test_stop_clears_state(self):
-        mgr, queue, repo, _ = _make_manager(num_workers=1)
+        mgr, queue, _repo, _ = _make_manager(num_workers=1)
         queue.get_running_task_ids.return_value = []
 
         with patch("taolib.testing.task_queue.worker.manager.TaskWorker") as MockWorker:
@@ -212,7 +212,7 @@ class TestManagerStartStop:
 
     @pytest.mark.asyncio
     async def test_stop_calls_worker_stop(self):
-        mgr, queue, repo, _ = _make_manager(num_workers=2)
+        mgr, queue, _repo, _ = _make_manager(num_workers=2)
         queue.get_running_task_ids.return_value = []
 
         with patch("taolib.testing.task_queue.worker.manager.TaskWorker") as MockWorker:
@@ -235,7 +235,7 @@ class TestManagerStartStop:
 
     @pytest.mark.asyncio
     async def test_stop_cancels_retry_poller(self):
-        mgr, queue, repo, _ = _make_manager(num_workers=1)
+        mgr, queue, _repo, _ = _make_manager(num_workers=1)
         queue.get_running_task_ids.return_value = []
 
         with patch("taolib.testing.task_queue.worker.manager.TaskWorker") as MockWorker:
@@ -332,7 +332,7 @@ class TestRetryPollLoop:
 
     @pytest.mark.asyncio
     async def test_poll_stops_when_not_running(self):
-        mgr, queue, repo, _ = _make_manager()
+        mgr, queue, _repo, _ = _make_manager()
         mgr._running = False
 
         # Should exit immediately
@@ -343,7 +343,7 @@ class TestRetryPollLoop:
 
     @pytest.mark.asyncio
     async def test_poll_handles_cancelled_error(self):
-        mgr, queue, repo, _ = _make_manager()
+        mgr, _queue, _repo, _ = _make_manager()
         mgr._running = True
 
         with patch("asyncio.sleep", new_callable=AsyncMock) as mock_sleep:
@@ -353,7 +353,7 @@ class TestRetryPollLoop:
 
     @pytest.mark.asyncio
     async def test_poll_handles_unexpected_exception(self):
-        mgr, queue, repo, _ = _make_manager()
+        mgr, queue, _repo, _ = _make_manager()
         mgr._running = True
         call_count = 0
 
@@ -375,7 +375,7 @@ class TestRetryPollLoop:
     @pytest.mark.asyncio
     async def test_poll_checks_running_after_sleep(self):
         """sleep 后如果 _running=False，应退出循环。"""
-        mgr, queue, repo, _ = _make_manager()
+        mgr, queue, _repo, _ = _make_manager()
         mgr._running = True
 
         async def stop_during_sleep(*args, **kwargs):
@@ -390,7 +390,7 @@ class TestRetryPollLoop:
 
     @pytest.mark.asyncio
     async def test_poll_interval_is_correct(self):
-        mgr, queue, repo, _ = _make_manager()
+        mgr, queue, _repo, _ = _make_manager()
         mgr._running = True
         queue.poll_retries.return_value = []
 
@@ -589,7 +589,7 @@ class TestCrashRecovery:
     @pytest.mark.asyncio
     async def test_exception_handled_gracefully(self):
         """_recover_running_tasks 内部异常不会传播到调用方。"""
-        mgr, queue, repo, _ = _make_manager()
+        mgr, queue, _repo, _ = _make_manager()
         queue.get_running_task_ids.side_effect = RuntimeError("Redis connection lost")
 
         # Should not raise

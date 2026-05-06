@@ -14,7 +14,9 @@ import pytest
 from taolib.testing.config_center.events.publisher import EventPublisher
 from taolib.testing.config_center.events.types import ConfigChangedEvent
 from taolib.testing.config_center.server.websocket.heartbeat import HeartbeatMonitor
-from taolib.testing.config_center.server.websocket.manager import WebSocketConnectionManager
+from taolib.testing.config_center.server.websocket.manager import (
+    WebSocketConnectionManager,
+)
 from taolib.testing.config_center.server.websocket.message_buffer import (
     InMemoryMessageBuffer,
 )
@@ -27,7 +29,9 @@ from taolib.testing.config_center.server.websocket.models import (
     PushMessage,
     UserPresence,
 )
-from taolib.testing.config_center.server.websocket.presence import InMemoryPresenceTracker
+from taolib.testing.config_center.server.websocket.presence import (
+    InMemoryPresenceTracker,
+)
 from taolib.testing.config_center.server.websocket.pubsub_bridge import PubSubBridge
 
 from .conftest import FakeWebSocket, MockRedis

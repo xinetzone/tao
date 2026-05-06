@@ -32,6 +32,21 @@
 
 ## 快速开始
 
+### 使用 mise（推荐）
+
+推荐使用 [mise](https://mise.jdx.dev/) 管理 Python 版本和开发工具：
+
+```bash
+mise trust
+mise install
+mise run setup    # 初始化开发环境（pdm install -G dev -G test）
+mise run test     # 运行测试
+mise run lint     # 代码检查
+mise run format   # 代码格式化
+```
+
+### 传统方式
+
 ```bash
 # 安装（开发模式）
 pip install -e ".[dev,doc,test]"

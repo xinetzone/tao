@@ -3,61 +3,49 @@
 测试所有核心数据模型。
 """
 
-import pytest
-from datetime import UTC, datetime, timedelta
 
+import pytest
+
+from taolib.testing.multi_agent.agents.templates import (
+    get_all_templates,
+    get_code_assistant_template,
+    get_writing_assistant_template,
+)
 from taolib.testing.multi_agent.models import (
-    # Enums
-    AgentStatus,
-    AgentType,
-    TaskStatus,
-    SkillType,
-    SkillStatus,
-    MessageType,
-    ModelProvider,
-    ModelStatus,
-    LoadBalanceStrategy,
+    AgentBase,
     # Agent models
     AgentCapability,
     AgentConfig,
-    AgentTemplate,
-    AgentBase,
     AgentCreate,
-    AgentUpdate,
-    AgentResponse,
     AgentDocument,
-    # Task models
-    TaskConstraint,
-    TaskProgress,
-    TaskResult,
-    SubTask,
-    TaskBase,
-    TaskCreate,
-    TaskUpdate,
-    TaskResponse,
-    TaskDocument,
-    # Skill models
-    SkillTestResult,
-    SkillEvaluation,
-    SkillParameter,
-    SkillBase,
-    SkillCreate,
-    SkillUpdate,
-    SkillResponse,
-    SkillDocument,
+    AgentStatus,
+    AgentType,
+    AgentUpdate,
+    LoadBalanceConfig,
+    LoadBalanceStrategy,
+    Message,
     # Message models
     MessagePayload,
-    Message,
+    MessageType,
     # LLM models
     ModelConfig,
-    ModelStats,
     ModelInstance,
-    LoadBalanceConfig,
-)
-from taolib.testing.multi_agent.agents.templates import (
-    get_code_assistant_template,
-    get_writing_assistant_template,
-    get_all_templates,
+    ModelProvider,
+    ModelStats,
+    ModelStatus,
+    SkillDocument,
+    SkillEvaluation,
+    SkillParameter,
+    SkillStatus,
+    # Skill models
+    SkillTestResult,
+    SkillType,
+    SubTask,
+    TaskConstraint,
+    TaskDocument,
+    TaskProgress,
+    TaskResult,
+    TaskStatus,
 )
 
 

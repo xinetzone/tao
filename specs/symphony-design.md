@@ -1,6 +1,6 @@
-# Symphony Python 实现设计方案
+# FlexLoop 编排子系统设计方案
 
-基于 [SPEC.md](../symphony/SPEC.md) 规范的完整 Python 实现设计。
+FlexLoop 独立项目的编排子系统设计方案，参考 [SPEC.md](./SPEC.md) 规范。
 
 ---
 
@@ -44,7 +44,7 @@
 
 ### 1.4 数据存储方案
 
-- **无持久化数据库**：规范明确要求内存状态，重启通过跟踪器+文件系统恢复
+- **无持久化数据库**：本设计采用纯内存状态，重启通过跟踪器+文件系统恢复
 - **内存状态**：Pydantic model + dataclass 持有 OrchestratorState
 - **文件系统**：工作区目录 + 日志文件
 
@@ -804,12 +804,12 @@ async def get_worker_tasks_info() -> list[dict]:
 
 ## 3. 关键设计决策
 
-1. **单进程 asyncio**：规范要求单一权威调度器状态串行化变更（§7），asyncio 天然满足
+1. **单进程 asyncio**：本设计采用单一权威调度器串行化状态变更（参考 §7），asyncio 天然满足
 2. **双层配置**：symphony.toml（服务级静态）+ WORKFLOW.md（工作流动态热重载）
 3. **gql GraphQL 客户端**：查询定义时 AST 校验，异常层级清晰，原生 async
 4. **Typer CLI**：type hints 驱动，零样板，内置 Rich 美化错误输出
 5. **asyncssh SSH 扩展**：原生 asyncio stdio 流，与本地子进程接口对称
-6. **Jinja2 + t-string 双模板**：用户模板用 Jinja2（规范要求），内部模板用 t-string（3.14 新特性）
+6. **Jinja2 + t-string 双模板**：用户模板用 Jinja2（参考 §12），内部模板用 t-string（3.14 新特性）
 7. **AgentTransport 抽象**：统一 Local/SSH 执行接口，Agent Runner 不关心执行位置
 8. **Pydantic v2 配置**：受益于 PEP 649 迟延标注，模块加载更快
 
@@ -864,4 +864,4 @@ class RunningEntry:
 8. **SSH 扩展**：asyncssh AgentTransport + 主机调度
 9. **HTTP 扩展**：FastAPI 仪表板 + JSON API
 10. **linear_graphql 工具**：客户端侧工具扩展
-11. **测试套件**：单元测试 + 集成测试 + 规范一致性验证
+11. **测试套件**：单元测试 + 集成测试 + 设计契约验证

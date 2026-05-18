@@ -19,19 +19,6 @@
 
 ## 核心功能速览
 
-`taolib` 是一个 Python 库（Python >= 3.14），提供以下核心功能：
-- **文档构建自动化**：基于 Sphinx 和 Invoke 的文档任务
-- **远程 SSH 探测**：Conda 环境探测与远程命令执行
-- **Matplotlib 字体配置**：中文文本渲染支持
-- **中心化配置管理**：多环境配置管理、版本控制、审计日志和实时推送
-- **MongoDB 数据同步**：ETL 管道、增量同步、自定义转换和定时调度
-- **统一认证授权**：JWT + RBAC + API Key + Token 黑名单
-- **用户行为分析**：事件采集、会话追踪、聚合分析
-- **多提供商邮件服务**：SMTP/SendGrid/Mailgun/SES + 故障转移 + 模板引擎
-- **文件存储与 CDN**：S3/本地存储 + CloudFront + 图片处理管道
-- **OAuth2 第三方登录**：Google/GitHub + Token 加密 + 审计日志
-- **API 限流中间件**：滑动窗口限流 + TOML 配置 + 违规追踪
-- **后台任务队列**：Redis 优先级队列 + Worker 管理 + 重试策略
-- **博客/CMS 平台**：FastAPI + SQLAlchemy + Markdown + RSS
+`taolib` 是一个 Python 库（Python >= 3.13），核心功能列表详见 [README.md](README.md#核心功能)。
 
 核心设计理念：最小化核心依赖（`dependencies = []`），通过可选依赖组提供扩展功能。

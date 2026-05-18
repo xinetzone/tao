@@ -316,6 +316,10 @@ python_classes = ["Test*"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
 testpaths = ["tests"]
+markers = [
+  "asyncio: mark test as async test",
+  "slow: mark test as slow running",
+]
 
 [tool.coverage.run]
 branch = true

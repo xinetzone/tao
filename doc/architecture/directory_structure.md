@@ -21,10 +21,10 @@ flexloop/
 │   ├── api_reference/      # API参考
 │   ├── developer_guide/    # 开发者指南
 │   ├── architecture/       # 架构文档
+│   ├── examples/           # 示例代码
+│   ├── reports/            # 一次性分析报告
 │   └── ...                 # 其他文档子目录
 ├── tests/                  # 测试代码目录（已有）
-├── examples/               # 示例代码（已有）
-├── reports/                # 报告文件（已有）
 ├── scripts/                # 辅助脚本（已有）
 ├── configs/                # 配置文件目录（新增）
 ├── build/                  # 构建输出目录（新增）
@@ -40,7 +40,7 @@ flexloop/
 ├── .readthedocs.yml        # ReadTheDocs配置（已有）
 ├── LICENSE                 # 许可证（已有）
 ├── README.md               # 项目说明（已有）
-├── CHANGELOG.md            # 变更日志（已有）
+├── CHANGELOG.md            # 变更日志导航索引（已有，各模块详细日志已拆分至 tests/ 子目录）
 └── CONTRIBUTING.md         # 贡献指南（已有）
 ```
 
@@ -61,6 +61,8 @@ flexloop/
   ├── api_reference/        # API参考
   ├── developer_guide/      # 开发者指南
   ├── architecture/         # 架构文档
+  ├── examples/             # 示例代码（从根目录移入）
+  ├── reports/              # 一次性分析报告（从根目录移入）
   ├── _static/              # 静态资源（已有）
   ├── scripts/              # 文档脚本（已有）
   ├── _config.toml          # 配置（已有）
@@ -84,24 +86,31 @@ flexloop/
 #### 2.2.3 测试目录 (`tests/`)
 - 已存在，但内容需整理
 - 现有结构：`tests/testing/...`
+- 变更日志存放：各功能模块的 `CHANGELOG.md` 存放在对应测试子目录中，项目级变更日志按时间存放在 `tests/project_changelogs/` 目录下（如 `tests/project_changelogs/CHANGELOG_2026-05.md`）
 - 建议结构：
   ```
   tests/
-  ├── unit/                 # 单元测试
-  ├── integration/          # 集成测试
-  ├── functional/           # 功能测试
+  ├── testing/              # 主测试目录
+  │   ├── test_auth/        # 含 CHANGELOG.md
+  │   ├── test_analytics/   # 含 CHANGELOG.md
+  │   └── ...
+  ├── test_symphony/        # 含 CHANGELOG.md
+  ├── project_changelogs/   # 项目级变更日志（按时间拆分）
+  │   ├── CHANGELOG_2026-05.md
+  │   └── CHANGELOG_2026-04.md
   └── conftest.py           # 测试配置（如需）
   ```
 
-#### 2.2.4 示例代码目录 (`examples/`)
-- 已存在，无需创建
+#### 2.2.4 示例代码目录 (`doc/examples/`)
+- 已从根目录迁移至 `doc/examples/`
 - 现有内容：`multi_agent_example.py`
-- 建议保持不变，新增示例代码继续存放在此目录
+- 示例代码属于文档体系的一部分，放在 `doc/` 下有助于减少根目录碎片化
+- 注意：示例代码中的路径引用已同步更新（`Path(__file__).parent.parent.parent`）以确保可正常运行
 
-#### 2.2.5 报告目录 (`reports/`)
-- 已存在，无需创建
-- 现有内容：`PROJECT_ANALYSIS.md`, `TEST_REPORT.md`
-- 建议保持不变，新增报告继续存放在此目录
+#### 2.2.5 报告目录 (`doc/reports/`)
+- 已从根目录迁移至 `doc/reports/`
+- 现有内容：`PROJECT_ANALYSIS.md`, `TEST_REPORT.md`, `README.md`
+- 报告为一次性生成文档，放入 `doc/` 下归入文档体系统一管理
 
 #### 2.2.6 脚本目录 (`scripts/`)
 - 已存在，无需创建

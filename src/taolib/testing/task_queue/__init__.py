@@ -7,7 +7,7 @@
 - MongoDB 持久化任务记录
 - Web 管理仪表板
 
-使用方式：
+使用方式::
 
     from taolib.testing.task_queue import TaskCreate, TaskPriority
     from taolib.testing.task_queue.services.task_service import TaskService
@@ -24,7 +24,7 @@
         TaskCreate(task_type="send_email", params={"to": "user@example.com"})
     )
 
-启动 Web 服务器：
+启动 Web 服务器::
 
     from taolib.testing.task_queue.server.app import create_app
 

@@ -14,6 +14,8 @@
 - [最佳实践](doc/developer_guide/best_practices.md) - 最佳实践
 - [项目经验总结](doc/developer_guide/project_experience.md) - 项目经验总结
 - [Qoder 规范](doc/developer_guide/qoder_rules.md) - Qoder 规范
+- [测试指南](doc/developer_guide/testing.md) - 测试命令、规范与策略
+- [目录结构](doc/architecture/directory_structure.md) - 项目目录结构规范
 
 ## 核心功能速览
 

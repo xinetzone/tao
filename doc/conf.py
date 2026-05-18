@@ -420,6 +420,7 @@ suppress_warnings = [
     "autoapi.not_readable",  # AutoAPI 读取源码不可读告警（例如权限/编码问题）
     "tippy.wiki",  # Wikipedia 抓取失败告警（离线/内网环境常见）
 ]
+
 nb_execution_mode = (
     "cache"  # Notebook 执行模式：cache 表示缓存执行结果，提高增量构建速度
 )

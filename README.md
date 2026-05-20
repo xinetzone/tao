@@ -8,12 +8,12 @@
 
 为了提供更清晰的指引，本项目文档已进行模块化拆分。请根据需要访问以下详细文档：
 
-- [📖 项目介绍 (Project Introduction)](docs/intro.md)
-- [🚀 快速开始 (Quick Start)](docs/quickstart.md)
-- [✨ 核心功能 (Core Features)](docs/features.md)
-- [🔌 API 文档 (API Documentation)](docs/api.md)
-- [📦 部署指南 (Deployment Guide)](docs/deploy.md)
-- [🤝 贡献规范 (Contribution Guidelines)](docs/contributing.md)
+- [📖 项目介绍 (Project Introduction)](docs/human/intro.md)
+- [🚀 快速开始 (Quick Start)](docs/human/quickstart.md)
+- [✨ 核心功能 (Core Features)](docs/human/features.md)
+- [🔌 API 文档 (API Documentation)](docs/human/api.md)
+- [📦 部署指南 (Deployment Guide)](docs/human/deploy.md)
+- [🤝 贡献规范 (Contribution Guidelines)](docs/human/contributing.md)
 
 ---
 *由您的 AI 助手协助初始化配置。*

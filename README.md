@@ -1,5 +1,42 @@
 # AgentForge
 
+![repo size](https://img.shields.io/github/repo-size/xinetzone/tao.svg)
+[![PyPI][pypi-badge]][pypi-link]
+[![GitHub issues][issue-badge]][issue-link]
+[![GitHub forks][fork-badge]][fork-link]
+![atom star](https://gitcode.com/flexloop/flexloop/star/badge.svg)
+[![GitHub stars][star-badge]][star-link]
+[![GitHub license][license-badge]][license-link]
+[![contributors][contributor-badge]][contributor-link]
+[![watcher][watcher-badge]][watcher-link]
+[![Binder][binder-badge]][binder-link]
+[![Downloads][download-badge]][download-link]
+[![Documentation Status][status-badge]][status-link]
+[![PyPI - Downloads][install-badge]][install-link]
+
+[pypi-badge]: https://img.shields.io/pypi/v/taolib.svg
+[pypi-link]: https://pypi.org/project/taolib/
+[issue-badge]: https://img.shields.io/github/issues/xinetzone/tao
+[issue-link]: https://github.com/xinetzone/tao/issues
+[fork-badge]: https://img.shields.io/github/forks/xinetzone/tao
+[fork-link]: https://github.com/xinetzone/tao/network
+[star-badge]: https://img.shields.io/github/stars/xinetzone/tao
+[star-link]: https://github.com/xinetzone/tao/stargazers
+[license-badge]: https://img.shields.io/github/license/xinetzone/tao
+[license-link]: https://github.com/xinetzone/tao/LICENSE
+[contributor-badge]: https://img.shields.io/github/contributors/xinetzone/tao
+[contributor-link]: https://github.com/xinetzone/tao/contributors
+[watcher-badge]: https://img.shields.io/github/watchers/xinetzone/tao
+[watcher-link]: https://github.com/xinetzone/tao/watchers
+[binder-badge]: https://mybinder.org/badge_logo.svg
+[binder-link]: https://mybinder.org/v2/gh/xinetzone/tao/main
+[install-badge]: https://img.shields.io/pypi/dw/taolib?label=pypi%20installs
+[install-link]: https://pypistats.org/packages/taolib
+[status-badge]: https://readthedocs.org/projects/taolib/badge/?version=latest
+[status-link]: https://taolib.readthedocs.io/zh-cn/latest/?badge=latest
+[download-badge]: https://pepy.tech/badge/taolib
+[download-link]: https://pepy.tech/project/taolib
+
 > AI 驱动开发模板 (AI-Driven Development Template)
 
 这是一个面向未来的、为 AI 智能体高度优化的项目脚手架/模板。通过内置的“契约”系统，它可以确保 AI 助手在辅助开发时遵循统一的规范和最佳实践。

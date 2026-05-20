@@ -1,0 +1,1390 @@
+{
+  "exit_reason": "max_iterations (5)",
+  "original_description": "当用户要对已完成或进入收尾阶段的工作做回顾性分析、总结、复盘、回顾、汇报、recap 或 postmortem 时使用此技能。 核心判断：同时出现完成信号（如做完、修完、结束、收尾）与回顾请求（如整理过程、总结得失、回看结果、复盘经验）即应触发。 对刚完成的 Bug 修复、Sprint、故障排查、技术研究、项目交付和学习过程总结保持较高召回。 不要触发：用户仍在继续执行任务、只想学习新知识、只要模板/计划/README/外部说明，而不是回顾分析已完成过程。",
+  "best_description": "Use this skill when the user wants you to produce a structured retrospective of completed work — reconstructing the process, surfacing lessons, and identifying improvements. Trigger for any request to 总结, 复盘, 回顾, recap, or postmortem finished tasks across any domain (development, operations, learning, research, management). The user wants to extract knowledge from the journey, not just state results. Do NOT trigger for producing forward-looking artifacts (plans, READMEs, templates, presentations), simple event logs without analysis, or specific decisions drawn from past work.",
+  "best_score": "5/8",
+  "best_train_score": "6/12",
+  "best_test_score": "5/8",
+  "final_description": "Use this skill when the user wants to look back at completed work and extract meaning from the experience — reconstructing what happened, surfacing lessons, and identifying improvements. The core pattern is a done signal (the work is finished or wrapping up) paired with a reflective ask (summarize the process, review outcomes, capture what was learned, identify what to do differently). Applies to bug fixes, sprints, projects, experiments, learning efforts, and incidents. Do NOT trigger when the user wants forward-looking artifacts (plans, READMEs, templates, slide decks), simple event logs without analysis, or standalone decisions/recommendations that skip the reflective framing.",
+  "iterations_run": 5,
+  "holdout": 0.4,
+  "train_size": 12,
+  "test_size": 8,
+  "history": [
+    {
+      "iteration": 1,
+      "description": "当用户要对已完成或进入收尾阶段的工作做回顾性分析、总结、复盘、回顾、汇报、recap 或 postmortem 时使用此技能。 核心判断：同时出现完成信号（如做完、修完、结束、收尾）与回顾请求（如整理过程、总结得失、回看结果、复盘经验）即应触发。 对刚完成的 Bug 修复、Sprint、故障排查、技术研究、项目交付和学习过程总结保持较高召回。 不要触发：用户仍在继续执行任务、只想学习新知识、只要模板/计划/README/外部说明，而不是回顾分析已完成过程。",
+      "train_passed": 7,
+      "train_failed": 5,
+      "train_total": 12,
+      "train_results": [
+        {
+          "query": "老板明早要我汇报这次重构做了哪些事、花了多久、碰到什么问题、结果怎么样。你直接给我一版结构化总结，我再自己压缩成 1 页。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "这个 bug 已经关单了，你先别继续改代码，帮我整理一下刚才到底做了什么、为什么一开始判断错了、最后是怎么定位出来的。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "今天把推荐算法小实验收尾了，数据清洗、特征选择、调参都试过一轮，结果一般。帮我把这段过程总结下，重点记失败尝试、关键判断和后续行动项。",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我这周把 Docker 和 CI/CD 这块系统学了一遍，也自己搭了条流水线。别讲新知识了，帮我总结一下我这次学习过程、关键卡点和后续练习建议。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "这次事故我已经写了个初步总结，不过现在更需要你分析根因，判断为什么会发生连接泄漏，并给我一版修复方案，不用再整理过程文档。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "Sprint 28 今天收尾了，原计划 10 个事项只做完 8 个，中间被两个线上故障插队。麻烦整理一份回顾，重点写下进度偏差和团队协作问题。",
+          "should_trigger": true,
+          "trigger_rate": 0.6666666666666666,
+          "triggers": 2,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我刚把登录权限这块修完，前后折腾了快一下午，期间把 JWT 改成了 Session，还踩了跨域坑。现在功能能跑了，帮我复盘一下这次开发过程，顺便看看下次怎么少走弯路。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "昨晚故障已经结束，现在我不是要复盘，我是要把报警时间线提取出来做成一页汇报 PPT，给领导开会用，越短越好。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "能不能根据我刚完成的那个 POC，直接给出 go/no-go 建议和技术选型结论？结论比过程重要，先别展开写成长篇总结。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我已经把这个登录模块做完了，现在帮我把 README 更新一下，重点写启动方式、环境变量和接口列表，方便别人接手。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "帮我把最近这次重构拆成 Jira 任务模板，我要给团队复制用。可以参考这次经历，但目标是产出模板，不是写回顾报告。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我想把今天做过的事情记到 Obsidian daily note 里，按时间顺序列个简短日志就行，不需要分析得失、经验或者行动项。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "test_passed": 4,
+      "test_failed": 4,
+      "test_total": 8,
+      "test_results": [
+        {
+          "query": "我们刚完成一个两周的小项目，功能是按时交付了，但我更想知道这次做得怎么样、有什么收获、下次怎么做会更稳。帮我做个复盘。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "ok recap 一下吧，我今天从选型、搭 demo 到跑通 POC 全做完了，想整理成一份技术研究总结，尤其是哪些判断是对的、哪些地方如果重来一次会换打法。",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "这次线上报警我已经处理完了，最后确认是 Redis 连接池配太小导致的。你帮我把排查过程和解决方案记下来，后面我要发到组里。",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我想知道这次学习 Kubernetes 到底哪些概念还没掌握，你直接给我出一份下一阶段学习计划和练习路线，不用回顾之前过程。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "帮我写个 postmortem，背景是昨晚发布后支付接口 502 了 40 分钟，现在服务恢复了。我需要一份能留档的过程总结，不只是事故通报。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我这边刚修完 bug，不过先别做总结，麻烦你直接把修复代码再检查一遍，看看有没有回归风险和缺的测试。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "Sprint 结束了，帮我排一下下个迭代的优先级，哪些需求先做、哪些可以延后，我要拿去跟产品开计划会。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "把刚才那段排查记录整理成一条发给客户的外部说明，语气要克制，不要写太多内部过程和经验教训。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "passed": 7,
+      "failed": 5,
+      "total": 12,
+      "results": [
+        {
+          "query": "老板明早要我汇报这次重构做了哪些事、花了多久、碰到什么问题、结果怎么样。你直接给我一版结构化总结，我再自己压缩成 1 页。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "这个 bug 已经关单了，你先别继续改代码，帮我整理一下刚才到底做了什么、为什么一开始判断错了、最后是怎么定位出来的。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "今天把推荐算法小实验收尾了，数据清洗、特征选择、调参都试过一轮，结果一般。帮我把这段过程总结下，重点记失败尝试、关键判断和后续行动项。",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我这周把 Docker 和 CI/CD 这块系统学了一遍，也自己搭了条流水线。别讲新知识了，帮我总结一下我这次学习过程、关键卡点和后续练习建议。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "这次事故我已经写了个初步总结，不过现在更需要你分析根因，判断为什么会发生连接泄漏，并给我一版修复方案，不用再整理过程文档。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "Sprint 28 今天收尾了，原计划 10 个事项只做完 8 个，中间被两个线上故障插队。麻烦整理一份回顾，重点写下进度偏差和团队协作问题。",
+          "should_trigger": true,
+          "trigger_rate": 0.6666666666666666,
+          "triggers": 2,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我刚把登录权限这块修完，前后折腾了快一下午，期间把 JWT 改成了 Session，还踩了跨域坑。现在功能能跑了，帮我复盘一下这次开发过程，顺便看看下次怎么少走弯路。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "昨晚故障已经结束，现在我不是要复盘，我是要把报警时间线提取出来做成一页汇报 PPT，给领导开会用，越短越好。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "能不能根据我刚完成的那个 POC，直接给出 go/no-go 建议和技术选型结论？结论比过程重要，先别展开写成长篇总结。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我已经把这个登录模块做完了，现在帮我把 README 更新一下，重点写启动方式、环境变量和接口列表，方便别人接手。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "帮我把最近这次重构拆成 Jira 任务模板，我要给团队复制用。可以参考这次经历，但目标是产出模板，不是写回顾报告。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我想把今天做过的事情记到 Obsidian daily note 里，按时间顺序列个简短日志就行，不需要分析得失、经验或者行动项。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "iteration": 2,
+      "description": "Use this skill when the user asks you to produce a retrospective summary of work they've completed — to document what was done, how it went, what was learned, and what comes next. This includes requests phrased as 总结, 复盘, 回顾, recap, postmortem, 汇报, or any ask to look back at finished work and extract lessons. Typical contexts: completed bug fixes, sprints, projects, experiments, learning efforts, or incidents. Do NOT trigger for ongoing work, or when the user wants a specific forward-looking artifact like a README, template, plan, or presentation.",
+      "train_passed": 6,
+      "train_failed": 6,
+      "train_total": 12,
+      "train_results": [
+        {
+          "query": "这个 bug 已经关单了，你先别继续改代码，帮我整理一下刚才到底做了什么、为什么一开始判断错了、最后是怎么定位出来的。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "老板明早要我汇报这次重构做了哪些事、花了多久、碰到什么问题、结果怎么样。你直接给我一版结构化总结，我再自己压缩成 1 页。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "今天把推荐算法小实验收尾了，数据清洗、特征选择、调参都试过一轮，结果一般。帮我把这段过程总结下，重点记失败尝试、关键判断和后续行动项。",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我这周把 Docker 和 CI/CD 这块系统学了一遍，也自己搭了条流水线。别讲新知识了，帮我总结一下我这次学习过程、关键卡点和后续练习建议。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我刚把登录权限这块修完，前后折腾了快一下午，期间把 JWT 改成了 Session，还踩了跨域坑。现在功能能跑了，帮我复盘一下这次开发过程，顺便看看下次怎么少走弯路。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "能不能根据我刚完成的那个 POC，直接给出 go/no-go 建议和技术选型结论？结论比过程重要，先别展开写成长篇总结。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "这次事故我已经写了个初步总结，不过现在更需要你分析根因，判断为什么会发生连接泄漏，并给我一版修复方案，不用再整理过程文档。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "Sprint 28 今天收尾了，原计划 10 个事项只做完 8 个，中间被两个线上故障插队。麻烦整理一份回顾，重点写下进度偏差和团队协作问题。",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "昨晚故障已经结束，现在我不是要复盘，我是要把报警时间线提取出来做成一页汇报 PPT，给领导开会用，越短越好。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我已经把这个登录模块做完了，现在帮我把 README 更新一下，重点写启动方式、环境变量和接口列表，方便别人接手。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "帮我把最近这次重构拆成 Jira 任务模板，我要给团队复制用。可以参考这次经历，但目标是产出模板，不是写回顾报告。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我想把今天做过的事情记到 Obsidian daily note 里，按时间顺序列个简短日志就行，不需要分析得失、经验或者行动项。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "test_passed": 4,
+      "test_failed": 4,
+      "test_total": 8,
+      "test_results": [
+        {
+          "query": "我们刚完成一个两周的小项目，功能是按时交付了，但我更想知道这次做得怎么样、有什么收获、下次怎么做会更稳。帮我做个复盘。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "ok recap 一下吧，我今天从选型、搭 demo 到跑通 POC 全做完了，想整理成一份技术研究总结，尤其是哪些判断是对的、哪些地方如果重来一次会换打法。",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我想知道这次学习 Kubernetes 到底哪些概念还没掌握，你直接给我出一份下一阶段学习计划和练习路线，不用回顾之前过程。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "这次线上报警我已经处理完了，最后确认是 Redis 连接池配太小导致的。你帮我把排查过程和解决方案记下来，后面我要发到组里。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "帮我写个 postmortem，背景是昨晚发布后支付接口 502 了 40 分钟，现在服务恢复了。我需要一份能留档的过程总结，不只是事故通报。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我这边刚修完 bug，不过先别做总结，麻烦你直接把修复代码再检查一遍，看看有没有回归风险和缺的测试。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "Sprint 结束了，帮我排一下下个迭代的优先级，哪些需求先做、哪些可以延后，我要拿去跟产品开计划会。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "把刚才那段排查记录整理成一条发给客户的外部说明，语气要克制，不要写太多内部过程和经验教训。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "passed": 6,
+      "failed": 6,
+      "total": 12,
+      "results": [
+        {
+          "query": "这个 bug 已经关单了，你先别继续改代码，帮我整理一下刚才到底做了什么、为什么一开始判断错了、最后是怎么定位出来的。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "老板明早要我汇报这次重构做了哪些事、花了多久、碰到什么问题、结果怎么样。你直接给我一版结构化总结，我再自己压缩成 1 页。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "今天把推荐算法小实验收尾了，数据清洗、特征选择、调参都试过一轮，结果一般。帮我把这段过程总结下，重点记失败尝试、关键判断和后续行动项。",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我这周把 Docker 和 CI/CD 这块系统学了一遍，也自己搭了条流水线。别讲新知识了，帮我总结一下我这次学习过程、关键卡点和后续练习建议。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我刚把登录权限这块修完，前后折腾了快一下午，期间把 JWT 改成了 Session，还踩了跨域坑。现在功能能跑了，帮我复盘一下这次开发过程，顺便看看下次怎么少走弯路。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "能不能根据我刚完成的那个 POC，直接给出 go/no-go 建议和技术选型结论？结论比过程重要，先别展开写成长篇总结。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "这次事故我已经写了个初步总结，不过现在更需要你分析根因，判断为什么会发生连接泄漏，并给我一版修复方案，不用再整理过程文档。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "Sprint 28 今天收尾了，原计划 10 个事项只做完 8 个，中间被两个线上故障插队。麻烦整理一份回顾，重点写下进度偏差和团队协作问题。",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "昨晚故障已经结束，现在我不是要复盘，我是要把报警时间线提取出来做成一页汇报 PPT，给领导开会用，越短越好。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我已经把这个登录模块做完了，现在帮我把 README 更新一下，重点写启动方式、环境变量和接口列表，方便别人接手。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "帮我把最近这次重构拆成 Jira 任务模板，我要给团队复制用。可以参考这次经历，但目标是产出模板，不是写回顾报告。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我想把今天做过的事情记到 Obsidian daily note 里，按时间顺序列个简短日志就行，不需要分析得失、经验或者行动项。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "iteration": 3,
+      "description": "",
+      "train_passed": 6,
+      "train_failed": 6,
+      "train_total": 12,
+      "train_results": [
+        {
+          "query": "老板明早要我汇报这次重构做了哪些事、花了多久、碰到什么问题、结果怎么样。你直接给我一版结构化总结，我再自己压缩成 1 页。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "这个 bug 已经关单了，你先别继续改代码，帮我整理一下刚才到底做了什么、为什么一开始判断错了、最后是怎么定位出来的。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "今天把推荐算法小实验收尾了，数据清洗、特征选择、调参都试过一轮，结果一般。帮我把这段过程总结下，重点记失败尝试、关键判断和后续行动项。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我这周把 Docker 和 CI/CD 这块系统学了一遍，也自己搭了条流水线。别讲新知识了，帮我总结一下我这次学习过程、关键卡点和后续练习建议。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我刚把登录权限这块修完，前后折腾了快一下午，期间把 JWT 改成了 Session，还踩了跨域坑。现在功能能跑了，帮我复盘一下这次开发过程，顺便看看下次怎么少走弯路。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "Sprint 28 今天收尾了，原计划 10 个事项只做完 8 个，中间被两个线上故障插队。麻烦整理一份回顾，重点写下进度偏差和团队协作问题。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "能不能根据我刚完成的那个 POC，直接给出 go/no-go 建议和技术选型结论？结论比过程重要，先别展开写成长篇总结。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "这次事故我已经写了个初步总结，不过现在更需要你分析根因，判断为什么会发生连接泄漏，并给我一版修复方案，不用再整理过程文档。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "昨晚故障已经结束，现在我不是要复盘，我是要把报警时间线提取出来做成一页汇报 PPT，给领导开会用，越短越好。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我已经把这个登录模块做完了，现在帮我把 README 更新一下，重点写启动方式、环境变量和接口列表，方便别人接手。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "帮我把最近这次重构拆成 Jira 任务模板，我要给团队复制用。可以参考这次经历，但目标是产出模板，不是写回顾报告。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我想把今天做过的事情记到 Obsidian daily note 里，按时间顺序列个简短日志就行，不需要分析得失、经验或者行动项。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "test_passed": 4,
+      "test_failed": 4,
+      "test_total": 8,
+      "test_results": [
+        {
+          "query": "我们刚完成一个两周的小项目，功能是按时交付了，但我更想知道这次做得怎么样、有什么收获、下次怎么做会更稳。帮我做个复盘。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "这次线上报警我已经处理完了，最后确认是 Redis 连接池配太小导致的。你帮我把排查过程和解决方案记下来，后面我要发到组里。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "ok recap 一下吧，我今天从选型、搭 demo 到跑通 POC 全做完了，想整理成一份技术研究总结，尤其是哪些判断是对的、哪些地方如果重来一次会换打法。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我想知道这次学习 Kubernetes 到底哪些概念还没掌握，你直接给我出一份下一阶段学习计划和练习路线，不用回顾之前过程。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "帮我写个 postmortem，背景是昨晚发布后支付接口 502 了 40 分钟，现在服务恢复了。我需要一份能留档的过程总结，不只是事故通报。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我这边刚修完 bug，不过先别做总结，麻烦你直接把修复代码再检查一遍，看看有没有回归风险和缺的测试。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "Sprint 结束了，帮我排一下下个迭代的优先级，哪些需求先做、哪些可以延后，我要拿去跟产品开计划会。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "把刚才那段排查记录整理成一条发给客户的外部说明，语气要克制，不要写太多内部过程和经验教训。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "passed": 6,
+      "failed": 6,
+      "total": 12,
+      "results": [
+        {
+          "query": "老板明早要我汇报这次重构做了哪些事、花了多久、碰到什么问题、结果怎么样。你直接给我一版结构化总结，我再自己压缩成 1 页。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "这个 bug 已经关单了，你先别继续改代码，帮我整理一下刚才到底做了什么、为什么一开始判断错了、最后是怎么定位出来的。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "今天把推荐算法小实验收尾了，数据清洗、特征选择、调参都试过一轮，结果一般。帮我把这段过程总结下，重点记失败尝试、关键判断和后续行动项。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我这周把 Docker 和 CI/CD 这块系统学了一遍，也自己搭了条流水线。别讲新知识了，帮我总结一下我这次学习过程、关键卡点和后续练习建议。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我刚把登录权限这块修完，前后折腾了快一下午，期间把 JWT 改成了 Session，还踩了跨域坑。现在功能能跑了，帮我复盘一下这次开发过程，顺便看看下次怎么少走弯路。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "Sprint 28 今天收尾了，原计划 10 个事项只做完 8 个，中间被两个线上故障插队。麻烦整理一份回顾，重点写下进度偏差和团队协作问题。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "能不能根据我刚完成的那个 POC，直接给出 go/no-go 建议和技术选型结论？结论比过程重要，先别展开写成长篇总结。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "这次事故我已经写了个初步总结，不过现在更需要你分析根因，判断为什么会发生连接泄漏，并给我一版修复方案，不用再整理过程文档。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "昨晚故障已经结束，现在我不是要复盘，我是要把报警时间线提取出来做成一页汇报 PPT，给领导开会用，越短越好。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我已经把这个登录模块做完了，现在帮我把 README 更新一下，重点写启动方式、环境变量和接口列表，方便别人接手。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "帮我把最近这次重构拆成 Jira 任务模板，我要给团队复制用。可以参考这次经历，但目标是产出模板，不是写回顾报告。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我想把今天做过的事情记到 Obsidian daily note 里，按时间顺序列个简短日志就行，不需要分析得失、经验或者行动项。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "iteration": 4,
+      "description": "Use this skill when the user wants you to produce a structured retrospective of completed work — reconstructing the process, surfacing lessons, and identifying improvements. Trigger for any request to 总结, 复盘, 回顾, recap, or postmortem finished tasks across any domain (development, operations, learning, research, management). The user wants to extract knowledge from the journey, not just state results. Do NOT trigger for producing forward-looking artifacts (plans, READMEs, templates, presentations), simple event logs without analysis, or specific decisions drawn from past work.",
+      "train_passed": 6,
+      "train_failed": 6,
+      "train_total": 12,
+      "train_results": [
+        {
+          "query": "这个 bug 已经关单了，你先别继续改代码，帮我整理一下刚才到底做了什么、为什么一开始判断错了、最后是怎么定位出来的。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "老板明早要我汇报这次重构做了哪些事、花了多久、碰到什么问题、结果怎么样。你直接给我一版结构化总结，我再自己压缩成 1 页。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "今天把推荐算法小实验收尾了，数据清洗、特征选择、调参都试过一轮，结果一般。帮我把这段过程总结下，重点记失败尝试、关键判断和后续行动项。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我这周把 Docker 和 CI/CD 这块系统学了一遍，也自己搭了条流水线。别讲新知识了，帮我总结一下我这次学习过程、关键卡点和后续练习建议。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "Sprint 28 今天收尾了，原计划 10 个事项只做完 8 个，中间被两个线上故障插队。麻烦整理一份回顾，重点写下进度偏差和团队协作问题。",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我刚把登录权限这块修完，前后折腾了快一下午，期间把 JWT 改成了 Session，还踩了跨域坑。现在功能能跑了，帮我复盘一下这次开发过程，顺便看看下次怎么少走弯路。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "能不能根据我刚完成的那个 POC，直接给出 go/no-go 建议和技术选型结论？结论比过程重要，先别展开写成长篇总结。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "这次事故我已经写了个初步总结，不过现在更需要你分析根因，判断为什么会发生连接泄漏，并给我一版修复方案，不用再整理过程文档。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "昨晚故障已经结束，现在我不是要复盘，我是要把报警时间线提取出来做成一页汇报 PPT，给领导开会用，越短越好。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我已经把这个登录模块做完了，现在帮我把 README 更新一下，重点写启动方式、环境变量和接口列表，方便别人接手。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "帮我把最近这次重构拆成 Jira 任务模板，我要给团队复制用。可以参考这次经历，但目标是产出模板，不是写回顾报告。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我想把今天做过的事情记到 Obsidian daily note 里，按时间顺序列个简短日志就行，不需要分析得失、经验或者行动项。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "test_passed": 5,
+      "test_failed": 3,
+      "test_total": 8,
+      "test_results": [
+        {
+          "query": "ok recap 一下吧，我今天从选型、搭 demo 到跑通 POC 全做完了，想整理成一份技术研究总结，尤其是哪些判断是对的、哪些地方如果重来一次会换打法。",
+          "should_trigger": true,
+          "trigger_rate": 0.6666666666666666,
+          "triggers": 2,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我们刚完成一个两周的小项目，功能是按时交付了，但我更想知道这次做得怎么样、有什么收获、下次怎么做会更稳。帮我做个复盘。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我想知道这次学习 Kubernetes 到底哪些概念还没掌握，你直接给我出一份下一阶段学习计划和练习路线，不用回顾之前过程。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我这边刚修完 bug，不过先别做总结，麻烦你直接把修复代码再检查一遍，看看有没有回归风险和缺的测试。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "这次线上报警我已经处理完了，最后确认是 Redis 连接池配太小导致的。你帮我把排查过程和解决方案记下来，后面我要发到组里。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "帮我写个 postmortem，背景是昨晚发布后支付接口 502 了 40 分钟，现在服务恢复了。我需要一份能留档的过程总结，不只是事故通报。",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "Sprint 结束了，帮我排一下下个迭代的优先级，哪些需求先做、哪些可以延后，我要拿去跟产品开计划会。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "把刚才那段排查记录整理成一条发给客户的外部说明，语气要克制，不要写太多内部过程和经验教训。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "passed": 6,
+      "failed": 6,
+      "total": 12,
+      "results": [
+        {
+          "query": "这个 bug 已经关单了，你先别继续改代码，帮我整理一下刚才到底做了什么、为什么一开始判断错了、最后是怎么定位出来的。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "老板明早要我汇报这次重构做了哪些事、花了多久、碰到什么问题、结果怎么样。你直接给我一版结构化总结，我再自己压缩成 1 页。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "今天把推荐算法小实验收尾了，数据清洗、特征选择、调参都试过一轮，结果一般。帮我把这段过程总结下，重点记失败尝试、关键判断和后续行动项。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我这周把 Docker 和 CI/CD 这块系统学了一遍，也自己搭了条流水线。别讲新知识了，帮我总结一下我这次学习过程、关键卡点和后续练习建议。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "Sprint 28 今天收尾了，原计划 10 个事项只做完 8 个，中间被两个线上故障插队。麻烦整理一份回顾，重点写下进度偏差和团队协作问题。",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我刚把登录权限这块修完，前后折腾了快一下午，期间把 JWT 改成了 Session，还踩了跨域坑。现在功能能跑了，帮我复盘一下这次开发过程，顺便看看下次怎么少走弯路。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "能不能根据我刚完成的那个 POC，直接给出 go/no-go 建议和技术选型结论？结论比过程重要，先别展开写成长篇总结。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "这次事故我已经写了个初步总结，不过现在更需要你分析根因，判断为什么会发生连接泄漏，并给我一版修复方案，不用再整理过程文档。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "昨晚故障已经结束，现在我不是要复盘，我是要把报警时间线提取出来做成一页汇报 PPT，给领导开会用，越短越好。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我已经把这个登录模块做完了，现在帮我把 README 更新一下，重点写启动方式、环境变量和接口列表，方便别人接手。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "帮我把最近这次重构拆成 Jira 任务模板，我要给团队复制用。可以参考这次经历，但目标是产出模板，不是写回顾报告。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我想把今天做过的事情记到 Obsidian daily note 里，按时间顺序列个简短日志就行，不需要分析得失、经验或者行动项。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ]
+    },
+    {
+      "iteration": 5,
+      "description": "Use this skill when the user wants to look back at completed work and extract meaning from the experience — reconstructing what happened, surfacing lessons, and identifying improvements. The core pattern is a done signal (the work is finished or wrapping up) paired with a reflective ask (summarize the process, review outcomes, capture what was learned, identify what to do differently). Applies to bug fixes, sprints, projects, experiments, learning efforts, and incidents. Do NOT trigger when the user wants forward-looking artifacts (plans, READMEs, templates, slide decks), simple event logs without analysis, or standalone decisions/recommendations that skip the reflective framing.",
+      "train_passed": 6,
+      "train_failed": 6,
+      "train_total": 12,
+      "train_results": [
+        {
+          "query": "老板明早要我汇报这次重构做了哪些事、花了多久、碰到什么问题、结果怎么样。你直接给我一版结构化总结，我再自己压缩成 1 页。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "这个 bug 已经关单了，你先别继续改代码，帮我整理一下刚才到底做了什么、为什么一开始判断错了、最后是怎么定位出来的。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "今天把推荐算法小实验收尾了，数据清洗、特征选择、调参都试过一轮，结果一般。帮我把这段过程总结下，重点记失败尝试、关键判断和后续行动项。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我刚把登录权限这块修完，前后折腾了快一下午，期间把 JWT 改成了 Session，还踩了跨域坑。现在功能能跑了，帮我复盘一下这次开发过程，顺便看看下次怎么少走弯路。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我这周把 Docker 和 CI/CD 这块系统学了一遍，也自己搭了条流水线。别讲新知识了，帮我总结一下我这次学习过程、关键卡点和后续练习建议。",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "Sprint 28 今天收尾了，原计划 10 个事项只做完 8 个，中间被两个线上故障插队。麻烦整理一份回顾，重点写下进度偏差和团队协作问题。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "这次事故我已经写了个初步总结，不过现在更需要你分析根因，判断为什么会发生连接泄漏，并给我一版修复方案，不用再整理过程文档。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "能不能根据我刚完成的那个 POC，直接给出 go/no-go 建议和技术选型结论？结论比过程重要，先别展开写成长篇总结。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "昨晚故障已经结束，现在我不是要复盘，我是要把报警时间线提取出来做成一页汇报 PPT，给领导开会用，越短越好。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我已经把这个登录模块做完了，现在帮我把 README 更新一下，重点写启动方式、环境变量和接口列表，方便别人接手。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "帮我把最近这次重构拆成 Jira 任务模板，我要给团队复制用。可以参考这次经历，但目标是产出模板，不是写回顾报告。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我想把今天做过的事情记到 Obsidian daily note 里，按时间顺序列个简短日志就行，不需要分析得失、经验或者行动项。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "test_passed": 4,
+      "test_failed": 4,
+      "test_total": 8,
+      "test_results": [
+        {
+          "query": "这次线上报警我已经处理完了，最后确认是 Redis 连接池配太小导致的。你帮我把排查过程和解决方案记下来，后面我要发到组里。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "ok recap 一下吧，我今天从选型、搭 demo 到跑通 POC 全做完了，想整理成一份技术研究总结，尤其是哪些判断是对的、哪些地方如果重来一次会换打法。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我们刚完成一个两周的小项目，功能是按时交付了，但我更想知道这次做得怎么样、有什么收获、下次怎么做会更稳。帮我做个复盘。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我这边刚修完 bug，不过先别做总结，麻烦你直接把修复代码再检查一遍，看看有没有回归风险和缺的测试。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "帮我写个 postmortem，背景是昨晚发布后支付接口 502 了 40 分钟，现在服务恢复了。我需要一份能留档的过程总结，不只是事故通报。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "Sprint 结束了，帮我排一下下个迭代的优先级，哪些需求先做、哪些可以延后，我要拿去跟产品开计划会。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我想知道这次学习 Kubernetes 到底哪些概念还没掌握，你直接给我出一份下一阶段学习计划和练习路线，不用回顾之前过程。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "把刚才那段排查记录整理成一条发给客户的外部说明，语气要克制，不要写太多内部过程和经验教训。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ],
+      "passed": 6,
+      "failed": 6,
+      "total": 12,
+      "results": [
+        {
+          "query": "老板明早要我汇报这次重构做了哪些事、花了多久、碰到什么问题、结果怎么样。你直接给我一版结构化总结，我再自己压缩成 1 页。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "这个 bug 已经关单了，你先别继续改代码，帮我整理一下刚才到底做了什么、为什么一开始判断错了、最后是怎么定位出来的。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "今天把推荐算法小实验收尾了，数据清洗、特征选择、调参都试过一轮，结果一般。帮我把这段过程总结下，重点记失败尝试、关键判断和后续行动项。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我刚把登录权限这块修完，前后折腾了快一下午，期间把 JWT 改成了 Session，还踩了跨域坑。现在功能能跑了，帮我复盘一下这次开发过程，顺便看看下次怎么少走弯路。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "我这周把 Docker 和 CI/CD 这块系统学了一遍，也自己搭了条流水线。别讲新知识了，帮我总结一下我这次学习过程、关键卡点和后续练习建议。",
+          "should_trigger": true,
+          "trigger_rate": 0.3333333333333333,
+          "triggers": 1,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "Sprint 28 今天收尾了，原计划 10 个事项只做完 8 个，中间被两个线上故障插队。麻烦整理一份回顾，重点写下进度偏差和团队协作问题。",
+          "should_trigger": true,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": false
+        },
+        {
+          "query": "这次事故我已经写了个初步总结，不过现在更需要你分析根因，判断为什么会发生连接泄漏，并给我一版修复方案，不用再整理过程文档。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "能不能根据我刚完成的那个 POC，直接给出 go/no-go 建议和技术选型结论？结论比过程重要，先别展开写成长篇总结。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "昨晚故障已经结束，现在我不是要复盘，我是要把报警时间线提取出来做成一页汇报 PPT，给领导开会用，越短越好。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我已经把这个登录模块做完了，现在帮我把 README 更新一下，重点写启动方式、环境变量和接口列表，方便别人接手。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "帮我把最近这次重构拆成 Jira 任务模板，我要给团队复制用。可以参考这次经历，但目标是产出模板，不是写回顾报告。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        },
+        {
+          "query": "我想把今天做过的事情记到 Obsidian daily note 里，按时间顺序列个简短日志就行，不需要分析得失、经验或者行动项。",
+          "should_trigger": false,
+          "trigger_rate": 0.0,
+          "triggers": 0,
+          "runs": 3,
+          "pass": true
+        }
+      ]
+    }
+  ]
+}

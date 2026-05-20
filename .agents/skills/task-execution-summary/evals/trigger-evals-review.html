@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eval Set Review - task-execution-summary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Lora', Georgia, serif; background: #faf9f5; padding: 2rem; color: #141413; }
+    h1 { font-family: 'Poppins', sans-serif; margin-bottom: 0.5rem; font-size: 1.5rem; }
+    .description { color: #b0aea5; margin-bottom: 1.5rem; font-style: italic; max-width: 900px; }
+    .controls { margin-bottom: 1rem; display: flex; gap: 0.5rem; }
+    .btn { font-family: 'Poppins', sans-serif; padding: 0.5rem 1rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.875rem; font-weight: 500; }
+    .btn-add { background: #6a9bcc; color: white; }
+    .btn-add:hover { background: #5889b8; }
+    .btn-export { background: #d97757; color: white; }
+    .btn-export:hover { background: #c4613f; }
+    table { width: 100%; max-width: 1100px; border-collapse: collapse; background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    th { font-family: 'Poppins', sans-serif; background: #141413; color: #faf9f5; padding: 0.75rem 1rem; text-align: left; font-size: 0.875rem; }
+    td { padding: 0.75rem 1rem; border-bottom: 1px solid #e8e6dc; vertical-align: top; }
+    tr:nth-child(even) td { background: #faf9f5; }
+    tr:hover td { background: #f3f1ea; }
+    .section-header td { background: #e8e6dc; font-family: 'Poppins', sans-serif; font-weight: 500; font-size: 0.8rem; color: #141413; text-transform: uppercase; letter-spacing: 0.05em; }
+    .query-input { width: 100%; padding: 0.4rem; border: 1px solid #e8e6dc; border-radius: 4px; font-size: 0.875rem; font-family: 'Lora', Georgia, serif; resize: vertical; min-height: 60px; }
+    .query-input:focus { outline: none; border-color: #d97757; box-shadow: 0 0 0 2px rgba(217,119,87,0.15); }
+    .toggle { position: relative; display: inline-block; width: 44px; height: 24px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle .slider { position: absolute; inset: 0; background: #b0aea5; border-radius: 24px; cursor: pointer; transition: 0.2s; }
+    .toggle .slider::before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.2s; }
+    .toggle input:checked + .slider { background: #d97757; }
+    .toggle input:checked + .slider::before { transform: translateX(20px); }
+    .btn-delete { background: #c44; color: white; padding: 0.3rem 0.6rem; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-family: 'Poppins', sans-serif; }
+    .btn-delete:hover { background: #a33; }
+    .summary { margin-top: 1rem; color: #b0aea5; font-size: 0.875rem; }
+  </style>
+</head>
+<body>
+  <h1>Eval Set Review: <span id="skill-name">task-execution-summary</span></h1>
+  <p class="description">Current description: <span id="skill-desc">系统性总结任务从启动到完成的执行过程，生成结构化经验报告。 当用户要对已完成或进入收尾阶段的任务做总结、复盘、回顾、报告、debrief、recap 或 postmortem 时，必须使用此技能。 即使用户未明确说“总结”，但在询问“做得怎么样”“有什么收获”“下次怎么做”“学到了什么”，或希望整理刚做完的工作、Bug 修复、Sprint、故障排查、技术研究、学习过程，也应触发。 适用于软件开发、项目管理、运维故障排查、技术研究、学习成长和其他任何有明确起止过程的任务；对口语化、中英混合和非标准表达保持较高召回。</span></p>
+
+  <div class="controls">
+    <button class="btn btn-add" onclick="addRow()">+ Add Query</button>
+    <button class="btn btn-export" onclick="exportEvalSet()">Export Eval Set</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width:65%">Query</th>
+        <th style="width:18%">Should Trigger</th>
+        <th style="width:10%">Actions</th>
+      </tr>
+    </thead>
+    <tbody id="eval-body"></tbody>
+  </table>
+
+  <p class="summary" id="summary"></p>
+
+  <script>
+    const EVAL_DATA = [
+  {
+    "query": "我刚把登录权限这块修完，前后折腾了快一下午，期间把 JWT 改成了 Session，还踩了跨域坑。现在功能能跑了，帮我复盘一下这次开发过程，顺便看看下次怎么少走弯路。",
+    "should_trigger": true
+  },
+  {
+    "query": "Sprint 28 今天收尾了，原计划 10 个事项只做完 8 个，中间被两个线上故障插队。麻烦整理一份回顾，重点写下进度偏差和团队协作问题。",
+    "should_trigger": true
+  },
+  {
+    "query": "这次线上报警我已经处理完了，最后确认是 Redis 连接池配太小导致的。你帮我把排查过程和解决方案记下来，后面我要发到组里。",
+    "should_trigger": true
+  },
+  {
+    "query": "ok recap 一下吧，我今天从选型、搭 demo 到跑通 POC 全做完了，想整理成一份技术研究总结，尤其是哪些判断是对的、哪些地方如果重来一次会换打法。",
+    "should_trigger": true
+  },
+  {
+    "query": "我这周把 Docker 和 CI/CD 这块系统学了一遍，也自己搭了条流水线。别讲新知识了，帮我总结一下我这次学习过程、关键卡点和后续练习建议。",
+    "should_trigger": true
+  },
+  {
+    "query": "这个 bug 已经关单了，你先别继续改代码，帮我整理一下刚才到底做了什么、为什么一开始判断错了、最后是怎么定位出来的。",
+    "should_trigger": true
+  },
+  {
+    "query": "老板明早要我汇报这次重构做了哪些事、花了多久、碰到什么问题、结果怎么样。你直接给我一版结构化总结，我再自己压缩成 1 页。",
+    "should_trigger": true
+  },
+  {
+    "query": "我们刚完成一个两周的小项目，功能是按时交付了，但我更想知道这次做得怎么样、有什么收获、下次怎么做会更稳。帮我做个复盘。",
+    "should_trigger": true
+  },
+  {
+    "query": "帮我写个 postmortem，背景是昨晚发布后支付接口 502 了 40 分钟，现在服务恢复了。我需要一份能留档的过程总结，不只是事故通报。",
+    "should_trigger": true
+  },
+  {
+    "query": "今天把推荐算法小实验收尾了，数据清洗、特征选择、调参都试过一轮，结果一般。帮我把这段过程总结下，重点记失败尝试、关键判断和后续行动项。",
+    "should_trigger": true
+  },
+  {
+    "query": "我已经把这个登录模块做完了，现在帮我把 README 更新一下，重点写启动方式、环境变量和接口列表，方便别人接手。",
+    "should_trigger": false
+  },
+  {
+    "query": "这次事故我已经写了个初步总结，不过现在更需要你分析根因，判断为什么会发生连接泄漏，并给我一版修复方案，不用再整理过程文档。",
+    "should_trigger": false
+  },
+  {
+    "query": "Sprint 结束了，帮我排一下下个迭代的优先级，哪些需求先做、哪些可以延后，我要拿去跟产品开计划会。",
+    "should_trigger": false
+  },
+  {
+    "query": "我想知道这次学习 Kubernetes 到底哪些概念还没掌握，你直接给我出一份下一阶段学习计划和练习路线，不用回顾之前过程。",
+    "should_trigger": false
+  },
+  {
+    "query": "把刚才那段排查记录整理成一条发给客户的外部说明，语气要克制，不要写太多内部过程和经验教训。",
+    "should_trigger": false
+  },
+  {
+    "query": "我这边刚修完 bug，不过先别做总结，麻烦你直接把修复代码再检查一遍，看看有没有回归风险和缺的测试。",
+    "should_trigger": false
+  },
+  {
+    "query": "帮我把最近这次重构拆成 Jira 任务模板，我要给团队复制用。可以参考这次经历，但目标是产出模板，不是写回顾报告。",
+    "should_trigger": false
+  },
+  {
+    "query": "昨晚故障已经结束，现在我不是要复盘，我是要把报警时间线提取出来做成一页汇报 PPT，给领导开会用，越短越好。",
+    "should_trigger": false
+  },
+  {
+    "query": "能不能根据我刚完成的那个 POC，直接给出 go/no-go 建议和技术选型结论？结论比过程重要，先别展开写成长篇总结。",
+    "should_trigger": false
+  },
+  {
+    "query": "我想把今天做过的事情记到 Obsidian daily note 里，按时间顺序列个简短日志就行，不需要分析得失、经验或者行动项。",
+    "should_trigger": false
+  }
+]
+;
+
+    let evalItems = [...EVAL_DATA];
+
+    function render() {
+      const tbody = document.getElementById('eval-body');
+      tbody.innerHTML = '';
+
+      // Sort: should-trigger first, then should-not-trigger
+      const sorted = evalItems
+        .map((item, origIdx) => ({ ...item, origIdx }))
+        .sort((a, b) => (b.should_trigger ? 1 : 0) - (a.should_trigger ? 1 : 0));
+
+      let lastGroup = null;
+      sorted.forEach(item => {
+        const group = item.should_trigger ? 'trigger' : 'no-trigger';
+        if (group !== lastGroup) {
+          const headerRow = document.createElement('tr');
+          headerRow.className = 'section-header';
+          headerRow.innerHTML = `<td colspan="3">${item.should_trigger ? 'Should Trigger' : 'Should NOT Trigger'}</td>`;
+          tbody.appendChild(headerRow);
+          lastGroup = group;
+        }
+
+        const idx = item.origIdx;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><textarea class="query-input" onchange="updateQuery(${idx}, this.value)">${escapeHtml(item.query)}</textarea></td>
+          <td>
+            <label class="toggle">
+              <input type="checkbox" ${item.should_trigger ? 'checked' : ''} onchange="updateTrigger(${idx}, this.checked)">
+              <span class="slider"></span>
+            </label>
+            <span style="margin-left:8px;font-size:0.8rem;color:#b0aea5">${item.should_trigger ? 'Yes' : 'No'}</span>
+          </td>
+          <td><button class="btn-delete" onclick="deleteRow(${idx})">Delete</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+      updateSummary();
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function updateQuery(idx, value) { evalItems[idx].query = value; updateSummary(); }
+    function updateTrigger(idx, value) { evalItems[idx].should_trigger = value; render(); }
+    function deleteRow(idx) { evalItems.splice(idx, 1); render(); }
+
+    function addRow() {
+      evalItems.push({ query: '', should_trigger: true });
+      render();
+      const inputs = document.querySelectorAll('.query-input');
+      inputs[inputs.length - 1].focus();
+    }
+
+    function updateSummary() {
+      const trigger = evalItems.filter(i => i.should_trigger).length;
+      const noTrigger = evalItems.filter(i => !i.should_trigger).length;
+      document.getElementById('summary').textContent =
+        `${evalItems.length} queries total: ${trigger} should trigger, ${noTrigger} should not trigger`;
+    }
+
+    function exportEvalSet() {
+      const valid = evalItems.filter(i => i.query.trim() !== '');
+      const data = valid.map(i => ({ query: i.query.trim(), should_trigger: i.should_trigger }));
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'eval_set.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    render();
+  </script>
+</body>
+</html>
+

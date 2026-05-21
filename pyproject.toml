@@ -31,3 +31,76 @@ docs = [
     "sphinxcontrib-mermaid",
     "sphinx-sitemap",
 ]
+
+[tool.pdm.build]
+includes = ["src/taolib"]
+package-dir = "src"
+
+[tool.ruff]
+exclude = [".git", ".venv", "doc/_build", ".pytest_cache", "__pycache__"]
+line-length = 88
+target-version = "py313"
+
+[tool.ruff.lint]
+ignore = [
+  "E501",   # line length handled by formatter
+  "ANN401", # allow Any type in **kwargs
+  "RUF001", # allow ambiguous unicode characters in strings (Chinese punctuation)
+  "RUF002", # allow ambiguous unicode characters in docstrings (Chinese punctuation)
+  "RUF003", # allow ambiguous unicode characters in comments (Chinese punctuation)
+  "B008",   # allow function call in argument defaults (FastAPI Depends pattern)
+  "ANN001", # missing type annotation for function argument
+  "ANN003", # missing type annotation for **kwargs
+  "ANN201", # missing return type annotation for public function
+  "ANN202", # missing return type annotation for private function
+  "ANN204", # missing return type annotation for special method
+  "B904",   # raise without from inside except
+  "SIM105", # suppressible-exception
+  "RUF022", # unsorted __all__
+  "SIM102", # collapsible-if
+  "C401",   # unnecessary-generator-set
+  "C416",   # unnecessary-comprehension
+  "RUF006", # asyncio-dangling-task
+  "UP046",  # non-pep695-generic-class
+]
+select = [
+  "E",   # pycodestyle errors
+  "W",   # pycodestyle warnings
+  "F",   # pyflakes
+  "I",   # isort
+  "UP",  # pyupgrade
+  "ANN", # flake8-annotations
+  "B",   # flake8-bugbear
+  "C4",  # flake8-comprehensions
+  "SIM", # flake8-simplify
+  "RUF", # ruff-specific rules
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ANN", "S101"]
+
+[tool.pytest.ini_options]
+addopts = "-v --tb=short"
+asyncio_mode = "auto"
+python_classes = ["Test*"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+testpaths = ["tests"]
+markers = [
+  "asyncio: mark test as async test",
+  "slow: mark test as slow running",
+]
+
+[tool.coverage.run]
+branch = true
+omit = ["*/rate_limiter/example_integration.py"]
+source = ["src/taolib"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "if __name__ == .__main__.:",
+  "raise NotImplementedError",
+]
+fail_under = 80
+show_missing = true

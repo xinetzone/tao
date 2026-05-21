@@ -1,5 +1,8 @@
 # 主题选项配置
 [html_theme_options]
+# Logo 设置
+logo = "images/logo.jpg"
+
 # 公告栏设置
 announcement = "👋你好，世界！👋"
 

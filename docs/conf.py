@@ -102,7 +102,12 @@ master_doc = "index"
 source_suffix = {".rst": "restructuredtext"}
 
 html_static_path = ["_static"]
-html_css_files = []
+html_css_files = [
+    "variables.css",
+    "local.css",
+    "mermaid.css",
+]
+html_favicon = "images/favicon.jpg"
 
 html_last_updated_fmt = "%Y-%m-%d, %H:%M:%S"
 

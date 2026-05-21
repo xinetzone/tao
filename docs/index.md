@@ -17,9 +17,9 @@ features
 api
 deploy
 contributing
+changelog
 ```
 
 * {ref}`genindex`
 * {ref}`modindex`
 * {ref}`search`
-

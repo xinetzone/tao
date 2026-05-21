@@ -91,7 +91,7 @@ def build_run(root: Path, run_dir: Path) -> dict | None:
     for candidate in [run_dir / "eval_metadata.json", run_dir.parent / "eval_metadata.json"]:
         if candidate.exists():
             try:
-                metadata = json.loads(candidate.read_text())
+                metadata = json.loads(candidate.read_text(encoding="utf-8"))
                 prompt = metadata.get("prompt", "")
                 eval_id = metadata.get("eval_id")
             except (json.JSONDecodeError, OSError):
@@ -153,7 +153,7 @@ def embed_file(path: Path) -> dict:
 
     if ext in TEXT_EXTENSIONS:
         try:
-            content = path.read_text(errors="replace")
+            content = path.read_text(encoding="utf-8", errors="replace")
         except OSError:
             content = "(Error reading file)"
         return {
@@ -366,7 +366,7 @@ class ReviewHandler(BaseHTTPRequestHandler):
                 data = json.loads(body)
                 if not isinstance(data, dict) or "reviews" not in data:
                     raise ValueError("Expected JSON object with 'reviews' key")
-                self.feedback_path.write_text(json.dumps(data, indent=2) + "\n")
+                self.feedback_path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
                 resp = b'{"ok":true}'
                 self.send_response(200)
             except (json.JSONDecodeError, OSError, ValueError) as e:

@@ -1,0 +1,15 @@
+- [x] 成功使用 defuddle 抓取并提取 Python 3.15 官方更新文档内容。
+- [x] 技术规范文档的 Python 版本适配章节已更新核心语言特性。
+- [x] 依赖管理文档已更新标准库接口变更。
+- [x] 迁移指南文档已更新兼容性调整内容。
+- [x] 技术债务追踪台账已记录废弃功能。
+- [x] 已完成现有代码的 Python 3.15 合规性审查，并输出不兼容片段及整改建议。
+- [x] 版本适配更新报告已生成并归档至 `.agents/docs/superpowers/retrospectives/` 目录下。
+- [x] P3 流程改进完成：
+  - [x] 子智能体引用策略规范已建立 (`.agents/rules/citations.md`)
+  - [x] Python 合规性扫描脚本已创建 (`.agents/scripts/check_python_compat.py`)
+  - [x] AGENTS.md 已增加版本升级适配触发规则
+  - [x] 季度版本追踪机制已建立 (`.agents/docs/version-tracking.md`)
+- [x] P4 工具增强完成：
+  - [x] AST 级弃用检测脚本已创建 (`.agents/scripts/check_python_deprecations.py`)
+  - [x] defuddle 预装集成已完成 (`scripts/init.ps1`)

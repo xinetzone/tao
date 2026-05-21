@@ -51,16 +51,35 @@
 
 ## 📖 项目简介
 
-**AgentForge** 致力于解决在大型复杂项目中“人类开发者”与“AI 智能体”之间的协作摩擦问题。本项目不仅是一个包含标准代码结构的脚手架，更是一个**“人机协同双向契约”**的载体。
-通过物理隔离人类阅读文档（`docs/`）与 AI 阅读文档（`.agents/`），以及内置丰富的自定义 AI 技能（Skills），AgentForge 实现了代码编写、文档生成、架构评审和经验复盘的全流程 AI 赋能。
+**AgentForge** 是一个面向 AI 辅助开发场景的项目模板，目标是降低人类开发者与 AI 智能体协作时的沟通和维护成本。
+它提供了清晰的目录约定、文档分层、技能资产组织方式，以及开箱即用的开发与复盘工作流，适合构建需要长期演进的工程化项目。
 
 ## ✨ 功能特性
 
-- **🤖 智能体全局契约**：内置 `AGENTS.md` 规范，实现基于上下文的智能路由（Context Router）。
-- **📦 模块化技能管理**：提供基于自然语言的自定义 AI 技能链（如 `skill-creator`、`task-execution-summary`）。
+- **🤖 智能体全局契约**：内置 `AGENTS.md`，统一 AI 助手的执行入口与协作规则。
+- **🧩 清晰的目录分层**：区分人类文档、AI 规则、任务工作台与长期知识资产。
+- **📦 模块化技能管理**：提供可复用的 AI 技能体系与规范化资产目录。
 - **隔离式文档架构**：彻底分离人类专属文档（`docs/`）与 AI 专属资产库（`.agents/docs/`），防止 LLM 产生上下文幻觉。
 - **🔄 自动化评测循环**：集成了针对 AI 技能的测试驱动开发（TDD）及兼容性修复验证体系。
 - **📚 Sphinx/MyST 深度集成**：开箱即用的现代化文档构建流，支持多层级模块化日志追踪。
+
+## 🗂️ 阅读与目录导航
+
+如果你是第一次进入项目，建议优先按下面的入口阅读：
+
+| 入口 | 面向对象 | 说明 |
+|------|----------|------|
+| `README.md` | 人类开发者 | 当前首页，提供项目简介、环境要求、安装方式与使用入口。 |
+| `AGENTS.md` | AI 助手 / 需要协作的开发者 | AI 执行契约、任务路由、文档边界与协作规则。 |
+| `.agents/README.md` | 想理解 AI 目录结构的读者 | `.agents/` 目录说明与子目录导航。 |
+| `.trae/` | 当前任务执行者 | 存放任务规划、草稿和执行中的临时产物。 |
+| `.agents/docs/superpowers/` | 需要查历史沉淀的读者 | 归档 Spec、复盘和长期知识资产。 |
+
+**推荐路径**：
+- **快速上手**：先看当前首页，再按需进入 `docs/`。
+- **需要 AI 协作**：阅读 `AGENTS.md`，让 AI 按契约执行。
+- **需要了解 AI 资产布局**：阅读 `.agents/README.md`。
+- **需要历史方案或复盘**：阅读 `.agents/docs/superpowers/` 与 `CHANGELOG.md`。
 
 ## 💻 环境依赖
 
@@ -101,40 +120,35 @@ make html
 
 ## 🎮 使用指南
 
-1. **查阅全局契约**：在指派 AI 执行任务前，请先让 AI 阅读根目录下的 [`AGENTS.md`](AGENTS.md)。
-2. **触发特定工作流**：
-   - 当需要开发前端功能时，AI 会自动路由并读取 `.agents/rules/frontend.md`。
-   - 当需要进行复盘总结时，直接对 AI 助手说：“帮我复盘一下刚才的任务”，即可触发内置总结技能。
-3. **查阅人类文档**：访问 [`docs/index.md`](docs/index.md) 获取更详细的 API 说明与部署指南。
+1. **人类开发入口**：访问 [`docs/index.md`](docs/index.md) 获取更详细的使用说明、API 文档与部署指南。
+2. **AI 协作入口**：在让 AI 参与任务前，先阅读 [`AGENTS.md`](AGENTS.md) 以确认执行契约、文档边界与任务路由。
+3. **AI 目录说明**：如需了解 `.agents/` 的结构与资产分布，请阅读 [`.agents/README.md`](.agents/README.md)。
 
 ## 🛠️ 技能管理
 
-本项目将 AI 技能 (Skills) 纳入版本管理，实现技能的集中维护、评测和优化。所有技能统一存放在 [`.agents/skills/`](.agents/skills/) 目录下：
+本项目将 AI 技能统一纳入 [`.agents/skills/`](.agents/skills/) 目录管理，用于集中维护技能定义、脚本、评测与配套文档。
 
-| 技能 | 核心用途 | 文档路径 |
-|------|----------|---------|
-| **skill-creator** | 技能开发工具链：创建技能、编写触发评测集 (evals)、自动优化触发词 | [.agents/skills/skill-creator/](.agents/skills/skill-creator/) |
-| **task-execution-summary** | 任务执行总结：从对话历史提取信息，生成标准化、结构化的 10 章复盘报告 | [.agents/skills/task-execution-summary/](.agents/skills/task-execution-summary/) |
+- **查看技能总入口**：访问 [`.agents/README.md`](.agents/README.md) 了解 `.agents/` 的整体结构。
+- **查看技能开发规范**：访问 [`.agents/rules/skills.md`](.agents/rules/skills.md)。
+- **查看技能模板**：访问 [`.agents/templates/SKILL.md`](.agents/templates/SKILL.md)。
+- **查看已实现技能**：浏览 [`.agents/skills/`](.agents/skills/) 下各技能目录。
+- **查看历史演进与复盘**：访问 [`.agents/docs/superpowers/`](.agents/docs/superpowers/)。
 
-> 💡 **提示**：技能的触发描述优化、Windows 兼容性修复等历史迭代记录，均归档于 [`.agents/docs/superpowers/`](.agents/docs/superpowers/) 下的专属目录中。
+## 📝 版本更新日志
 
-## � 版本更新日志
+本项目采用分层变更日志结构，格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)。
 
-本项目已建立基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/) 的分层变更日志系统。
-
-- **最新版本**：请查阅 [项目级更新日志 (2026-05)](tests/project_changelogs/CHANGELOG_2026-05.md)。
-- **核心迭代**：近期重点优化了 `skill-creator` 的 Windows 跨平台兼容性，并发布了 `task-execution-summary` v2.4 核心契约。
-- **全量日志**：请访问根目录下的 [CHANGELOG.md](CHANGELOG.md) 获取全局索引。
+- **查看全局日志索引**：访问 [CHANGELOG.md](CHANGELOG.md)。
+- **查看项目级月度变更**：访问 [tests/project_changelogs/](tests/project_changelogs/)。
+- **查看技能级变更**：访问 [`.agents/skills/`](.agents/skills/) 下各技能目录中的 `CHANGELOG.md`。
 
 ## 🤝 贡献规范
 
-我们欢迎任何旨在提升人机协同效率的贡献！参与贡献前请注意：
+我们欢迎任何旨在提升人机协同效率的贡献。
 
-1. **遵循 TDD 流程**：提交新的 AI 自动化脚本前，必须包含类似 `test_windows_compat.py` 的跨平台验证用例。
-2. **遵守文件隔离**：技术方案设计文档 (Spec) 与复盘报告 (Retrospective) 必须放入 `.agents/docs/superpowers/`，严禁污染 `docs/` 目录。
-3. **提交 PR**：请参考 `.agents/workflows/pr-review.md` 中的代码审查规范。
-
-详细的贡献指南请参考：[📖 贡献文档](docs/contributing.md)
+- **贡献总入口**：阅读 [docs/contributing.md](docs/contributing.md)。
+- **AI 协作约束**：阅读 [AGENTS.md](AGENTS.md)。
+- **PR 审查流程**：阅读 [`.agents/workflows/pr-review.md`](.agents/workflows/pr-review.md)。
 
 ## 📫 联系方式
 

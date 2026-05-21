@@ -1,0 +1,11 @@
+[
+  {
+    "version": "dev",
+    "url": "https://xinetzone.github.io/tao/"
+  },
+  {
+    "name": "rtd",
+    "version": "latest",
+    "url": "https://taolib.readthedocs.io/zh-cn/latest/"
+  }
+]

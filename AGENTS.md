@@ -15,24 +15,37 @@
 - ⚙️ **后端开发 / API 任务** 👉 读取 `.agents/rules/backend.md`
 - 🔄 **代码审查 / PR 任务** 👉 读取 `.agents/workflows/pr-review.md`
 - 🛠️ **技能开发 / Skill 任务** 👉 读取 `.agents/rules/skills.md`
+- 🐍 **Python 版本升级 / 适配任务** 👉 读取 `.agents/docs/version-tracking.md` + `.agents/rules/citations.md`，执行 `.agents/scripts/check_python_compat.py` + `.agents/scripts/check_python_deprecations.py`
+- 📄 **网页内容抓取 / defuddle 任务** 👉 使用 `defuddle parse <url> --md -o <output>` 命令抓取网页内容。
 
 ## 3. 工具与脚本 (Tools & Scripts)
 - 项目专属的自动化脚本统一放置在 `.agents/scripts/` 目录下。
 - 智能体在需要自动化验证或执行特定工作流时，可自行检查该目录下的可用脚本。
+- **外部工具初始化**：运行 `scripts/init.ps1` 安装项目所需的外部工具依赖（如 `defuddle` 网页抓取工具）。使用 `-CheckOnly` 参数可仅检查依赖状态。
 
 ## 4. 文档管理 (Documentation Management)
+
 本项目严格区分面向 AI 的契约文档与面向人类开发者的说明文档。智能体在处理文档相关任务时，需遵循以下原则：
 
 - 📄 **人类专属文档**：`README.md` 及 `docs/` 目录下的内容专门面向**人类开发者**。在执行项目常规文档的编写、更新任务前，必须查阅 `docs/` 中的对应模块结构。
-- 🤖 **AI 专属文档**：`.agents/docs/` 目录专门用于存放供 AI 智能体读取和维护的知识库、架构图或分析产物，隔离对人类开发者的视觉干扰。
-  - 🦸 **Superpowers (技能增强) 资产库**：`.agents/docs/superpowers/` 目录是智能体自我进化、技能设计与任务经验总结的“大脑记忆库”，包含以下两大核心板块：
+- 🤖 **AI 专属文档**：[`.agents/docs/`](.agents/docs/) 目录专门用于存放供 AI 智能体读取和维护的知识库、架构图或分析产物，隔离对人类开发者的视觉干扰。
+  - 🦸 **Superpowers (技能增强) 资产库**：[`.agents/docs/superpowers/`](.agents/docs/superpowers/) 目录是智能体自我进化、技能设计与任务经验总结的“大脑记忆库”，包含以下两大核心板块：
     - 🚫 **Spec / 设计文档归属 (`specs/`)**：任何面向实现的设计文档（spec、技术方案、架构决策、优化设计等）**一律禁止**放入面向人类的 `docs/`。技能 spec 必须归档于 `.agents/docs/superpowers/specs/<skill-name>/`；通用技术方案归档于 `.agents/docs/` 下对应子目录。
     - 📝 **复盘报告归档规则 (`retrospectives/`)**：
       - **执行范围**：所有关于项目任务、Bug 修复、技术预研、技能开发等过程的“复盘报告”（Retrospectives / Postmortems / Task Execution Summaries）及类似总结性文件。
-      - **存放位置**：必须统一存放在 `.agents/docs/superpowers/retrospectives/` 目录下。
+      - **存放位置**：必须统一存放在 [`.agents/docs/superpowers/retrospectives/`](.agents/docs/superpowers/retrospectives/) 目录下。
       - **时间要求**：在生成或完成复盘报告后，必须**立即**将其移动或保存至上述指定目录，不得遗留在项目根目录或其他临时文件夹中。
       - **违规处理**：如发现复盘报告未按规定存放，AI 智能体在后续读取到相关违规文件时，必须主动将其移动至正确目录，并在后续会话中提醒用户或记录归档动作。
 - 🔄 **双向同步机制**：当智能体核心契约（`AGENTS.md` 或 `.agents/` 目录）发生结构性变更时，智能体必须主动评估并同步更新 `README.md` 或 `docs/` 中的对应说明，以确保人机信息始终保持一致。
+
+### 4.1 任务规划与知识沉淀的双目录架构
+
+| 目录 | 定位 | 生命周期 | 关联关系 |
+|------|------|----------|----------|
+| [`.trae/`](.trae/) | TRAE IDE 任务规划工作台 | 临时（任务结束后可清理） | 任务执行前创建规范 → 完成后归档成果 |
+| [`.agents/docs/`](.agents/docs/) | AI 知识库与复盘档案馆 | 持久（长期积累） | 接收 `.trae` 产出，沉淀为可复用知识 |
+
+**流转关系**：`.trae/specs/<task>/`（执行中的规范） → 任务完成 → `.agents/docs/superpowers/retrospectives/`（复盘归档）
 
 ## 5. 项目变更日志 (Changelog)
 

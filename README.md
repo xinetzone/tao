@@ -88,8 +88,8 @@ uv venv
 # 激活虚拟环境 (Windows PowerShell)
 .venv\Scripts\activate
 
-# 安装项目依赖 (根据 docs/requirements.txt)
-uv pip install -r docs/requirements.txt
+# 安装项目核心依赖与文档依赖
+uv sync --group docs
 ```
 
 ### 3. 构建本地文档 (可选)

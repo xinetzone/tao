@@ -202,3 +202,6 @@ test_result*.txt
 *_output.txt
 
 .ruff_cache/
+
+# 技能优化产出的临时结果（由 skill-creator/run_loop 自动生成）
+**/optimization-results*/

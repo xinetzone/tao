@@ -18,3 +18,8 @@ api
 deploy
 contributing
 ```
+
+* {ref}`genindex`
+* {ref}`modindex`
+* {ref}`search`
+

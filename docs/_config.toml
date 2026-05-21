@@ -1,7 +1,7 @@
 # 主题选项配置
 [html_theme_options]
 # Logo 设置
-logo = "images/logo.jpg"
+logo = { image_light = "_static/images/logo.jpg", image_dark = "_static/images/logo.jpg" }
 
 # 公告栏设置
 announcement = "👋你好，世界！👋"

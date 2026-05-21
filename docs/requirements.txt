@@ -2,7 +2,8 @@ sphinx>=7.0.0
 myst-parser>=2.0.0
 mystx
 myst-nb
-sphinx-book-theme>=1.0.0
+sphinx-book-theme
+pydata-sphinx-theme
 sphinx-design>=0.5.0
 sphinx-copybutton>=0.5.2
 sphinxcontrib-bibtex>=2.6.1

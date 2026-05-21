@@ -107,7 +107,7 @@ html_css_files = [
     "local.css",
     "mermaid.css",
 ]
-html_favicon = "images/favicon.jpg"
+html_favicon = "_static/images/favicon.jpg"
 
 html_last_updated_fmt = "%Y-%m-%d, %H:%M:%S"
 

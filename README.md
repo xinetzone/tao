@@ -43,6 +43,17 @@
 
 <!-- end-doc-include -->
 
+## 🛠️ 技能管理
+
+本项目将 AI 技能 (Skills) 纳入版本管理，实现技能的集中维护、评测和优化。所有技能统一存放在 [.agents/skills/](.agents/skills/) 目录下：
+
+| 技能 | 用途 |
+|------|------|
+| [skill-creator](.agents/skills/skill-creator/) | 技能开发工具链：创建技能、编写触发评测集 (evals)、自动优化 description 触发词 |
+| [task-execution-summary](.agents/skills/task-execution-summary/) | 任务执行总结报告生成器：从对话历史中提取关键信息，生成结构化复盘报告 |
+
+技能的触发描述优化、Windows 兼容性修复等迭代记录见 `.agents/docs/superpowers/` 下的设计文档和复盘报告。
+
 ## 📚 文档导航
 
 为了提供更清晰的指引，本项目文档已进行模块化拆分。请访问 [📖 文档目录](docs/index.md) 获取详细指引。

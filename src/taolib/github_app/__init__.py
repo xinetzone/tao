@@ -18,6 +18,10 @@ from taolib.github_app.models import (
     TokenKind,
 )
 from taolib.github_app.token_manager import GitHubInstallationTokenManager
+from taolib.github_app.pygithub_adapter import (
+    PyGithubInstallationClientFactory,
+    build_pygithub_client,
+)
 
 __all__ = [
     "EffectiveTokenStrategy",
@@ -32,6 +36,8 @@ __all__ = [
     "InMemoryInstallationTokenCache",
     "InstallationTokenRequest",
     "InstallationTokenResult",
+    "PyGithubInstallationClientFactory",
     "RequestedTokenStrategy",
     "TokenKind",
+    "build_pygithub_client",
 ]

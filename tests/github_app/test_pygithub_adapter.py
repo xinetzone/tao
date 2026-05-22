@@ -89,3 +89,11 @@ async def test_build_pygithub_client_helper(mock_settings, mock_manager):
 
     assert isinstance(client, Github)
     mock_manager.get_token.assert_awaited_once_with(request)
+
+
+def test_module_exports():
+    import taolib.github_app
+    
+    assert hasattr(taolib.github_app, "PyGithubInstallationClientFactory")
+    assert hasattr(taolib.github_app, "build_pygithub_client")
+

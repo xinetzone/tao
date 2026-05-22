@@ -1,5 +1,5 @@
-from dataclasses import dataclass
 import os
+from dataclasses import dataclass
 from pathlib import Path
 
 from taolib.github_app.errors import GitHubAppConfigurationError
@@ -48,9 +48,7 @@ class GitHubAppSettings:
             private_key = Path(private_key_file).read_text(encoding="utf-8")
 
         if not private_key:
-            raise GitHubAppConfigurationError(
-                "GitHub App private key is required."
-            )
+            raise GitHubAppConfigurationError("GitHub App private key is required.")
 
         api_url = os.getenv("GITHUB_API_URL", "https://api.github.com")
         runtime_profile = GitHubRuntimeProfile(

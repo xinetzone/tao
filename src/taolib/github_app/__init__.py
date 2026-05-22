@@ -17,11 +17,11 @@ from taolib.github_app.models import (
     RequestedTokenStrategy,
     TokenKind,
 )
-from taolib.github_app.token_manager import GitHubInstallationTokenManager
 from taolib.github_app.pygithub_adapter import (
     PyGithubInstallationClientFactory,
     build_pygithub_client,
 )
+from taolib.github_app.token_manager import GitHubInstallationTokenManager
 
 __all__ = [
     "EffectiveTokenStrategy",

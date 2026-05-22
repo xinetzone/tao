@@ -22,21 +22,24 @@ environment-specific configurations to produce high-quality documentation.
 """
 
 # === Standard Library Imports ===
-from importlib.metadata import PackageNotFoundError, version as _dist_version
+import importlib.util as _ilut
 import os
 import sys
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as _dist_version
 from pathlib import Path
 
 # === Platform-Specific Configuration ===
 if sys.platform == "win32":
     import asyncio
-    asyncio.set_event_loop_policy(
-        asyncio.WindowsSelectorEventLoopPolicy()
-    )
+
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
 
 # === Path Setup ===
 def get_project_root():
     return Path(__file__).resolve().parents[1]
+
 
 ROOT = get_project_root()
 
@@ -46,6 +49,7 @@ def _resolve_release() -> str:
         return _dist_version("taolib")
     except PackageNotFoundError:
         return "0+unknown"
+
 
 # ================================= 项目基本信息 =================================
 project = "AgentForge"
@@ -60,13 +64,14 @@ locale_dirs = ["../locales/"]
 gettext_compact = False
 
 # ================================= 扩展插件配置 =================================
-import importlib.util as _ilut
+
 
 def _has(mod: str) -> bool:
     try:
         return _ilut.find_spec(mod) is not None
     except ModuleNotFoundError:
         return False
+
 
 MYST_PARSER_ENABLED = _has("myst_parser")
 MYSTX_ENABLED = _has("mystx") and _has("myst_nb")
@@ -151,10 +156,7 @@ copybutton_selector = ":not(.prompt) > div.highlight pre"
 # === 主题选项加载（从 _config.toml） ===
 html_theme_options = {}
 try:
-    if sys.version_info >= (3, 11):
-        import tomllib as _tomllib
-    else:
-        import tomli as _tomllib
+    import tomllib as _tomllib
 
     cfg_path = Path(__file__).parent / "_config.toml"
     if cfg_path.exists():

@@ -141,8 +141,6 @@ def test_manager_disables_override_for_ghes():
         settings=settings,
     )
 
-    effective = manager.resolve_effective_strategy(
-        RequestedTokenStrategy.ENABLED
-    )
+    effective = manager.resolve_effective_strategy(RequestedTokenStrategy.ENABLED)
 
     assert effective is EffectiveTokenStrategy.NONE

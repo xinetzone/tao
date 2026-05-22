@@ -10,9 +10,7 @@ async def test_client_sends_override_header_for_enabled_strategy():
     seen_headers = {}
 
     async def handler(request: httpx.Request) -> httpx.Response:
-        seen_headers["override"] = request.headers.get(
-            "X-GitHub-Stateless-S2S-Token"
-        )
+        seen_headers["override"] = request.headers.get("X-GitHub-Stateless-S2S-Token")
         return httpx.Response(
             201,
             json={"token": "ghs_a.b.c", "expires_at": "2026-05-22T11:00:00Z"},

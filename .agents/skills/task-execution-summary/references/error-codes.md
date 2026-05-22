@@ -1348,25 +1348,25 @@
 error_handling_config:
   # 严格模式：将 Warning 升级为 Error
   strict_mode: false
-  
+
   # 允许部分输出（针对 Error 级别）
   allow_partial_output: true
-  
+
   # 降级阈值：低于此分数视为不可接受
   min_acceptable_quality_score: 60
-  
+
   # 自动重试配置
   retry_policy:
     max_retries: 2
     retryable_errors: [E011, E032, E051]
     backoff_strategy: exponential
-  
+
   # 通知配置
   notification:
     on_critical: ["email_admin", "slack_alert"]
     on_error: ["log_warning"]
     on_warning: ["report_annotation"]
-  
+
   # 质量门禁
   quality_gate:
     enabled: true
@@ -1485,7 +1485,7 @@ error_handling_config:
 ```python
 def calculate_quality_score(warnings: List[Warning]) -> int:
     score = 100
-    
+
     for warning in warnings:
         if warning.code == "E010":
             # 根据缺失信息类型和程度扣分
@@ -1498,10 +1498,10 @@ def calculate_quality_score(warnings: List[Warning]) -> int:
                     score -= 10 * missing_item.severity   # 最高 -20
                 elif missing_item.type == "resource_info":
                     score -= 5 * missing_item.severity     # 最高 -10
-        
+
         elif warning.code == "E022":
             score -= 5  # 时间线精度问题固定扣分
-    
+
     # 确保分数不低于 0
     return max(0, score)
 

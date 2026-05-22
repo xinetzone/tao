@@ -55,7 +55,8 @@ class GitHubInstallationTokenManager:
         effective: EffectiveTokenStrategy,
     ) -> bool:
         return (
-            requested in {
+            requested
+            in {
                 RequestedTokenStrategy.ENABLED,
                 RequestedTokenStrategy.DISABLED,
             }

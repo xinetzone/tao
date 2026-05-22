@@ -1,8 +1,3 @@
-def test_pygithub_is_installed():
-    import github
-    assert github.__name__ == "github"
-
-
 from datetime import UTC, datetime
 from unittest.mock import AsyncMock
 
@@ -18,11 +13,17 @@ from taolib.github_app.models import (
     RequestedTokenStrategy,
     TokenKind,
 )
-from taolib.github_app.token_manager import GitHubInstallationTokenManager
 from taolib.github_app.pygithub_adapter import (
     PyGithubInstallationClientFactory,
     build_pygithub_client,
 )
+from taolib.github_app.token_manager import GitHubInstallationTokenManager
+
+
+def test_pygithub_is_installed():
+    import github
+
+    assert github.__name__ == "github"
 
 
 @pytest.fixture
@@ -58,7 +59,9 @@ def mock_manager():
 
 @pytest.mark.asyncio
 async def test_factory_creates_github_client(mock_settings, mock_manager):
-    factory = PyGithubInstallationClientFactory(settings=mock_settings, manager=mock_manager)
+    factory = PyGithubInstallationClientFactory(
+        settings=mock_settings, manager=mock_manager
+    )
     request = InstallationTokenRequest(
         installation_id="456",
         permissions={},
@@ -93,7 +96,6 @@ async def test_build_pygithub_client_helper(mock_settings, mock_manager):
 
 def test_module_exports():
     import taolib.github_app
-    
+
     assert hasattr(taolib.github_app, "PyGithubInstallationClientFactory")
     assert hasattr(taolib.github_app, "build_pygithub_client")
-

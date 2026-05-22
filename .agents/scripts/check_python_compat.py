@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """Python 版本合规性扫描脚本。
 
 基于已知的 Python 版本弃用/移除清单，扫描项目代码中可能的不兼容模式。
@@ -9,8 +8,6 @@
     python check_python_compat.py [--target-version 3.15]
 """
 
-import ast
-import re
 import sys
 from pathlib import Path
 
@@ -66,15 +63,17 @@ def scan_file(file_path: Path, target_version: str) -> list[dict]:
         for category, items in rules.items():
             for rule in items:
                 if rule["check"](file_path, line):
-                    results.append({
-                        "file": str(file_path.relative_to(PROJECT_ROOT)),
-                        "line": i,
-                        "line_content": line.strip(),
-                        "severity": rule["severity"],
-                        "category": category,
-                        "message": rule["message"],
-                        "fix": rule.get("fix", ""),
-                    })
+                    results.append(
+                        {
+                            "file": str(file_path.relative_to(PROJECT_ROOT)),
+                            "line": i,
+                            "line_content": line.strip(),
+                            "severity": rule["severity"],
+                            "category": category,
+                            "message": rule["message"],
+                            "fix": rule.get("fix", ""),
+                        }
+                    )
 
     return results
 
@@ -109,7 +108,9 @@ def main():
     print(f"   扫描文件: {total_files}")
     print(f"   发现问题: {len(all_results)}")
     for sev, count in sorted(severity_counts.items()):
-        label = {"critical": "Critical", "warning": "Warning", "info": "Info"}.get(sev, sev)
+        label = {"critical": "Critical", "warning": "Warning", "info": "Info"}.get(
+            sev, sev
+        )
         print(f"     {label}: {count}")
     print()
 

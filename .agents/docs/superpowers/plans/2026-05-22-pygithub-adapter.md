@@ -219,7 +219,7 @@ Append to `tests/github_app/test_pygithub_adapter.py`:
 ```python
 def test_module_exports():
     import taolib.github_app
-    
+
     assert hasattr(taolib.github_app, "PyGithubInstallationClientFactory")
     assert hasattr(taolib.github_app, "build_pygithub_client")
 ```

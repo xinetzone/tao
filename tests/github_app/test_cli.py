@@ -35,9 +35,7 @@ def test_token_command_masks_secret(capsys, monkeypatch):
         lambda args: FakeManager(),
     )
 
-    exit_code = main(
-        ["token", "--installation-id", "456", "--strategy", "enabled"]
-    )
+    exit_code = main(["token", "--installation-id", "456", "--strategy", "enabled"])
     out = capsys.readouterr().out
 
     assert exit_code == 0

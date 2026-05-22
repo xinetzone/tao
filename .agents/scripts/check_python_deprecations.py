@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """基于 AST 的 Python 弃用 API 检测脚本。
 
 使用 ast 模块解析源码，检测未来版本中将移除的 API 调用模式。
@@ -91,7 +90,12 @@ DEPRECATION_PATTERNS = {
         },
         {
             "module": "ssl",
-            "names": ["PROTOCOL_SSLv3", "PROTOCOL_TLSv1", "PROTOCOL_TLSv1_1", "PROTOCOL_TLSv1_2"],
+            "names": [
+                "PROTOCOL_SSLv3",
+                "PROTOCOL_TLSv1",
+                "PROTOCOL_TLSv1_1",
+                "PROTOCOL_TLSv1_2",
+            ],
             "message": "ssl.PROTOCOL_* 旧常量计划移除。改用 ssl.PROTOCOL_TLS_CLIENT / ssl.PROTOCOL_TLS_SERVER。",
         },
         {
@@ -117,12 +121,14 @@ class DeprecationVisitor(ast.NodeVisitor):
         self._import_map: dict[str, str] = {}
 
     def _add_result(self, line: int, col: int, message: str):
-        self.results.append({
-            "file": self.file_path,
-            "line": line,
-            "col": col,
-            "message": message,
-        })
+        self.results.append(
+            {
+                "file": self.file_path,
+                "line": line,
+                "col": col,
+                "message": message,
+            }
+        )
 
     def visit_Import(self, node):
         for alias in node.names:
@@ -137,9 +143,8 @@ class DeprecationVisitor(ast.NodeVisitor):
         self.generic_visit(node)
 
     def visit_Call(self, node):
-        for pattern_set in DEPRECATION_PATTERNS.get(self.target_version, []):
-            for pattern in DEPRECATION_PATTERNS.get("future", []):
-                self._check_pattern(node, pattern)
+        for pattern in DEPRECATION_PATTERNS.get("future", []):
+            self._check_pattern(node, pattern)
         for pattern in DEPRECATION_PATTERNS.get(self.target_version, []):
             self._check_pattern(node, pattern)
         self.generic_visit(node)
@@ -158,7 +163,9 @@ class DeprecationVisitor(ast.NodeVisitor):
                 if obj.attr in target_classes and attr_name in target_methods:
                     full_name = self._resolve_name(obj)
                     if module in full_name or not module:
-                        self._add_result(node.lineno, node.col_offset, pattern["message"])
+                        self._add_result(
+                            node.lineno, node.col_offset, pattern["message"]
+                        )
                         return
 
             if attr_name in target_names:
@@ -199,7 +206,9 @@ def scan_file(file_path: Path, target_version: str) -> list[dict]:
     except (OSError, SyntaxError):
         return []
 
-    visitor = DeprecationVisitor(target_version, str(file_path.relative_to(PROJECT_ROOT)))
+    visitor = DeprecationVisitor(
+        target_version, str(file_path.relative_to(PROJECT_ROOT))
+    )
     visitor.visit(tree)
     return visitor.results
 

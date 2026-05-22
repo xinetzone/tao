@@ -396,13 +396,13 @@ Sprint 23（2026年3月25日-4月7日）共完成7个用户故事（计划完成
   - 订单服务的健康检查端点(/health)响应正常(200 OK, <50ms)
   - 但业务接口(/api/orders/create) P99延迟 > 10s
   - Kubernetes Pod状态显示Running，无CrashLoopBackOff
-  
+
 - **初步判断**：可能是下游依赖（数据库或外部服务）出现性能瓶颈，而非服务本身崩溃
 
 - **尝试操作**：
   1. 检查订单服务的应用日志 → 发现大量"Connection pool exhausted"和"Timeout waiting for available connection"错误
   2. 查看数据库监控面板 → 发现MySQL的`Threads_connected`指标达到98（接近max_connections=100的限制）
-  
+
 - **结果**：✅ 初步锁定方向 —— 数据库连接池问题
 
 **T+5min ~ T+25min** - 深入分析与假设验证
@@ -411,7 +411,7 @@ Sprint 23（2026年3月25日-4月7日）共完成7个用户故事（计划完成
   - 通过`SHOW PROCESSLIST`命令查看当前数据库连接状态
   -发现有大量处于"Sleep"状态的连接（67个），且这些连接的空闲时间大多超过5分钟
   - 同时有32个连接处于"Query"状态，其中28个是"Sending data"阶段的慢查询
-  
+
 - **新假设**：存在两个叠加问题：(1) 连接池最大连接数设置过低；(2) 应用层存在连接未正确释放（连接泄漏）
 
 - **验证方法**：
@@ -438,8 +438,8 @@ Sprint 23（2026年3月25日-4月7日）共完成7个用户故事（计划完成
      ```
   2. **清理僵尸连接**：在数据库端执行`KILL`命令终止空闲超过10分钟的Sleep连接
      ```sql
-     SELECT CONCAT('KILL ', id, ';') 
-     FROM information_schema.processlist 
+     SELECT CONCAT('KILL ', id, ';')
+     FROM information_schema.processlist
      WHERE command = 'Sleep' AND time > 600;
      ```
   3. **实施流量控制**：在API Gateway层对订单创建接口实施限流（令牌桶算法，QPS限制为500）
@@ -488,7 +488,7 @@ Sprint 23（2026年3月25日-4月7日）共完成7个用户故事（计划完成
         maximum-pool-size: 20
         idle-timeout: 600000
         connection-timeout: 30000
-  
+
   # 变更后
   spring:
     datasource:

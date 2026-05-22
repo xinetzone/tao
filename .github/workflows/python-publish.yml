@@ -18,24 +18,16 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # 获取完整 git 历史（含 tags），供 PDM SCM 版本使用
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.14"
-      - name: Set up uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-          cache-dependency-glob: |
-            pyproject.toml
-            uv.lock
+      - name: Set up mise
+        uses: jdx/mise-action@v2
+      - name: Install managed tools
+        run: mise install
       - name: Install test dependencies
-        run: uv sync --group test
+        run: mise run install-test-deps
       - name: Run tests before publish
-        run: |
-          uv run pytest tests/ -v --tb=short
+        run: mise run test-release
       - name: Build package
-        run: uv build
+        run: mise run package-build
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@release/v1
         with:

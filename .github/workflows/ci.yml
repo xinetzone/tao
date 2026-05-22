@@ -20,33 +20,26 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: ["3.14"]
 
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Set up uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-          cache-dependency-glob: |
-            pyproject.toml
-            uv.lock
+      - name: Set up mise
+        uses: jdx/mise-action@v2
 
-      - name: Install dependencies
-        run: uv sync --group test
+      - name: Install managed tools
+        run: mise install
+
+      - name: Install test dependencies
+        run: mise run install-test-deps
 
       - name: Run GitHub App token tests
-        run: uv run pytest tests/github_app -v
+        run: mise run test-github-app
 
       - name: Run tests with coverage
-        run: uv run pytest tests/ -v --cov=taolib --cov-report=xml --cov-report=term-missing --cov-report=html:htmlcov --cov-fail-under=80
+        run: mise run test-coverage
 
       - name: Check coverage threshold
         run: |
@@ -59,12 +52,12 @@ jobs:
         with:
           file: ./coverage.xml
           fail_ci_if_error: false
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.14'
+        if: matrix.os == 'ubuntu-latest'
 
       - name: Upload coverage HTML report
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-${{ matrix.os }}-py${{ matrix.python-version }}
+          name: coverage-${{ matrix.os }}-mise
           path: htmlcov/
           retention-days: 14
         if: always()
@@ -76,41 +69,27 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.14"
-
-      - name: Set up uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-          cache-dependency-glob: |
-            pyproject.toml
-            uv.lock
+      - name: Set up mise
+        uses: jdx/mise-action@v2
 
       - name: Run pre-commit hooks
-        run: uvx pre-commit run --all-files
+        run: |
+          mise install
+          mise run lint
 
   security:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.14"
-      - name: Set up uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-          cache-dependency-glob: |
-            pyproject.toml
-            uv.lock
+      - name: Set up mise
+        uses: jdx/mise-action@v2
 
-      - name: Install dependencies
-        run: uv sync --group test
+      - name: Install managed tools
+        run: mise install
+
+      - name: Install test dependencies
+        run: mise run install-test-deps
 
       - name: Audit Python dependencies
-        run: uv run --with pip-audit pip-audit --strict --desc
+        run: mise run audit

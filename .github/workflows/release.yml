@@ -202,23 +202,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.14"
-      - name: Set up uv
-        uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
-          cache-dependency-glob: |
-            pyproject.toml
-            uv.lock
+      - name: Set up mise
+        uses: jdx/mise-action@v2
 
-      - name: Install dependencies
-        run: uv sync --group test
+      - name: Install managed tools
+        run: mise install
+
+      - name: Install test dependencies
+        run: mise run install-test-deps
 
       - name: Run tests before release
-        run: uv run pytest tests/ -v --tb=short
+        run: mise run test-release
 
       - name: Create git tag
         run: |

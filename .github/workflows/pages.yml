@@ -46,59 +46,37 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.14"
-          cache: "pip"
-          cache-dependency-path: "pyproject.toml"
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            pyproject.toml
+            uv.lock
       - name: 🔧 环境与依赖
         run: |
           sudo apt-get update
           sudo apt-get install -y graphviz
-          python -m pip install --upgrade pip
-          pip install .[doc,dev] --upgrade
+          uv sync --group dev --group docs
       - name: 🔧 Build HTML
+        working-directory: docs
         run: |
-          invoke doc
+          uv run invoke build --target html
       - name: 🧹 Clean up unnecessary files
         run: |
-          # Remove environment.pickle (large cache file)
-          if [ -f "doc/_build/html/environment.pickle" ]; then
-            rm "doc/_build/html/environment.pickle"
+          if [ -f "docs/_build/html/environment.pickle" ]; then
+            rm "docs/_build/html/environment.pickle"
             echo "Removed environment.pickle"
           fi
-          
-          # Remove .doctree files (intermediate build files)
-          find "doc/_build/html" -name "*.doctree" -type f -delete
-          echo "Removed .doctree files"
-          
-          # Remove any .pyc files
-          find "doc/_build/html" -name "*.pyc" -type f -delete
-          echo "Removed .pyc files"
-          
-          # Remove empty directories
-          find "doc/_build/html" -type d -empty -delete
-          echo "Removed empty directories"
-      - name: 📦 Compress static resources
-        run: |
-          # 安装压缩工具
-          npm install -g cssnano terser imagemin-cli
-          
-          # 运行压缩脚本
-          python doc/scripts/compress_static.py
-          
-          # 替换构建目录为压缩后的目录
-          rm -rf doc/_build/html
-          mv doc/_build/html_compressed doc/_build/html
-          echo "Compressed static resources"
-      - name: 📊 Monitor build size
-        run: |
-          # 运行监控脚本
-          python doc/scripts/monitor_build_size.py --set-baseline
-          echo "Monitored build size"
+          find "docs/_build/html" -name "*.doctree" -type f -delete
+          find "docs/_build/html" -name "*.pyc" -type f -delete
+          find "docs/_build/html" -type d -empty -delete
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: 'doc/_build/html/'
+          path: 'docs/_build/html/'
       - name: 🚀 Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

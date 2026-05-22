@@ -30,6 +30,8 @@ taolib-github-app = "taolib.cli.github_app:main"
 dev = [
   "ruff",
   "invoke",
+  "uv",
+  "typer",
   "pre-commit",
 ]
 

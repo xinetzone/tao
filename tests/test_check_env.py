@@ -4,7 +4,9 @@ from pathlib import Path
 
 
 def _load_check_env_module():
-    script_path = Path(__file__).resolve().parents[1] / ".agents" / "scripts" / "check_env.py"
+    script_path = (
+        Path(__file__).resolve().parents[1] / ".agents" / "scripts" / "check_env.py"
+    )
     spec = spec_from_file_location("check_env", script_path)
     assert spec is not None
     assert spec.loader is not None
@@ -19,4 +21,11 @@ def test_defuddle_check_uses_mise_managed_tool_entry():
 
     defuddle = next(spec for spec in module.TOOLS if spec.name == "defuddle")
 
-    assert defuddle.command == ["mise", "x", "npm:defuddle", "--", "defuddle", "--version"]
+    assert defuddle.command == [
+        "mise",
+        "x",
+        "npm:defuddle",
+        "--",
+        "defuddle",
+        "--version",
+    ]

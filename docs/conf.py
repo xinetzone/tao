@@ -4,8 +4,9 @@
 #
 # 本文件是 Sphinx 文档构建系统的核心配置入口（conf.py）。
 # 使用场景：
-# 1) 本地开发：在 docs/ 目录下运行 `sphinx-build` 或 `make html` 时读取本配置，
-#    用于控制扩展加载、主题外观、国际化、API 文档生成策略等。
+# 1) 本地开发：在 docs/ 目录下通过 `uv run --group dev --group docs invoke ...`
+#    触发文档构建时读取本配置，用于控制扩展加载、主题外观、国际化、
+#    API 文档生成策略等。
 # 2) CI / 文档托管平台：在 GitHub Actions、Read the Docs 等环境中构建文档时，
 #    根据环境变量自动切换 baseurl、站点地图(sitemap)规则等。
 #
@@ -21,6 +22,7 @@ environment-specific configurations to produce high-quality documentation.
 """
 
 # === Standard Library Imports ===
+from importlib.metadata import PackageNotFoundError, version as _dist_version
 import os
 import sys
 from pathlib import Path
@@ -38,11 +40,19 @@ def get_project_root():
 
 ROOT = get_project_root()
 
+
+def _resolve_release() -> str:
+    try:
+        return _dist_version("taolib")
+    except PackageNotFoundError:
+        return "0+unknown"
+
 # ================================= 项目基本信息 =================================
 project = "AgentForge"
 author = "AI Dao"
 copyright = "2026, AI Dao"
-release = "0.1.0"
+release = _resolve_release()
+version = release
 
 # ================================= 国际化与本地化设置 ==============================
 language = "zh_CN"

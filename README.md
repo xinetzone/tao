@@ -107,14 +107,15 @@ uv venv
 # 激活虚拟环境 (Windows PowerShell)
 .venv\Scripts\activate
 
-# 安装项目核心依赖与文档依赖
-uv sync --group docs
+# 安装项目核心依赖、invoke 与文档依赖
+uv sync --group dev --group docs
 ```
 
 ### 3. 构建本地文档 (可选)
 ```bash
 cd docs
-make html
+uv run --group dev --group docs invoke help
+uv run --group dev --group docs invoke build --target html
 # 构建完成后可通过浏览器访问 docs/_build/html/index.html
 ```
 

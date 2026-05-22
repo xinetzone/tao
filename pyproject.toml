@@ -18,6 +18,11 @@ Documentation = "https://taolib.readthedocs.io/"
 Repository = "https://github.com/xinetzone/tao"
 
 [dependency-groups]
+dev = [
+  "ruff",
+  "invoke",
+]
+
 docs = [
     "sphinx>=7.0.0",
     "myst-parser>=2.0.0",
@@ -30,6 +35,15 @@ docs = [
     "sphinxcontrib-bibtex>=2.6.1",
     "sphinxcontrib-mermaid",
     "sphinx-sitemap",
+]
+
+test = [
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov",
+    "pytest-mock",
+    "pytest-xdist",
+    "pytest-ruff",
 ]
 
 [tool.pdm.build]

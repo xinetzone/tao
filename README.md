@@ -125,6 +125,15 @@ uv run --group dev --group docs invoke build --target html
 2. **AI 协作入口**：在让 AI 参与任务前，先阅读 [`AGENTS.md`](AGENTS.md) 以确认执行契约、文档边界与任务路由。
 3. **AI 目录说明**：如需了解 `.agents/` 的结构与资产分布，请阅读 [`.agents/README.md`](.agents/README.md)。
 
+## 🔐 GitHub App 令牌治理
+
+项目现已提供 `taolib.github_app` 认证层，用于统一 GitHub App 安装令牌的配置解析、请求级覆盖头控制、缓存、并发刷新去重与 CLI 诊断输出。
+
+- **学习笔记与接入说明**：阅读 [docs/github-app-token-override.md](docs/github-app-token-override.md)。
+- **命令行入口**：使用 `uv run taolib-github-app profile` 查看环境画像，使用 `uv run taolib-github-app token --strategy auto` 获取脱敏诊断输出。
+- **实现位置**：核心代码位于 [`src/taolib/github_app/`](src/taolib/github_app/) 与 [`src/taolib/cli/github_app.py`](src/taolib/cli/github_app.py)。
+- **测试入口**：专项测试位于 [`tests/github_app/`](tests/github_app/)，可使用 `uv run pytest tests/github_app -v` 单独验证。
+
 ## 🛠️ 技能管理
 
 本项目将 AI 技能统一纳入 [`.agents/skills/`](.agents/skills/) 目录管理，用于集中维护技能定义、脚本、评测与配套文档。

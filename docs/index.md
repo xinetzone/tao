@@ -14,11 +14,17 @@
 intro
 quickstart
 features
+github-app-token-override
 api
 deploy
 contributing
 changelog
 ```
+
+## 🔍 重点阅读
+
+- 想了解 GitHub App 安装令牌请求级覆盖头的背景、兼容性约束与工程启发，请阅读 [GitHub App 安装令牌请求级覆盖头学习笔记](github-app-token-override.md)。
+- 想查看项目级演进记录与本月新增能力，请继续访问 [更新日志](changelog.md)。
 
 * {ref}`genindex`
 * {ref}`modindex`

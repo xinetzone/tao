@@ -4,7 +4,10 @@ requires = ["pdm-backend"]
 
 [project]
 authors = [{ name = "xinetzone", email = "735613050@qq.com" }]
-dependencies = []
+dependencies = [
+  "httpx>=0.27,<1",
+  "PyJWT[crypto]>=2.10,<3",
+]
 description = "道可道，非恒道"
 dynamic = ["version"]
 license = { file = "LICENSE" }
@@ -16,6 +19,9 @@ requires-python = ">=3.13"
 [project.urls]
 Documentation = "https://taolib.readthedocs.io/"
 Repository = "https://github.com/xinetzone/tao"
+
+[project.scripts]
+taolib-github-app = "taolib.cli.github_app:main"
 
 [dependency-groups]
 dev = [

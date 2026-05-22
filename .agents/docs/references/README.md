@@ -6,6 +6,7 @@
 
 - `python/`：沉淀 Python 包、运行时特性与排障相关的参考知识。
 - `podman/`：沉淀 Podman 命令、容器场景和常见故障的参考知识。
+- `mise/`：沉淀 mise 多语言版本管理、Shell 激活、`mise.toml` 配置、任务运行器和 asdf/nvm/pyenv 迁移相关参考知识。
 
 ## 使用原则
 
@@ -17,3 +18,4 @@
 
 - [Python](./python/README.md)
 - [Podman](./podman/README.md)
+- [mise](./mise/README.md)

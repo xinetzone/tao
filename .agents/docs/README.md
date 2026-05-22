@@ -35,6 +35,13 @@
 2. 再看 [`issue-patterns/podman-errors.md`](./issue-patterns/podman-errors.md)
 3. 最后看 [`references/podman/`](./references/podman/)
 
+如果你遇到 mise、开发工具版本管理、Shell 激活或 asdf/nvm/pyenv 迁移问题：
+
+1. 先看 [`references/mise/README.md`](./references/mise/README.md)
+2. 需要安装和 Shell 激活时看 [`references/mise/02-快速入门.md`](./references/mise/02-快速入门.md)
+3. 需要命令、配置或迁移细节时看 [`references/mise/03-基础使用.md`](./references/mise/03-基础使用.md)、[`references/mise/05-配置详解.md`](./references/mise/05-配置详解.md) 或 [`references/mise/08-迁移指南.md`](./references/mise/08-迁移指南.md)
+4. 需要追溯原始调研时看 [`sources/mise/00-mise-technical-research.md`](./sources/mise/00-mise-technical-research.md)
+
 如果你需要追溯原始资料或官方文档：
 
 1. 先确认对应主题是否已有提炼页

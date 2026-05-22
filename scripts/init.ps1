@@ -1,82 +1,100 @@
-# -*- coding: utf-8 -*-
-"""项目环境初始化脚本。
-
-安装项目所需的外部工具依赖（npm 全局包）。
-
-用法:
-    ./init.ps1          # Windows PowerShell
-    pwsh -File init.ps1 # PowerShell Core
-"""
-
 param(
     [switch]$CheckOnly
 )
 
 $ErrorActionPreference = "Stop"
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$RepoRoot = Resolve-Path (Join-Path $ScriptDir "..")
 
 function Test-Command {
     param([string]$Command)
-    $null = Get-Command $Command -ErrorAction SilentlyContinue
-    return $?
+
+    return $null -ne (Get-Command $Command -ErrorAction SilentlyContinue)
 }
 
-function Install-IfMissing {
+function Fail-WithHint {
     param(
-        [string]$Package,
-        [string]$InstallCmd
+        [string]$Message,
+        [string]$FixHint
     )
-    if (Test-Command $Package) {
-        Write-Host "[SKIP] $Package already installed" -ForegroundColor DarkGray
-        return $true
+
+    Write-Host "[ERROR] $Message" -ForegroundColor Red
+    if ($FixHint) {
+        Write-Host "[FIX]   $FixHint" -ForegroundColor Yellow
     }
-    if ($CheckOnly) {
-        Write-Host "[MISSING] $Package not found" -ForegroundColor Yellow
-        return $false
+    exit 1
+}
+
+function Invoke-Step {
+    param(
+        [string]$Label,
+        [scriptblock]$Action,
+        [string]$FixHint = ""
+    )
+
+    Write-Host "[STEP] $Label" -ForegroundColor Cyan
+
+    try {
+        & $Action
+        if ($LASTEXITCODE -ne $null -and $LASTEXITCODE -ne 0) {
+            throw "Exit code: $LASTEXITCODE"
+        }
+        Write-Host "[OK]   $Label" -ForegroundColor Green
+    } catch {
+        Write-Host "[FAIL] $Label" -ForegroundColor Red
+        if ($FixHint) {
+            Write-Host "[FIX]  $FixHint" -ForegroundColor Yellow
+        }
+        throw
     }
-    Write-Host "[INSTALL] Installing $Package..." -ForegroundColor Cyan
-    Invoke-Expression $InstallCmd
-    if ($LASTEXITCODE -eq 0) {
-        Write-Host "[OK] $Package installed" -ForegroundColor Green
-        return $true
-    } else {
-        Write-Host "[ERROR] Failed to install $Package" -ForegroundColor Red
-        return $false
-    }
+}
+
+if (-not (Test-Command "mise")) {
+    Fail-WithHint `
+        "未检测到 mise，请先安装后再初始化项目环境。" `
+        "参考安装说明: https://mise.jdx.dev/getting-started.html"
 }
 
 Write-Host "=== AgentForge 环境初始化 ===" -ForegroundColor White
+Write-Host "[INFO] 仓库根目录: $RepoRoot" -ForegroundColor DarkGray
 
-$node_ok = Test-Command "node"
-if (-not $node_ok) {
-    Write-Host "[ERROR] Node.js not found. Please install from https://nodejs.org/" -ForegroundColor Red
-    exit 1
-}
+Push-Location $RepoRoot
+try {
+    Invoke-Step `
+        "信任仓库 mise 配置" `
+        { & mise trust } `
+        "可手动运行: mise trust"
 
-$npm_ok = Test-Command "npm"
-if (-not $npm_ok) {
-    Write-Host "[ERROR] npm not found. Please install Node.js from https://nodejs.org/" -ForegroundColor Red
-    exit 1
-}
+    if ($CheckOnly) {
+        Invoke-Step `
+            "校验当前工具链与版本基线" `
+            { & mise run check-env } `
+            "可手动运行: mise install ; mise run check-env"
 
-Write-Host ""
-Write-Host "[INFO] Node.js version: $(node --version)" -ForegroundColor Gray
-Write-Host "[INFO] npm version: $(npm --version)" -ForegroundColor Gray
-Write-Host ""
-
-$allGood = $true
-
-Write-Host "--- 检查工具依赖 ---" -ForegroundColor White
-
-$allGood = (Install-IfMissing "defuddle" "npm install -g defuddle") -and $allGood
-
-Write-Host ""
-if ($CheckOnly) {
-    if ($allGood) {
-        Write-Host "[OK] 所有工具依赖已就绪" -ForegroundColor Green
-    } else {
-        Write-Host "[WARN] 部分工具依赖缺失，请运行不带 -CheckOnly 参数的脚本安装" -ForegroundColor Yellow
+        Write-Host ""
+        Write-Host "[OK] 环境检查完成" -ForegroundColor Green
+        Write-Host "建议后续命令: mise run test / mise run lint / mise run docs-html" -ForegroundColor DarkGray
+        exit 0
     }
-} else {
-    Write-Host "=== 初始化完成 ===" -ForegroundColor Green
-    Write-Host "运行 'defuddle --help' 验证安装" -ForegroundColor Gray
+
+    Invoke-Step `
+        "安装 mise 工具链 (Python 3.14.5 / uv 0.11.16 / Node 22.22.3 等)" `
+        { & mise install } `
+        "可手动运行: mise install"
+
+    Invoke-Step `
+        "同步 Python 依赖组" `
+        { & mise run sync } `
+        "可手动运行: mise run sync"
+
+    Invoke-Step `
+        "执行环境一致性校验" `
+        { & mise run check-env } `
+        "可手动运行: mise run check-env"
+
+    Write-Host ""
+    Write-Host "[OK] 初始化完成" -ForegroundColor Green
+    Write-Host "常用入口: mise run test / mise run lint / mise run docs-html" -ForegroundColor DarkGray
+} finally {
+    Pop-Location
 }

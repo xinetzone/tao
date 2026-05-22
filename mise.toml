@@ -1,0 +1,85 @@
+[env]
+PYTHONUTF8 = "1"
+
+[tools]
+python = "3.14.5"
+uv = "0.11.16"
+node = { version = "22.22.3", postinstall = "corepack enable" }
+"npm:defuddle" = { version = "0.18.1", depends = ["node"] }
+
+[tasks.check-env]
+description = "校验本地工具链版本"
+run = "python .agents/scripts/check_env.py"
+
+[tasks.sync]
+description = "同步开发、测试与文档依赖"
+run = "uv sync --group dev --group test --group docs"
+depends = ["check-env"]
+
+[tasks.install-test-deps]
+description = "同步 CI 测试所需依赖"
+run = "uv sync --group test"
+depends = ["check-env"]
+
+[tasks.install-docs-deps]
+description = "同步文档构建所需依赖"
+run = "uv sync --group dev --group docs"
+depends = ["check-env"]
+
+[tasks.test-github-app]
+description = "运行 GitHub App 专项测试"
+run = "uv run pytest tests/github_app -v"
+depends = ["check-env"]
+
+[tasks.test]
+description = "运行完整测试集"
+run = "uv run pytest tests/ -v"
+depends = ["check-env"]
+
+[tasks.test-coverage]
+description = "运行带覆盖率的完整测试"
+run = "uv run pytest tests/ -v --cov=taolib --cov-report=xml --cov-report=term-missing --cov-report=html:htmlcov --cov-fail-under=80"
+depends = ["check-env"]
+
+[tasks.test-release]
+description = "运行发布前回归测试"
+run = "uv run pytest tests/ -v --tb=short"
+depends = ["check-env"]
+
+[tasks.lint]
+description = "运行 pre-commit 全量检查"
+run = "uv run pre-commit run --all-files"
+depends = ["check-env"]
+
+[tasks.fmt]
+description = "运行 Ruff 格式化"
+run = "uv run ruff format ."
+depends = ["check-env"]
+
+[tasks.audit]
+description = "审计 Python 依赖安全问题"
+run = "uv run --with pip-audit pip-audit --strict --desc"
+depends = ["check-env"]
+
+[tasks.docs-html]
+description = "构建 HTML 文档"
+dir = "docs"
+run = "uv run invoke build --target html"
+depends = ["check-env"]
+
+[tasks.docs-linkcheck]
+description = "执行文档外链校验"
+dir = "docs"
+run = "uv run invoke linkcheck"
+depends = ["check-env"]
+
+[tasks.docs-build]
+description = "CI 文档构建入口"
+dir = "docs"
+run = "uv run invoke build --target html"
+depends = ["check-env"]
+
+[tasks.package-build]
+description = "构建 Python 包"
+run = "uv build"
+depends = ["check-env"]

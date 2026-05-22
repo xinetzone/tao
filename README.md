@@ -151,9 +151,11 @@ mise run sync
 
 如需一键完成信任、安装、依赖同步与首次环境校验，请直接运行：
 
-```powershell
-pwsh -File scripts/init.ps1
+```bash
+mise run init
 ```
+
+> 初始化流程基于 Python `invoke` 实现，原生跨平台，**Windows / Linux / macOS 均可直接运行**。
 
 ### 4. 验证环境
 建议至少完成以下验证：
@@ -175,7 +177,7 @@ mise run docs-linkcheck
 - **刷新项目工具版本**：更新根目录 `mise.toml` 中的精确版本后，运行 `mise install --force` 与 `mise run sync`。
 - **版本未切换**：先检查 Shell 激活是否生效，再运行 `mise trust`、`mise current` 与 `mise doctor`。
 - **工具下载失败**：先确认网络与代理设置，必要时执行 `mise cache clean` 后重试。
-- **外部 CLI 缺失**：重新运行 `pwsh -File scripts/init.ps1 -CheckOnly` 查看缺失项。
+- **外部 CLI 缺失**：运行 `mise run init-check` 查看缺失项（跨平台，Windows/Linux/macOS 均可使用）。
 
 更详细的环境说明请继续阅读 [`docs/quickstart.md`](docs/quickstart.md)、[`docs/build-conventions.md`](docs/build-conventions.md)、[`docs/contributing.md`](docs/contributing.md) 与 [`docs/deploy.md`](docs/deploy.md)。
 

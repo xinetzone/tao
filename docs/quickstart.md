@@ -71,11 +71,13 @@ mise install
 mise run sync
 ```
 
-如需安装仓库依赖的额外外部工具，请执行：
+如需安装仓库依赖的额外外部工具或一键完成环境初始化，请执行：
 
-```powershell
-pwsh -File scripts/init.ps1
+```bash
+mise run init
 ```
+
+> 初始化流程基于 Python `invoke` 实现，原生跨平台，**Windows / Linux / macOS 均可直接运行**。
 
 ## 4. 验证接入结果
 
@@ -124,7 +126,7 @@ mise run sync
 - **`mise` 命令不可用**：确认已重开终端，并检查 Shell 配置文件中是否存在 `mise activate`。
 - **进入仓库后版本未切换**：优先执行 `mise trust`，然后运行 `mise doctor`。
 - **`uv` 或 `python` 版本不符合预期**：执行 `mise current`、`mise ls`，必要时重新运行 `mise install --force`。
-- **外部工具缺失**：运行 `pwsh -File scripts/init.ps1 -CheckOnly` 查看缺失项。
+- **外部工具缺失**：运行 `mise run init-check` 查看缺失项（跨平台，Windows/Linux/macOS 均可使用）。
 - **文档构建失败**：先执行 `mise run install-docs-deps`，再运行 `mise run docs-html` 或进入 `docs/` 目录手动调用 `uv run invoke`。
 
 如果问题仍未解决，请继续阅读 `docs/build-conventions.md`、`docs/contributing.md` 与 `docs/deploy.md` 中的环境说明。

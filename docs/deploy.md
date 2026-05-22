@@ -12,10 +12,10 @@ mise install
 mise run sync
 ```
 
-如需额外外部工具，请在仓库根目录执行：
+如需额外外部工具或一键初始化，请在仓库根目录执行：
 
-```powershell
-pwsh -File scripts/init.ps1
+```bash
+mise run init
 ```
 
 ## 本地发布前验证
@@ -55,6 +55,6 @@ mise run sync
 - **CI 与本地版本不一致**：先确认双方都以 `mise` 作为工具版本入口，不要混用独立安装的 Python/uv。
 - **部署前构建失败**：优先执行 `mise doctor`、`mise install --force` 与 `mise run sync`。
 - **文档构建或链接检查失败**：先在 `docs/` 目录重新执行 `invoke html` 和 `invoke linkcheck`，确认是否为依赖缺失或外链波动。
-- **额外 CLI 缺失**：运行 `pwsh -File scripts/init.ps1 -CheckOnly` 检查本地缺失项。
+- **额外 CLI 缺失**：运行 `mise run init-check` 检查本地缺失项（跨平台，Windows/Linux/macOS 均可使用）。
 
 后续如果仓库补充正式的发布脚本、容器镜像构建或云端部署步骤，应继续沿用同一套 `mise` 工具声明，避免再次回到多处硬编码版本的状态。

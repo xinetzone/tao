@@ -17,10 +17,10 @@ mise install
 mise run install-docs-deps
 ```
 
-如果你需要额外的外部工具，请回到仓库根目录运行：
+如果你需要额外的外部工具或一键完成环境初始化，请回到仓库根目录运行：
 
-```powershell
-pwsh -File scripts/init.ps1
+```bash
+mise run init
 ```
 
 完成后再进入 `docs/` 目录执行构建命令。

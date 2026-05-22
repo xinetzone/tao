@@ -14,10 +14,10 @@ mise install
 mise run sync
 ```
 
-如需安装额外 CLI，请运行：
+如需安装额外 CLI 或一键初始化，请运行：
 
-```powershell
-pwsh -File scripts/init.ps1
+```bash
+mise run init
 ```
 
 ## 提交前检查
@@ -49,7 +49,7 @@ mise run docs-html
 
 - **命令与文档不一致**：先检查当前分支是否已更新到最新的 `mise` 方案，再执行 `mise doctor`。
 - **工具版本漂移**：运行 `mise current`、`mise install --force`，然后重新执行 `mise run sync`。
-- **新同事无法复现环境**：优先检查是否漏掉了 Shell 激活、`mise trust` 或 `scripts/init.ps1`。
+- **新同事无法复现环境**：优先检查是否漏掉了 Shell 激活、`mise trust` 或 `mise run init`。
 - **只想改文档或规则**：也建议先完成最小环境准备，至少确保 `python`、`uv` 与文档构建链路可用。
 
 ## 扩展建议

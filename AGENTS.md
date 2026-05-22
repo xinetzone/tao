@@ -53,7 +53,7 @@ Python 导入风格必须遵循以下约定：
 ## 3. 工具与脚本 (Tools & Scripts)
 - 项目专属的自动化脚本统一放置在 `.agents/scripts/` 目录下。
 - 智能体在需要自动化验证或执行特定工作流时，可自行检查该目录下的可用脚本。
-- **外部工具初始化**：运行 `scripts/init.ps1` 安装项目所需的外部工具依赖（如 `defuddle` 网页抓取工具）。使用 `-CheckOnly` 参数可仅检查依赖状态。
+- **外部工具初始化**：运行 `mise run init` 安装项目所需的外部工具依赖（如 `defuddle` 网页抓取工具）。使用 `mise run init-check` 可仅检查依赖状态。
 
 ## 4. 文档管理 (Documentation Management)
 

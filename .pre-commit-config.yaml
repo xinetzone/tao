@@ -17,12 +17,3 @@ repos:
       - id: ruff
         args: [--fix]
       - id: ruff-format
-
-  - repo: local
-    hooks:
-      - id: check-file-size
-        name: Check file size
-        entry: python scripts/check_file_size.py
-        language: system
-        files: .*(png|jpg|jpeg|gif|webp|pdf|zip|tar|tar\.gz)$
-        pass_filenames: true

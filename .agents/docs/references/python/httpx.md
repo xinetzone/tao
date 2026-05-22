@@ -73,7 +73,7 @@ import pytest
 async def test_with_mock_transport():
     async def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(200, json={"status": "ok"})
-        
+
     client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
     response = await client.get("https://example.com")
     assert response.json()["status"] == "ok"

@@ -4,13 +4,26 @@
 
 ## 环境准备
 
-本项目的依赖管理由 `uv` 统一处理，确保已安装 `uv`，然后在项目根目录下运行以下命令安装包含文档构建工具的依赖：
+文档构建前，推荐先用 `mise` 收敛工具版本，再用 `uv` 同步 Python 依赖：
 
 ```bash
-uv sync --group docs
+# 首次使用先信任项目配置
+mise trust
+
+# 仓库根目录 `mise.toml` 已声明工具链，直接安装即可
+mise install
+
+# 同步文档依赖
+mise run install-docs-deps
 ```
 
-或者使用 `invoke` 或 `uv run invoke` 在 `docs` 目录下执行构建任务。
+如果你需要额外的外部工具，请回到仓库根目录运行：
+
+```powershell
+pwsh -File scripts/init.ps1
+```
+
+完成后再进入 `docs/` 目录执行构建命令。
 
 ## 构建命令
 
@@ -21,8 +34,8 @@ uv sync --group docs
 查看所有支持的文档构建目标和命令：
 
 ```bash
-# 在 docs/ 目录下
-uv run invoke help
+# 在仓库根目录
+mise run docs-html
 ```
 
 ### 构建 HTML 文档
@@ -30,13 +43,13 @@ uv run invoke help
 构建本地 HTML 文档站点：
 
 ```bash
-uv run invoke build html
+mise run docs-html
 ```
-或者
+或者在 `docs/` 目录下手动执行：
 ```bash
-uv run invoke html
+uv run invoke build --target html
 ```
-> **注意**：我们增加了针对常见目标的快捷任务，如 `html`, `clean`, `linkcheck`, `doctest`。
+> **注意**：`mise` 负责编排环境与入口，实际构建仍复用 `docs/tasks.py` 中的 `invoke` 任务。
 
 ### 清理构建产物
 
@@ -51,7 +64,7 @@ uv run invoke clean
 检查文档中包含的所有外部链接是否可用：
 
 ```bash
-uv run invoke linkcheck
+mise run docs-linkcheck
 ```
 
 ### 运行文档测试
@@ -69,3 +82,27 @@ uv run invoke doctest
 - **`docs/_config.toml`**：提供与 Jupyter Book 或 MyST 兼容的额外配置。
 
 通过这些统一的配置与命令，无论是本地开发还是 GitHub Actions 的 CI/CD 流水线，都共享完全相同的构建链路。
+
+## 升级建议
+
+当文档构建依赖、Python 版本或 `mise` 本体发生升级时，建议按以下顺序处理：
+
+```bash
+mise self-update
+mise install --force
+mise run install-docs-deps
+```
+
+如果升级涉及 Sphinx 或主题版本，请补跑一次以下命令验证：
+
+```bash
+uv run invoke html
+uv run invoke linkcheck
+```
+
+## 常见排障
+
+- **`invoke` 或 `sphinx-build` 找不到**：通常是 `mise run install-docs-deps` 尚未执行，或当前 Shell 未使用 `mise` 激活后的 Python/uv。
+- **进入仓库后工具版本不对**：先运行 `mise trust`，再用 `mise doctor` 和 `mise current` 检查当前生效版本。
+- **文档依赖升级后构建异常**：执行 `mise install --force` 与 `mise run install-docs-deps`，必要时清理 `_build/` 后重试。
+- **Windows 下 PowerShell 命令无法识别**：确认 `$PROFILE` 中已配置 `(& mise activate pwsh) | Out-String | Invoke-Expression`，然后重开终端。

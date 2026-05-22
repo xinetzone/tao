@@ -83,12 +83,13 @@
 
 ## 💻 环境依赖
 
-本项目遵循严格的开发环境标准，请确保您的本地环境满足以下要求：
+本项目推荐使用 `mise` 统一管理运行时与开发工具，再由 `uv` 负责 Python 包依赖同步。
 
 - **操作系统**：跨平台支持（Windows / macOS / Linux），推荐在 Windows 环境下使用 `PowerShell 7+`。
-- **Python 版本**：`>= 3.13`
-- **依赖管理工具**：统一使用 [uv](https://github.com/astral-sh/uv)（禁止直接使用 `pip` 或 `conda` 安装核心依赖）。
-- **文档构建**：依赖 Sphinx, MyST Parser, Jupyter Book 等工具。
+- **Python 版本基线**：由根目录 `mise.toml` 统一锁定为 `3.14.5`。
+- **工具层管理**：优先使用 [mise](https://mise.jdx.dev/) 安装并切换 Python、`uv`、Node.js、`ruff`、`pre-commit` 与 `defuddle`。
+- **Python 依赖层管理**：统一使用 [uv](https://github.com/astral-sh/uv)（禁止直接使用 `pip` 或 `conda` 安装项目依赖）。
+- **文档构建**：依赖 Sphinx、MyST Parser、Jupyter Book 等工具，建议在 `mise` 激活后的环境中执行。
 
 ## 🚀 安装部署
 
@@ -98,26 +99,85 @@ git clone https://github.com/xinetzone/tao.git
 cd tao
 ```
 
-### 2. 环境初始化
-请使用 `uv` 创建虚拟环境并同步依赖：
-```bash
-# 创建虚拟环境
-uv venv
+### 2. 安装 `mise`
+请选择适合当前系统的安装方式：
 
-# 激活虚拟环境 (Windows PowerShell)
-.venv\Scripts\activate
+```powershell
+# Windows: winget
+winget install jdx.mise
 
-# 安装项目核心依赖、invoke 与文档依赖
-uv sync --group dev --group docs
+# Windows: Scoop
+scoop install mise
 ```
 
-### 3. 构建本地文档 (可选)
 ```bash
-cd docs
-uv run --group dev --group docs invoke help
-uv run --group dev --group docs invoke build --target html
-# 构建完成后可通过浏览器访问 docs/_build/html/index.html
+# macOS: Homebrew
+brew install mise
+
+# Linux / macOS: 官方安装脚本
+curl https://mise.run | sh
 ```
+
+首次安装后，请为当前 Shell 添加激活命令：
+
+```powershell
+# PowerShell
+Add-Content $PROFILE '(& mise activate pwsh) | Out-String | Invoke-Expression'
+```
+
+```bash
+# Bash
+echo 'eval "$(mise activate bash)"' >> ~/.bashrc
+
+# Zsh
+echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
+```
+
+完成后请重新打开终端，并执行 `mise --version` 与 `mise doctor` 确认安装成功。
+
+### 3. 环境初始化
+本项目推荐的初始化顺序如下：
+
+```bash
+# 信任当前仓库中的 mise 配置
+mise trust
+
+# 根据根目录 `mise.toml` 安装全部工具
+mise install
+
+# 同步开发、测试与文档依赖
+mise run sync
+```
+
+如需一键完成信任、安装、依赖同步与首次环境校验，请直接运行：
+
+```powershell
+pwsh -File scripts/init.ps1
+```
+
+### 4. 验证环境
+建议至少完成以下验证：
+
+```bash
+mise run check-env
+mise run test
+```
+
+```bash
+mise run docs-html
+mise run docs-linkcheck
+```
+
+构建完成后可通过浏览器访问 `docs/_build/html/index.html`。
+
+### 5. 升级与排障
+- **升级 `mise` 本体**：运行 `mise self-update`，然后执行 `mise doctor`。
+- **刷新项目工具版本**：更新根目录 `mise.toml` 中的精确版本后，运行 `mise install --force` 与 `mise run sync`。
+- **版本未切换**：先检查 Shell 激活是否生效，再运行 `mise trust`、`mise current` 与 `mise doctor`。
+- **工具下载失败**：先确认网络与代理设置，必要时执行 `mise cache clean` 后重试。
+- **外部 CLI 缺失**：重新运行 `pwsh -File scripts/init.ps1 -CheckOnly` 查看缺失项。
+
+更详细的环境说明请继续阅读 [`docs/quickstart.md`](docs/quickstart.md)、[`docs/build-conventions.md`](docs/build-conventions.md)、[`docs/contributing.md`](docs/contributing.md) 与 [`docs/deploy.md`](docs/deploy.md)。
 
 ## 🎮 使用指南
 

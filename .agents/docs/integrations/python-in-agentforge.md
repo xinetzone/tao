@@ -20,5 +20,5 @@
 
 ## Related References
 
-- `../references/python/package-index.md`
 - `../issue-patterns/python-errors.md`
+- `../references/python/package-index.md`

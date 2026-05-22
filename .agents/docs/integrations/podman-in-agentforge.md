@@ -17,5 +17,5 @@
 
 ## Related References
 
-- `../references/podman/command-cheatsheet.md`
 - `../issue-patterns/podman-errors.md`
+- `../references/podman/command-cheatsheet.md`

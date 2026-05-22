@@ -1,0 +1,13 @@
+- [x] 项目根 `tasks.py` 包含 `init` 和 `init-check` 两个 invoke 任务。
+- [x] `init` 任务按顺序执行 `mise trust` → `mise install` → `mise run sync` → `mise run check-env`。
+- [x] `init-check` 任务仅执行 `mise trust` → `mise run check-env`（等价原 `-CheckOnly`）。
+- [x] `_run_step` 辅助函数统一处理 subprocess.run、步骤标签输出、失败修复提示和退出码。
+- [x] 缺少 `mise` 时输出 `[ERROR]` 提示和安装链接，返回非零退出码。
+- [x] `mise.toml` 中定义了 `tasks.init` 和 `tasks.init-check`，通过 `uv run invoke` 调用。
+- [x] README.md 中初始化入口已从 `pwsh -File scripts/init.ps1` 更新为 `mise run init`。
+- [x] docs/quickstart.md、build-conventions.md、contributing.md、deploy.md 中初始化入口已同步更新。
+- [x] 所有排障条目中的 `-CheckOnly` 引用已更新为 `mise run init-check`。
+- [x] pytest 测试覆盖 `_run_step` 成功、命令缺失、非零退出码场景（9/9 passed）。
+- [x] Python invoke 任务在 Windows 上完成 `mise run init-check` 验证。
+- [x] `mise run init-check`（检查模式）在当前平台输出正确且步骤全部 `[OK]`。
+- [x] `scripts/init.ps1` 原文件保留不动（向后兼容），但文档不再推荐使用。

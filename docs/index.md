@@ -17,6 +17,7 @@ features
 github-app-token-override
 api
 deploy
+build-conventions
 contributing
 changelog
 ```

@@ -84,3 +84,47 @@ def build(
         builddir=builddir,
         opts=opts,
     )
+
+
+@task
+def html(
+    _ctx,
+    sourcedir: str = ".",
+    builddir: str = "_build",
+    opts: str = "",
+) -> None:
+    """Build HTML documentation."""
+    build(_ctx, target="html", sourcedir=sourcedir, builddir=builddir, opts=opts)
+
+
+@task
+def clean(
+    _ctx,
+    sourcedir: str = ".",
+    builddir: str = "_build",
+    opts: str = "",
+) -> None:
+    """Clean built documentation."""
+    build(_ctx, target="clean", sourcedir=sourcedir, builddir=builddir, opts=opts)
+
+
+@task
+def linkcheck(
+    _ctx,
+    sourcedir: str = ".",
+    builddir: str = "_build",
+    opts: str = "",
+) -> None:
+    """Check all external links for integrity."""
+    build(_ctx, target="linkcheck", sourcedir=sourcedir, builddir=builddir, opts=opts)
+
+
+@task
+def doctest(
+    _ctx,
+    sourcedir: str = ".",
+    builddir: str = "_build",
+    opts: str = "",
+) -> None:
+    """Run doctests in the documentation."""
+    build(_ctx, target="doctest", sourcedir=sourcedir, builddir=builddir, opts=opts)

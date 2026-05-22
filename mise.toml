@@ -79,6 +79,14 @@ dir = "docs"
 run = "uv run invoke build --target html"
 depends = ["check-env"]
 
+[tasks.init]
+description = "一键环境初始化（跨平台，支持 Windows/Linux/macOS）"
+run = "uv run invoke init"
+
+[tasks.init-check]
+description = "仅检查环境配置（跨平台，支持 Windows/Linux/macOS）"
+run = "uv run invoke init-check"
+
 [tasks.package-build]
 description = "构建 Python 包"
 run = "uv build"

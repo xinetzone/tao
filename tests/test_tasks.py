@@ -1,20 +1,24 @@
 from __future__ import annotations
 
+import importlib.util
 import os
-import subprocess
 import sys
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 
-PROJECT_ROOT = str(Path(__file__).resolve().parent.parent)
-sys.path.insert(0, PROJECT_ROOT)
+TASKS_PY = Path(__file__).resolve().parent.parent / "tasks.py"
+TASKS_SPEC = importlib.util.spec_from_file_location("tasks", TASKS_PY)
+tasks = importlib.util.module_from_spec(TASKS_SPEC)
+sys.modules[TASKS_SPEC.name] = tasks
+TASKS_SPEC.loader.exec_module(tasks)
 
-import tasks
-from tasks import PLATFORM, REPO_ROOT, _check_mise, _run_step, _write
-
-TASKS_PY = os.path.join(REPO_ROOT, "tasks.py")
+PLATFORM = tasks.PLATFORM
+REPO_ROOT = tasks.REPO_ROOT
+_check_mise = tasks._check_mise
+_run_step = tasks._run_step
+_write = tasks._write
 
 
 class TestPlatformDetection:

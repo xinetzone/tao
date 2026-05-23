@@ -93,4 +93,3 @@ jobs:
 
       - name: Audit Python dependencies
         run: mise run audit
-

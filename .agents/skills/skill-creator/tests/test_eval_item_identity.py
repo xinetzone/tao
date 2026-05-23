@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 import scripts.generate_report as generate_report
 import scripts.run_eval as run_eval
@@ -6,24 +7,24 @@ import scripts.run_loop as run_loop
 
 
 class _FakeFuture:
-    def __init__(self, value):
+    def __init__(self, value: bool) -> None:
         self._value = value
 
-    def result(self):
+    def result(self) -> bool:
         return self._value
 
 
 class _FakeExecutor:
-    def __init__(self, *args, **kwargs):
-        self.futures = []
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        self.futures: list[_FakeFuture] = []
 
-    def __enter__(self):
+    def __enter__(self) -> "_FakeExecutor":
         return self
 
-    def __exit__(self, exc_type, exc, tb):
+    def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> bool:
         return False
 
-    def submit(self, func, query, *args):
+    def submit(self, func: Any, query: str, *args: Any) -> _FakeFuture:
         future = _FakeFuture(True)
         self.futures.append(future)
         return future
@@ -105,8 +106,16 @@ def test_run_loop_splits_train_and_test_by_item_id(monkeypatch, tmp_path):
 
     output = run_loop.run_loop(
         eval_set=[
-            {"eval_item_id": "train-item", "query": "same prompt", "should_trigger": True},
-            {"eval_item_id": "test-item", "query": "same prompt", "should_trigger": False},
+            {
+                "eval_item_id": "train-item",
+                "query": "same prompt",
+                "should_trigger": True,
+            },
+            {
+                "eval_item_id": "test-item",
+                "query": "same prompt",
+                "should_trigger": False,
+            },
         ],
         skill_path=tmp_path,
         description_override=None,

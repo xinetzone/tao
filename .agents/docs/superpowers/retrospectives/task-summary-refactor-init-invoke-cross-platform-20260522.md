@@ -1,10 +1,10 @@
 # 📊 任务执行总结报告：init.ps1 跨平台重构
 
-**任务名称**：`refactor-init-invoke-cross-platform`  
-**任务类型**：软件开发 - 技术重构  
-**执行日期**：2026-05-22  
-**详细程度**：标准版  
-**报告语言**：zh-CN  
+**任务名称**：`refactor-init-invoke-cross-platform`
+**任务类型**：软件开发 - 技术重构
+**执行日期**：2026-05-22
+**详细程度**：标准版
+**报告语言**：zh-CN
 
 ---
 
@@ -15,9 +15,9 @@
 | **目标** | 将 Windows-only 的 `scripts/init.ps1` PowerShell 脚本重构为基于 Python `invoke` 包的真正跨平台初始化方案 |
 | **最终成果** | `tasks.py`（2 个 invoke task）+ `tests/test_tasks.py`（9 个测试）+ 更新 6 份文档 + 删除旧文件 |
 | **关键数据** | 新建 2 文件、修改 7 文件、删除 2 文件、9 个 pytest、27 个测试全量通过 |
-| **亮点** | 🔵 从 PowerShell 单平台 → Python invoke 三平台（Windows/Linux/macOS）  
-🔵 攻克 Windows 控制台 CP936 中文乱码问题  
-🔵 零外部依赖新增（仅 `invoke` 包）  
+| **亮点** | 🔵 从 PowerShell 单平台 → Python invoke 三平台（Windows/Linux/macOS）
+🔵 攻克 Windows 控制台 CP936 中文乱码问题
+🔵 零外部依赖新增（仅 `invoke` 包）
 🔵 测试覆盖率覆盖核心路径和异常路径 |
 | **最大挑战** | Windows 终端中文乱码，经历 **4 轮迭代** 才找到根本原因 |
 

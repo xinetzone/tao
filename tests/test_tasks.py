@@ -8,6 +8,8 @@ from unittest.mock import patch
 
 import pytest
 
+pytest.importorskip("invoke", reason="invoke 仅在 dev 依赖组，本测试需要根目录 tasks.py 依赖的 invoke")
+
 TASKS_PY = Path(__file__).resolve().parent.parent / "tasks.py"
 TASKS_SPEC = importlib.util.spec_from_file_location("tasks", TASKS_PY)
 tasks = importlib.util.module_from_spec(TASKS_SPEC)

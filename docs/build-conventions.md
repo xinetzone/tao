@@ -120,6 +120,11 @@ PYTHONUTF8 = "1"
 ```toml
 [project]
 dynamic = ["version"]
+
+[tool.pdm.version]
+source = "scm"
+write_to = "taolib/_version.py"
+write_template = "__version__ = '{}'\n"
 ```
 
 版本号不硬编码于 `pyproject.toml`，而是由构建后端在打包时从 VCS 标签或版本文件中解析。这种方式确保：
@@ -129,6 +134,59 @@ dynamic = ["version"]
 - 预发布版本（alpha/beta/rc）可通过标签直接生成
 
 文档构建时通过 `importlib.metadata.version("taolib")` 动态解析当前版本号。
+
+### 配置要点
+
+> ⚠️ **`dynamic` 与 `[tool.pdm.version]` 必须并存**：
+>
+> - 仅声明 `dynamic = ["version"]` 而缺失 `[tool.pdm.version]` 段时，pdm-backend 会兜底为 `0.0.0`，导致 wheel 文件名与 git tag 完全脱节。
+> - 仅有 `[tool.pdm.version]` 而 `[project]` 没声明 `dynamic`，则版本源配置不会生效。
+
+运行时入口 `src/taolib/__init__.py` 通过 `from ._version import __version__` 暴露版本号，并在源码树直接运行（未构建安装）时回退到 `importlib.metadata.version("taolib")`，再降级到 `0.0.0+unknown`。
+
+### PDM SCM 版本派生规则（PEP 440）
+
+`pdm-backend` 的 SCM 源遵循 PEP 440 + setuptools-scm 风格规则，**版本号会诚实反映工作树状态**：
+
+| git 状态 | 派生版本号示例 | 适用场景 |
+|---|---|---|
+| 在 tag commit 上 + 工作树干净 | `0.6.0` | ✅ 正式发布到 PyPI |
+| tag + N 个新 commit + 工作树干净 | `0.6.1.dev1+ga6a981f` | 仅 TestPyPI 或本地预览 |
+| 在 tag commit 上 + **dirty** 工作树 | `0.6.0+d20260524` | ❌ PyPI 拒收（包含 local segment） |
+| tag + N 个新 commit + **dirty** 工作树 | `0.6.1.dev1+ga6a981f.d20260524` | ❌ PyPI 拒收 |
+
+关键概念：
+
+- `.devN`：PEP 440 预发布段（pre-release segment），`N` 为距最近 tag 的 commit 数
+- `+g<sha>`：local version identifier，`g` 是 git 前缀，`<sha>` 是当前 commit 短哈希
+- `+d<date>`：dirty 标记，本地日期，**该形态会被 PyPI 直接拒收**
+
+### 发布流程的工作树洁净度防线
+
+为防止 dirty 标记污染发布产物，CI 流程设有 **三道防线**：
+
+```mermaid
+flowchart LR
+    A["release.yml<br/>打 tag 前校验工作树"] --> B["python-publish.yml<br/>build 前再校验工作树"]
+    B --> C["pyproject.toml<br/>SCM 派生规则本身"]
+```
+
+- **第 1 道**：`.github/workflows/release.yml` 在打 tag 前执行 `git status --porcelain` 校验
+- **第 2 道**：`.github/workflows/python-publish.yml` 在 `mise run package-build` 之前再次校验
+- **第 3 道**：`pyproject.toml` 中 `[tool.pdm.version]` 派生规则本身
+
+### 本地构建发布产物的正确姿势
+
+如需在本地复现 CI 的纯净构建，遵循以下流程：
+
+```bash
+git checkout v0.6.0          # 切到目标 tag
+git status                   # 确认输出为空（工作树干净）
+uv build                     # 产物为 taolib-0.6.0-py3-none-any.whl
+twine check dist/*.whl       # 上传前预校验 PyPI 兼容性
+```
+
+如有未提交改动，先 `git stash push -u` 暂存，构建完毕后再 `git stash pop` 恢复。
 
 ## 常用构建命令
 

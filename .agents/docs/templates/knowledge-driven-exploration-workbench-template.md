@@ -54,6 +54,18 @@
 - [Task 4] depends on [Task 3]
 ```
 
+## Expected Evidence
+
+每轮探索收尾时，应至少能指向以下证据：
+
+- 协议页或模板入口
+- 长期场景目录中的场景卡或场景条目
+- `.trae/specs/<topic>/spec.md`
+- `.trae/specs/<topic>/tasks.md`
+- `.trae/specs/<topic>/checklist.md`
+- `.agents/docs/superpowers/retrospectives/<date>-<topic>.md`
+- 复盘中的 `Next Action` 或等价回流动作
+
 ## checklist.md Skeleton
 
 ```md
@@ -62,4 +74,5 @@
 - [ ] plan 已完成并可执行
 - [ ] 至少完成一次最小验证
 - [ ] 已输出复盘并指定回流动作
+- [ ] 预期证据已完整指向协议、场景、工作台、复盘与回流动作
 ```

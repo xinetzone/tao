@@ -1,5 +1,5 @@
-- [ ] 已定义最小必查引用集合
-- [ ] 已定义 `PASS`、`WARN`、`MISSING` 状态语义
-- [ ] 已使用 `exploration-knowledge-loop-pilot` 完成一次手工只读检查
-- [ ] 已记录至少一个真实摩擦点或稳定性结论
-- [ ] 已输出复盘并指定至少一个回流动作
+- [x] 已定义最小必查引用集合
+- [x] 已定义 `PASS`、`WARN`、`MISSING` 状态语义
+- [x] 已使用 `exploration-knowledge-loop-pilot` 完成一次手工只读检查
+- [x] 已记录至少一个真实摩擦点或稳定性结论
+- [x] 已输出复盘并指定至少一个回流动作

@@ -17,3 +17,14 @@ repos:
       - id: ruff
         args: [--fix]
       - id: ruff-format
+
+  # 严格构建文档（仅手动阶段触发，不拦截日常 commit/push）
+  # 按需运行：pre-commit run docs-strict --hook-stage manual --all-files
+  - repo: local
+    hooks:
+      - id: docs-strict
+        name: docs-strict (sphinx -W --keep-going)
+        entry: mise run docs-strict
+        language: system
+        pass_filenames: false
+        stages: [manual]

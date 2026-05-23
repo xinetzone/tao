@@ -69,3 +69,26 @@ jobs:
 
       - name: 构建包
         run: cd repo_workspace && uv build
+
+  docs:
+    runs-on: euleros-2.10.1
+    needs: lint
+    steps:
+      - name: 检出代码
+        uses: checkout-action@0.0.1
+
+      - name: 设置 Python 3.14
+        uses: setup-python@0.0.1
+        with:
+          python-version: "3.14"
+
+      - name: 安装 uv
+        run: pip install uv
+
+      - name: 安装文档依赖
+        run: cd repo_workspace && uv sync --group docs
+
+      - name: 严格构建文档 (-W --keep-going)
+        env:
+          SPHINXOPTS: "-W --keep-going"
+        run: cd repo_workspace/docs && uv run invoke build --target html

@@ -51,7 +51,7 @@ jobs:
           mise install
           mise run install-docs-deps
       - name: 🔧 Build HTML
-        run: mise run docs-build
+        run: mise run docs-strict
       - name: 🧹 Clean up unnecessary files
         run: |
           if [ -f "docs/_build/html/environment.pickle" ]; then

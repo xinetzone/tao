@@ -109,3 +109,23 @@ jobs:
 
       - name: Audit Python dependencies
         run: mise run audit
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # 获取完整 git 历史（含 tags），供 PDM SCM 版本使用
+
+      - name: Set up mise
+        uses: jdx/mise-action@v4
+
+      - name: 🔧 环境与依赖
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
+          mise install
+          mise run install-docs-deps
+
+      - name: 📖 严格构建文档（-W --keep-going）
+        run: mise run docs-strict

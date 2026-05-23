@@ -19,7 +19,11 @@ def _load_check_env_module():
 def test_defuddle_check_uses_mise_managed_tool_entry():
     module = _load_check_env_module()
 
-    defuddle = next(spec for spec in module.TOOLS if spec.name == "defuddle")
+    defuddle = next(
+        spec
+        for spec in module.build_tool_specs(Path(__file__).resolve().parents[1])
+        if spec.name == "defuddle"
+    )
 
     assert defuddle.command == [
         "mise",
@@ -29,3 +33,46 @@ def test_defuddle_check_uses_mise_managed_tool_entry():
         "defuddle",
         "--version",
     ]
+
+
+def test_environment_check_main_resolves_project_root(monkeypatch):
+    module = _load_check_env_module()
+
+    monkeypatch.setattr(
+        module,
+        "check_tool",
+        lambda spec: module.ToolResult(
+            name=spec.name,
+            expected=spec.expected,
+            current=spec.expected,
+            ok=True,
+            fix=spec.fix,
+        ),
+    )
+    monkeypatch.setattr(module, "print_table", lambda results: None)
+    monkeypatch.setattr(module, "check_config_consistency", lambda project_root: [])
+
+    assert module.main() == 0
+
+
+def test_build_tool_specs_reads_tool_versions_from_mise_config(tmp_path):
+    module = _load_check_env_module()
+    mise_config = tmp_path / "mise.toml"
+    mise_config.write_text(
+        """
+[tools]
+python = "3.15.1"
+uv = "0.12.0"
+node = { version = "24.1.0" }
+"npm:defuddle" = { version = "0.20.0" }
+""".strip(),
+        encoding="utf-8",
+    )
+
+    specs = {spec.name: spec for spec in module.build_tool_specs(tmp_path)}
+
+    assert specs["python"].expected == "3.15.1"
+    assert specs["uv"].expected == "0.12.0"
+    assert specs["node"].expected == "24.1.0"
+    assert specs["defuddle"].expected == "0.20.0"
+    assert specs["mise"].fix == "先安装 mise，再重新运行 mise run init"

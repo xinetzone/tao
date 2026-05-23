@@ -3,7 +3,9 @@ from __future__ import annotations
 import re
 import subprocess
 import sys
+import tomllib
 from dataclasses import dataclass
+from pathlib import Path
 
 
 @dataclass(frozen=True)
@@ -26,53 +28,85 @@ class ToolResult:
     fix: str
 
 
-TOOLS: tuple[ToolSpec, ...] = (
-    ToolSpec(
-        name="mise",
-        command=["mise", "--version"],
-        expected="已安装",
-        fix="先安装 mise，再重新运行 scripts/init.ps1",
-        version_pattern=None,
-        match_mode="available",
-    ),
-    ToolSpec(
-        name="python",
-        command=["python", "--version"],
-        expected="3.14.5",
-        fix="mise install python@3.14.5",
-    ),
-    ToolSpec(
-        name="uv",
-        command=["uv", "--version"],
-        expected="0.11.16",
-        fix="mise install uv@0.11.16",
-    ),
-    ToolSpec(
-        name="node",
-        command=["node", "--version"],
-        expected="22.22.3",
-        fix="mise install node@22.22.3",
-        version_pattern=r"v?(\d+(?:\.\d+)+)",
-    ),
-    ToolSpec(
-        name="ruff",
-        command=["uv", "run", "ruff", "--version"],
-        expected="0.15.14",
-        fix="mise run sync",
-    ),
-    ToolSpec(
-        name="pre-commit",
-        command=["uv", "run", "pre-commit", "--version"],
-        expected="4.6.0",
-        fix="mise run sync",
-    ),
-    ToolSpec(
-        name="defuddle",
-        command=["mise", "x", "npm:defuddle", "--", "defuddle", "--version"],
-        expected="0.18.1",
-        fix='mise install "npm:defuddle@0.18.1"',
-    ),
-)
+def _tool_version(value: object) -> str:
+    if isinstance(value, str):
+        return value
+    if isinstance(value, dict) and isinstance(value.get("version"), str):
+        return value["version"]
+    return "未声明"
+
+
+def load_mise_tool_versions(project_root: Path) -> dict[str, str]:
+    mise_path = project_root / "mise.toml"
+    with mise_path.open("rb") as file:
+        data = tomllib.load(file)
+
+    tools = data.get("tools", {})
+    if not isinstance(tools, dict):
+        return {}
+
+    return {
+        "python": _tool_version(tools.get("python")),
+        "uv": _tool_version(tools.get("uv")),
+        "node": _tool_version(tools.get("node")),
+        "defuddle": _tool_version(tools.get("npm:defuddle")),
+    }
+
+
+def build_tool_specs(project_root: Path) -> tuple[ToolSpec, ...]:
+    versions = load_mise_tool_versions(project_root)
+    python_version = versions.get("python", "未声明")
+    uv_version = versions.get("uv", "未声明")
+    node_version = versions.get("node", "未声明")
+    defuddle_version = versions.get("defuddle", "未声明")
+
+    return (
+        ToolSpec(
+            name="mise",
+            command=["mise", "--version"],
+            expected="已安装",
+            fix="先安装 mise，再重新运行 mise run init",
+            version_pattern=None,
+            match_mode="available",
+        ),
+        ToolSpec(
+            name="python",
+            command=["python", "--version"],
+            expected=python_version,
+            fix=f"mise install python@{python_version}",
+        ),
+        ToolSpec(
+            name="uv",
+            command=["uv", "--version"],
+            expected=uv_version,
+            fix=f"mise install uv@{uv_version}",
+        ),
+        ToolSpec(
+            name="node",
+            command=["node", "--version"],
+            expected=node_version,
+            fix=f"mise install node@{node_version}",
+            version_pattern=r"v?(\d+(?:\.\d+)+)",
+        ),
+        ToolSpec(
+            name="ruff",
+            command=["uv", "run", "ruff", "--version"],
+            expected="0.15.14",
+            fix="mise run sync",
+        ),
+        ToolSpec(
+            name="pre-commit",
+            command=["uv", "run", "pre-commit", "--version"],
+            expected="4.6.0",
+            fix="mise run sync",
+        ),
+        ToolSpec(
+            name="defuddle",
+            command=["mise", "x", "npm:defuddle", "--", "defuddle", "--version"],
+            expected=defuddle_version,
+            fix=f'mise install "npm:defuddle@{defuddle_version}"',
+        ),
+    )
 
 
 def run_command(command: list[str]) -> tuple[bool, str]:
@@ -215,11 +249,11 @@ def check_config_consistency(project_root: Path) -> list[dict]:
 
 
 def main() -> int:
-    results = [check_tool(spec) for spec in TOOLS]
+    project_root = Path(__file__).resolve().parents[2]
+    results = [check_tool(spec) for spec in build_tool_specs(project_root)]
     print("AgentForge 环境校验")
     print_table(results)
 
-    project_root = Path(__file__).resolve().parents[2]
     consistency_issues = check_config_consistency(project_root)
 
     if consistency_issues:

@@ -236,17 +236,41 @@ flowchart LR
 
 ## 10. 改进行动
 
-| 优先级 | 行动项 | 责任人 | 截止 |
-| --- | --- | --- | --- |
-| P0 | 将"AutoAPI docstring 风格"沉淀到 `.agents/docs/` 或 `docs/contributing.md` | 文档维护者 | 下一次贡献流程更新 |
-| P1 | 在 CI 中加入 `sphinx-build -W`（warning as error）保护 0-warning 基线 | CI 维护者 | 下一次 CI 调整 |
-| P2 | 为 PEP 257 attribute docstring 添加 lint/检测脚本，防止 `Attributes:` 段回归 | 工程化维护者 | 视需要 |
-| P3 | 评估对 `.temp/build.log` 的统一收敛（改为 `tasks.py` invoke 任务直接 Tee） | 工具链维护者 | 视需要 |
+| 优先级 | 行动项 | 责任人 | 截止 | 状态 |
+| --- | --- | --- | --- | --- |
+| P0 | 将"AutoAPI docstring 风格"沉淀到 `.agents/docs/` 或 `docs/contributing.md` | 文档维护者 | 下一次贡献流程更新 | ⏳ 待办 |
+| P1 | 在 CI 中加入 `sphinx-build -W`（warning as error）保护 0-warning 基线 | CI 维护者 | — | ✅ 已完成（前置提交 `fc997d64` 已固化，详见 §10.0） |
+| P2 | 为 PEP 257 attribute docstring 添加 lint/检测脚本，防止 `Attributes:` 段回归 | 工程化维护者 | 视需要 | ⏳ 待办 |
+| P3 | 评估对 `.temp/build.log` 的统一收敛（改为 `tasks.py` invoke 任务直接 Tee） | 工具链维护者 | 视需要 | ⏳ 待办 |
+
+### 10.0 P1 已落地证据（事后追加）
+
+本次复盘归档时回查发现，P1 行动项早在更早提交 `fc997d64`（"Sphinx 文档零警告 CI 固化全流程"）中已经端到端落地，本次零警告基线已被三层护栏自动保护：
+
+```mermaid
+flowchart LR
+    Dev[开发者本地] -->|可选预检| PreCommit["pre-commit manual hook<br/>mise run docs-strict"]
+    PR[PR / push to main] --> GHA[".github/workflows/ci.yml#L113-131<br/>docs job → mise run docs-strict"]
+    PR --> GitCode[".gitcode/workflows/ci.yml<br/>uv 模式镜像 docs-strict"]
+    Tag[发布 / Pages 部署] --> Pages[".github/workflows/pages.yml<br/>mise run docs-strict"]
+    GHA -->|warning 即非零退出| Block[阻断合并]
+    GitCode --> Block
+    Pages --> Block
+```
+
+关键证据：
+
+- `mise.toml` 第 82-87 行：`[tasks.docs-strict]` 通过 `env = { SPHINXOPTS = "-W --keep-going" }` 注入严格选项，由 `docs/tasks.py` 透传给 `sphinx-build`。
+- `.github/workflows/ci.yml` 第 113-131 行：`docs` job 在 `pull_request` / `push` 上执行 `mise run docs-strict`，warning 触发 `exit 1`，阻断合并。
+- `mise.toml` 第 34-37 行：`[tasks.test]` 已将 `docs-strict` 列为依赖，本地 `mise run test` 也会先做严格构建。
+- `[tasks.docs-html]` 故意不含 `--keep-going`，保留宽松路径供本地 watch / 预览，不与严格门禁冲突。
+
+结论：本次复盘提出的 P1 行动项在历史上已被覆盖，无需新增 CI 步骤；只需在风险预警中保留"CI 已会立即拦截"的事实陈述即可。
 
 ### 10.1 风险预警
 
 - ⚠️ 后续若新增 dataclass / enum，新作者可能习惯性写 `Attributes:` 段触发 duplicate；需要靠 contributing 文档 + 代码审查兜底。
-- ⚠️ 中文 docstring 涉及 inline literal 时，作者容易再次产生中文标点紧贴问题；若 P1 行动落地，CI 会立即拦截。
+- ⚠️ 中文 docstring 涉及 inline literal 时，作者容易再次产生中文标点紧贴问题；CI 的 `mise run docs-strict` 会立即拦截，无需依赖人工审查。
 
 ### 10.2 工具推荐
 

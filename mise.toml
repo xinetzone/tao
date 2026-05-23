@@ -12,8 +12,8 @@ description = "校验本地工具链版本"
 run = "python .agents/scripts/check_env.py"
 
 [tasks.sync]
-description = "同步开发、测试与文档依赖"
-run = "uv sync --group dev --group test --group docs"
+description = "同步开发、测试、文档依赖与全部 extras（github-app/task）"
+run = "uv sync --all-extras --group dev --group test --group docs"
 depends = ["check-env"]
 
 [tasks.install-test-deps]
@@ -32,9 +32,9 @@ run = "uv run pytest tests/github_app -v"
 depends = ["check-env"]
 
 [tasks.test]
-description = "运行完整测试集"
+description = "运行完整测试集（含文档严格构建校验）"
 run = "uv run pytest tests/ -v"
-depends = ["check-env"]
+depends = ["check-env", "sync", "docs-strict"]
 
 [tasks.test-coverage]
 description = "运行带覆盖率的完整测试"
@@ -76,6 +76,13 @@ depends = ["check-env"]
 [tasks.docs-build]
 description = "CI 文档构建入口"
 dir = "docs"
+run = "uv run invoke build --target html"
+depends = ["check-env"]
+
+[tasks.docs-strict]
+description = "严格模式构建文档：警告即失败（CI 与 GitHub Pages 部署入口）"
+dir = "docs"
+env = { SPHINXOPTS = "-W --keep-going" }
 run = "uv run invoke build --target html"
 depends = ["check-env"]
 

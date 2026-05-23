@@ -18,6 +18,7 @@
 
 - [Dao Tech Foundation](./dao-tech-foundation.md)
 - [Dao Business Mapping Framework](./dao-business-mapping-framework.md)
+- [Knowledge-Driven Exploration Protocol](./knowledge-driven-exploration-protocol.md)
 - [Dao Scenario Catalog](./dao-scenario-catalog.md)
 - [Python](./python/README.md)
 - [Podman](./podman/README.md)

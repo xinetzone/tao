@@ -164,14 +164,95 @@ def print_table(results: list[ToolResult]) -> None:
         print(format_row(row))
 
 
+def check_config_consistency(project_root: Path) -> list[dict]:
+    issues = []
+
+    mise_path = project_root / "mise.toml"
+    pyproject_path = project_root / "pyproject.toml"
+
+    if not mise_path.exists() or not pyproject_path.exists():
+        return issues
+
+    mise_content = mise_path.read_text(encoding="utf-8")
+    mise_match = re.search(r'python\s*=\s*"(\d+)\.(\d+)', mise_content)
+    if not mise_match:
+        return issues
+    mise_major, mise_minor = int(mise_match[1]), int(mise_match[2])
+
+    pyproject = pyproject_path.read_text(encoding="utf-8")
+
+    ruff_match = re.search(r'target-version\s*=\s*"py(\d)(\d+)"', pyproject)
+    if ruff_match:
+        ruff_major, ruff_minor = int(ruff_match[1]), int(ruff_match[2])
+        expected_ruff = f"py{mise_major}{mise_minor}"
+        current_ruff = f"py{ruff_major}{ruff_minor}"
+        if ruff_major != mise_major or ruff_minor != mise_minor:
+            issues.append(
+                {
+                    "item": "Ruff target-version vs Python version",
+                    "expected": expected_ruff,
+                    "current": current_ruff,
+                    "fix": f'更新 pyproject.toml 中 tool.ruff.target-version 为 "{expected_ruff}"',
+                }
+            )
+
+    req_match = re.search(r'requires-python\s*=\s*">=\s*(\d+)\.(\d+)"', pyproject)
+    if req_match:
+        req_major, req_minor = int(req_match[1]), int(req_match[2])
+        if req_major > mise_major or (
+            req_major == mise_major and req_minor > mise_minor
+        ):
+            issues.append(
+                {
+                    "item": "requires-python 约束 vs mise Python 版本",
+                    "expected": f">={mise_major}.{mise_minor}",
+                    "current": f">={req_major}.{req_minor}",
+                    "fix": f"降低 requires-python 约束或升级 mise Python 版本至 >={req_major}.{req_minor}",
+                }
+            )
+
+    return issues
+
+
 def main() -> int:
     results = [check_tool(spec) for spec in TOOLS]
     print("AgentForge 环境校验")
     print_table(results)
 
+    project_root = Path(__file__).resolve().parents[2]
+    consistency_issues = check_config_consistency(project_root)
+
+    if consistency_issues:
+        print("\n配置一致性校验:")
+        headers_c = ("检查项", "期望值", "当前值", "修复建议")
+        widths_c = [
+            max(
+                len(headers_c[idx]),
+                *(len(str(i.get(k, ""))) for i in consistency_issues),
+            )
+            for idx, k in enumerate(["item", "expected", "current", "fix"])
+        ]
+        print(
+            " | ".join(
+                h.ljust(widths_c[idx]) for idx, h in enumerate(headers_c)
+            )
+        )
+        print("-+-".join("-" * w for w in widths_c))
+        for issue in consistency_issues:
+            row = (
+                issue["item"].ljust(widths_c[0]),
+                issue["expected"].ljust(widths_c[1]),
+                issue["current"].ljust(widths_c[2]),
+                issue["fix"].ljust(widths_c[3]),
+            )
+            print(" | ".join(row))
+
     failed = [result for result in results if not result.ok]
-    if failed:
-        print("\n存在工具版本或可用性不一致，请按“修复命令”列处理。")
+    if failed or consistency_issues:
+        if failed:
+            print('\n存在工具版本或可用性不一致，请按"修复命令"列处理。')
+        if consistency_issues:
+            print('存在配置文件一致性不一致，请按"修复建议"列处理。')
         return 1
 
     print("\n环境满足项目基线。")

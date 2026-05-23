@@ -2,6 +2,8 @@
 
 > 本文档记录 Python 3.15 核心语言特性更新，供项目开发与代码审查参考。
 > 数据来源：[Python 3.15 新特性 — 官方文档](https://docs.python.org/zh-cn/3.16/whatsnew/3.15.html)
+> 
+> **交叉引用**：3.14 版本的弃用时间线、移除项、适配检查清单见 [python-3.14-adaptation.md](python-3.14-adaptation.md)。
 
 ## 1. 核心语言特性
 
@@ -399,6 +401,8 @@ Python 3.15 的 JIT 编译器在多个方面得到显著提升：
 ### 5.2 GC 回退到 Generational GC
 
 Python 3.14.0-3.14.4 引入了增量 GC，但因生产环境内存压力问题，从 3.14.5 和 3.15 起回退到 3.13 的分代 GC。
+
+> 项目当前使用 Python 3.14.5，因此增量 GC **不适用**。详见 [python-3.14-adaptation.md](python-3.14-adaptation.md)。
 
 ### 5.3 mimalloc 默认分配器
 

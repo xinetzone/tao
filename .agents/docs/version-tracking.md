@@ -39,6 +39,7 @@
 
 | 日期 | Python 版本 | 追踪报告 |
 |------|------------|---------|
+| 2026-05-23 | 3.14 | [python-3.14-adaptation.md](python-3.14-adaptation.md) |
 | 2026-05-21 | 3.15 | [python315-adaptation-20260521.md](superpowers/retrospectives/python315-adaptation-20260521.md) |
 
 ## 下一次检查：2026-08-21（或 Python 3.16 RC 发布时，以先到者为准）

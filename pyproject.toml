@@ -10,7 +10,7 @@ license = { file = "LICENSE" }
 maintainers = [{ name = "xinetzone", email = "735613050@qq.com" }]
 name = "taolib"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 
 [project.optional-dependencies]
 github-app = [
@@ -65,7 +65,7 @@ package-dir = "src"
 [tool.ruff]
 exclude = [".git", ".venv", "doc/_build", ".pytest_cache", "__pycache__"]
 line-length = 88
-target-version = "py313"
+target-version = "py314"
 
 [tool.ruff.lint]
 ignore = [

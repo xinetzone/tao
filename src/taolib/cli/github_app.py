@@ -1,7 +1,18 @@
+"""``taolib-github-app`` 命令行入口。
+
+本模块提供两个子命令：
+
+- ``profile``：查询当前运行环境画像，无需有效私钥即可执行。
+- ``token``：获取安装令牌并以脱敏后的 JSON 输出。
+
+详细环境变量与输出示例请参阅 :class:`taolib.github_app.config.GitHubAppSettings`。
+"""
+
 import argparse
 import asyncio
 import json
 import os
+import sys
 
 from taolib.github_app import (
     GitHubAppSettings,
@@ -11,10 +22,16 @@ from taolib.github_app import (
 )
 from taolib.github_app.cache import InMemoryInstallationTokenCache
 from taolib.github_app.client import GitHubAppClient
+from taolib.github_app.errors import GitHubAppClientError, GitHubAppConfigurationError
 from taolib.github_app.models import EnvironmentKind, InstallationTokenResult
 
 
 def build_parser() -> argparse.ArgumentParser:
+    """构造 CLI 参数解析器。
+
+    Returns:
+        包含 ``profile`` 与 ``token`` 两个子命令的 :class:`argparse.ArgumentParser`。
+    """
     parser = argparse.ArgumentParser(prog="taolib-github-app")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -61,6 +78,14 @@ def _resolve_strategy(args: argparse.Namespace) -> RequestedTokenStrategy:
 
 
 def build_manager(args: argparse.Namespace) -> GitHubInstallationTokenManager:
+    """从环境变量装配出可用的令牌管理器。
+
+    Args:
+        args: 仅为接口一致性保留，不参与现有逻辑。
+
+    Returns:
+        依赖内存缓存与默认客户端的 :class:`GitHubInstallationTokenManager` 实例。
+    """
     del args
     settings = GitHubAppSettings.from_env()
     client = GitHubAppClient(
@@ -76,6 +101,14 @@ def build_manager(args: argparse.Namespace) -> GitHubInstallationTokenManager:
 
 
 def build_request(args: argparse.Namespace) -> InstallationTokenRequest:
+    """根据命令行参数与环境变量拼装令牌请求。
+
+    Args:
+        args: 已解析的命令行参数。
+
+    Returns:
+        可用于 :meth:`GitHubInstallationTokenManager.get_token` 的请求对象。
+    """
     installation_id = args.installation_id or os.environ["GITHUB_APP_INSTALLATION_ID"]
     return InstallationTokenRequest(
         installation_id=installation_id,
@@ -110,15 +143,29 @@ def _emit_json(payload: dict[str, object]) -> None:
 
 
 def main(argv: list[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
-    if args.command == "profile":
-        _emit_json(_build_profile_payload(args))
-        return 0
+    """CLI 主入口。
 
-    manager = build_manager(args)
-    result = asyncio.run(manager.get_token(build_request(args)))
-    _emit_json(_build_token_payload(result))
-    return 0
+    Args:
+        argv: 可选参数列表，为 ``None`` 时默认使用 :data:`sys.argv`。
+
+    Returns:
+        进程退出码：``0`` 表示成功，``1`` 表示配置错误，``2`` 表示客户端错误。
+    """
+    try:
+        args = build_parser().parse_args(argv)
+        if args.command == "profile":
+            _emit_json(_build_profile_payload(args))
+            return 0
+        manager = build_manager(args)
+        result = asyncio.run(manager.get_token(build_request(args)))
+        _emit_json(_build_token_payload(result))
+        return 0
+    except GitHubAppConfigurationError as exc:
+        print(json.dumps({"error": str(exc)}), file=sys.stderr)
+        return 1
+    except GitHubAppClientError as exc:
+        print(json.dumps({"error": str(exc)}), file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":

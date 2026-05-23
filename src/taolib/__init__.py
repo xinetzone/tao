@@ -5,3 +5,23 @@
 :mod:`taolib.cli` 提供与之对应的命令行入口。
 调用方应从各子模块的公共接口导入能力，避免依赖内部模块。
 """
+
+from __future__ import annotations
+
+# 版本号统一由 pdm-backend 的 SCM 源派生，构建时写入 ``_version.py``。
+# 详见 ``pyproject.toml`` 中的 ``[tool.pdm.version]`` 段与
+# ``docs/build-conventions.md`` 的版本管理章节。
+try:
+    from ._version import __version__
+except ImportError:  # pragma: no cover - 源码树直接运行（未构建安装）时的兜底
+    try:
+        from importlib.metadata import PackageNotFoundError, version as _pkg_version
+
+        try:
+            __version__ = _pkg_version("taolib")
+        except PackageNotFoundError:
+            __version__ = "0.0.0+unknown"
+    except ImportError:
+        __version__ = "0.0.0+unknown"
+
+__all__ = ["__version__"]

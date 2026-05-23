@@ -179,6 +179,7 @@ draft/
 # IDE / Editor
 .idea/
 .vscode/
+.qoder/
 *.swp
 *.swo
 .DS_Store

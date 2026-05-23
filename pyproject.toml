@@ -51,6 +51,7 @@ docs = [
     "sphinxcontrib-bibtex>=2.6.1",
     "sphinxcontrib-mermaid",
     "sphinx-sitemap",
+    "docutils>=0.20",
 ]
 
 test = [
@@ -78,7 +79,7 @@ package-dir = "src"
 [tool.ruff]
 exclude = [".git", ".venv", "doc/_build", ".pytest_cache", "__pycache__"]
 line-length = 88
-target-version = "py314"
+target-version = "py313"
 
 [tool.ruff.lint]
 ignore = [
@@ -114,7 +115,11 @@ select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["ANN", "S101"]
+"tests/**" = ["ANN", "S101"]
+".agents/scripts/**" = ["ANN"]
+".agents/skills/**" = ["ANN"]
+"docs/**" = ["ANN"]
+"tasks.py" = ["ANN"]
 
 [tool.pytest.ini_options]
 addopts = "-v --tb=short"

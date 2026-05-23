@@ -76,3 +76,25 @@ node = { version = "24.1.0" }
     assert specs["node"].expected == "24.1.0"
     assert specs["defuddle"].expected == "0.20.0"
     assert specs["mise"].fix == "先安装 mise，再重新运行 mise run init"
+
+
+def test_config_consistency_accepts_ruff_supported_target_floor(tmp_path):
+    module = _load_check_env_module()
+    (tmp_path / "mise.toml").write_text(
+        """
+[tools]
+python = "3.14.5"
+""".strip(),
+        encoding="utf-8",
+    )
+    (tmp_path / "pyproject.toml").write_text(
+        """
+requires-python = ">=3.14"
+
+[tool.ruff]
+target-version = "py313"
+""".strip(),
+        encoding="utf-8",
+    )
+
+    assert module.check_config_consistency(tmp_path) == []

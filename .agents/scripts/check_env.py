@@ -198,6 +198,15 @@ def print_table(results: list[ToolResult]) -> None:
         print(format_row(row))
 
 
+def ruff_target_for_python(major: int, minor: int) -> tuple[int, int]:
+    supported_major, supported_minor = 3, 13
+    if major > supported_major or (
+        major == supported_major and minor > supported_minor
+    ):
+        return supported_major, supported_minor
+    return major, minor
+
+
 def check_config_consistency(project_root: Path) -> list[dict]:
     issues = []
 
@@ -218,9 +227,10 @@ def check_config_consistency(project_root: Path) -> list[dict]:
     ruff_match = re.search(r'target-version\s*=\s*"py(\d)(\d+)"', pyproject)
     if ruff_match:
         ruff_major, ruff_minor = int(ruff_match[1]), int(ruff_match[2])
-        expected_ruff = f"py{mise_major}{mise_minor}"
+        expected_major, expected_minor = ruff_target_for_python(mise_major, mise_minor)
+        expected_ruff = f"py{expected_major}{expected_minor}"
         current_ruff = f"py{ruff_major}{ruff_minor}"
-        if ruff_major != mise_major or ruff_minor != mise_minor:
+        if ruff_major != expected_major or ruff_minor != expected_minor:
             issues.append(
                 {
                     "item": "Ruff target-version vs Python version",
@@ -266,11 +276,7 @@ def main() -> int:
             )
             for idx, k in enumerate(["item", "expected", "current", "fix"])
         ]
-        print(
-            " | ".join(
-                h.ljust(widths_c[idx]) for idx, h in enumerate(headers_c)
-            )
-        )
+        print(" | ".join(h.ljust(widths_c[idx]) for idx, h in enumerate(headers_c)))
         print("-+-".join("-" * w for w in widths_c))
         for issue in consistency_issues:
             row = (

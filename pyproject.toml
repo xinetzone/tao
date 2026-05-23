@@ -18,6 +18,9 @@ github-app = [
   "PyJWT[crypto]>=2.10,<3",
   "PyGithub>=2.5,<3",
 ]
+task = [
+  "metaflow>=2.12,<3",
+]
 
 [project.urls]
 Documentation = "https://taolib.readthedocs.io/"

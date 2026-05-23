@@ -17,7 +17,7 @@ from pathlib import Path
 
 from scripts.generate_report import generate_html
 from scripts.improve_description import improve_description
-from scripts.run_eval import resolve_project_root, run_eval
+from scripts.run_eval import normalize_eval_set, resolve_project_root, run_eval
 from scripts.utils import parse_skill_md
 
 
@@ -63,6 +63,7 @@ def run_loop(
     project_root: Path | None = None,
 ) -> dict:
     """Run the eval + improvement loop."""
+    eval_set = normalize_eval_set(eval_set)
     project_root = resolve_project_root(project_root)
     name, original_description, content = parse_skill_md(skill_path)
     current_description = description_override or original_description
@@ -106,12 +107,13 @@ def run_loop(
         eval_elapsed = time.time() - t0
 
         # Split results back into train/test by matching queries
-        train_queries_set = {q["query"] for q in train_set}
+        train_ids_set = {q["eval_item_id"] for q in train_set}
+        test_ids_set = {q["eval_item_id"] for q in test_set}
         train_result_list = [
-            r for r in all_results["results"] if r["query"] in train_queries_set
+            r for r in all_results["results"] if r["eval_item_id"] in train_ids_set
         ]
         test_result_list = [
-            r for r in all_results["results"] if r["query"] not in train_queries_set
+            r for r in all_results["results"] if r["eval_item_id"] in test_ids_set
         ]
 
         train_passed = sum(1 for r in train_result_list if r["pass"])

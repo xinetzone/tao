@@ -19,6 +19,26 @@ from pathlib import Path
 from scripts.utils import parse_skill_md
 
 
+def normalize_eval_set(eval_set: list[dict]) -> list[dict]:
+    """Attach a stable per-item ID so duplicate queries remain distinct."""
+    normalized = []
+    seen_ids = set()
+
+    for idx, item in enumerate(eval_set):
+        eval_item_id = str(
+            item.get("eval_item_id") or item.get("id") or f"sample-{idx}"
+        )
+        if eval_item_id in seen_ids:
+            raise ValueError(f"Duplicate eval item id: {eval_item_id}")
+        seen_ids.add(eval_item_id)
+
+        normalized_item = dict(item)
+        normalized_item["eval_item_id"] = eval_item_id
+        normalized.append(normalized_item)
+
+    return normalized
+
+
 def find_project_root() -> Path:
     """Find the project root by walking up from cwd looking for .claude/.
 
@@ -231,11 +251,12 @@ def run_eval(
     model: str | None = None,
 ) -> dict:
     """Run the full eval set and return results."""
+    eval_items = normalize_eval_set(eval_set)
     results = []
 
     with ProcessPoolExecutor(max_workers=num_workers) as executor:
         future_to_info = {}
-        for item in eval_set:
+        for item in eval_items:
             for run_idx in range(runs_per_query):
                 future = executor.submit(
                     run_single_query,
@@ -246,24 +267,23 @@ def run_eval(
                     str(project_root),
                     model,
                 )
-                future_to_info[future] = (item, run_idx)
+                future_to_info[future] = (item["eval_item_id"], item, run_idx)
 
-        query_triggers: dict[str, list[bool]] = {}
-        query_items: dict[str, dict] = {}
+        item_triggers: dict[str, list[bool]] = {
+            item["eval_item_id"]: [] for item in eval_items
+        }
         for future in as_completed(future_to_info):
-            item, _ = future_to_info[future]
-            query = item["query"]
-            query_items[query] = item
-            if query not in query_triggers:
-                query_triggers[query] = []
+            eval_item_id, _, _ = future_to_info[future]
             try:
-                query_triggers[query].append(future.result())
+                item_triggers[eval_item_id].append(future.result())
             except Exception as e:
                 print(f"Warning: query failed: {e}", file=sys.stderr)
-                query_triggers[query].append(False)
+                item_triggers[eval_item_id].append(False)
 
-    for query, triggers in query_triggers.items():
-        item = query_items[query]
+    for item in eval_items:
+        eval_item_id = item["eval_item_id"]
+        query = item["query"]
+        triggers = item_triggers[eval_item_id]
         trigger_rate = sum(triggers) / len(triggers)
         should_trigger = item["should_trigger"]
         if should_trigger:
@@ -272,6 +292,7 @@ def run_eval(
             did_pass = trigger_rate < trigger_threshold
         results.append(
             {
+                "eval_item_id": eval_item_id,
                 "query": query,
                 "should_trigger": should_trigger,
                 "trigger_rate": trigger_rate,

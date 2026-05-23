@@ -13,6 +13,30 @@ import sys
 from pathlib import Path
 
 
+def result_identity(result: dict, index: int) -> str:
+    """Return a stable per-result key, falling back to position for old data."""
+    return str(result.get("eval_item_id") or result.get("id") or f"index-{index}")
+
+
+def build_query_columns(results: list[dict]) -> list[dict]:
+    """Preserve duplicate query columns by tracking an internal item ID."""
+    columns = []
+    for idx, result in enumerate(results):
+        columns.append(
+            {
+                "eval_item_id": result_identity(result, idx),
+                "query": result["query"],
+                "should_trigger": result.get("should_trigger", True),
+            }
+        )
+    return columns
+
+
+def map_results_by_identity(results: list[dict]) -> dict[str, dict]:
+    """Map results by stable ID instead of display query text."""
+    return {result_identity(result, idx): result for idx, result in enumerate(results)}
+
+
 def generate_html(data: dict, auto_refresh: bool = False, skill_name: str = "") -> str:
     """Generate HTML report from loop output data. If auto_refresh is True, adds a meta refresh tag."""
     history = data.get("history", [])
@@ -22,18 +46,11 @@ def generate_html(data: dict, auto_refresh: bool = False, skill_name: str = "") 
     train_queries: list[dict] = []
     test_queries: list[dict] = []
     if history:
-        for r in history[0].get("train_results", history[0].get("results", [])):
-            train_queries.append(
-                {"query": r["query"], "should_trigger": r.get("should_trigger", True)}
-            )
+        train_queries = build_query_columns(
+            history[0].get("train_results", history[0].get("results", []))
+        )
         if history[0].get("test_results"):
-            for r in history[0].get("test_results", []):
-                test_queries.append(
-                    {
-                        "query": r["query"],
-                        "should_trigger": r.get("should_trigger", True),
-                    }
-                )
+            test_queries = build_query_columns(history[0].get("test_results", []))
 
     refresh_tag = (
         '    <meta http-equiv="refresh" content="5">\n' if auto_refresh else ""
@@ -239,8 +256,8 @@ def generate_html(data: dict, auto_refresh: bool = False, skill_name: str = "") 
         test_results = h.get("test_results", [])
 
         # Create lookups for results by query
-        train_by_query = {r["query"]: r for r in train_results}
-        test_by_query = {r["query"]: r for r in test_results} if test_results else {}
+        train_by_id = map_results_by_identity(train_results)
+        test_by_id = map_results_by_identity(test_results) if test_results else {}
 
         # Compute aggregate correct/total runs across all retries
         def aggregate_runs(results: list[dict]) -> tuple[int, int]:
@@ -283,7 +300,7 @@ def generate_html(data: dict, auto_refresh: bool = False, skill_name: str = "") 
 
         # Add result for each train query
         for qinfo in train_queries:
-            r = train_by_query.get(qinfo["query"], {})
+            r = train_by_id.get(qinfo["eval_item_id"], {})
             did_pass = r.get("pass", False)
             triggers = r.get("triggers", 0)
             runs = r.get("runs", 0)
@@ -297,7 +314,7 @@ def generate_html(data: dict, auto_refresh: bool = False, skill_name: str = "") 
 
         # Add result for each test query (with different background)
         for qinfo in test_queries:
-            r = test_by_query.get(qinfo["query"], {})
+            r = test_by_id.get(qinfo["eval_item_id"], {})
             did_pass = r.get("pass", False)
             triggers = r.get("triggers", 0)
             runs = r.get("runs", 0)

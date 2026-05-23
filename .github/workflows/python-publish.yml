@@ -26,6 +26,14 @@ jobs:
         run: mise run install-test-deps
       - name: Run tests before publish
         run: mise run test-release
+      - name: Verify clean working tree before build
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::Working tree is dirty before build. PDM SCM version would be polluted with +d<date> local segment, leading to PyPI rejection."
+            git status
+            exit 1
+          fi
+          echo "::notice::Working tree is clean; PDM SCM version will derive cleanly from the tag."
       - name: Build package
         run: mise run package-build
       - name: Publish package

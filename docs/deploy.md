@@ -58,3 +58,42 @@ mise run sync
 - **额外 CLI 缺失**：运行 `mise run init-check` 检查本地缺失项（跨平台，Windows/Linux/macOS 均可使用）。
 
 后续如果仓库补充正式的发布脚本、容器镜像构建或云端部署步骤，应继续沿用同一套 `mise` 工具声明，避免再次回到多处硬编码版本的状态。
+
+## AtomGit 平台使用
+
+本项目同时支持 AtomGit 代码托管平台。使用方式如下：
+
+1. 在 [AtomGit](https://atomgit.com) 创建项目仓库
+2. 将本地仓库关联到 AtomGit 远程地址：
+
+   ```bash
+   git remote add atomgit https://atomgit.com/<your-namespace>/<repo-name>.git
+   ```
+
+3. 推送代码：
+
+   ```bash
+   git push atomgit main
+   ```
+
+4. 日常协作（拉取、推送、分支管理）使用标准 Git 命令即可，与 GitHub 流程一致
+
+## GitCode CI/CD
+
+项目已集成 GitCode Pipeline CI/CD 能力，配置文件位于 `.gitcode/workflows/ci.yml`。
+
+**触发规则**：
+- 推送到 `main` 分支时自动触发
+- 创建/更新 Pull Request 到 `main` 时自动触发
+- 支持在 GitCode 控制台手动触发（workflow_dispatch）
+
+**流水线阶段**：
+1. **lint**（静态代码扫描）：通过 `ruff check` 检查代码规范
+2. **test**（单元测试）：运行 `pytest` 全量测试并生成覆盖率报告（要求 >= 80%）
+3. **build**（构建编译）：使用 `uv build` 构建 Python 包
+
+**维护说明**：
+- 修改 CI 流程请编辑 `.gitcode/workflows/ci.yml`
+- CI 使用 GitCode EulerOS runner（`euleros-2.10.1`）
+- 依赖管理通过 `uv` 工具，Python 版本要求 3.14+
+- 如有新增测试目录或修改覆盖率阈值，需同步更新 CI 配置

@@ -49,7 +49,7 @@ class TestCacheBenchmarks:
         benchmark(lambda: asyncio.run(op()))
 
     def test_cache_maxsize_eviction(self, benchmark):
-        """测量满容量下写入触发 FIFO 淘汰的开销。"""
+        """测量满容量下写入触发 LRU 淘汰的开销。"""
         cache = InMemoryInstallationTokenCache(maxsize=100)
         result = _make_result()
 

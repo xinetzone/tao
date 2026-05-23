@@ -5,13 +5,14 @@
 """
 
 import asyncio
+from collections import OrderedDict
 from datetime import UTC, datetime, timedelta
 
 from taolib.github_app.models import InstallationTokenResult
 
 
 class InMemoryInstallationTokenCache:
-    """基于字典的异步安装令牌缓存。
+    """基于 OrderedDict 的异步安装令牌缓存（LRU 淘汰）。
 
     本实现支持 TTL 主动过期：通过 :meth:`purge_expired` 手动清理，
     或通过 :meth:`start_purge_task` 启动后台周期清理协程。
@@ -22,13 +23,16 @@ class InMemoryInstallationTokenCache:
         """初始化一个空的内存缓存容器。
 
         Args:
-            maxsize: 缓存最大条目数，超出时淘汰最早写入的条目。
+            maxsize: 缓存最大条目数，超出时淘汰最久未访问的条目。
         """
-        self._items: dict[str, InstallationTokenResult] = {}
+        self._items: OrderedDict[str, InstallationTokenResult] = OrderedDict()
         self._maxsize = maxsize
 
     async def get(self, key: str) -> InstallationTokenResult | None:
         """读取缓存中给定键的令牌结果。
+
+        命中时将该键移至末尾，实现 LRU 淘汰语义：
+        最近被访问的 key 不会被优先淘汰。
 
         Args:
             key: 令牌管理器构建的缓存键。
@@ -36,20 +40,22 @@ class InMemoryInstallationTokenCache:
         Returns:
             命中时返回 :class:`InstallationTokenResult`，未命中时返回 ``None``。
         """
-        return self._items.get(key)
+        result = self._items.get(key)
+        if result is not None:
+            self._items.move_to_end(key)
+        return result
 
     async def set(self, key: str, result: InstallationTokenResult) -> None:
         """写入或覆盖缓存中的令牌结果。
 
-        当缓存已满且 key 为新键时，淘汰最早写入的条目（FIFO）。
+        当缓存已满且 key 为新键时，淘汰最久未访问的条目（LRU）。
 
         Args:
             key: 令牌管理器构建的缓存键。
             result: 待缓存的令牌结果。
         """
         if key not in self._items and len(self._items) >= self._maxsize:
-            oldest_key = next(iter(self._items))
-            del self._items[oldest_key]
+            self._items.popitem(last=False)
         self._items[key] = result
 
     def is_stale(

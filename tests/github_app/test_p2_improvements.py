@@ -104,18 +104,21 @@ async def test_refresh_locks_not_cleaned_while_contended():
 
 
 @pytest.mark.asyncio
-async def test_cache_maxsize_evicts_oldest():
-    """验证缓存超过 maxsize 时淘汰最旧条目。"""
+async def test_cache_maxsize_evicts_lru():
+    """验证缓存超过 maxsize 时淘汰最久未访问的条目（LRU）。"""
     cache = InMemoryInstallationTokenCache(maxsize=3)
 
     for i in range(3):
         await cache.set(f"key{i}", _make_result(f"token{i}"))
 
-    # 缓存已满，写入第 4 个应淘汰 key0
+    # 访问 key0，使其成为最近访问，不应被淘汰
+    await cache.get("key0")
+
+    # 缓存已满，写入第 4 个应淘汰 key1（最久未访问）
     await cache.set("key3", _make_result("token3"))
 
-    assert await cache.get("key0") is None, "oldest entry should be evicted"
-    assert await cache.get("key1") is not None
+    assert await cache.get("key0") is not None, "recently accessed key0 should survive"
+    assert await cache.get("key1") is None, "least recently used key1 should be evicted"
     assert await cache.get("key2") is not None
     assert await cache.get("key3") is not None
 

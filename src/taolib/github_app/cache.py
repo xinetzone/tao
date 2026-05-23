@@ -4,6 +4,7 @@
 如需跨进程共享，可另行实现同接口的 Redis / Memcached 适配器。
 """
 
+import asyncio
 from datetime import UTC, datetime, timedelta
 
 from taolib.github_app.models import InstallationTokenResult
@@ -12,8 +13,9 @@ from taolib.github_app.models import InstallationTokenResult
 class InMemoryInstallationTokenCache:
     """基于字典的异步安装令牌缓存。
 
-    本实现不带过期清理任务。过期识别与提前刷新需配合
-    :meth:`is_stale` 使用。
+    本实现支持 TTL 主动过期：通过 :meth:`purge_expired` 手动清理，
+    或通过 :meth:`start_purge_task` 启动后台周期清理协程。
+    过期识别与提前刷新需配合 :meth:`is_stale` 使用。
     """
 
     def __init__(self, maxsize: int = 256) -> None:
@@ -67,3 +69,39 @@ class InMemoryInstallationTokenCache:
         """
         refresh_at = result.expires_at - timedelta(seconds=eager_refresh_seconds)
         return datetime.now(tz=UTC) >= refresh_at
+
+    def purge_expired(self) -> int:
+        """删除所有已过期的缓存条目。
+
+        Returns:
+            本次清理删除的条目数量。
+        """
+        now = datetime.now(tz=UTC)
+        expired_keys = [k for k, v in self._items.items() if v.expires_at <= now]
+        for k in expired_keys:
+            del self._items[k]
+        return len(expired_keys)
+
+    def start_purge_task(self, interval_seconds: int = 300) -> "asyncio.Task[None]":
+        """启动后台周期清理协程。
+
+        Args:
+            interval_seconds: 清理间隔秒数，默认 300 秒。
+
+        Returns:
+            后台清理任务的 asyncio.Task 对象。
+        """
+
+        async def _purge_loop() -> None:
+            while True:
+                await asyncio.sleep(interval_seconds)
+                self.purge_expired()
+
+        self._purge_task = asyncio.create_task(_purge_loop())
+        return self._purge_task
+
+    def stop_purge_task(self) -> None:
+        """取消后台清理任务。"""
+        if hasattr(self, "_purge_task") and self._purge_task is not None:
+            self._purge_task.cancel()
+            self._purge_task = None

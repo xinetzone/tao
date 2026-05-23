@@ -54,8 +54,8 @@ class GitHubInstallationTokenManager:
     ) -> str:
         """为一个令牌请求构建唯一缓存键。
 
-        键值由 ``installation_id``、``permissions``（排序后）、
-        ``repositories``（排序后）与生效策略拼接，确保不同权限与仓库
+        键值由 ``installation_id`` 、排序后的 ``permissions`` 、
+        排序后的 ``repositories`` 与生效策略拼接，确保不同权限与仓库
         组合的令牌隔离存储。
 
         Args:

@@ -215,3 +215,8 @@ if _has("autoapi.extension"):
         "show-module-summary",
     ]
     autoapi_ignore = ["*/__pycache__/*", "*/tests/*"]
+
+# ================================= Napoleon 配置 =================================
+# 将 ``Attributes:`` 等节渲染为 ``:ivar:`` 字段语法，避免与 autoapi 自动生成的
+# ``.. py:attribute::`` 指令产生 duplicate object description 警告。
+napoleon_use_ivar = True

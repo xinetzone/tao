@@ -238,7 +238,7 @@ flowchart LR
 
 | 优先级 | 行动项 | 责任人 | 截止 | 状态 |
 | --- | --- | --- | --- | --- |
-| P0 | 将"AutoAPI docstring 风格"沉淀到 `.agents/docs/` 或 `docs/contributing.md` | 文档维护者 | 下一次贡献流程更新 | ⏳ 待办 |
+| P0 | 将"AutoAPI docstring 风格"沉淀到 `.agents/docs/` 或 `docs/contributing.md` | 文档维护者 | 下一次贡献流程更新 | ✅ 已完成（本轮提交同步下发，详见 §10.Ⅰ） |
 | P1 | 在 CI 中加入 `sphinx-build -W`（warning as error）保护 0-warning 基线 | CI 维护者 | — | ✅ 已完成（前置提交 `fc997d64` 已固化，详见 §10.0） |
 | P2 | 为 PEP 257 attribute docstring 添加 lint/检测脚本，防止 `Attributes:` 段回归 | 工程化维护者 | 视需要 | ⏳ 待办 |
 | P3 | 评估对 `.temp/build.log` 的统一收敛（改为 `tasks.py` invoke 任务直接 Tee） | 工具链维护者 | 视需要 | ⏳ 待办 |
@@ -266,6 +266,29 @@ flowchart LR
 - `[tasks.docs-html]` 故意不含 `--keep-going`，保留宽松路径供本地 watch / 预览，不与严格门禁冲突。
 
 结论：本次复盘提出的 P1 行动项在历史上已被覆盖，无需新增 CI 步骤；只需在风险预警中保留"CI 已会立即拦截"的事实陈述即可。
+
+### 10.Ⅰ P0 已落地证据（本轮同步下发）
+
+在本轮同一提交中，"AutoAPI 友好的 docstring 风格"已同时沉淀到人类贡献规范与 AI 参考库，形成二层录可检索的规范体系：
+
+- **人类贡献者入口**：[`docs/contributing.md`](../../../../docs/contributing.md) 新增《Docstring 风格规范（AutoAPI 友好）》章节，收录三条铁律 + 正反例对比，随贡献流程一起阅读。
+- **AI 详细参考**：[`.agents/docs/references/autoapi-docstring-style.md`](../../references/autoapi-docstring-style.md) 新增独立规范文档，包含：
+  - 3 条铁律的完整型 RFC 2119 表述（MUST / MUST NOT / MAY）
+  - 6 个反例模式的速查表
+  - P2 行动项对应的 `check_autoapi_docstring.py` 伪码骨架
+  - 历史提交溯源（`0f0219d` → `8e6d5d6` → `84ec066` → `1b1ec58/84f8daf`）
+
+```mermaid
+flowchart LR
+    Author[新作者] --> Contrib["docs/contributing.md<br/>三条铁律摘要"]
+    Author --> AIRef[".agents/docs/references/<br/>autoapi-docstring-style.md<br/>详细参考"]
+    Contrib --> CodeReview[代码审查]
+    AIRef --> AIAgent[AI 智能体代码生成]
+    CodeReview --> CI["CI: mise run docs-strict<br/>（P1 在运行时拦截违反）"]
+    AIAgent --> CI
+```
+
+本次下发后重新调用 `sphinx-build -W --keep-going` （1次手动验证）返回 `ExitCode=0` 与 `build succeeded`，证明新增文档未引入警告。P0 行动项正式闭环。
 
 ### 10.1 风险预警
 

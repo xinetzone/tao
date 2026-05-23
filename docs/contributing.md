@@ -52,6 +52,51 @@ mise run docs-html
 - **新同事无法复现环境**：优先检查是否漏掉了 Shell 激活、`mise trust` 或 `mise run init`。
 - **只想改文档或规则**：也建议先完成最小环境准备，至少确保 `python`、`uv` 与文档构建链路可用。
 
+## Docstring 风格规范（AutoAPI 友好）
+
+本项目使用 [sphinx-autoapi](https://sphinx-autoapi.readthedocs.io/) 静态扫描 `src/taolib/` 自动生成 API 文档，构建在 CI 中以 `-W --keep-going` 严格模式执行。为保持 0-warning 基线，请遵守以下三条规则：
+
+1. **属性说明使用 PEP 257 内联 docstring**，不要使用 `Attributes:` 段或 `:ivar:` 字段。AutoAPI 会从源码静态生成 `.. py:attribute::`，与 Napoleon 处理的 `Attributes:` 段叠加会触发 `duplicate object description` 警告。
+
+   ✅ 正确写法：
+
+   ```python
+   @dataclass(slots=True)
+   class GitHubAppSettings:
+       """GitHub App 的全局配置聚合。"""
+
+       app_id: str
+       """GitHub App 的 App ID。"""
+
+       installation_id: str
+       """默认的安装实例 ID。"""
+   ```
+
+   ❌ 错误写法（会触发重复声明警告）：
+
+   ```python
+   @dataclass(slots=True)
+   class GitHubAppSettings:
+       """GitHub App 的全局配置聚合。
+
+       Attributes:
+           app_id: GitHub App 的 App ID。
+           installation_id: 默认的安装实例 ID。
+       """
+       app_id: str
+       installation_id: str
+   ```
+
+2. **inline literal 不能紧贴中文标点**。docutils 仅识别 ASCII 空格与英文标点为 `` ``...`` `` 的合法 end-string，紧贴中文 `：`、`、`、`。` 会触发 `Inline literal start-string without end-string`。
+
+   ✅ 正确：`` ``GITHUB_APP_ID`` 必填，App ID。``（字面量后接 ASCII 空格）
+
+   ❌ 错误：`` ``GITHUB_APP_ID`` (默认 ``auto``)：必填。``（嵌套字面量后紧贴中文冒号）
+
+3. **不要启用 `imported-members`**。`taolib.github_app/__init__.py` 已对子模块对象做 re-export，启用后 AutoAPI 会在包级页面再次声明，造成大面积重复。
+
+详细规范、典型反例与 lint 落地建议详见仓库内的 `.agents/docs/references/autoapi-docstring-style.md`（仅向 AI 智能体开放，不纳入 Sphinx 文档站点）。
+
 ## 扩展建议
 
 您可以根据团队的需要，在 `.agents/` 目录下添加更多的自定义规范，并在 `AGENTS.md` 中注册路由。例如：

@@ -63,6 +63,11 @@ test = [
     "pytest-ruff",
 ]
 
+[tool.pdm.version]
+source = "scm"
+write_to = "taolib/_version.py"
+write_template = "__version__ = '{}'\n"
+
 [tool.pdm.build]
 includes = ["src/taolib"]
 package-dir = "src"

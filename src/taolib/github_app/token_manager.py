@@ -172,7 +172,9 @@ class GitHubInstallationTokenManager:
                 result = self._project_result_for_request(cached, request, effective)
             else:
                 try:
-                    result = await self._request_and_store(cache_key, request, effective)
+                    result = await self._request_and_store(
+                        cache_key, request, effective
+                    )
                 except Exception as exc:
                     await self._event_hook.on_token_refresh_failed(cache_key, exc)
                     raise

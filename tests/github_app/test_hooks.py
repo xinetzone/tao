@@ -5,7 +5,6 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from taolib.github_app.events import TokenEventHook
 from taolib.github_app.hooks import LoggingTokenEventHook, MetricsTokenEventHook
 from taolib.github_app.models import InstallationTokenResult, TokenKind
 
@@ -25,7 +24,9 @@ def _make_result() -> InstallationTokenResult:
 class TestLoggingTokenEventHook:
     """LoggingTokenEventHook 测试。"""
 
-    async def test_on_token_refreshed_logs_info(self, caplog: pytest.LogCaptureFixture) -> None:
+    async def test_on_token_refreshed_logs_info(
+        self, caplog: pytest.LogCaptureFixture
+    ) -> None:
         """on_token_refreshed 应记录 info 级别日志。"""
         logger = logging.getLogger("test.refreshed")
         hook = LoggingTokenEventHook(logger=logger)
@@ -40,7 +41,9 @@ class TestLoggingTokenEventHook:
         assert "key_1" in record.message
         assert "stateful" in record.message
 
-    async def test_on_token_refresh_failed_logs_error(self, caplog: pytest.LogCaptureFixture) -> None:
+    async def test_on_token_refresh_failed_logs_error(
+        self, caplog: pytest.LogCaptureFixture
+    ) -> None:
         """on_token_refresh_failed 应记录 error 级别日志。"""
         logger = logging.getLogger("test.failed")
         hook = LoggingTokenEventHook(logger=logger)

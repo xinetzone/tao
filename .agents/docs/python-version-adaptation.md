@@ -2,7 +2,7 @@
 
 > 本文档记录 Python 3.15 核心语言特性更新，供项目开发与代码审查参考。
 > 数据来源：[Python 3.15 新特性 — 官方文档](https://docs.python.org/zh-cn/3.16/whatsnew/3.15.html)
-> 
+>
 > **交叉引用**：3.14 版本的弃用时间线、移除项、适配检查清单见 [python-3.14-adaptation.md](python-3.14-adaptation.md)。
 
 ## 1. 核心语言特性

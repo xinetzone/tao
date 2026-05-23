@@ -1,6 +1,5 @@
 """事件 hook 机制的单元测试。"""
 
-import asyncio
 from datetime import UTC, datetime, timedelta
 from types import SimpleNamespace
 
@@ -75,6 +74,7 @@ class RecordingHook:
 @pytest.mark.asyncio
 async def test_null_hook_does_not_affect_normal_flow():
     """默认 NullTokenEventHook 不影响正常流程。"""
+
     async def fake_create_token(**kwargs):
         return _make_result()
 
@@ -92,6 +92,7 @@ async def test_null_hook_does_not_affect_normal_flow():
 @pytest.mark.asyncio
 async def test_custom_hook_called_on_refresh_success():
     """自定义 hook 在刷新成功时被调用。"""
+
     async def fake_create_token(**kwargs):
         return _make_result()
 
@@ -113,6 +114,7 @@ async def test_custom_hook_called_on_refresh_success():
 @pytest.mark.asyncio
 async def test_custom_hook_called_on_refresh_failure():
     """自定义 hook 在刷新失败时被调用。"""
+
     async def fake_create_token(**kwargs):
         raise GitHubAppClientError("API failed")
 
@@ -136,6 +138,7 @@ async def test_custom_hook_called_on_refresh_failure():
 @pytest.mark.asyncio
 async def test_hook_exception_propagates():
     """hook 自身抛出异常时应透传（不吞没）。"""
+
     async def fake_create_token(**kwargs):
         return _make_result()
 
@@ -161,6 +164,7 @@ async def test_hook_exception_propagates():
 @pytest.mark.asyncio
 async def test_no_hook_parameter_uses_null_hook():
     """不传 event_hook 参数时使用 NullTokenEventHook。"""
+
     async def fake_create_token(**kwargs):
         return _make_result()
 

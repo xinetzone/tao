@@ -7,7 +7,10 @@ def test_status_empty_cache(capsys, monkeypatch):
     """status 在缓存为空时应返回 cached=false。"""
     monkeypatch.setenv("GITHUB_APP_ID", "123")
     monkeypatch.setenv("GITHUB_APP_INSTALLATION_ID", "456")
-    monkeypatch.setenv("GITHUB_APP_PRIVATE_KEY", "-----BEGIN RSA PRIVATE KEY-----\nfake\n-----END RSA PRIVATE KEY-----\n")
+    monkeypatch.setenv(
+        "GITHUB_APP_PRIVATE_KEY",
+        "-----BEGIN RSA PRIVATE KEY-----\nfake\n-----END RSA PRIVATE KEY-----\n",
+    )
 
     from taolib.cli.github_app import main
 

@@ -8,7 +8,9 @@ from unittest.mock import patch
 
 import pytest
 
-pytest.importorskip("invoke", reason="invoke 仅在 dev 依赖组，本测试需要根目录 tasks.py 依赖的 invoke")
+pytest.importorskip(
+    "invoke", reason="invoke 仅在 dev 依赖组，本测试需要根目录 tasks.py 依赖的 invoke"
+)
 
 TASKS_PY = Path(__file__).resolve().parent.parent / "tasks.py"
 TASKS_SPEC = importlib.util.spec_from_file_location("tasks", TASKS_PY)
@@ -48,8 +50,14 @@ class TestCheckMise:
         message = str(exc_info.value)
         assert exc_info.value.code == 1
         assert "[ERROR] 未检测到 mise，无法继续初始化。" in message
-        assert "[WHY]   AgentForge 使用 mise 统一管理 Python、uv、Node 与外部工具版本。" in message
-        assert "[FIX]   请先安装 mise: https://mise.jdx.dev/getting-started.html" in message
+        assert (
+            "[WHY]   AgentForge 使用 mise 统一管理 Python、uv、Node 与外部工具版本。"
+            in message
+        )
+        assert (
+            "[FIX]   请先安装 mise: https://mise.jdx.dev/getting-started.html"
+            in message
+        )
         assert "[NEXT]  安装完成后重新打开终端，并运行: mise run init" in message
 
 
@@ -109,7 +117,9 @@ class TestRunStep:
             )
         calls = "\n".join(c[0][0] for c in mock_write.call_args_list)
         assert "[FAIL] 失败步骤" in calls
-        assert "[WHY]  命令执行失败，常见原因包括工具链未安装或当前环境未同步。" in calls
+        assert (
+            "[WHY]  命令执行失败，常见原因包括工具链未安装或当前环境未同步。" in calls
+        )
         assert "[FIX]  可手动运行: false" in calls
         assert "[NEXT] 修复后重新运行: mise run init" in calls
 

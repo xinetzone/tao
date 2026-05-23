@@ -206,7 +206,9 @@ if _has("autoapi.extension"):
     autoapi_root = "api"  # 输出目录：docs/api/
     autoapi_add_toctree_entry = False  # 由 index.md 显式管控 toctree，避免重复
     autoapi_keep_files = False  # 构建时清理旧产物
-    autoapi_python_class_content = "both"  # 同时显示 class docstring 与 __init__ docstring
+    autoapi_python_class_content = (
+        "both"  # 同时显示 class docstring 与 __init__ docstring
+    )
     autoapi_member_order = "groupwise"  # 按 类/方法/属性 分组
     autoapi_options = [
         "members",

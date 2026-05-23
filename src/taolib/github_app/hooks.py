@@ -41,9 +41,7 @@ class LoggingTokenEventHook:
             result.expires_at.isoformat(),
         )
 
-    async def on_token_refresh_failed(
-        self, cache_key: str, error: Exception
-    ) -> None:
+    async def on_token_refresh_failed(self, cache_key: str, error: Exception) -> None:
         """记录令牌刷新失败事件。
 
         Args:
@@ -82,9 +80,7 @@ class MetricsTokenEventHook:
         self.refresh_count += 1
         self.last_refresh_key = cache_key
 
-    async def on_token_refresh_failed(
-        self, cache_key: str, error: Exception
-    ) -> None:
+    async def on_token_refresh_failed(self, cache_key: str, error: Exception) -> None:
         """递增刷新失败计数。
 
         Args:

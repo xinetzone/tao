@@ -28,9 +28,7 @@ class TokenEventHook(Protocol):
         """
         ...
 
-    async def on_token_refresh_failed(
-        self, cache_key: str, error: Exception
-    ) -> None:
+    async def on_token_refresh_failed(self, cache_key: str, error: Exception) -> None:
         """令牌刷新失败时触发。
 
         Args:
@@ -48,7 +46,5 @@ class NullTokenEventHook:
     ) -> None:
         """空操作：令牌刷新成功时不执行任何动作。"""
 
-    async def on_token_refresh_failed(
-        self, cache_key: str, error: Exception
-    ) -> None:
+    async def on_token_refresh_failed(self, cache_key: str, error: Exception) -> None:
         """空操作：令牌刷新失败时不执行任何动作。"""

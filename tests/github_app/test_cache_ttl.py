@@ -3,8 +3,6 @@
 import asyncio
 from datetime import UTC, datetime, timedelta
 
-import pytest
-
 from taolib.github_app.cache import InMemoryInstallationTokenCache
 from taolib.github_app.models import InstallationTokenResult, TokenKind
 

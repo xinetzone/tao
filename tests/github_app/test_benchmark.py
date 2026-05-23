@@ -9,7 +9,9 @@ from taolib.github_app.cache import InMemoryInstallationTokenCache
 from taolib.github_app.models import InstallationTokenResult, TokenKind
 
 
-def _make_result(token: str = "ghs_bench", hours_until_expire: int = 1) -> InstallationTokenResult:
+def _make_result(
+    token: str = "ghs_bench", hours_until_expire: int = 1
+) -> InstallationTokenResult:
     """构造测试用令牌结果。"""
     return InstallationTokenResult(
         token=token,

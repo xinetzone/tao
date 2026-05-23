@@ -15,7 +15,8 @@ try:
     from ._version import __version__
 except ImportError:  # pragma: no cover - 源码树直接运行（未构建安装）时的兜底
     try:
-        from importlib.metadata import PackageNotFoundError, version as _pkg_version
+        from importlib.metadata import PackageNotFoundError
+        from importlib.metadata import version as _pkg_version
 
         try:
             __version__ = _pkg_version("taolib")

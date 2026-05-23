@@ -66,9 +66,7 @@ class RecordingEventHook:
     ) -> None:
         self.refreshed.append((cache_key, result))
 
-    async def on_token_refresh_failed(
-        self, cache_key: str, error: Exception
-    ) -> None:
+    async def on_token_refresh_failed(self, cache_key: str, error: Exception) -> None:
         self.failed.append((cache_key, error))
 
 

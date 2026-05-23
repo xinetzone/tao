@@ -8,7 +8,6 @@ from taolib.github_app.config import GitHubAppSettings
 from taolib.github_app.errors import GitHubAppClientError, GitHubAppConfigurationError
 from taolib.github_app.models import EffectiveTokenStrategy
 
-
 # ---------------------------------------------------------------------------
 # 1. Invalid private key → JWT encoding error
 # ---------------------------------------------------------------------------
@@ -106,7 +105,9 @@ async def test_network_timeout_raises_client_error():
 # ---------------------------------------------------------------------------
 
 
-def test_missing_private_key_raises_configuration_error(monkeypatch: pytest.MonkeyPatch):
+def test_missing_private_key_raises_configuration_error(
+    monkeypatch: pytest.MonkeyPatch,
+):
     monkeypatch.delenv("GITHUB_APP_PRIVATE_KEY", raising=False)
     monkeypatch.delenv("GITHUB_APP_PRIVATE_KEY_FILE", raising=False)
 
@@ -148,7 +149,10 @@ def test_cli_client_error_returns_exit_2(
 
     monkeypatch.setenv("GITHUB_APP_ID", "123")
     monkeypatch.setenv("GITHUB_APP_INSTALLATION_ID", "456")
-    monkeypatch.setenv("GITHUB_APP_PRIVATE_KEY", "-----BEGIN PRIVATE KEY-----\nfake\n-----END PRIVATE KEY-----\n")
+    monkeypatch.setenv(
+        "GITHUB_APP_PRIVATE_KEY",
+        "-----BEGIN PRIVATE KEY-----\nfake\n-----END PRIVATE KEY-----\n",
+    )
 
     from taolib.github_app.client import GitHubAppClient as _Client
 

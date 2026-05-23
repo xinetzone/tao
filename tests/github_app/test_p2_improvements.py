@@ -3,11 +3,11 @@
 import asyncio
 from datetime import UTC, datetime, timedelta
 from types import SimpleNamespace
-from unittest.mock import AsyncMock
 
 import pytest
 
 from taolib.github_app.cache import InMemoryInstallationTokenCache
+from taolib.github_app.config import GitHubAppSettings
 from taolib.github_app.models import (
     EffectiveTokenStrategy,
     EnvironmentKind,
@@ -16,7 +16,6 @@ from taolib.github_app.models import (
     RequestedTokenStrategy,
     TokenKind,
 )
-from taolib.github_app.config import GitHubAppSettings
 from taolib.github_app.token_manager import GitHubInstallationTokenManager
 
 
@@ -36,6 +35,7 @@ def _make_manager(call_count_box: list[int] | None = None):
     settings = GitHubAppSettings.from_env.__func__  # 不调用，手动构建
     # 手动构建 settings
     from taolib.github_app.models import GitHubRuntimeProfile
+
     profile = GitHubRuntimeProfile(
         base_url="https://api.github.com",
         environment=EnvironmentKind.CLOUD,

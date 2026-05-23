@@ -3,7 +3,11 @@
 import argparse
 from datetime import UTC, datetime
 
-from taolib.github_app import GitHubAppSettings, GitHubInstallationTokenManager, InstallationTokenRequest
+from taolib.github_app import (
+    GitHubAppSettings,
+    GitHubInstallationTokenManager,
+    InstallationTokenRequest,
+)
 from taolib.github_app.cache import InMemoryInstallationTokenCache
 from taolib.github_app.client import GitHubAppClient
 
@@ -19,7 +23,9 @@ def check_status(args: argparse.Namespace) -> dict[str, object]:
         api_url=settings.api_url,
     )
     cache = InMemoryInstallationTokenCache()
-    manager = GitHubInstallationTokenManager(client=client, cache=cache, settings=settings)
+    manager = GitHubInstallationTokenManager(
+        client=client, cache=cache, settings=settings
+    )
 
     request = InstallationTokenRequest(
         installation_id=args.installation_id,
@@ -33,7 +39,12 @@ def check_status(args: argparse.Namespace) -> dict[str, object]:
     cached = asyncio.run(cache.get(manager.build_cache_key(request)))
 
     if cached is None:
-        return {"cached": False, "expired": False, "expires_at": None, "token_kind": None}
+        return {
+            "cached": False,
+            "expired": False,
+            "expires_at": None,
+            "token_kind": None,
+        }
 
     now = datetime.now(tz=UTC)
     return {

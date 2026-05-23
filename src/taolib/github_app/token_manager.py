@@ -10,6 +10,7 @@ from dataclasses import replace
 from taolib.github_app.cache import InMemoryInstallationTokenCache
 from taolib.github_app.client import GitHubAppClient
 from taolib.github_app.config import GitHubAppSettings
+from taolib.github_app.events import NullTokenEventHook, TokenEventHook
 from taolib.github_app.models import (
     EffectiveTokenStrategy,
     EnvironmentKind,
@@ -34,6 +35,7 @@ class GitHubInstallationTokenManager:
         client: GitHubAppClient,
         cache: InMemoryInstallationTokenCache,
         settings: GitHubAppSettings,
+        event_hook: TokenEventHook | None = None,
     ) -> None:
         """初始化令牌管理器。
 
@@ -41,11 +43,13 @@ class GitHubInstallationTokenManager:
             client: 与 GitHub API 交互的客户端。
             cache: 外部注入的令牌缓存实现。
             settings: GitHub App 运行时配置。
+            event_hook: 可选的事件回调，用于监听令牌刷新事件。
         """
         self.client = client
         self.cache = cache
         self.settings = settings
         self._refresh_locks: dict[str, asyncio.Lock] = {}
+        self._event_hook: TokenEventHook = event_hook or NullTokenEventHook()
 
     def build_cache_key(
         self,
@@ -148,6 +152,7 @@ class GitHubInstallationTokenManager:
         )
         stored = self._project_result_for_request(result, request, effective)
         await self.cache.set(cache_key, stored)
+        await self._event_hook.on_token_refreshed(cache_key, stored)
         return stored
 
     async def _refresh_with_singleflight(
@@ -164,8 +169,17 @@ class GitHubInstallationTokenManager:
                 cached,
                 self.settings.eager_refresh_seconds,
             ):
-                return self._project_result_for_request(cached, request, effective)
-            return await self._request_and_store(cache_key, request, effective)
+                result = self._project_result_for_request(cached, request, effective)
+            else:
+                try:
+                    result = await self._request_and_store(cache_key, request, effective)
+                except Exception as exc:
+                    await self._event_hook.on_token_refresh_failed(cache_key, exc)
+                    raise
+        # 锁释放后，如果没有其他协程在等待，则清理以防内存泄漏
+        if not lock.locked():
+            self._refresh_locks.pop(cache_key, None)
+        return result
 
     async def get_token(
         self, request: InstallationTokenRequest

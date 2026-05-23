@@ -16,9 +16,14 @@ class InMemoryInstallationTokenCache:
     :meth:`is_stale` 使用。
     """
 
-    def __init__(self) -> None:
-        """初始化一个空的内存缓存容器。"""
+    def __init__(self, maxsize: int = 256) -> None:
+        """初始化一个空的内存缓存容器。
+
+        Args:
+            maxsize: 缓存最大条目数，超出时淘汰最早写入的条目。
+        """
         self._items: dict[str, InstallationTokenResult] = {}
+        self._maxsize = maxsize
 
     async def get(self, key: str) -> InstallationTokenResult | None:
         """读取缓存中给定键的令牌结果。
@@ -34,10 +39,15 @@ class InMemoryInstallationTokenCache:
     async def set(self, key: str, result: InstallationTokenResult) -> None:
         """写入或覆盖缓存中的令牌结果。
 
+        当缓存已满且 key 为新键时，淘汰最早写入的条目（FIFO）。
+
         Args:
             key: 令牌管理器构建的缓存键。
             result: 待缓存的令牌结果。
         """
+        if key not in self._items and len(self._items) >= self._maxsize:
+            oldest_key = next(iter(self._items))
+            del self._items[oldest_key]
         self._items[key] = result
 
     def is_stale(

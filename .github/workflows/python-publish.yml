@@ -15,11 +15,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # 获取完整 git 历史（含 tags），供 PDM SCM 版本使用
       - name: Set up mise
-        uses: jdx/mise-action@v2
+        uses: jdx/mise-action@v4
       - name: Install managed tools
         run: mise install
       - name: Install test dependencies
@@ -33,3 +33,4 @@ jobs:
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
+

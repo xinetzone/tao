@@ -39,11 +39,11 @@ jobs:
         with:
           egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0  # 获取完整 git 历史（含 tags），供 PDM SCM 版本使用
       - name: Set up mise
-        uses: jdx/mise-action@v2
+        uses: jdx/mise-action@v4
       - name: 🔧 环境与依赖
         run: |
           sudo apt-get update
@@ -71,3 +71,4 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         # uses: peaceiris/actions-gh-pages@v3.6.1
+

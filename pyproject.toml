@@ -79,9 +79,7 @@ ignore = [
   "RUF002", # allow ambiguous unicode characters in docstrings (Chinese punctuation)
   "RUF003", # allow ambiguous unicode characters in comments (Chinese punctuation)
   "B008",   # allow function call in argument defaults (FastAPI Depends pattern)
-  "ANN001", # missing type annotation for function argument
   "ANN003", # missing type annotation for **kwargs
-  "ANN201", # missing return type annotation for public function
   "ANN202", # missing return type annotation for private function
   "ANN204", # missing return type annotation for special method
   "B904",   # raise without from inside except

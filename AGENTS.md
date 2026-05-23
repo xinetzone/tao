@@ -103,16 +103,16 @@ flowchart LR
 ```mermaid
 flowchart TD
     Start["遇到任务"] --> Decide{"任务类型"}
-    Decide -->|前端 / UI| Front["读取 .agents/rules/frontend.md"]
-    Decide -->|后端 / API| Back["读取 .agents/rules/backend.md"]
+    Decide -->|前端 / UI| Front["⚠️ 模板骨架，待填充。如项目已有前端模块，请优先查阅现有代码风格。"]
+    Decide -->|后端 / API| Back["⚠️ 模板骨架，待填充。如项目已有后端模块，请优先查阅现有代码风格。"]
     Decide -->|代码审查 / PR| Review["读取 .agents/workflows/pr-review.md"]
     Decide -->|技能开发 / Skill| Skill["读取 .agents/rules/skills.md"]
     Decide -->|Python 版本升级 / 适配| Py["读取 version-tracking.md 与 citations.md，并执行兼容性检查脚本"]
     Decide -->|网页内容抓取 / defuddle| Defuddle["执行 defuddle parse URL --md -o OUTPUT"]
 ```
 
-- 🎨 **前端开发 / UI 任务**：读取 `.agents/rules/frontend.md`
-- ⚙️ **后端开发 / API 任务**：读取 `.agents/rules/backend.md`
+- 🎨 **前端开发 / UI 任务**：⚠️ 规范当前为模板骨架（`frontend.md` 中核心技术栈待填充）。如项目尚未涉及前端开发，此路由暂不生效；如已涉及，请优先查阅现有代码风格。
+- ⚙️ **后端开发 / API 任务**：⚠️ 规范当前为模板骨架（`backend.md` 中核心技术栈待填充）。如项目尚未涉及后端开发，此路由暂不生效；如已涉及，请优先查阅现有代码风格。
 - 🔄 **代码审查 / PR 任务**：读取 `.agents/workflows/pr-review.md`
 - 🛠️ **技能开发 / Skill 任务**：读取 `.agents/rules/skills.md`
 - 🐍 **Python 版本升级 / 适配任务**：读取 `.agents/docs/version-tracking.md` + `.agents/rules/citations.md`，执行 `.agents/scripts/check_python_compat.py` + `.agents/scripts/check_python_deprecations.py`

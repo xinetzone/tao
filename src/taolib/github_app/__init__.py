@@ -16,6 +16,7 @@ from taolib.github_app.cache import InMemoryInstallationTokenCache
 from taolib.github_app.client import GitHubAppClient
 from taolib.github_app.config import GitHubAppSettings
 from taolib.github_app.events import NullTokenEventHook, TokenEventHook
+from taolib.github_app.hooks import LoggingTokenEventHook, MetricsTokenEventHook
 from taolib.github_app.errors import (
     GitHubAppClientError,
     GitHubAppConfigurationError,
@@ -49,6 +50,8 @@ __all__ = [
     "InMemoryInstallationTokenCache",
     "InstallationTokenRequest",
     "InstallationTokenResult",
+    "LoggingTokenEventHook",
+    "MetricsTokenEventHook",
     "NullTokenEventHook",
     "PyGithubInstallationClientFactory",
     "RequestedTokenStrategy",

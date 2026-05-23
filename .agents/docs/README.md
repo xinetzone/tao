@@ -54,6 +54,13 @@
 2. 先看 `specs/` 理解设计意图
 3. 再看 `plans/` 和 `retrospectives/` 理解执行路径和结果
 
+如果你需要理解项目的哲学驱动、极简原则与“理论 -> 技术 -> 业务”的转化路径：
+
+1. 先看 [`references/dao-tech-foundation.md`](./references/dao-tech-foundation.md)
+2. 再看 [`references/dao-business-mapping-framework.md`](./references/dao-business-mapping-framework.md)
+3. 需要具体示例时看 [`references/dao-scenario-catalog.md`](./references/dao-scenario-catalog.md)
+4. 需要设计历史时，再进入 [`superpowers/`](./superpowers/)
+
 ## Agent 检索约定
 
 为减少盲目翻找，agent 默认按以下顺序检索：

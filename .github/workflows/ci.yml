@@ -14,6 +14,22 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  init-check:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up mise
+        uses: jdx/mise-action@v4
+
+      - name: Run init-check (trust + check-env)
+        run: mise run init-check
+
   test:
     runs-on: ${{ matrix.os }}
     strategy:

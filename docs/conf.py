@@ -91,6 +91,7 @@ optional_exts = [
     "sphinxcontrib.bibtex",
     "sphinx.ext.graphviz",
     "sphinx_sitemap",
+    "autoapi.extension",  # sphinx-autoapi：从源码静态解析自动生成 API 文档
 ]
 
 extensions = core_exts.copy()
@@ -195,3 +196,22 @@ myst_enable_extensions = [
 myst_footnote_transition = False
 
 templates_path = ["_templates"]
+
+# ================================= AutoAPI 配置 =================================
+# 通过 sphinx-autoapi 静态解析 src/taolib/ 源码，自动生成 API 文档。
+# 无需导入包，CI 与本地构建一致；新增模块时无需手写文档。
+if _has("autoapi.extension"):
+    autoapi_type = "python"
+    autoapi_dirs = [str(ROOT / "src" / "taolib")]
+    autoapi_root = "api"  # 输出目录：docs/api/
+    autoapi_add_toctree_entry = False  # 由 index.md 显式管控 toctree，避免重复
+    autoapi_keep_files = False  # 构建时清理旧产物
+    autoapi_python_class_content = "both"  # 同时显示 class docstring 与 __init__ docstring
+    autoapi_member_order = "groupwise"  # 按 类/方法/属性 分组
+    autoapi_options = [
+        "members",
+        "undoc-members",
+        "show-inheritance",
+        "show-module-summary",
+    ]
+    autoapi_ignore = ["*/__pycache__/*", "*/tests/*"]

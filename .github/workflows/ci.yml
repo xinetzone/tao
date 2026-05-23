@@ -19,8 +19,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
 
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up mise
+        uses: jdx/mise-action@v4
+
+      - name: Run init-check (trust + check-env)
+        run: mise run init-check
+
+  init-check-macos:
+    if: github.event_name == 'push'
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v5
 
@@ -35,7 +47,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
 
     steps:
       - uses: actions/checkout@v5
@@ -74,6 +86,37 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-${{ matrix.os }}-mise
+          path: htmlcov/
+          retention-days: 14
+        if: always()
+
+  test-macos:
+    if: github.event_name == 'push'
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up mise
+        uses: jdx/mise-action@v4
+
+      - name: Install managed tools
+        run: mise install
+
+      - name: Install test dependencies
+        run: mise run install-test-deps
+
+      - name: Run GitHub App token tests
+        run: mise run test-github-app
+
+      - name: Run tests with coverage
+        run: mise run test-coverage
+
+      - name: Upload coverage HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-macos-latest-mise
           path: htmlcov/
           retention-days: 14
         if: always()

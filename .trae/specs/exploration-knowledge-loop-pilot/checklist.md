@@ -1,7 +1,7 @@
-- [ ] 已创建统一探索协议页
-- [ ] 已升级场景卡模板并包含三类适配视图
-- [ ] 已创建 spec、retrospective 与 workbench 模板
-- [ ] 已创建 `.trae/specs/exploration-knowledge-loop-pilot/` 工作台
-- [ ] 已将试点场景写入长期场景目录
-- [ ] 已更新 AI 文档导航入口
-- [ ] 已完成一次复盘并指定回流动作
+- [x] 已创建统一探索协议页
+- [x] 已升级场景卡模板并包含三类适配视图
+- [x] 已创建 spec、retrospective 与 workbench 模板
+- [x] 已创建 `.trae/specs/exploration-knowledge-loop-pilot/` 工作台
+- [x] 已将试点场景写入长期场景目录
+- [x] 已更新 AI 文档导航入口
+- [x] 已完成一次复盘并指定回流动作

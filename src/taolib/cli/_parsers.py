@@ -35,6 +35,14 @@ def build_parser() -> argparse.ArgumentParser:
         choices=["auto", "enabled", "disabled"],
         default=None,
     )
+
+    status_parser = subparsers.add_parser("status")
+    status_parser.add_argument("--installation-id", required=True)
+    status_parser.add_argument(
+        "--strategy",
+        choices=["auto", "enabled", "disabled"],
+        default=None,
+    )
     return parser
 
 

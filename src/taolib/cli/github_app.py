@@ -36,6 +36,11 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "profile":
             _emit_json(_build_profile_payload(args))
             return 0
+        if args.command == "status":
+            from ._status import check_status
+
+            _emit_json(check_status(args))
+            return 0
         manager = build_manager(args)
         result = asyncio.run(manager.get_token(build_request(args)))
         _emit_json(_build_token_payload(result))

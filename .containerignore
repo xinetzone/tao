@@ -1,0 +1,10 @@
+.venv/
+.git/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+dist/
+htmlcov/
+.temp/
+docs/_build/

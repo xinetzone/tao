@@ -172,3 +172,15 @@ jobs:
 
       - name: 📖 严格构建文档（-W --keep-going）
         run: mise run docs-strict
+
+  test-container:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build test container
+        run: docker build -f Containerfile.test -t taolib-test .
+
+      - name: Run containerized tests
+        run: docker run --rm taolib-test

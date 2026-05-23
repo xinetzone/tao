@@ -98,3 +98,15 @@ run = "uv run invoke init-check"
 description = "构建 Python 包"
 run = "uv build"
 depends = ["check-env"]
+
+[tasks.container-build]
+description = "构建本地开发容器"
+run = "podman build -t taolib-dev -f Containerfile ."
+
+[tasks.container-run]
+description = "启动开发容器（挂载当前目录）"
+run = "podman run -it --rm -v .:/workspace:Z taolib-dev"
+
+[tasks.container-test]
+description = "在容器中运行测试"
+run = "podman build -f Containerfile.test -t taolib-test . && podman run --rm taolib-test"

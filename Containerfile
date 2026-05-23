@@ -1,0 +1,25 @@
+# 本地开发容器 - 包含所有开发、测试、文档构建依赖
+# 使用方式：podman build -t taolib-dev . && podman run -it --rm -v .:/workspace taolib-dev
+FROM python:3.14-slim
+
+# 系统依赖
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git curl graphviz && \
+    rm -rf /var/lib/apt/lists/*
+
+# 安装 uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
+WORKDIR /workspace
+
+# 先复制依赖定义以利用缓存层
+COPY pyproject.toml uv.lock ./
+
+# 安装全部依赖（dev + test + docs + extras）
+RUN uv sync --all-extras --group dev --group test --group docs
+
+# 复制项目源码
+COPY . .
+
+# 默认进入交互式 shell
+CMD ["bash"]

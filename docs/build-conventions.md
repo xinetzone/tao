@@ -1,108 +1,221 @@
-# 文档构建约定
+# 🔧 构建约定
 
-本项目采用基于 [Invoke](https://www.pyinvoke.org/) 的文档构建系统，以实现跨平台一致性和更清晰的任务管理，彻底废弃了传统的 `Makefile` 和 `make.bat`。
+本文档说明 AgentForge 项目的构建系统配置与日常开发命令约定。
 
-## 环境准备
+## 构建后端
 
-文档构建前，推荐先用 `mise` 收敛工具版本，再用 `uv` 同步 Python 依赖：
+本项目采用 **PDM** 作为构建后端，配置位于 `pyproject.toml`：
 
-```bash
-# 首次使用先信任项目配置
-mise trust
-
-# 仓库根目录 `mise.toml` 已声明工具链，直接安装即可
-mise install
-
-# 同步文档依赖
-mise run install-docs-deps
+```toml
+[build-system]
+build-backend = "pdm.backend"
+requires = ["pdm-backend"]
 ```
 
-如果你需要额外的外部工具或一键完成环境初始化，请回到仓库根目录运行：
+- **包目录映射**：源代码位于 `src/taolib/`，通过 `tool.pdm.build` 显式声明：
+
+```toml
+[tool.pdm.build]
+includes = ["src/taolib"]
+package-dir = "src"
+```
+
+这种 `src/` 布局可避免开发时误导入未安装的源码，确保测试与 CI 均基于真实安装态运行。
+
+## 依赖分组策略
+
+本项目遵循 **PEP 735** 的 `dependency-groups` 规范，将依赖按使用场景拆分为独立的可选依赖与依赖组。
+
+### 可选依赖（`project.optional-dependencies`）
+
+用于运行时按需安装的功能扩展：
+
+| 分组名 | 用途 | 包含包 |
+|--------|------|--------|
+| `github-app` | GitHub App Token 管理功能 | `httpx`, `PyJWT[crypto]`, `PyGithub` |
+| `task` | 工作流任务执行 | `metaflow` |
+
+安装示例：
 
 ```bash
+uv sync --extra github-app
+```
+
+### 依赖组（`dependency-groups`）
+
+用于开发、测试、文档等场景的纯工具依赖，不进入运行时包：
+
+| 分组名 | 用途 | 包含包 |
+|--------|------|--------|
+| `dev` | 开发工具链 | `ruff`, `invoke`, `uv`, `typer`, `pre-commit` |
+| `docs` | 文档构建 | `sphinx`, `myst-parser`, `sphinx-book-theme` 等 |
+| `test` | 测试框架 | `pytest`, `pytest-asyncio`, `pytest-cov` 等 |
+
+安装示例：
+
+```bash
+# 安装全部开发依赖
+uv sync --group dev --group test --group docs
+
+# 仅安装测试依赖（CI 场景）
+uv sync --group test
+
+# 仅安装文档依赖
+uv sync --group dev --group docs
+```
+
+> **设计原则**：`optional-dependencies` 面向包的使用者（运行时功能开关），`dependency-groups` 面向包的开发者（本地/CI 工具链）。两者职责分离，避免将纯开发工具污染到最终用户环境。
+
+## mise 工具链管理
+
+`mise.toml` 锁定项目所需的全部外部工具及其精确版本：
+
+```toml
+[tools]
+python = "3.14.5"
+uv = "0.11.16"
+node = { version = "22.22.3", postinstall = "corepack enable" }
+"npm:defuddle" = { version = "0.18.1", depends = ["node"] }
+```
+
+### 版本冻结策略
+
+- **Python 运行时**：精确到补丁版本（`3.14.5`），确保所有开发者与 CI 环境完全一致
+- **工具链**：`uv`、`node`、`defuddle` 均声明精确版本，并通过 `mise install` 统一安装
+- **升级流程**：修改 `mise.toml` → `mise install --force` → `mise run check-env` → `mise run test`
+
+### 环境变量
+
+```toml
+[env]
+PYTHONUTF8 = "1"
+```
+
+确保跨平台（尤其是 Windows）下 Python 默认使用 UTF-8 编码，避免中文路径或日志输出时的编码问题。
+
+## uv 包管理器使用约定
+
+本项目统一使用 `uv` 管理 Python 依赖，**禁止直接使用 `pip` 或 `conda`**。
+
+### 常用命令
+
+| 命令 | 作用 |
+|------|------|
+| `uv sync` | 根据 `pyproject.toml` + `uv.lock` 同步虚拟环境 |
+| `uv sync --group <name>` | 同步时包含指定依赖组 |
+| `uv sync --extra <name>` | 同步时包含指定可选依赖 |
+| `uv run <command>` | 在虚拟环境中执行命令 |
+| `uv build` | 构建 wheel + sdist |
+| `uv lock` | 刷新 `uv.lock` 文件（依赖变更后执行） |
+
+### 锁文件
+
+- `uv.lock` 必须纳入版本控制，确保所有环境安装完全一致
+- 修改 `pyproject.toml` 中的依赖后，执行 `uv lock` 或 `uv sync` 自动更新
+
+## 版本管理
+
+项目采用 **动态版本** 策略：
+
+```toml
+[project]
+dynamic = ["version"]
+```
+
+版本号不硬编码于 `pyproject.toml`，而是由构建后端在打包时从 VCS 标签或版本文件中解析。这种方式确保：
+
+- 源码中无需手动维护版本字符串
+- 发布流程与 Git 标签天然对齐
+- 预发布版本（alpha/beta/rc）可通过标签直接生成
+
+文档构建时通过 `importlib.metadata.version("taolib")` 动态解析当前版本号。
+
+## 常用构建命令
+
+以下命令均通过 `mise run` 执行，确保跨平台一致性：
+
+### 环境初始化
+
+```bash
+# 一键完成信任、安装、依赖同步与环境校验
 mise run init
+
+# 仅检查工具链是否就绪
+mise run init-check
+
+# 校验本地工具链版本
+mise run check-env
 ```
 
-完成后再进入 `docs/` 目录执行构建命令。
-
-## 构建命令
-
-所有文档构建任务统一收口在 `docs/tasks.py` 文件中，推荐在 `docs/` 目录下执行以下命令：
-
-### 获取帮助信息
-
-查看所有支持的文档构建目标和命令：
+### 依赖同步
 
 ```bash
-# 在仓库根目录
-mise run docs-html
-```
+# 同步全部开发、测试与文档依赖
+mise run sync
 
-### 构建 HTML 文档
+# 仅安装测试依赖（CI 场景）
+mise run install-test-deps
 
-构建本地 HTML 文档站点：
-
-```bash
-mise run docs-html
-```
-或者在 `docs/` 目录下手动执行：
-```bash
-uv run invoke build --target html
-```
-> **注意**：`mise` 负责编排环境与入口，实际构建仍复用 `docs/tasks.py` 中的 `invoke` 任务。
-
-### 清理构建产物
-
-清理之前构建生成的静态文件缓存（对应原 `make clean`）：
-
-```bash
-uv run invoke clean
-```
-
-### 检查链接有效性
-
-检查文档中包含的所有外部链接是否可用：
-
-```bash
-mise run docs-linkcheck
-```
-
-### 运行文档测试
-
-执行文档中包含的代码片段测试：
-
-```bash
-uv run invoke doctest
-```
-
-## 目录与配置
-
-- **`docs/tasks.py`**：定义了所有的 `invoke` 任务，基于 `sphinx-build -M` 模式封装。
-- **`docs/conf.py`**：Sphinx 核心配置，动态读取项目版本号等元信息。
-- **`docs/_config.toml`**：提供与 Jupyter Book 或 MyST 兼容的额外配置。
-
-通过这些统一的配置与命令，无论是本地开发还是 GitHub Actions 的 CI/CD 流水线，都共享完全相同的构建链路。
-
-## 升级建议
-
-当文档构建依赖、Python 版本或 `mise` 本体发生升级时，建议按以下顺序处理：
-
-```bash
-mise self-update
-mise install --force
+# 仅安装文档依赖
 mise run install-docs-deps
 ```
 
-如果升级涉及 Sphinx 或主题版本，请补跑一次以下命令验证：
+### 测试
 
 ```bash
-uv run invoke html
-uv run invoke linkcheck
+# 运行完整测试集
+mise run test
+
+# 运行 GitHub App 专项测试
+mise run test-github-app
+
+# 运行带覆盖率的完整测试
+mise run test-coverage
+
+# 运行发布前回归测试
+mise run test-release
 ```
 
-## 常见排障
+### 代码质量
 
-- **`invoke` 或 `sphinx-build` 找不到**：通常是 `mise run install-docs-deps` 尚未执行，或当前 Shell 未使用 `mise` 激活后的 Python/uv。
-- **进入仓库后工具版本不对**：先运行 `mise trust`，再用 `mise doctor` 和 `mise current` 检查当前生效版本。
-- **文档依赖升级后构建异常**：执行 `mise install --force` 与 `mise run install-docs-deps`，必要时清理 `_build/` 后重试。
-- **Windows 下 PowerShell 命令无法识别**：确认 `$PROFILE` 中已配置 `(& mise activate pwsh) | Out-String | Invoke-Expression`，然后重开终端。
+```bash
+# 运行 pre-commit 全量检查（包含 ruff lint + format + 其他 hooks）
+mise run lint
+
+# 仅运行 Ruff 格式化
+mise run fmt
+
+# 审计 Python 依赖安全问题
+mise run audit
+```
+
+### 文档构建
+
+```bash
+# 构建 HTML 文档
+mise run docs-html
+
+# 执行文档外链校验
+mise run docs-linkcheck
+
+# CI 文档构建入口
+mise run docs-build
+```
+
+### 包构建
+
+```bash
+# 构建 Python 包（wheel + sdist）
+mise run package-build
+```
+
+## 配置速查
+
+| 配置文件 | 用途 |
+|----------|------|
+| `pyproject.toml` | Python 包元数据、构建系统、依赖分组、ruff/pytest/coverage 配置 |
+| `mise.toml` | 工具链版本锁定、mise 任务定义、环境变量 |
+| `uv.lock` | 依赖解析锁定文件，确保可复现安装 |
+| `.pre-commit-config.yaml` | pre-commit hooks 配置（ruff、代码格式化等） |
+| `docs/conf.py` | Sphinx 文档构建配置 |
+| `docs/_config.toml` | Sphinx 主题选项配置 |

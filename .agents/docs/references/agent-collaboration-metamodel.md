@@ -141,17 +141,19 @@ flowchart TD
 | `.agents/workflows/role-review/` | Execution 域协作协议实例 | 首条多角色协作工作流，覆盖角色审批四道门禁。 |
 | `.agents/workflows/` | Execution 域协作协议实例 | 围绕任务执行的流程化编排说明。 |
 | `.agents/skills/` | Knowledge 域能力资产 | 可被 Role 或 Agent 使用的能力单元。 |
-| `.agents/roles/` | Organization 域实例承载 | 首字母义实例目录，当前试点 Role 实例。 |
+| `.agents/roles/` | Organization 域实例承载 | 首批语义实例目录，当前试点 Role 实例。 |
+| `.agents/teams/` | Organization 域实例承载 | 第二批语义实例目录，当前试点 Team 实例。 |
 | `.agents/docs/` | Knowledge 域长期知识层 | 规则、参考、洞见、spec、复盘等知识资产。 |
 | `.trae/` | Runtime State 任务期工作台 | Session、草稿、执行中上下文与临时产物。 |
 
 ## 8. 目录演进
 
-当前阶段：第一批试点目录 `.agents/roles/`。
+当前阶段：`.agents/roles/`（第一批）和 `.agents/teams/`（第二批）已试点。
 
 演进规划：
-1. `.agents/roles/` — 第一批试点
-2. `.agents/teams/` — 后续评估
-3. `.agents/agents/` — 最晚引入
+1. `.agents/roles/` — 第一批试点 ✅
+2. `.agents/teams/` — 第二批试点 ✅
+3. `.agents/agents/` — 后续评估
+4. `.agents/policies/` — 后续评估
 
 演进约束：目录属于实例承载层，不是元模型本身；即使不创建这些目录，元模型依然成立。

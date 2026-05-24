@@ -45,12 +45,13 @@ flowchart TD
     A["AGENTS.md"] --> B[".agents/README.md"]
     A --> C[".agents/docs/references/agent-collaboration-metamodel.md"]
     A --> D[".agents/roles/"]
+    A --> E[".agents/teams/"]
 ```
 
 核心事实：
 - `Team` 是治理边界，`Role` 是职责模板，`Agent` 是执行主体。
 - `Agent` 必须通过 `Role` 进入规范性协作体系。
-- `.agents/roles/` 是协作元模型的首个语义实例目录试点。
+- `.agents/roles/` 和 `.agents/teams/` 是协作元模型的语义实例目录试点。
 
 ## 4. 上下文路由
 
@@ -63,7 +64,7 @@ flowchart TD
 | Python 开发、依赖管理、导入规则、版本适配 | [`.agents/rules/python.md`](.agents/rules/python.md) |
 | Python 版本升级或弃用 API 检查 | [`.agents/docs/version-tracking.md`](.agents/docs/version-tracking.md)、[`.agents/rules/citations.md`](.agents/rules/citations.md) |
 | 技能开发或技能规范调整 | [`.agents/rules/skills.md`](.agents/rules/skills.md) |
-| 协作元模型、角色定义、多智能体规范 | [`.agents/docs/references/agent-collaboration-metamodel.md`](.agents/docs/references/agent-collaboration-metamodel.md)、[`.agents/roles/`](.agents/roles/) |
+| 协作元模型、角色定义、Team 治理、多智能体规范 | [`.agents/docs/references/agent-collaboration-metamodel.md`](.agents/docs/references/agent-collaboration-metamodel.md)、[`.agents/roles/`](.agents/roles/)、[`.agents/teams/`](.agents/teams/) |
 | 代码审查或 PR Review | [`.agents/workflows/pr-review.md`](.agents/workflows/pr-review.md) |
 | 前端或 UI 开发 | [`.agents/rules/frontend.md`](.agents/rules/frontend.md)，如项目已有前端模块还需优先参考现有代码 |
 | 后端或 API 开发 | [`.agents/rules/backend.md`](.agents/rules/backend.md)，如项目已有后端模块还需优先参考现有代码 |

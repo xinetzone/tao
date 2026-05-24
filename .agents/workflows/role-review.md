@@ -152,3 +152,43 @@ Handoff 状态流转：
 - 本工作流不替代 `pr-review.md`，两者适用场景不同
 - 本工作流的角色审查基于 `.agents/docs/references/agent-collaboration-metamodel.md` 中的强约束
 - 提案模板与工作流内聚存放，遵循"模板随工作流"原则
+
+## 9. Team 审查扩展
+
+本工作流的四道门禁同样适用于 `.agents/teams/` 下的新 Team 提案。审查时各 Gate 检查标准作如下适配：
+
+### Gate 1: Organization Steward — 组织归属审查（Team 适配）
+
+| 检查项 | 通过条件 | 驳回条件 |
+|---|---|---|
+| Domain 归属 | Domain 固定为 Organization | Domain 为其他领域 |
+| 名命规范 | Name 使用英文小写连字符，不混淆元模型实体名 | Name 使用中文、大写或与 `Role/Agent` 等实体名重复 |
+| 边界唯一性 | 与现有 Team 治理边界不重叠 | 与已有 Team 边界高度重复且无区分说明 |
+
+### Gate 2: Execution Orchestrator — 执行影响审查（Team 适配）
+
+| 检查项 | 通过条件 | 驳回条件 |
+|---|---|---|
+| 职责编排性 | Responsibilities 聚焦治理与边界维护，不描述任务执行 | Responsibilities 直接描述任务调度或 Agent 操作细节 |
+| Member Role 完整性 | Member Roles 中所有引用的 Role 真实存在于 `.agents/roles/` | 引用不存在的 Role |
+| 运行时排除 | Non-Goals 中明确排除运行时实现 | Non-Goals 未涉及运行时相关排除项 |
+
+### Gate 3: Collaboration Architect — 语义一致性审查（Team 适配）
+
+| 检查项 | 通过条件 | 驳回条件 |
+|---|---|---|
+| 字段完整性 | Team Identity / Responsibilities / Member Roles / Cross-Team Policy / Default Bindings / Non-Goals 全部存在 | 任一必填字段缺失 |
+| 引用有效性 | Default Bindings 和 Member Roles 中所有引用真实存在于仓库 | 引用路径错误或引用不存在的文件 |
+| 映射兼容性 | 不破坏现有目录映射与元模型关系 | 引入后导致语义冲突 |
+
+### Gate 4: Governance Auditor — 合规审计审查（Team 适配）
+
+| 检查项 | 通过条件 | 驳回条件 |
+|---|---|---|
+| 强约束遵守 | 不违反五大强约束中任一条 | 违反任一条强约束 |
+| Cross-Team Policy | Cross-Team Policy 声明了跨 Team 协作策略（当前可声明为单 Team 模式） | 缺少 Cross-Team Policy 声明 |
+| 可追踪性 | Team 文件包含完整六字段，可被独立审计 | 关键字段缺失导致无法追踪 |
+
+Team 提案使用专用模板：[`role-review/templates/team-proposal.md`](role-review/templates/team-proposal.md)。
+
+Team 提案文件放在 `.agents/teams/proposals/` 下，命名为 `<team-name>-proposal.md`。

@@ -22,4 +22,7 @@
 
 | 文件 | 角色 | 领域 |
 |---|---|---|
+| `organization-steward.md` | Organization Steward | Organization |
+| `execution-orchestrator.md` | Execution Orchestrator | Execution |
 | `collaboration-architect.md` | Collaboration Architect | Governance + Knowledge |
+| `governance-auditor.md` | Governance Auditor | Governance |

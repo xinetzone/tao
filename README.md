@@ -62,6 +62,7 @@
 - **🛡️ 隔离式文档架构**：彻底分离人类专属文档（`docs/`）与 AI 专属资产库（`.agents/docs/`），防止 LLM 产生上下文幻觉。
 - **🔄 自动化评测循环**：集成了针对 AI 技能的测试驱动开发（TDD）及兼容性修复验证体系。
 - **🧠 智能体记忆与做梦协议**：定义了 [记忆、做梦、洞见回流与遗忘](.agents/docs/references/agent-memory-dream-protocol.md) 的认知循环，使智能体能够从任务中提取稳定知识，通过做梦式重组发现隐藏模式，并回流到规则与模板。
+- **🔐 GitHub App 令牌管理**：内置 [`taolib.github_app`](src/taolib/github_app/) Python 模块与 [`taolib-github-app`](src/taolib/cli/github_app.py) CLI，提供 GitHub App 安装令牌的策略解析、缓存、Singleflight 并发控制、事件钩子与 [PyGithub 适配器](src/taolib/github_app/pygithub_adapter.py)，可作为 Python 包独立集成到外部项目。
 - **📚 Sphinx/MyST 深度集成**：开箱即用的现代化文档构建流，支持多层级模块化日志追踪。
 
 ## 🗂️ 阅读与目录导航
@@ -221,6 +222,7 @@ mise run docs-linkcheck
 1. **人类开发入口**：访问 [`docs/index.md`](docs/index.md) 获取更详细的使用说明、API 文档与部署指南。
 2. **AI 协作入口**：在让 AI 参与任务前，先阅读 [`AGENTS.md`](AGENTS.md) 以确认执行契约、文档边界与任务路由。
 3. **AI 目录说明**：如需了解 `.agents/` 的结构与资产分布，请阅读 [`.agents/README.md`](.agents/README.md)。
+4. **作为 Python 包集成**：在外部项目中通过 `uv add 'taolib[github-app]'` 引入 GitHub App 令牌管理能力，详见 [`docs/integration-guide.md`](docs/integration-guide.md) 与 [`docs/github-app-token-override.md`](docs/github-app-token-override.md)。
 
 ## ️ 技能管理
 

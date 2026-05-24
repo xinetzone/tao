@@ -6,7 +6,6 @@
 [![PyPI][pypi-badge]][pypi-link]
 [![GitHub issues][issue-badge]][issue-link]
 [![GitHub forks][fork-badge]][fork-link]
-![atom star](https://gitcode.com/flexloop/flexloop/star/badge.svg)
 [![GitHub stars][star-badge]][star-link]
 [![GitHub license][license-badge]][license-link]
 [![contributors][contributor-badge]][contributor-link]
@@ -25,7 +24,7 @@
 [star-badge]: https://img.shields.io/github/stars/xinetzone/tao
 [star-link]: https://github.com/xinetzone/tao/stargazers
 [license-badge]: https://img.shields.io/github/license/xinetzone/tao
-[license-link]: https://github.com/xinetzone/tao/LICENSE
+[license-link]: https://github.com/xinetzone/tao/blob/main/LICENSE
 [contributor-badge]: https://img.shields.io/github/contributors/xinetzone/tao
 [contributor-link]: https://github.com/xinetzone/tao/contributors
 [watcher-badge]: https://img.shields.io/github/watchers/xinetzone/tao
@@ -173,7 +172,39 @@ mise run docs-linkcheck
 
 构建完成后可通过浏览器访问 `docs/_build/html/index.html`。
 
-### 5. 升级与排障
+### 5. 日常命令速查
+
+常用开发入口统一通过 `mise run` 执行，确保本地、CI 与跨平台环境保持一致：
+
+| 场景 | 命令 | 说明 |
+|------|------|------|
+| 环境检查 | `mise run check-env` | 校验 Python、uv、Node.js、defuddle 等工具链版本。 |
+| 依赖同步 | `mise run sync` | 同步开发、测试、文档依赖与全部可选功能依赖。 |
+| 完整测试 | `mise run test` | 运行完整测试集，并触发严格文档构建校验。 |
+| 覆盖率测试 | `mise run test-coverage` | 生成覆盖率报告，并按项目阈值校验。 |
+| 代码质量 | `mise run lint` | 执行 pre-commit 全量检查。 |
+| 代码格式化 | `mise run fmt` | 使用 Ruff 统一格式化代码。 |
+| 文档构建 | `mise run docs-html` | 构建 Sphinx HTML 文档站。 |
+| 外链校验 | `mise run docs-linkcheck` | 检查文档中的外部链接。 |
+| 包构建 | `mise run package-build` | 构建 Python wheel 与 sdist 发布产物。 |
+
+更多命令与配置背景请参阅 [`docs/build-conventions.md`](docs/build-conventions.md)。
+
+### 6. 配置与构建约定速览
+
+| 配置文件 | 作用 |
+|----------|------|
+| `pyproject.toml` | Python 包元数据、PDM 构建后端、依赖分组、Ruff、pytest 与 coverage 配置。 |
+| `mise.toml` | 统一锁定 Python、uv、Node.js、defuddle 等工具版本，并声明跨平台任务入口。 |
+| `uv.lock` | 锁定依赖解析结果，保障开发、测试与 CI 环境可复现。 |
+| `.pre-commit-config.yaml` | 管理提交前质量检查 hooks。 |
+| `docs/conf.py` | Sphinx 文档构建主配置。 |
+| `docs/_config.toml` | 文档站主题与展示选项配置。 |
+
+项目采用 `src/` 布局，运行时代码位于 `src/taolib/`；构建后端为 PDM，版本号通过 SCM 动态派生，发布产物会随 Git 标签与工作树状态自动反映版本信息。
+
+### 7. 升级与排障
+
 - **升级 `mise` 本体**：运行 `mise self-update`，然后执行 `mise doctor`。
 - **刷新项目工具版本**：更新根目录 `mise.toml` 中的精确版本后，运行 `mise install --force` 与 `mise run sync`。
 - **版本未切换**：先检查 Shell 激活是否生效，再运行 `mise trust`、`mise current` 与 `mise doctor`。

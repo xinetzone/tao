@@ -11,7 +11,7 @@
 |------|----------|------|
 | [`../AGENTS.md`](../AGENTS.md) | 需要了解全局契约的读者 | 查看 AI 助手的最高优先级规则、任务路由与文档边界。 |
 | [`README.md`](./README.md) | 需要理解目录结构的读者 | 查看 `.agents/` 的职责定位、目录结构与资产分布。 |
-| [`rules/`](./rules/) | 需要执行具体任务的读者 | 查看按领域拆分的详细规则，如前端、后端、技能开发等。 |
+| [`rules/`](./rules/) | 需要执行具体任务的读者 | 查看按领域拆分的详细规则，如上下文节省、文档治理、Python、前端、后端、技能开发等。 |
 | [`workflows/`](./workflows/) | 需要按流程执行任务的读者 | 查看 PR 审查等流程化工作流说明。 |
 | [`scripts/`](./scripts/) | 需要调用工具与脚本的读者 | 查看自动化校验脚本、兼容性检查与辅助执行脚本。 |
 | [`skills/`](./skills/) | 需要查看技能实现的读者 | 查看各技能目录下的 `SKILL.md`、脚本、评测与变更日志。 |
@@ -20,6 +20,15 @@
 
 - **任务执行中的临时产物**：优先放在根目录下的 [`.trae/`](../.trae/) 工作台。
 - **任务完成后的长期沉淀**：归档到 [`.agents/docs/superpowers/`](./docs/superpowers/)。
+
+## 专题规则导航
+
+| 规则 | 适用任务 |
+|------|----------|
+| [`rules/context-economy.md`](./rules/context-economy.md) | 上下文节省、token 优化、长材料预处理、输出预算。 |
+| [`rules/documentation.md`](./rules/documentation.md) | 文档边界、归档位置、临时产物、路径引用、同步机制。 |
+| [`rules/python.md`](./rules/python.md) | Python 依赖管理、导入规则、路径独立性、版本适配。 |
+| [`rules/skills.md`](./rules/skills.md) | 技能开发、`SKILL.md` 结构、技能验收约束。 |
 
 ## 目录定位
 - **模块化边界**：`.agents/` 负责承载智能体相关资产，与业务代码、API 层、数据层、基础设施层保持清晰边界。

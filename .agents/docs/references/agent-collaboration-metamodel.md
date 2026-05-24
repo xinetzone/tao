@@ -138,6 +138,7 @@ flowchart TD
 |---|---|---|
 | `AGENTS.md` | Governance Layer 总入口 | 全局治理契约、任务路由与协作边界。 |
 | `.agents/rules/` | Governance Layer 规则实现 | 对 Role、Workflow、知识访问等对象的约束。 |
+| `.agents/workflows/role-review/` | Execution 域协作协议实例 | 首条多角色协作工作流，覆盖角色审批四道门禁。 |
 | `.agents/workflows/` | Execution 域协作协议实例 | 围绕任务执行的流程化编排说明。 |
 | `.agents/skills/` | Knowledge 域能力资产 | 可被 Role 或 Agent 使用的能力单元。 |
 | `.agents/roles/` | Organization 域实例承载 | 首字母义实例目录，当前试点 Role 实例。 |

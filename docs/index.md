@@ -15,6 +15,7 @@ intro
 quickstart
 features
 github-app-token-override
+integration-guide
 api/taolib/index
 deploy
 build-conventions

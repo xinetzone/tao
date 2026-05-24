@@ -16,6 +16,7 @@
 | [`scripts/`](./scripts/) | 需要调用工具与脚本的读者 | 查看自动化校验脚本、兼容性检查与辅助执行脚本。 |
 | [`skills/`](./skills/) | 需要查看技能实现的读者 | 查看各技能目录下的 `SKILL.md`、脚本、评测与变更日志。 |
 | [`docs/`](./docs/) | 需要理解 AI 知识资产的读者 | 查看 AI 专属知识库、架构分析与主题文档。 |
+| [`roles/`](./roles/) | 需要查看职责模板的读者 | 查看角色定义、默认规则绑定与权限边界。 |
 | [`docs/superpowers/`](./docs/superpowers/) | 需要查历史沉淀的读者 | 查看 Spec、复盘和可复用的长期知识资产。 |
 
 - **任务执行中的临时产物**：优先放在根目录下的 [`.trae/`](../.trae/) 工作台。
@@ -29,6 +30,7 @@
 | [`rules/documentation.md`](./rules/documentation.md) | 文档边界、归档位置、临时产物、路径引用、同步机制。 |
 | [`rules/python.md`](./rules/python.md) | Python 依赖管理、导入规则、路径独立性、版本适配。 |
 | [`rules/skills.md`](./rules/skills.md) | 技能开发、`SKILL.md` 结构、技能验收约束。 |
+| [`docs/references/agent-collaboration-metamodel.md`](./docs/references/agent-collaboration-metamodel.md) | 多 team、多角色、多智能体协作语义建模。 |
 
 ## 目录定位
 - **模块化边界**：`.agents/` 负责承载智能体相关资产，与业务代码、API 层、数据层、基础设施层保持清晰边界。
@@ -206,11 +208,25 @@
 | **过度嵌套** | 高频开发路径的目录层级过深，增加定位成本和认知负担。 | 控制常用目录层级，一般不超过 3 层；归档型目录按需例外。 |
 
 ## 目录结构
+- `roles/`：存放协作元模型中的 Role 实例，用于定义职责模板、默认规则绑定与权限边界。
 - `rules/`：存放特定领域（如前端、后端、技能开发）的详细开发规范。
 - `workflows/`：存放特定工作流（如 PR Review）的 AI 执行指南。
 - `templates/`：存放供开发者和 AI 复用的标准化模板文件。
 - `scripts/`：存放供智能体调用的自动化校验或执行脚本。
 - `docs/`：专门为 AI 智能体保留的知识库、架构图和分析文档存储区。
+
+## 语义目录演进
+
+`.agents/roles/` 是协作元模型的首个语义实例目录试点。
+它不替代 `skills/` 或 `rules/`，而是独立承载 Role 的职责模板与绑定声明。
+
+当前试点范围：
+- `.agents/roles/` — 第一批试点目录
+
+后续评估范围：
+- `.agents/teams/` — 团队治理边界
+- `.agents/agents/` — 执行主体画像
+- `.agents/policies/` — 治理策略
 
 ## 🛠️ 技能标准化开发要求
 为了统一管理所有的智能体技能（Skills），本目录已将 `SKILL.md` 约定纳入官方标准化要求：

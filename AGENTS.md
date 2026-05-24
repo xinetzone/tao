@@ -36,7 +36,23 @@ flowchart TD
     A --> F[".agents/docs/"]
 ```
 
-## 3. 上下文路由
+## 3. 协作元模型
+
+本项目采用统一的协作元模型来定义多 team、多角色、多智能体协作的语义边界。详细定义见 [`.agents/docs/references/agent-collaboration-metamodel.md`](.agents/docs/references/agent-collaboration-metamodel.md)。
+
+```mermaid
+flowchart TD
+    A["AGENTS.md"] --> B[".agents/README.md"]
+    A --> C[".agents/docs/references/agent-collaboration-metamodel.md"]
+    A --> D[".agents/roles/"]
+```
+
+核心事实：
+- `Team` 是治理边界，`Role` 是职责模板，`Agent` 是执行主体。
+- `Agent` 必须通过 `Role` 进入规范性协作体系。
+- `.agents/roles/` 是协作元模型的首个语义实例目录试点。
+
+## 4. 上下文路由
 
 遇到以下任务时，先读取对应规范或入口，再执行任务。
 
@@ -47,6 +63,7 @@ flowchart TD
 | Python 开发、依赖管理、导入规则、版本适配 | [`.agents/rules/python.md`](.agents/rules/python.md) |
 | Python 版本升级或弃用 API 检查 | [`.agents/docs/version-tracking.md`](.agents/docs/version-tracking.md)、[`.agents/rules/citations.md`](.agents/rules/citations.md) |
 | 技能开发或技能规范调整 | [`.agents/rules/skills.md`](.agents/rules/skills.md) |
+| 协作元模型、角色定义、多智能体规范 | [`.agents/docs/references/agent-collaboration-metamodel.md`](.agents/docs/references/agent-collaboration-metamodel.md)、[`.agents/roles/`](.agents/roles/) |
 | 代码审查或 PR Review | [`.agents/workflows/pr-review.md`](.agents/workflows/pr-review.md) |
 | 前端或 UI 开发 | [`.agents/rules/frontend.md`](.agents/rules/frontend.md)，如项目已有前端模块还需优先参考现有代码 |
 | 后端或 API 开发 | [`.agents/rules/backend.md`](.agents/rules/backend.md)，如项目已有后端模块还需优先参考现有代码 |
@@ -62,7 +79,7 @@ flowchart TD
     Route --> Workflow["工作流规范"]
 ```
 
-## 4. 文档与产物边界
+## 5. 文档与产物边界
 
 文档边界、归档规则、临时产物、路径引用和同步机制详见 [`.agents/rules/documentation.md`](.agents/rules/documentation.md)。本入口仅保留最高层约束：
 
@@ -73,7 +90,7 @@ flowchart TD
 - 任务中间产物放入 `.temp/`，不得污染项目根目录。
 - 项目内引用必须使用相对路径。
 
-## 5. 工具与脚本
+## 6. 工具与脚本
 
 - 项目专属自动化脚本统一放置在 `.agents/scripts/`。
 - 需要自动化验证或特定工作流时，优先检查 `.agents/scripts/` 的可用脚本。
@@ -81,6 +98,6 @@ flowchart TD
 - 仅检查依赖状态使用 `mise run init-check`。
 - 工具链版本校验使用 `mise run check-env`。
 
-## 6. 变更日志
+## 7. 变更日志
 
 项目变更日志已独立拆分。详细变更索引见 [CHANGELOG.md](CHANGELOG.md)。

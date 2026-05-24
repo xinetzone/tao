@@ -59,8 +59,9 @@
 1. 先看 [`references/dao-tech-foundation.md`](./references/dao-tech-foundation.md)
 2. 再看 [`references/dao-business-mapping-framework.md`](./references/dao-business-mapping-framework.md)
 3. 需要探索协议时看 [`references/knowledge-driven-exploration-protocol.md`](./references/knowledge-driven-exploration-protocol.md)
-4. 需要具体示例时看 [`references/dao-scenario-catalog.md`](./references/dao-scenario-catalog.md)
-5. 需要设计历史时，再进入 [`superpowers/`](./superpowers/)
+4. 需要记忆、做梦、洞见回流与遗忘协议时看 [`references/agent-memory-dream-protocol.md`](./references/agent-memory-dream-protocol.md)
+5. 需要具体示例时看 [`references/dao-scenario-catalog.md`](./references/dao-scenario-catalog.md)
+6. 需要设计历史时，再进入 [`superpowers/`](./superpowers/)
 
 ## Agent 检索约定
 

@@ -84,8 +84,10 @@ flowchart LR
 
 - [`../templates/dao-scenario-card-template.md`](../templates/dao-scenario-card-template.md)
 - [`../templates/knowledge-driven-exploration-spec-template.md`](../templates/knowledge-driven-exploration-spec-template.md)
+- [`../templates/knowledge-driven-exploration-workbench-template.md`](../templates/knowledge-driven-exploration-workbench-template.md)
 - [`../templates/knowledge-driven-exploration-retrospective-template.md`](../templates/knowledge-driven-exploration-retrospective-template.md)
-- [`../../../../.trae/specs/exploration-knowledge-loop-pilot/spec.md`](../../../../.trae/specs/exploration-knowledge-loop-pilot/spec.md)
+- [`dao-scenario-catalog.md`](dao-scenario-catalog.md)
+- [`../../../.trae/specs/exploration-knowledge-loop-pilot/spec.md`](../../../.trae/specs/exploration-knowledge-loop-pilot/spec.md)
 
 ## Sources
 

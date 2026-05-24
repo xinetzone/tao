@@ -1,7 +1,7 @@
-- [x] 已创建统一探索协议页
-- [x] 已升级场景卡模板并包含三类适配视图
-- [x] 已创建 spec、retrospective 与 workbench 模板
-- [x] 已创建 `.trae/specs/exploration-knowledge-loop-pilot/` 工作台
-- [x] 已将试点场景写入长期场景目录
-- [x] 已更新 AI 文档导航入口
-- [x] 已完成一次复盘并指定回流动作
+- [x] 场景卡已完成并字段完整（条目存在于 `dao-scenario-catalog.md`，字段无缺失）
+- [x] spec 已完成并边界清晰（Goal / Scope / Non-Goals / Core Loop / Layer Mapping 无遗漏）
+- [x] plan 已完成并可执行（tasks.md 任务可逐一执行，依赖关系明确）
+- [x] 至少完成一次最小验证（工作台三文件全部落位，证据链可追溯）
+- [x] 已输出复盘并指定回流动作（复盘文档存在，Next Action 可执行）
+- [x] 复盘包含至少一个可执行回流动作（工作台模板已升级，场景目录状态已更新）
+- [x] 预期证据已完整指向协议、场景、工作台、复盘与回流动作

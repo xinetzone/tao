@@ -20,9 +20,15 @@
 
 ## 当前角色清单
 
-| 文件 | 角色 | 领域 |
-|---|---|---|
-| `organization-steward.md` | Organization Steward | Organization |
-| `execution-orchestrator.md` | Execution Orchestrator | Execution |
-| `collaboration-architect.md` | Collaboration Architect | Governance + Knowledge |
-| `governance-auditor.md` | Governance Auditor | Governance |
+| 文件 | 角色 | 领域 | 审查状态 |
+|---|---|---|---|
+| `organization-steward.md` | Organization Steward | Organization | ✅ 已审查 |
+| `execution-orchestrator.md` | Execution Orchestrator | Execution | ✅ 已审查 |
+| `collaboration-architect.md` | Collaboration Architect | Governance + Knowledge | ✅ 已审查 |
+| `governance-auditor.md` | Governance Auditor | Governance | ✅ 已审查 |
+
+## 审查流程
+
+新增角色须通过 `.agents/workflows/role-review.md` 定义的四道门禁审批。提案模板见 `.agents/workflows/role-review/templates/proposal.md`。
+
+当前四个角色已通过试运行自审查，审查记录见 `.agents/workflows/role-review/verification/`。

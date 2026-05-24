@@ -1,0 +1,140 @@
+from __future__ import annotations
+
+import re
+import sys
+from pathlib import Path
+
+REQUIRED_SECTIONS = [
+    ("Skill ID/Name", r"(?:Skill\s*(?:ID|Name|唯一标识)|Name)" ),
+    ("Description", r"(?:Description|功能描述|功能|用途|Summary)"),
+    ("I/O Parameters", r"(?:I/?O\s*Parameters?|Input|Output|输入|输出|Parameters?)"),
+    ("Dependencies", r"(?:Dependencies?|依赖|依赖项|Requirements?)"),
+    ("Deployment", r"(?:Deployment|部署|Install|安装|Setup|配置)"),
+    ("Error Handling", r"(?:Error\s*Handling|错误|异常|handling)"),
+    ("Changelog", r"(?:Changelog|版本|Version|History|变更|更新记录)"),
+]
+
+
+def find_skill_dirs(project_root: Path) -> list[Path]:
+    skills_root = project_root / ".agents" / "skills"
+    if not skills_root.exists():
+        return []
+    return sorted(
+        d
+        for d in skills_root.iterdir()
+        if d.is_dir() and not d.name.startswith(".") and d.name != "templates"
+    )
+
+
+def parse_skill_md_headers(skill_md_path: Path) -> set[str]:
+    if not skill_md_path.exists():
+        return set()
+    content = skill_md_path.read_text(encoding="utf-8")
+    headers = set()
+    for line in content.splitlines():
+        stripped = line.strip()
+        match = re.match(r"^#{1,4}\s+(.+)", stripped)
+        if match:
+            headers.add(match.group(1).strip())
+    return headers
+
+
+def check_skill_md(skill_name: str, skill_dir: Path) -> list[dict]:
+    issues: list[dict] = []
+    skill_md = skill_dir / "SKILL.md"
+
+    if not skill_md.exists():
+        issues.append(
+            {
+                "severity": "MISSING",
+                "item": "SKILL.md 存在性",
+                "detail": f"{skill_name} 缺少 SKILL.md 文件",
+            }
+        )
+        return issues
+
+    headers = parse_skill_md_headers(skill_md)
+
+    for section_name, pattern in REQUIRED_SECTIONS:
+        found = any(re.search(pattern, h) for h in headers)
+        if not found:
+            issues.append(
+                {
+                    "severity": "MISSING",
+                    "item": "必填章节",
+                    "detail": f"缺少「{section_name}」章节",
+                }
+            )
+
+    if not issues:
+        issues.append(
+            {
+                "severity": "PASS",
+                "item": "SKILL.md 合规性",
+                "detail": f"{skill_name} 的 SKILL.md 包含全部 7 个必填章节",
+            }
+        )
+    else:
+        remaining = 7 - sum(
+            1
+            for i in issues
+            if i["severity"] == "MISSING" and i["item"] == "必填章节"
+        )
+        issues.insert(
+            0,
+            {
+                "severity": "WARN",
+                "item": "SKILL.md 合规性",
+                "detail": f"{skill_name} 的 SKILL.md 包含 {remaining}/7 个必填章节",
+            },
+        )
+
+    return issues
+
+
+def run(project_root: Path) -> dict[str, list[dict]]:
+    skill_dirs = find_skill_dirs(project_root)
+    results: dict[str, list[dict]] = {}
+
+    for skill_dir in skill_dirs:
+        skill_name = skill_dir.name
+        results[skill_name] = check_skill_md(skill_name, skill_dir)
+
+    return results
+
+
+def print_report(results: dict[str, list[dict]]) -> None:
+    severity_order = {"MISSING": 0, "WARN": 1, "PASS": 2}
+
+    for skill_name, issues in sorted(results.items()):
+        print(f"\n## {skill_name}")
+        sorted_issues = sorted(issues, key=lambda i: severity_order.get(i["severity"], 3))
+        for issue in sorted_issues:
+            tag = issue["severity"]
+            print(f"  [{tag}] {issue['item']}: {issue['detail']}")
+
+
+def main() -> int:
+    project_root = Path(__file__).resolve().parents[3]
+    results = run(project_root)
+
+    if not results:
+        print("未找到任何 .agents/skills/ 下的技能目录。")
+        return 0
+
+    print("技能 SKILL.md 合规性校验报告")
+    print("=" * 40)
+    print_report(results)
+
+    exit_code = 0
+    for skill_name, issues in results.items():
+        if any(i["severity"] == "MISSING" for i in issues):
+            exit_code = 1
+            break
+
+    print(f"\n校验完成，退出码 {exit_code}")
+    return exit_code
+
+
+if __name__ == "__main__":
+    sys.exit(main())

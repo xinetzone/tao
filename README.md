@@ -61,6 +61,7 @@
 - **📦 模块化技能管理**：提供可复用的 AI 技能体系与规范化资产目录。
 - **🛡️ 隔离式文档架构**：彻底分离人类专属文档（`docs/`）与 AI 专属资产库（`.agents/docs/`），防止 LLM 产生上下文幻觉。
 - **🔄 自动化评测循环**：集成了针对 AI 技能的测试驱动开发（TDD）及兼容性修复验证体系。
+- **🧠 智能体记忆与做梦协议**：定义了 [记忆、做梦、洞见回流与遗忘](.agents/docs/references/agent-memory-dream-protocol.md) 的认知循环，使智能体能够从任务中提取稳定知识，通过做梦式重组发现隐藏模式，并回流到规则与模板。
 - **📚 Sphinx/MyST 深度集成**：开箱即用的现代化文档构建流，支持多层级模块化日志追踪。
 
 ## 🗂️ 阅读与目录导航
@@ -73,12 +74,14 @@
 | `AGENTS.md` | AI 助手 / 需要协作的开发者 | AI 执行契约、任务路由、文档边界与协作规则。 |
 | `.agents/README.md` | 想理解 AI 目录结构的读者 | `.agents/` 目录说明与子目录导航。 |
 | `.trae/` | 当前任务执行者 | 存放任务规划、草稿和执行中的临时产物。 |
+| `.agents/docs/references/` | 想了解 AI 记忆与认知协议的读者 | [记忆做梦协议](.agents/docs/references/agent-memory-dream-protocol.md)、[探索协议](.agents/docs/references/knowledge-driven-exploration-protocol.md) 等稳定知识页。 |
 | `.agents/docs/superpowers/` | 需要查历史沉淀的读者 | 归档 Spec、复盘和长期知识资产。 |
 
 **推荐路径**：
 - **快速上手**：先看当前首页，再按需进入 `docs/`。
 - **需要 AI 协作**：阅读 `AGENTS.md`，让 AI 按契约执行。
 - **需要了解 AI 资产布局**：阅读 `.agents/README.md`。
+- **需要理解记忆、做梦与知识回流**：阅读 [智能体记忆做梦协议](.agents/docs/references/agent-memory-dream-protocol.md)。
 - **需要历史方案或复盘**：阅读 `.agents/docs/superpowers/` 与 `CHANGELOG.md`。
 
 ## 💻 环境依赖

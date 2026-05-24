@@ -382,7 +382,7 @@ flowchart TD
 
 ## Semantic Directories Evolution
 
-在当前映射层稳定之后，可以考虑为协作元模型增加一组“语义实例目录”，让部分核心实体拥有更直接的承载位置。
+在当前映射层稳定之后，第一批优先引入 `.agents/roles/`，并将其他语义实例目录保留为后续扩展选项，让部分核心实体拥有更直接的承载位置。
 
 推荐候选如下：
 
@@ -398,7 +398,7 @@ flowchart TD
 
 推荐采用“先角色、后团队、再主体”的引入顺序：
 
-1. 优先考虑 `.agents/roles/`
+1. `.agents/roles/` 为第一批试点目录
    因为 `Role` 是 `Agent` 进入规范性协作体系的关键桥梁，也是规则、权限、技能绑定的最佳聚合点。
 2. 再考虑 `.agents/teams/`
    因为 `Team` 更偏治理边界与组织容器，应建立在 `Role` 的稳定语义之上。
@@ -408,7 +408,7 @@ flowchart TD
 ### Guardrails
 
 - 这些目录属于协作模型的“实例层承载”，不是元模型定义本身
-- 第一版即使不创建这些目录，元模型依然成立
+- 第一版即使只创建 `.agents/roles/`，元模型依然成立
 - 一旦引入，目录内文件应优先保存声明式语义，而不是执行日志或临时上下文
 - `roles/` 应优先承载职责模板和约束绑定，不应退化为杂项提示词仓库
 - `agents/` 不应直接等同于某个模型提供商配置集合
@@ -420,7 +420,8 @@ flowchart TD
 1. 先定义元模型：形成正式参考 spec，固化实体、关系、边界和状态语义。
 2. 再定义治理映射：明确现有入口文件和目录分别位于哪一层、对应哪些实体。
 3. 最后收敛入口：只在少量关键入口文件补充协作语义导航，不大规模调整目录结构。
-4. 如需增强实例承载，再受控引入 `.agents/roles/` 等语义目录，从 `Role` 开始试点。
+4. 作为第一批试点目录引入 `.agents/roles/`，用于验证语义实例承载方式。
+5. 在 `roles/` 稳定后，再受控评估 `.agents/teams/`、`.agents/agents/`、`.agents/policies/`。
 
 ## Planned Touchpoints
 
@@ -429,14 +430,14 @@ flowchart TD
 - `AGENTS.md`
 - `.agents/README.md`
 - `.agents/docs/references/`
-- 可选的 `.agents/roles/`
+- `.agents/roles/`（首批试点）
 
 说明：
 
 - `AGENTS.md` 适合补充协作语义入口和治理总览
 - `.agents/README.md` 适合补充目录与元模型的语义映射
 - `.agents/docs/references/` 适合作为后续稳定参考页的长期承载位置
-- `.agents/roles/` 适合作为后续首个语义实例目录试点，但不应在第一版中成为硬依赖
+- `.agents/roles/` 作为第一批试点目录，用于承载职责模板、权限边界与默认规则绑定
 
 ## Explicit Non-Goals for Phase 1
 
@@ -447,7 +448,7 @@ flowchart TD
 - 权限引擎和审批流实现
 - 跨 team 状态同步机制
 - 对现有规则体系的大规模重写
-- 一次性引入完整的 `teams/`、`roles/`、`agents/`、`policies/` 目录矩阵
+- 一次性引入完整的 `teams/`、`agents/`、`policies/` 目录矩阵
 
 ## Acceptance Criteria
 

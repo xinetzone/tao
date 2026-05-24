@@ -380,6 +380,39 @@ flowchart TD
 | `.agents/docs/` | `Knowledge` 域中的长期知识层 | 承载规则、参考、洞见、spec、复盘等知识资产。 |
 | `.trae/` | `Runtime State` 的任务期工作台 | 承载 `Session`、草稿、执行中上下文与临时产物。 |
 
+## Semantic Directories Evolution
+
+在当前映射层稳定之后，可以考虑为协作元模型增加一组“语义实例目录”，让部分核心实体拥有更直接的承载位置。
+
+推荐候选如下：
+
+| 候选目录 | 主要对应实体 | 建议定位 |
+|---|---|---|
+| `.agents/roles/` | `Role` | 职责模板、权限边界、默认规则绑定。 |
+| `.agents/teams/` | `Team` | 团队边界、成员关系、默认治理策略。 |
+| `.agents/agents/` | `Agent` | 执行主体画像、能力组合、角色扮演关系。 |
+| `.agents/policies/` | `Policy` | 治理策略、协作限制、升级与审计规则。 |
+| `.agents/workflows/` | `Workflow` | 协作协议实例，保持沿用当前目录。 |
+
+### Recommendation for Phaseing
+
+推荐采用“先角色、后团队、再主体”的引入顺序：
+
+1. 优先考虑 `.agents/roles/`
+   因为 `Role` 是 `Agent` 进入规范性协作体系的关键桥梁，也是规则、权限、技能绑定的最佳聚合点。
+2. 再考虑 `.agents/teams/`
+   因为 `Team` 更偏治理边界与组织容器，应建立在 `Role` 的稳定语义之上。
+3. 最后考虑 `.agents/agents/`
+   因为 `Agent` 最容易与具体实现、模型厂商或运行时形态耦合，适合在前两者稳定后再落目录。
+
+### Guardrails
+
+- 这些目录属于协作模型的“实例层承载”，不是元模型定义本身
+- 第一版即使不创建这些目录，元模型依然成立
+- 一旦引入，目录内文件应优先保存声明式语义，而不是执行日志或临时上下文
+- `roles/` 应优先承载职责模板和约束绑定，不应退化为杂项提示词仓库
+- `agents/` 不应直接等同于某个模型提供商配置集合
+
 ## First-Phase Adoption Plan
 
 推荐采用最小落地顺序：
@@ -387,6 +420,7 @@ flowchart TD
 1. 先定义元模型：形成正式参考 spec，固化实体、关系、边界和状态语义。
 2. 再定义治理映射：明确现有入口文件和目录分别位于哪一层、对应哪些实体。
 3. 最后收敛入口：只在少量关键入口文件补充协作语义导航，不大规模调整目录结构。
+4. 如需增强实例承载，再受控引入 `.agents/roles/` 等语义目录，从 `Role` 开始试点。
 
 ## Planned Touchpoints
 
@@ -395,12 +429,14 @@ flowchart TD
 - `AGENTS.md`
 - `.agents/README.md`
 - `.agents/docs/references/`
+- 可选的 `.agents/roles/`
 
 说明：
 
 - `AGENTS.md` 适合补充协作语义入口和治理总览
 - `.agents/README.md` 适合补充目录与元模型的语义映射
 - `.agents/docs/references/` 适合作为后续稳定参考页的长期承载位置
+- `.agents/roles/` 适合作为后续首个语义实例目录试点，但不应在第一版中成为硬依赖
 
 ## Explicit Non-Goals for Phase 1
 
@@ -411,6 +447,7 @@ flowchart TD
 - 权限引擎和审批流实现
 - 跨 team 状态同步机制
 - 对现有规则体系的大规模重写
+- 一次性引入完整的 `teams/`、`roles/`、`agents/`、`policies/` 目录矩阵
 
 ## Acceptance Criteria
 

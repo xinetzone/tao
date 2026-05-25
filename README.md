@@ -196,6 +196,7 @@ mise run docs-linkcheck
 | 文档构建 | `mise run docs-html` | 构建 Sphinx HTML 文档站。 |
 | 外链校验 | `mise run docs-linkcheck` | 检查文档中的外部链接。 |
 | 内链校验 | `mise run docs-internal-linkcheck` | 校验 README/CHANGELOG/AGENTS 与 `docs/`、`.agents/docs/`、`.agents/rules/` 下 Markdown 的相对路径引用。 |
+| 结构校验 | `mise run docs-structure-check` | 校验 `docs/` 遵循 `tech/general` 双轨分类：顶层无散装业务文档、双轨子入口存在、子目录命名不跨轨。 |
 | 包构建 | `mise run package-build` | 构建 Python wheel 与 sdist 发布产物。 |
 | 容器构建 | `mise run container-build` | 基于 [`Containerfile`](Containerfile) 构建本地开发容器镜像。 |
 | 容器运行 | `mise run container-run` | 启动开发容器并挂载当前工作目录。 |

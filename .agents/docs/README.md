@@ -14,6 +14,7 @@
 | [`integrations/`](./integrations/) | 说明外部知识与仓库代码的映射关系 | “在 AgentForge 里哪里相关”的导航页、代码落点说明 | 当你需要先判断问题与仓库中哪些模块、脚本或配置有关时 |
 | [`sources/`](./sources/) | 保留原始资料和追溯入口 | 官方文档摘录、抓取结果、工作底稿 | 当你需要追溯原文、版本、抓取时间或尚未提炼的资料时 |
 | [`superpowers/`](./superpowers/) | 沉淀历史设计、计划和复盘 | specs、plans、retrospectives 等长期资产 | 当你要理解历史决策、实施计划或复盘结论时 |
+| [`superpowers/memories/`](./superpowers/memories/) | 沉淀长期记忆 | 按模板格式提取的稳定知识（原则、经验、约束、反例等），待做梦重组或回流至 rules/references | 当你需要查证"这个规则/经验是如何形成的"或"这个约束的适用边界是什么"时 |
 
 ## 按场景导航
 

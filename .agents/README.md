@@ -19,6 +19,7 @@
 | [`roles/`](./roles/) | 需要查看职责模板的读者 | 查看角色定义、默认规则绑定与权限边界。 |
 | [`teams/`](./teams/) | 需要查看治理边界的读者 | 查看 Team 定义、角色成员关系与跨 Team 协作策略。 |
 | [`docs/superpowers/`](./docs/superpowers/) | 需要查历史沉淀的读者 | 查看 Spec、复盘和可复用的长期知识资产。 |
+| [`docs/superpowers/memories/`](./docs/superpowers/memories/) | 需要查长期记忆的读者 | 查看按模板提取的稳定知识（原则、经验、约束、反例等），待做梦重组或回流。 |
 
 - **任务执行中的临时产物**：优先放在根目录下的 [`.trae/`](../.trae/) 工作台。
 - **任务完成后的长期沉淀**：归档到 [`.agents/docs/superpowers/`](./docs/superpowers/)。

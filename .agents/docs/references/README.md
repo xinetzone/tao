@@ -21,6 +21,7 @@
 - [Knowledge-Driven Exploration Protocol](./knowledge-driven-exploration-protocol.md)
 - [Agent Memory Dream Protocol](./agent-memory-dream-protocol.md)
 - [Dao Scenario Catalog](./dao-scenario-catalog.md)
+- [Doc Maintenance Workflow](./doc-maintenance-workflow.md)
 - [Python](./python/README.md)
 - [Podman](./podman/README.md)
 - [mise](./mise/README.md)

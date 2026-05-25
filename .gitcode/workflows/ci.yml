@@ -31,6 +31,9 @@ jobs:
       - name: 文档内链校验
         run: cd repo_workspace && python .agents/scripts/check_doc_links.py
 
+      - name: 文档结构校验（docs/ 双轨分类）
+        run: cd repo_workspace && python .agents/scripts/check_docs_structure.py
+
   test:
     runs-on: euleros-2.10.1
     needs: lint

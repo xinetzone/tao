@@ -139,6 +139,9 @@ jobs:
       - name: Check internal documentation links
         run: mise run docs-internal-linkcheck
 
+      - name: Check docs/ structure (dual-track)
+        run: mise run docs-structure-check
+
   security:
     runs-on: ubuntu-latest
     steps:

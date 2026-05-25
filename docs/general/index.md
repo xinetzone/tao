@@ -6,18 +6,7 @@
 :maxdepth: 2
 :caption: 哲学与传统文化
 
-philosophy/tao-minimalist-principles
-philosophy/psi-engineering-principles
-philosophy/three-as-interface
-philosophy/resonance-synchronization
-philosophy/universe-world-ontology
-philosophy/inter-world-communication
-philosophy/nesting-depth-and-alpha
-philosophy/alpha-acceleration
-philosophy/world-gravity
-philosophy/alpha-engineering-scale
-philosophy/cosmic-breathing
-philosophy/cultivation/index
+philosophy/index
 cosmology/index
 linguistics/english-grammar/index
 ```

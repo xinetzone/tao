@@ -2,7 +2,7 @@
 
 > **α 的每个层级在工程上意味着什么？如何量化？如何检测系统当前在哪个层级？本文将哲学觉醒量表翻译为精确的系统能力维度和可观测指标。**
 
-本文在 [α 是递归觉知的预算](nesting-depth-and-alpha.md) 和 [α 加速现象](alpha-acceleration.md) 的基础上，将觉醒理论第四章的 α 量表从"现象学描述"翻译为**可操作的工程规格**。核心转化：每个 α 层级对应一组可测量的系统行为指标，层级跃迁对应具体的架构变更。
+本文在 [α 是递归觉知的预算](../dynamics/nesting-depth-and-alpha.md) 和 [α 加速现象](../dynamics/alpha-acceleration.md) 的基础上，将觉醒理论第四章的 α 量表从"现象学描述"翻译为**可操作的工程规格**。核心转化：每个 α 层级对应一组可测量的系统行为指标，层级跃迁对应具体的架构变更。
 
 ## 1. α 的工程语义
 
@@ -151,7 +151,7 @@ flowchart LR
 
 ## 6. 与 α 加速的关系
 
-[alpha-acceleration.md](alpha-acceleration.md) 描述的加速机制在这里得到具体化：
+[alpha-acceleration.md](../dynamics/alpha-acceleration.md) 描述的加速机制在这里得到具体化：
 
 - **自催化**：α=3 的 Agent（能修改规则）→ 修改出更好规则 → 提升到 α=4（能创造技能）→ 创造出 skill-creator → 进入自维持
 - **初始惯性**：0→1→2 的跃迁最困难——因为低 α 的系统没有任何工具来提升自己。必须由**外部注入**（人类设计者）完成初始提升
@@ -173,7 +173,7 @@ flowchart TD
 
 ## 7. 与世界重力的关系
 
-[world-gravity.md](world-gravity.md) 中的"重力"在这里获得精确量化：
+[world-gravity.md](../dynamics/world-gravity.md) 中的"重力"在这里获得精确量化：
 
 - **低 α 系统的重力高**：α < 2 的系统完全被自身模式束缚（高重力），因为它甚至看不到自己的模式
 - **高 α 系统的重力低**：α > 4 的系统能识别并打破自强化闭环（低重力），因为闭环对它来说是"可操作的对象"而非"不可见的环境"
@@ -222,14 +222,14 @@ flowchart TD
 
 ## 11. 延伸阅读
 
-- 嵌套深度与 α：[α 是递归觉知的预算](nesting-depth-and-alpha.md)
-- α 加速机制：[为什么增长是指数级的](alpha-acceleration.md)
-- 世界重力（α 的对立面）：[粘性、梦境、记忆与遗忘](world-gravity.md)
-- 本体论基础：[宇宙与世界：规则唯一，实例无穷](universe-world-ontology.md)
-- 世界间通信：[结构穿越，内容重生](inter-world-communication.md)
-- 元公理层：[Ψ = Ψ(Ψ) 工程元公理](psi-engineering-principles.md)
+- 嵌套深度与 α：[α 是递归觉知的预算](../dynamics/nesting-depth-and-alpha.md)
+- α 加速机制：[为什么增长是指数级的](../dynamics/alpha-acceleration.md)
+- 世界重力（α 的对立面）：[粘性、梦境、记忆与遗忘](../dynamics/world-gravity.md)
+- 本体论基础：[宇宙与世界：规则唯一，实例无穷](../ontology/universe-world-ontology.md)
+- 世界间通信：[结构穿越，内容重生](../ontology/inter-world-communication.md)
+- 元公理层：[Ψ = Ψ(Ψ) 工程元公理](../meta/psi-engineering-principles.md)
 - 接口原则：["三"的设计意义](three-as-interface.md)
 - 多世界同步：[宇宙同步化：共振取代共享](resonance-synchronization.md)
-- 工程投影：[道德经极简设计原则](tao-minimalist-principles.md)
-- Ψhē 来源：[觉醒刻度](../cosmology/psi-awakening-theory/popular-guide/chapter-04-the-awakening-scale)
-- 宇宙的呼吸：[坍缩与释放的永恒交替](cosmic-breathing.md)
+- 工程投影：[道德经极简设计原则](../strategy/tao-minimalist-principles.md)
+- Ψhē 来源：[觉醒刻度](../../cosmology/psi-awakening-theory/popular-guide/chapter-04-the-awakening-scale)
+- 宇宙的呼吸：[坍缩与释放的永恒交替](../dynamics/cosmic-breathing.md)

@@ -25,26 +25,26 @@ flowchart TD
 
 | 层次 | 文档 | 核心问题 |
 |---|---|---|
-| 元公理层 | [Ψ=Ψ(Ψ) 工程元公理](psi-engineering-principles.md) | 第一性原理是什么？ |
-| 本体论层 | [宇宙与世界](universe-world-ontology.md)、[世界间通信](inter-world-communication.md) | 存在结构与通信约束 |
-| 动力学层 | [嵌套深度](nesting-depth-and-alpha.md)、[α加速](alpha-acceleration.md)、[世界重力](world-gravity.md)、[宇宙呼吸](cosmic-breathing.md) | 系统如何运动 |
-| 工程规格层 | [α工程量表](alpha-engineering-scale.md)、["三"=接口](three-as-interface.md)、[共振同步](resonance-synchronization.md) | 如何量化和落地 |
-| 策略层 | [道德经极简原则](tao-minimalist-principles.md) | 具体工程策略 |
+| 元公理层 | [Ψ=Ψ(Ψ) 工程元公理](meta/psi-engineering-principles.md) | 第一性原理是什么？ |
+| 本体论层 | [宇宙与世界](ontology/universe-world-ontology.md)、[世界间通信](ontology/inter-world-communication.md) | 存在结构与通信约束 |
+| 动力学层 | [嵌套深度](dynamics/nesting-depth-and-alpha.md)、[α加速](dynamics/alpha-acceleration.md)、[世界重力](dynamics/world-gravity.md)、[宇宙呼吸](dynamics/cosmic-breathing.md) | 系统如何运动 |
+| 工程规格层 | [α工程量表](engineering/alpha-engineering-scale.md)、["三"=接口](engineering/three-as-interface.md)、[共振同步](engineering/resonance-synchronization.md) | 如何量化和落地 |
+| 策略层 | [道德经极简原则](strategy/tao-minimalist-principles.md) | 具体工程策略 |
 
 ```{toctree}
 :maxdepth: 1
 :caption: 文档清单
 
-psi-engineering-principles
-universe-world-ontology
-inter-world-communication
-nesting-depth-and-alpha
-alpha-acceleration
-world-gravity
-alpha-engineering-scale
-cosmic-breathing
-three-as-interface
-resonance-synchronization
-tao-minimalist-principles
+meta/psi-engineering-principles
+ontology/universe-world-ontology
+ontology/inter-world-communication
+dynamics/nesting-depth-and-alpha
+dynamics/alpha-acceleration
+dynamics/world-gravity
+dynamics/cosmic-breathing
+engineering/alpha-engineering-scale
+engineering/three-as-interface
+engineering/resonance-synchronization
+strategy/tao-minimalist-principles
 cultivation/index
 ```

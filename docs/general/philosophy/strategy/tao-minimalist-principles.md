@@ -127,17 +127,17 @@ flowchart TD
 
 ## 7. 延伸阅读
 
-- 元公理层：[Ψ = Ψ(Ψ) 递归自坍缩恒等式与设计约束](psi-engineering-principles.md)
-- "三"的设计意义：[接口比实体更根本](three-as-interface.md)
-- 宇宙同步化：[共振取代共享](resonance-synchronization.md)
-- 宇宙与世界：[规则唯一，实例无穷](universe-world-ontology.md)
-- 世界间通信：[结构穿越，内容重生](inter-world-communication.md)
+- 元公理层：[Ψ = Ψ(Ψ) 递归自坍缩恒等式与设计约束](../meta/psi-engineering-principles.md)
+- "三"的设计意义：[接口比实体更根本](../engineering/three-as-interface.md)
+- 宇宙同步化：[共振取代共享](../engineering/resonance-synchronization.md)
+- 宇宙与世界：[规则唯一，实例无穷](../ontology/universe-world-ontology.md)
+- 世界间通信：[结构穿越，内容重生](../ontology/inter-world-communication.md)
 - 哲学底座：仓库内文件 `.agents/docs/references/dao-tech-foundation.md`
 - 业务映射框架：仓库内文件 `.agents/docs/references/dao-business-mapping-framework.md`
 - 场景目录：仓库内文件 `.agents/docs/references/dao-scenario-catalog.md`
-- AgentForge 项目介绍：[项目介绍](../../tech/intro.md)
-- 嵌套深度与觉醒量表：[α 是递归觉知的预算](nesting-depth-and-alpha.md)
-- α 加速现象：[为什么增长是指数级的](alpha-acceleration.md)
-- 世界的重力：[粘性、梦境、记忆与遗忘](world-gravity.md)
-- 觉醒量表工程细化：[从哲学隐喻到可测量指标](alpha-engineering-scale.md)
-- 宇宙的呼吸：[坍缩与释放的永恒交替](cosmic-breathing.md)
+- AgentForge 项目介绍：[项目介绍](../../../tech/intro.md)
+- 嵌套深度与觉醒量表：[α 是递归觉知的预算](../dynamics/nesting-depth-and-alpha.md)
+- α 加速现象：[为什么增长是指数级的](../dynamics/alpha-acceleration.md)
+- 世界的重力：[粘性、梦境、记忆与遗忘](../dynamics/world-gravity.md)
+- 觉醒量表工程细化：[从哲学隐喻到可测量指标](../engineering/alpha-engineering-scale.md)
+- 宇宙的呼吸：[坍缩与释放的永恒交替](../dynamics/cosmic-breathing.md)

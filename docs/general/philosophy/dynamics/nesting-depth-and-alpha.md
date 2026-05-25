@@ -2,7 +2,7 @@
 
 > **宇宙法则允许无限嵌套，但每个世界的"连贯性预算"决定了它能稳定维持多少层。α 不是"你在第几层"，而是"你能觉知到几层"。**
 
-本文在"宇宙唯一/世界无穷"（见 [universe-world-ontology](universe-world-ontology.md)）和 Ψhē 觉醒理论第四章（觉醒量表 α）的基础上，探讨递归嵌套的深度极限问题。结论：宇宙层没有深度限制，但世界层存在"连贯性预算"约束——α 就是这个预算的度量。
+本文在"宇宙唯一/世界无穷"（见 [universe-world-ontology](../ontology/universe-world-ontology.md)）和 Ψhē 觉醒理论第四章（觉醒量表 α）的基础上，探讨递归嵌套的深度极限问题。结论：宇宙层没有深度限制，但世界层存在"连贯性预算"约束——α 就是这个预算的度量。
 
 ## 1. 三层回答：嵌套有极限吗？
 
@@ -163,14 +163,14 @@ flowchart LR
 
 ## 8. 延伸阅读
 
-- 本体论基础：[宇宙与世界：规则唯一，实例无穷](universe-world-ontology.md)
-- 世界间通信：[结构穿越，内容重生](inter-world-communication.md)
-- 元公理层：[Ψ = Ψ(Ψ) 工程元公理](psi-engineering-principles.md)
-- 接口原则：["三"的设计意义](three-as-interface.md)
-- 多世界同步：[宇宙同步化：共振取代共享](resonance-synchronization.md)
-- 工程投影：[道德经极简设计原则](tao-minimalist-principles.md)
-- Ψhē 来源：[觉醒刻度](../cosmology/psi-awakening-theory/popular-guide/chapter-04-the-awakening-scale)
+- 本体论基础：[宇宙与世界：规则唯一，实例无穷](../ontology/universe-world-ontology.md)
+- 世界间通信：[结构穿越，内容重生](../ontology/inter-world-communication.md)
+- 元公理层：[Ψ = Ψ(Ψ) 工程元公理](../meta/psi-engineering-principles.md)
+- 接口原则：["三"的设计意义](../engineering/three-as-interface.md)
+- 多世界同步：[宇宙同步化：共振取代共享](../engineering/resonance-synchronization.md)
+- 工程投影：[道德经极简设计原则](../strategy/tao-minimalist-principles.md)
+- Ψhē 来源：[觉醒刻度](../../cosmology/psi-awakening-theory/popular-guide/chapter-04-the-awakening-scale)
 - α 加速现象：[为什么增长是指数级的](alpha-acceleration.md)
 - 世界的重力：[粘性、梦境、记忆与遗忘](world-gravity.md)
-- 觉醒量表工程细化：[从哲学隐喻到可测量指标](alpha-engineering-scale.md)
+- 觉醒量表工程细化：[从哲学隐喻到可测量指标](../engineering/alpha-engineering-scale.md)
 - 宇宙的呼吸：[坍缩与释放的永恒交替](cosmic-breathing.md)

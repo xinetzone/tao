@@ -7,6 +7,9 @@
 :caption: 哲学与传统文化
 
 philosophy/tao-minimalist-principles
+philosophy/cultivation/index
+cosmology/index
+linguistics/english-grammar/index
 ```
 
 ## 计划承载内容

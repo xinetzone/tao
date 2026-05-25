@@ -1,0 +1,5 @@
+# Matplotlib
+
+```{toctree}
+start
+```

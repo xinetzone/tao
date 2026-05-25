@@ -137,3 +137,4 @@ flowchart LR
 - 宇宙的呼吸：[坍缩与释放的永恒交替](../dynamics/cosmic-breathing.md)
 - 操作世界：[世界可操作性的完整实现](../engineering/world-operations.md)
 - 世界包：[世界可移植性的三层模型](../engineering/world-package.md)
+- 世界分发：[分层混合分发策略](../engineering/world-distribution.md)

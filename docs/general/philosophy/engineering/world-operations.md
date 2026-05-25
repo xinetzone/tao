@@ -203,3 +203,4 @@ $$
 - [共振同步](./resonance-synchronization.md) — 多世界对齐机制
 - [道德经极简原则](../strategy/tao-minimalist-principles.md) — 世界设计的最高策略
 - [世界包](./world-package.md) — 从操作世界到分发世界
+- [世界分发](./world-distribution.md) — 分层混合分发策略

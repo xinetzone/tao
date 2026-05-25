@@ -144,3 +144,4 @@ flowchart LR
 - 宇宙的呼吸：[坍缩与释放的永恒交替](../dynamics/cosmic-breathing.md)
 - 操作世界：[多世界对齐的操作实现](./world-operations.md)
 - 世界包：[多世界包的对齐协议](./world-package.md)
+- 世界分发：[分层混合分发策略](./world-distribution.md)

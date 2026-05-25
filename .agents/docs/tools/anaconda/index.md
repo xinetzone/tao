@@ -1,5 +1,7 @@
 # Anaconda3
 
+> **文档时效性** | 归档日期：2026-05-25 | 涉及版本：版本未明确 | 当前最新：—（索引页） | 状态：✅ 基本适用
+
 参考 [Anaconda3 文档](https://www.anaconda.com/docs/main)。
 
 Anaconda® Distribution 是 Python/R 的数据科学发行版，包含：

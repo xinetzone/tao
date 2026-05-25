@@ -4,7 +4,4 @@
 :hidden:
 
 configs/index
-InsightHub/index
-notebook/index
-test-anywidget
 ```

@@ -173,7 +173,7 @@ bibtex_bibfiles = ["refs.bib"]
 sitemap_url_scheme = "{lang}{version}{link}"
 
 if os.environ.get("GITHUB_ACTIONS"):
-    html_baseurl = os.environ.get("SITEMAP_URL_BASE", "https://ai-dao.github.io/")
+    html_baseurl = os.environ.get("SITEMAP_URL_BASE", "https://xinetzone.github.io/tao")
 elif not os.environ.get("READTHEDOCS"):
     html_baseurl = os.environ.get("SITEMAP_URL_BASE", "http://127.0.0.1:8000/")
     sitemap_url_scheme = "{link}"

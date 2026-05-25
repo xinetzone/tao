@@ -28,6 +28,9 @@ jobs:
       - name: Ruff 静态扫描
         run: cd repo_workspace && uv run ruff check .
 
+      - name: 文档内链校验
+        run: cd repo_workspace && python .agents/scripts/check_doc_links.py
+
   test:
     runs-on: euleros-2.10.1
     needs: lint

@@ -73,6 +73,10 @@ dir = "docs"
 run = "uv run invoke linkcheck"
 depends = ["check-env"]
 
+[tasks.docs-internal-linkcheck]
+description = "校验 README/CHANGELOG/AGENTS 中的相对路径引用是否有效"
+run = "python .agents/scripts/check_doc_links.py"
+
 [tasks.docs-build]
 description = "CI 文档构建入口"
 dir = "docs"

@@ -136,6 +136,9 @@ jobs:
           mise install
           mise run lint
 
+      - name: Check internal documentation links
+        run: mise run docs-internal-linkcheck
+
   security:
     runs-on: ubuntu-latest
     steps:

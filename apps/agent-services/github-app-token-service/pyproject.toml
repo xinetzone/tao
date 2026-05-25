@@ -1,0 +1,21 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=61.0", "wheel"]
+
+[project]
+name = "github-app-token-service"
+version = "0.1.0"
+description = "基于 taolib 的 GitHub App 安装令牌管理 RESTful API 服务"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi>=0.115,<1",
+    "uvicorn[standard]>=0.34,<1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "httpx",  # for FastAPI TestClient
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

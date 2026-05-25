@@ -203,7 +203,7 @@ templates_path = ["_templates"]
 if _has("autoapi.extension"):
     autoapi_type = "python"
     autoapi_dirs = [str(ROOT / "src" / "taolib")]
-    autoapi_root = "api"  # 输出目录：docs/api/
+    autoapi_root = "tech/api"  # 输出目录：docs/tech/api/（与技术文档分类路径对齐）
     autoapi_add_toctree_entry = False  # 由 index.md 显式管控 toctree，避免重复
     autoapi_keep_files = False  # 构建时清理旧产物
     autoapi_python_class_content = (

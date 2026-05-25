@@ -201,7 +201,7 @@ mise run docs-linkcheck
 | 容器运行 | `mise run container-run` | 启动开发容器并挂载当前工作目录。 |
 | 容器测试 | `mise run container-test` | 在容器内运行测试集，验证容器化构建产物。 |
 
-更多命令与配置背景请参阅 [`docs/build-conventions.md`](docs/build-conventions.md)。
+更多命令与配置背景请参阅 [`docs/tech/build-conventions.md`](docs/tech/build-conventions.md)。
 
 ### 6. 配置与构建约定速览
 
@@ -224,14 +224,14 @@ mise run docs-linkcheck
 - **工具下载失败**：先确认网络与代理设置，必要时执行 `mise cache clean` 后重试。
 - **外部 CLI 缺失**：运行 `mise run init-check` 查看缺失项（跨平台，Windows/Linux/macOS 均可使用）。
 
-更详细的环境说明请继续阅读 [`docs/quickstart.md`](docs/quickstart.md)、[`docs/build-conventions.md`](docs/build-conventions.md)、[`docs/contributing.md`](docs/contributing.md) 与 [`docs/deploy.md`](docs/deploy.md)。
+更详细的环境说明请继续阅读 [`docs/tech/quickstart.md`](docs/tech/quickstart.md)、[`docs/tech/build-conventions.md`](docs/tech/build-conventions.md)、[`docs/tech/contributing.md`](docs/tech/contributing.md) 与 [`docs/tech/deploy.md`](docs/tech/deploy.md)。
 
 ## 🎮 使用指南
 
 1. **人类开发入口**：访问 [`docs/index.md`](docs/index.md) 获取更详细的使用说明、API 文档与部署指南。
 2. **AI 协作入口**：在让 AI 参与任务前，先阅读 [`AGENTS.md`](AGENTS.md) 以确认执行契约、文档边界与任务路由。
 3. **AI 目录说明**：如需了解 `.agents/` 的结构与资产分布，请阅读 [`.agents/README.md`](.agents/README.md)。
-4. **作为 Python 包集成**：在外部项目中通过 `uv add 'taolib[github-app]'` 引入 GitHub App 令牌管理能力，详见 [`docs/integration-guide.md`](docs/integration-guide.md) 与 [`docs/github-app-token-override.md`](docs/github-app-token-override.md)。
+4. **作为 Python 包集成**：在外部项目中通过 `uv add 'taolib[github-app]'` 引入 GitHub App 令牌管理能力，详见 [`docs/tech/integration-guide.md`](docs/tech/integration-guide.md) 与 [`docs/tech/github-app-token-override.md`](docs/tech/github-app-token-override.md)。
 
 ## ️ 技能管理
 
@@ -255,7 +255,7 @@ mise run docs-linkcheck
 
 我们欢迎任何旨在提升人机协同效率的贡献。
 
-- **贡献总入口**：阅读 [docs/contributing.md](docs/contributing.md)。
+- **贡献总入口**：阅读 [docs/tech/contributing.md](docs/tech/contributing.md)。
 - **AI 协作约束**：阅读 [AGENTS.md](AGENTS.md)。
 - **PR 审查流程**：阅读 [`.agents/workflows/pr-review.md`](.agents/workflows/pr-review.md)。
 

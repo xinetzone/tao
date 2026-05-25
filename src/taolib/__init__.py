@@ -10,7 +10,7 @@ from __future__ import annotations
 
 # 版本号统一由 pdm-backend 的 SCM 源派生，构建时写入 ``_version.py``。
 # 详见 ``pyproject.toml`` 中的 ``[tool.pdm.version]`` 段与
-# ``docs/build-conventions.md`` 的版本管理章节。
+# ``docs/tech/build-conventions.md`` 的版本管理章节。
 try:
     from ._version import __version__
 except ImportError:  # pragma: no cover - 源码树直接运行（未构建安装）时的兜底

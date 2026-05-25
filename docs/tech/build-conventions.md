@@ -165,7 +165,7 @@ write_template = "__version__ = '{}'\n"
 
 为防止 dirty 标记污染发布产物，CI 流程设有 **三道防线**：
 
-```mermaid
+```{mermaid}
 flowchart LR
     A["release.yml<br/>打 tag 前校验工作树"] --> B["python-publish.yml<br/>build 前再校验工作树"]
     B --> C["pyproject.toml<br/>SCM 派生规则本身"]

@@ -62,6 +62,7 @@
 - **🛡️ 隔离式文档架构**：彻底分离人类专属文档（`docs/`）与 AI 专属资产库（`.agents/docs/`），防止 LLM 产生上下文幻觉。
 - **🔄 自动化评测循环**：集成了针对 AI 技能的测试驱动开发（TDD）及兼容性修复验证体系。
 - **🧠 智能体记忆与做梦协议**：定义了 [记忆、做梦、洞见回流与遗忘](.agents/docs/references/agent-memory-dream-protocol.md) 的认知循环，使智能体能够从任务中提取稳定知识，通过做梦式重组发现隐藏模式，并回流到规则与模板。
+- **🧬 协作元模型**：通过 [`agent-collaboration-metamodel.md`](.agents/docs/references/agent-collaboration-metamodel.md) 定义 `Team / Role / Agent / Workflow / Memory / Context` 六类实体的统一语义边界，配合 [`.agents/roles/`](.agents/roles/) 与 [`.agents/teams/`](.agents/teams/) 提供职责模板与治理边界的声明式实例，支撑多智能体规范化协作。
 - **🔐 GitHub App 令牌管理**：内置 [`taolib.github_app`](src/taolib/github_app/) Python 模块与 [`taolib-github-app`](src/taolib/cli/github_app.py) CLI，提供 GitHub App 安装令牌的策略解析、缓存、Singleflight 并发控制、事件钩子与 [PyGithub 适配器](src/taolib/github_app/pygithub_adapter.py)，可作为 Python 包独立集成到外部项目。
 - **📚 Sphinx/MyST 深度集成**：开箱即用的现代化文档构建流，支持多层级模块化日志追踪。
 
@@ -76,6 +77,8 @@
 | `.agents/README.md` | 想理解 AI 目录结构的读者 | `.agents/` 目录说明与子目录导航。 |
 | `.trae/` | 当前任务执行者 | 存放任务规划、草稿和执行中的临时产物。 |
 | `.agents/docs/references/` | 想了解 AI 记忆与认知协议的读者 | [记忆做梦协议](.agents/docs/references/agent-memory-dream-protocol.md)、[探索协议](.agents/docs/references/knowledge-driven-exploration-protocol.md) 等稳定知识页。 |
+| `.agents/docs/references/dao-scenario-catalog.md` | 想理解哲学如何落地业务的读者 | 基于 [全链路业务映射框架](.agents/docs/references/dao-business-mapping-framework.md) 的业务场景卡目录，验证「大道至简」「反者道之动」「弱者道之用」等原则在技术与业务侧的复用路径。 |
+| `.agents/roles/`、`.agents/teams/` | 想了解协作元模型实例的读者 | 角色职责模板与团队治理边界的声明式实例，遵循 [协作元模型参考页](.agents/docs/references/agent-collaboration-metamodel.md) 定义的语义。 |
 | `.agents/docs/superpowers/` | 需要查历史沉淀的读者 | 归档 Spec、复盘和长期知识资产。 |
 
 **推荐路径**：
@@ -83,6 +86,7 @@
 - **需要 AI 协作**：阅读 `AGENTS.md`，让 AI 按契约执行。
 - **需要了解 AI 资产布局**：阅读 `.agents/README.md`。
 - **需要理解记忆、做梦与知识回流**：阅读 [智能体记忆做梦协议](.agents/docs/references/agent-memory-dream-protocol.md)。
+- **需要理解多智能体协作语义**：阅读 [协作元模型参考页](.agents/docs/references/agent-collaboration-metamodel.md)，并结合 [`.agents/roles/`](.agents/roles/) 与 [`.agents/teams/`](.agents/teams/) 中的实例。
 - **需要历史方案或复盘**：阅读 `.agents/docs/superpowers/` 与 `CHANGELOG.md`。
 
 ## 💻 环境依赖
@@ -188,9 +192,14 @@ mise run docs-linkcheck
 | 覆盖率测试 | `mise run test-coverage` | 生成覆盖率报告，并按项目阈值校验。 |
 | 代码质量 | `mise run lint` | 执行 pre-commit 全量检查。 |
 | 代码格式化 | `mise run fmt` | 使用 Ruff 统一格式化代码。 |
+| 依赖审计 | `mise run audit` | 通过 `pip-audit` 严格审计 Python 依赖安全问题。 |
 | 文档构建 | `mise run docs-html` | 构建 Sphinx HTML 文档站。 |
 | 外链校验 | `mise run docs-linkcheck` | 检查文档中的外部链接。 |
+| 内链校验 | `mise run docs-internal-linkcheck` | 校验 README/CHANGELOG/AGENTS 与 `docs/`、`.agents/docs/`、`.agents/rules/` 下 Markdown 的相对路径引用。 |
 | 包构建 | `mise run package-build` | 构建 Python wheel 与 sdist 发布产物。 |
+| 容器构建 | `mise run container-build` | 基于 [`Containerfile`](Containerfile) 构建本地开发容器镜像。 |
+| 容器运行 | `mise run container-run` | 启动开发容器并挂载当前工作目录。 |
+| 容器测试 | `mise run container-test` | 在容器内运行测试集，验证容器化构建产物。 |
 
 更多命令与配置背景请参阅 [`docs/build-conventions.md`](docs/build-conventions.md)。
 

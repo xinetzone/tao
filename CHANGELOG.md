@@ -12,8 +12,8 @@
 
 | 模块 | 说明 | CHANGELOG 路径 |
 |------|------|---------------|
-| Skill Creator | 技能开发工具链 | [docs/changelogs/skill-creator.md](docs/changelogs/skill-creator.md) |
-| Task Execution Summary | 任务执行总结报告生成器 | [docs/changelogs/task-execution-summary.md](docs/changelogs/task-execution-summary.md) |
+| Skill Creator | 技能开发工具链 | [.agents/skills/skill-creator/CHANGELOG.md](.agents/skills/skill-creator/CHANGELOG.md) |
+| Task Execution Summary | 任务执行总结报告生成器 | [.agents/skills/task-execution-summary/CHANGELOG.md](.agents/skills/task-execution-summary/CHANGELOG.md) |
 
 ## 项目级变更日志索引
 
@@ -21,4 +21,6 @@
 
 | 时间 | 说明 | CHANGELOG 路径 |
 |------|------|---------------|
-| 2026-05 | 2026年5月项目级变更（[未发布]） | [docs/changelogs/project-2026-05.md](docs/changelogs/project-2026-05.md) |
+| 2026-05 | 2026年5月项目级变更（[未发布]） | [tests/project_changelogs/CHANGELOG_2026-05.md](tests/project_changelogs/CHANGELOG_2026-05.md) |
+
+> 说明：上述路径为变更记录的**真实数据源**。文档站点（Sphinx）通过 [`docs/changelog.md`](docs/changelog.md) 与 [`docs/changelogs/`](docs/changelogs/) 下的镜像页 `{include}` 引用渲染，请勿直接编辑镜像页。

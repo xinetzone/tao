@@ -19,6 +19,10 @@ changelog
 jupyterlite
 ```
 
+:::{note}
+`api/taolib/` 目录由 sphinx-autoapi 在构建时从源码自动生成，不存在于版本库中。
+:::
+
 ## 目录清单
 
 | 路径 | 说明 |

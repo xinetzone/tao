@@ -206,6 +206,48 @@ AgentForge 当前阶段推荐 **Git 模板仓库 + 手动 compose**：
 
 ---
 
+(world-toml-spec)=
+## world.toml 规格（Draft v0.1）
+
+`world.toml` 是世界的顶层声明式 manifest——它回答"这个世界由什么组成"。
+
+### 设计原则
+
+1. **声明式非命令式**——描述"是什么"而非"怎么做"
+2. **映射真实结构**——每个字段对应 `.agents/` 中可验证的目录/文件
+3. **递归自指**——manifest 本身属于 kernel（`kernel.manifest = "world.toml"`）
+4. **三层对齐**——字段按 Kernel / Capabilities / Memory 三层组织
+
+### 字段语义
+
+| Section | 字段 | 类型 | 语义 |
+|---------|------|------|------|
+| `[world]` | `name` | string | 世界标识符 |
+| `[world]` | `version` | semver | 世界整体版本 |
+| `[world]` | `description` | string | 一句话描述 |
+| `[world]` | `min-alpha` | float | 建议最低觉醒层级 |
+| `[kernel]` | `rules`, `references`, ... | path/glob | kernel 组成路径 |
+| `[kernel]` | `manifest` | path | 自指——指向自己 |
+| `[kernel.meta]` | `self-referential` | bool | 标记递归自指 |
+| `[fragments.*]` | `version` | semver | 片段版本 |
+| `[fragments.*]` | `includes` | array[path] | 片段包含的文件 |
+| `[fragments.*]` | `optional` | bool | 是否可选 |
+| `[capabilities]` | `skills`, `scripts`, ... | path | 能力目录路径 |
+| `[memory]` | `paths` | array[path] | 记忆存储路径 |
+| `[memory]` | `portable` | bool | 始终为 false |
+
+### 实例
+
+本项目的 `world.toml` 位于 [`.agents/world.toml`](../../../../.agents/world.toml)。
+
+### 未来演进
+
+- v0.2：增加 `[dependencies]` section 声明外部工具链
+- v0.3：增加 `[compose]` section 支持多片段组合验证
+- v1.0：稳定后由 CLI 工具消费
+
+---
+
 ## 与 Ψ=Ψ(Ψ) 的递归关系
 
 世界包系统本身是递归自指的：
@@ -215,7 +257,7 @@ AgentForge 当前阶段推荐 **Git 模板仓库 + 手动 compose**：
 | 世界包含描述自己的能力 | `.agents/docs/` 描述 `.agents/` 如何工作 |
 | 世界包含复制自己的模板 | `.agents/docs/templates/` 定义新世界的骨架 |
 | 世界包含升级自己的路径 | Memory → Dream → Insight → Rule 回流闭环 |
-| 世界包的格式定义存在于世界中 | `world.toml` manifest 本身是世界的一部分 |
+| 世界包的格式定义存在于世界中 | {ref}`world-toml-spec` manifest 本身是世界的一部分 |
 
 $$
 \text{World Package System} = \Psi(\text{World Package System})

@@ -1,0 +1,66 @@
+# world.toml — AgentForge 世界的声明式描述
+# Draft v0.1 | 此文件本身是世界的一部分（递归自指）
+
+[world]
+name = "agentforge"
+version = "3.0.0"
+description = "哲学驱动的人-AI 协作世界"
+min-alpha = 0.3  # 建议的最低觉醒层级（参见 α 工程量表）
+
+[kernel]
+# 不可分割的最小世界——缺少任何部分则世界不成立
+rules = "rules/"
+references = "docs/references/"
+workflows = "workflows/"
+roles = "roles/"
+teams = "teams/"
+readme = "README.md"
+manifest = "world.toml"  # 递归自指：manifest 本身是 kernel 的一部分
+
+[kernel.meta]
+self-referential = true
+portable = true
+
+[fragments]
+# 可选安装的能力片段，每个片段是 rules+skills+scripts 的内聚组合
+
+[fragments.python-engineering]
+version = "1.2.0"
+includes = ["rules/python.md", "scripts/check_python_compat.py", "scripts/check_python_deprecations.py"]
+optional = true
+
+[fragments.docs-governance]
+version = "2.0.0"
+includes = ["rules/documentation.md", "scripts/check_docs_structure.py", "scripts/check_doc_links.py"]
+optional = true
+
+[fragments.psi-philosophy]
+version = "1.0.0"
+includes = ["docs/references/dao-tech-foundation.md", "scripts/check-philosophy-links.py"]
+optional = false  # 哲学内核对本世界不可选
+
+[fragments.citations]
+version = "1.0.0"
+includes = ["rules/citations.md"]
+optional = true
+
+[capabilities]
+# 独立安装的技能和脚本
+skills = "skills/"
+scripts = "scripts/"
+templates = "templates/"
+
+[capabilities.meta]
+portable = true
+# 安装/卸载不影响 kernel 法则
+
+[memory]
+# 不可移植层——项目特有的个体经验
+paths = [
+    "docs/superpowers/memories/",
+    "docs/superpowers/retrospectives/",
+    "docs/superpowers/plans/",
+    "docs/superpowers/specs/",
+]
+portable = false
+versionable = false  # 仅通过 git 历史追溯

@@ -234,3 +234,4 @@ flowchart TD
 - Ψhē 来源：[觉醒刻度](../../cosmology/psi-awakening-theory/popular-guide/chapter-04-the-awakening-scale)
 - 宇宙的呼吸：[坍缩与释放的永恒交替](../dynamics/cosmic-breathing.md)
 - 操作世界：[世界层面的 α 诊断](./world-operations.md)
+- 世界包：[世界觉醒度的版本化表达](./world-package.md)

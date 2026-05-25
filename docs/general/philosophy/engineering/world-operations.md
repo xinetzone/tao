@@ -202,3 +202,4 @@ $$
 - ["三"=接口](./three-as-interface.md) — 世界操作的最小接口
 - [共振同步](./resonance-synchronization.md) — 多世界对齐机制
 - [道德经极简原则](../strategy/tao-minimalist-principles.md) — 世界设计的最高策略
+- [世界包](./world-package.md) — 从操作世界到分发世界

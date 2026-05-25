@@ -260,3 +260,4 @@ flowchart LR
 - 工程投影：[道德经极简设计原则](../strategy/tao-minimalist-principles.md)
 - Ψhē 来源：[死亡、梦境和其他幻象](../../cosmology/psi-awakening-theory/popular-guide/chapter-07-death-dreams-illusions)
 - 操作世界：[呼吸作为世界操作原语](../engineering/world-operations.md)
+- 世界包：[世界版本演进的节律](../engineering/world-package.md)

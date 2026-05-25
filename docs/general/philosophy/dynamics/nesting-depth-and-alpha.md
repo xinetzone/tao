@@ -175,3 +175,4 @@ flowchart LR
 - 觉醒量表工程细化：[从哲学隐喻到可测量指标](../engineering/alpha-engineering-scale.md)
 - 宇宙的呼吸：[坍缩与释放的永恒交替](cosmic-breathing.md)
 - 操作世界：[世界中智能体的觉醒层级](../engineering/world-operations.md)
+- 世界包：[世界进化的版本化管理](../engineering/world-package.md)

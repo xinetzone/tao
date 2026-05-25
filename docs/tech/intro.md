@@ -64,7 +64,7 @@ flowchart LR
 | [快速开始](quickstart.md) | 环境初始化与首次接入指南 |
 | [核心功能](features.md) | 目录结构、`.agents/` 详解与权限规范 |
 | [GitHub App Token 覆盖头](github-app-token-override.md) | S2S Token 策略、兼容性约束与工程启发 |
-| {doc}`API 参考 <api/taolib/index>` | `taolib` 各模块的类、函数与 CLI 用法（由 sphinx-autoapi 自动生成） |
+| {doc}`API 参考 </tech/api/taolib/index>` | `taolib` 各模块的类、函数与 CLI 用法（由 sphinx-autoapi 自动生成） |
 | [构建约定](build-conventions.md) | PDM、uv、mise 配置与日常构建命令 |
 | [部署指南](deploy.md) | 文档托管、CI/CD 与发布流程 |
 | [贡献规范](contributing.md) | PR 流程、代码审查与测试要求 |

@@ -66,10 +66,10 @@ flowchart TD
 
 ```{mermaid}
 flowchart LR
-    subgraph 宇宙层（不可变）
+    subgraph "宇宙层（不可变）"
         Rules["AGENTS.md<br/>.agents/rules/"]
     end
-    subgraph 世界层（可操作）
+    subgraph "世界层（可操作）"
         S1["会话 1"] -.重启.-> S2["会话 2"]
         S2 -.生长.-> S3["会话 3"]
         S1 -->|嵌套| Sub["子 Agent 会话"]

@@ -4,7 +4,7 @@
 
 ```{toctree}
 :maxdepth: 2
-:caption: 哲学与传统文化
+:caption: 知识领域
 
 philosophy/index
 cosmology/index

@@ -280,7 +280,7 @@
 
 名词从句（第二个中括号内）的简化方式是省略掉重复的主语 he、助动词 can 简化为表示不定式的 to。
 
-请注意：如果采用的是类似 what one does is (to) V 这种特别的分裂句来强调动词（见[第十九章](./chapter-19-relative-clauses.md#强调动词的分裂句)），那么 be 动词后面的补语位置可以用不定式短语、也可以用原形动词。例如：
+请注意：如果采用的是类似 what one does is (to) V 这种特别的分裂句来强调动词（见{ref}`第十九章 <verb-cleft-sentence>`），那么 be 动词后面的补语位置可以用不定式短语、也可以用原形动词。例如：
 
   - <u>I</u> only <u>asked</u> <u>him</u> <u>a simple question</u>. S V O O（我只不过是问他一个简单的问题而已。）
 

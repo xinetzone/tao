@@ -746,7 +746,7 @@ After the stroke, John is not <u>the man</u> <u>who he used to be</u>. 先行词
 
       先行词是 last night，分裂句中的关系副词可以用 that 或 when。
 
-(强调动词的分裂句)=
+(verb-cleft-sentence)=
 ### 强调动词的分裂句
 
 如要强调的是「动词」这个元素，不能采用一般分裂句 it is … that 的句型，而必须动用类似「what one does is (to) V」的句型。先回到前面那个句子：

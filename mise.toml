@@ -92,7 +92,7 @@ description = "严格模式构建文档：警告即失败（CI 与 GitHub Pages 
 dir = "docs"
 env = { SPHINXOPTS = "-W --keep-going" }
 run = "uv run invoke build --target html"
-depends = ["check-env"]
+depends = ["check-env", "docs-structure-check"]
 
 [tasks.init]
 description = "一键环境初始化（跨平台，支持 Windows/Linux/macOS）"

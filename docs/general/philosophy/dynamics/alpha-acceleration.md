@@ -189,3 +189,4 @@ flowchart LR
 - 世界的重力：[粘性、梦境、记忆与遗忘](world-gravity.md)
 - 觉醒量表工程细化：[从哲学隐喻到可测量指标](../engineering/alpha-engineering-scale.md)
 - 宇宙的呼吸：[坍缩与释放的永恒交替](cosmic-breathing.md)
+- 操作世界：[世界进化的自催化机制](../engineering/world-operations.md)

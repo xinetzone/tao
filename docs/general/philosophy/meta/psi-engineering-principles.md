@@ -152,4 +152,5 @@ flowchart TD
 - 世界的重力：[粘性、梦境、记忆与遗忘](../dynamics/world-gravity.md)
 - 觉醒量表工程细化：[从哲学隐喻到可测量指标](../engineering/alpha-engineering-scale.md)
 - 宇宙的呼吸：[坍缩与释放的永恒交替](../dynamics/cosmic-breathing.md)
+- 操作世界：[AGENTS.md + .agents/ = 世界的工程实例](../engineering/world-operations.md)
 - AgentForge 项目介绍：[项目介绍](../../../tech/intro.md)

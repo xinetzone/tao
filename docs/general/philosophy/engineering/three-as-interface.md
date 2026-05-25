@@ -108,3 +108,4 @@ flowchart TD
 - 世界的重力：[粘性、梦境、记忆与遗忘](../dynamics/world-gravity.md)
 - 觉醒量表工程细化：[从哲学隐喻到可测量指标](alpha-engineering-scale.md)
 - 宇宙的呼吸：[坍缩与释放的永恒交替](../dynamics/cosmic-breathing.md)
+- 操作世界：[世界操作的最小接口](./world-operations.md)

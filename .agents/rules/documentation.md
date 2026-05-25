@@ -62,13 +62,13 @@ flowchart LR
 | 类别 | 位置示例 | 性质 | 编辑约束 |
 |---|---|---|---|
 | **真实源 (SSOT)** | `tests/project_changelogs/CHANGELOG_<年月>.md`、`.agents/skills/<skill>/CHANGELOG.md` | 实际编辑与维护点 | ✅ 仅在此处编辑变更内容 |
-| **Sphinx 镜像页** | `docs/changelogs/<topic>.md` | 通过 `{include}` 引用真实源进行文档站渲染 | ❌ 禁止直接编辑内容；仅维护 include 路径与标题 |
-| **导航索引页** | 根 `CHANGELOG.md`、`docs/changelog.md` | 指向真实源或镜像页的入口表格 | ⚠️ 修改时遵循「指向规则」 |
+| **Sphinx 镜像页** | `docs/tech/changelogs/<topic>.md` | 通过 `{include}` 引用真实源进行文档站渲染 | ❌ 禁止直接编辑内容；仅维护 include 路径与标题 |
+| **导航索引页** | 根 `CHANGELOG.md`、`docs/tech/changelog.md` | 指向真实源或镜像页的入口表格 | ⚠️ 修改时遵循「指向规则」 |
 
 ### 6.1 指向规则
 
 - **根目录索引**（`CHANGELOG.md`、`README.md`）→ 必须指向**真实源**，确保 GitHub 浏览体验直达数据。
-- **Sphinx 站内索引**（`docs/changelog.md`）→ 指向同站镜像页（相对路径），借助 Sphinx 渲染管线。
+- **Sphinx 站内索引**（`docs/tech/changelog.md`）→ 指向同站镜像页（相对路径），借助 Sphinx 渲染管线。
 - **同一字段不要同时挂两条链接**，避免维护双份引用。
 
 ### 6.2 新增镜像页流程
@@ -76,13 +76,94 @@ flowchart LR
 为新模块新增变更日志时：
 
 1. 在真实源位置创建 `CHANGELOG.md`（或月度文件）。
-2. 在 `docs/changelogs/<topic>.md` 创建镜像页，仅含一级标题 + `{include}` 块。
-3. 在 `docs/changelog.md` 索引表追加镜像页相对路径。
+2. 在 `docs/tech/changelogs/<topic>.md` 创建镜像页，仅含一级标题 + `{include}` 块。
+3. 在 `docs/tech/changelog.md` 索引表追加镜像页相对路径。
 4. 在根 `CHANGELOG.md` 索引表追加**真实源**绝对/相对路径。
-5. 在 `docs/changelog.md` 顶部 `toctree` 中登记镜像页。
+5. 在 `docs/tech/changelog.md` 顶部 `toctree` 中登记镜像页。
 
 ### 6.3 禁止事项
 
-- ❌ 不得在根 `CHANGELOG.md`、`README.md` 中将链接指向 `docs/changelogs/` 镜像页。
-- ❌ 不得在 `docs/changelogs/<topic>.md` 镜像页中直接添加变更内容（应改写真实源）。
+- ❌ 不得在根 `CHANGELOG.md`、`README.md` 中将链接指向 `docs/tech/changelogs/` 镜像页。
+- ❌ 不得在 `docs/tech/changelogs/<topic>.md` 镜像页中直接添加变更内容（应改写真实源）。
 - ❌ 不得删除真实源而仅保留镜像页，会导致 Sphinx 构建失败。
+
+## 7. `docs/` 双轨分类
+
+`docs/` 下采用「项目技术文档」与「通用知识」双轨分类，两类内容物理隔离、互不混入：
+
+| 子目录 | 承载内容 | 边界 |
+|---|---|---|
+| `docs/tech/` | 项目源码相关：API 参考、集成指南、部署、构建约定、变更日志等 | 与本项目源码/工程化直接相关 |
+| `docs/general/` | 通用知识：传统文化（如《道德经》映射）、数学、跨学科常识等 | 与项目无直接耦合，但对协作或开发哲学有滋养 |
+
+### 7.1 入口结构
+
+- `docs/index.md` 是父入口，仅引用两个子入口（嵌套 toctree）。
+- `docs/tech/index.md` 与 `docs/general/index.md` 是子入口，各自展开自己的 toctree。
+- 子入口 **不得带 `orphan: true`**，必须进入主导航。
+
+### 7.2 新增文档流程
+
+1. 判定归属类目（技术 / 通用）。
+2. 放入对应子目录（必要时按领域再建子目录，如 `philosophy/`、`math/`）。
+3. 在所在目录的 `index.md` 的 `toctree` 中追加文档名（**不带子目录前缀**，因为 toctree 项相对当前 `index.md` 解析）。
+4. 不得直接在 `docs/index.md` 父级 toctree 中添加业务文档。
+
+### 7.3 边界隔离原则
+
+- 技术资产（源码、配置、API、构建与发布）严禁进入 `docs/general/`。
+- 通用知识（哲学、数学、传统文化）严禁进入 `docs/tech/`。
+- 跨轨互链使用相对路径（如 `../tech/index.md` ↔ `../general/index.md`）。
+
+## 8. MyST 跨目录引用三段式校验
+
+在 `docs/` 内进行文档迁移、重命名或跨目录互链时，必须分别校验三类引用——它们的解析规则不同：
+
+| 引用类型 | 路径解析 | 跨 docs 树外文件 | 典型陷阱 |
+|---|---|---|---|
+| `{doc}` 指令 | docname（无后缀），相对当前文档目录或源根 | ❌ 不允许 | 跨目录后绝对/相对 docname 易混淆 |
+| `{include}` 指令 | 文件系统相对路径 | ✅ 允许 | 上移/下移目录后 `../` 层级需调整 |
+| Markdown hyperlink | 必须指向 docs 源树内的 `.md` 文档 | ❌ 触发 `myst.xref_missing` | `.agents/`、`src/` 等树外文件不能用 hyperlink |
+
+### 8.1 跨 docs 树外文件的引用约定
+
+- ❌ 禁止：`[规则](.agents/rules/context-economy.md)` —— 触发 `myst.xref_missing`。
+- ✅ 推荐：内联代码 `` `.agents/rules/context-economy.md` ``。
+- ✅ 推荐：纯路径文本（不加链接）。
+
+### 8.2 迁移后需同步调整的引用点
+
+| 场景 | 校验动作 |
+|---|---|
+| 文档上移一层目录 | `{include}` 路径 `../` 层级 -1 |
+| 文档下移一层目录 | `{include}` 路径 `../` 层级 +1 |
+| 跨目录互链 `.md` | 确认目标仍在 docs 树内；否则改为内联代码 |
+| `{doc}` 引用 | 首选相对当前目录的 docname（如 `<api/taolib/index>`而非 `<tech/api/...>`）|
+
+### 8.3 已知工具链兼容性
+
+- `{contents}` 指令在 mystx 5.1 + Sphinx 9.1 下触发 `KeyError: 'anchorname'`，应直接移除，由章节标题自然导航替代。
+- mermaid 代码栅栏应使用 `` ```{mermaid} `` 指令式写法，避免 Pygments lexer 缺失警告。
+- 跨目录迁移后必须运行 `mise run docs-strict` 即时验证，不让警告积累。
+
+## 9. AutoAPI 输出路径与 嵌套 toctree 口径
+
+### 9.1 AutoAPI 输出路径
+
+- `docs/conf.py` 中 `autoapi_root` 决定 sphinx-autoapi 的输出位置，应与技术文档子目录路径对齐：`autoapi_root = "tech/api"`。
+- API 生成产物位于 `docs/tech/api/`，必须在 `.gitignore` 中排除，不得提交进仓。
+- 调整 `autoapi_root` 后无需手工迁移生成产物，下次构建会自动重生成。
+
+### 9.2 嵌套 toctree docname 口径
+
+| 位置 | toctree 项写法 | 例 |
+|---|---|---|
+| `docs/index.md`（父入口） | 相对源根 | `tech/index`、`general/index` |
+| `docs/tech/index.md`（子入口） | 相对当前目录（**不加 `tech/` 前缀**） | `intro`、`api/taolib/index` |
+| `docs/general/index.md`（子入口） | 相对当前目录（**不加 `general/` 前缀**） | `philosophy/tao-minimalist-principles` |
+
+### 9.3 README → index 升级时机
+
+- 占位 README（`orphan: true`）适用于骨架预设阶段。
+- 一旦目录有正式内容并需要进入主导航，应升级为 `index.md`：重命名同时移除 `orphan: true` 并加入子 `toctree`。
+- 不允许 README.md 与 index.md 同时存在于同一子目录（避免入口歧义）。

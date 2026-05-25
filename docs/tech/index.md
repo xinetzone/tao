@@ -16,6 +16,7 @@ deploy
 build-conventions
 contributing
 changelog
+jupyterlite
 ```
 
 ## 目录清单
@@ -32,6 +33,7 @@ changelog
 | `build-conventions.md` | PDM / uv / mise 构建约定 |
 | `contributing.md` | PR 流程、代码审查与测试要求 |
 | `changelog.md` + `changelogs/` | 项目级变更索引与月度/技能变更镜像页 |
+| `jupyterlite.md` | JupyterLite 集成说明 |
 
 ## 边界
 

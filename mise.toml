@@ -77,6 +77,10 @@ depends = ["check-env"]
 description = "校验 README/CHANGELOG/AGENTS 中的相对路径引用是否有效"
 run = "python .agents/scripts/check_doc_links.py"
 
+[tasks.docs-structure-check]
+description = "校验 docs/ 目录结构遵循 tech/general 双轨分类规范"
+run = "python .agents/scripts/check_docs_structure.py"
+
 [tasks.docs-build]
 description = "CI 文档构建入口"
 dir = "docs"

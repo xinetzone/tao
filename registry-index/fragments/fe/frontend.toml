@@ -1,0 +1,22 @@
+[metadata]
+name = "frontend"
+description = "前端开发规范"
+authors = ["agentforge-core <core@agentforge.dev>"]
+license = "MIT"
+keywords = ["frontend", "ui", "web", "rules"]
+category = "fe"
+type = "fragment"
+
+[source]
+repository = "https://github.com/agentforge/agentforge"
+
+[[versions]]
+version = "0.1.0"
+git_url = "https://github.com/agentforge/agentforge"
+git_ref = "v3.1.0"
+manifest_path = "fragment.toml"
+yanked = false
+published_at = "2026-05-26T00:00:00Z"
+
+[latest]
+stable = "0.1.0"

@@ -1,0 +1,22 @@
+[metadata]
+name = "python-engineering"
+description = "Python 工程规范与兼容性检查"
+authors = ["agentforge-core <core@agentforge.dev>"]
+license = "MIT"
+keywords = ["python", "lint", "compatibility", "engineering"]
+category = "py"
+type = "fragment"
+
+[source]
+repository = "https://github.com/agentforge/agentforge"
+
+[[versions]]
+version = "1.2.0"
+git_url = "https://github.com/agentforge/agentforge"
+git_ref = "v3.1.0"
+manifest_path = "fragment.toml"
+yanked = false
+published_at = "2026-05-26T00:00:00Z"
+
+[latest]
+stable = "1.2.0"

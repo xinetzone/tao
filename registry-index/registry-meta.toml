@@ -1,0 +1,19 @@
+# registry-meta.toml — Registry 仓库自身元数据
+# Draft v0.1
+
+[registry]
+name = "agentforge-official"
+description = "AgentForge 官方世界组件 Registry"
+version = "2026.1"
+maintainers = ["agentforge-core"]
+url = "https://github.com/agentforge/registry-index"
+
+[registry.policy]
+accept_submissions = true
+require_signed_commits = false
+review_required = false
+
+[registry.capabilities]
+http_api = false
+search_enabled = false
+checksum_algorithm = "sha256"

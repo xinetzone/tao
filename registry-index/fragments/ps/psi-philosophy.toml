@@ -1,0 +1,22 @@
+[metadata]
+name = "psi-philosophy"
+description = "Ψhē 哲学-工程映射基础"
+authors = ["agentforge-core <core@agentforge.dev>"]
+license = "MIT"
+keywords = ["philosophy", "psi", "dao", "engineering-mapping"]
+category = "ps"
+type = "fragment"
+
+[source]
+repository = "https://github.com/agentforge/agentforge"
+
+[[versions]]
+version = "1.0.0"
+git_url = "https://github.com/agentforge/agentforge"
+git_ref = "v3.1.0"
+manifest_path = "fragment.toml"
+yanked = false
+published_at = "2026-05-26T00:00:00Z"
+
+[latest]
+stable = "1.0.0"

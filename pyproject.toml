@@ -28,6 +28,7 @@ Repository = "https://github.com/xinetzone/tao"
 
 [project.scripts]
 taolib-github-app = "taolib.cli.github_app:main"
+world = "taolib.cli.world:main"
 
 [dependency-groups]
 dev = [

@@ -158,6 +158,12 @@ def register_install_parser(subparsers: Any) -> None:
         action="store_true",
         help="跳过生命周期钩子",
     )
+    install_parser.add_argument(
+        "--update",
+        action="store_true",
+        default=False,
+        help="强制更新 Registry 缓存（忽略 TTL）",
+    )
 
 
 def handle_install(args: argparse.Namespace) -> int:
@@ -250,7 +256,7 @@ def _handle_registry(parsed: ParsedSource, args: argparse.Namespace) -> int:
 
     entry = None
     for source in registry_sources:
-        index_path = resolve_index_path(source)
+        index_path = resolve_index_path(source, force_update=args.update)
         if index_path is None:
             continue
         entry = query_entry(index_path, parsed.name)

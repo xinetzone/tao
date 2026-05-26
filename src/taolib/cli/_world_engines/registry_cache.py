@@ -13,6 +13,20 @@ from pathlib import Path
 DEFAULT_TTL = 3600
 
 
+def inject_token(url: str) -> str:
+    """将 WORLD_TOKEN 注入 HTTPS Git URL。
+
+    格式：https://github.com/org/repo → https://x-access-token:{token}@github.com/org/repo
+    非 HTTPS URL（SSH、本地路径等）不注入。
+    """
+    token = os.environ.get("WORLD_TOKEN", "").strip()
+    if not token:
+        return url
+    if not url.startswith("https://"):
+        return url
+    return url.replace("https://", f"https://x-access-token:{token}@", 1)
+
+
 @dataclass(frozen=True)
 class CacheConfig:
     """缓存配置。"""
@@ -80,8 +94,10 @@ def _clone_index(url: str, dest: Path) -> bool:
     """首次 clone Index 仓库到 dest。
 
     使用 git clone --depth 1。失败时返回 False，不抛异常。
+    WORLD_TOKEN 环境变量存在时自动注入认证信息。
     """
-    cmd = ["git", "clone", "--depth", "1", url, str(dest)]
+    authed_url = inject_token(url)
+    cmd = ["git", "clone", "--depth", "1", authed_url, str(dest)]
     try:
         result = subprocess.run(
             cmd,
@@ -90,7 +106,13 @@ def _clone_index(url: str, dest: Path) -> bool:
             timeout=120,
             check=False,
         )
-        return result.returncode == 0
+        if result.returncode != 0:
+            stderr = (result.stderr or "").strip()
+            if "Authentication" in stderr or "could not read Username" in stderr:
+                # 认证相关错误，静默降级
+                pass
+            return False
+        return True
     except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
         return False
 
@@ -98,10 +120,28 @@ def _clone_index(url: str, dest: Path) -> bool:
 def _fetch_index(cache_path: Path) -> bool:
     """增量更新已缓存的 Index。
 
-    执行 git fetch --depth 1 origin，然后 git reset --hard origin/HEAD。
+    获取 remote URL 后注入 WORLD_TOKEN，执行 git fetch --depth 1，
+    然后 git reset --hard FETCH_HEAD。
     失败时返回 False（降级使用旧缓存）。
     """
-    fetch_cmd = ["git", "-C", str(cache_path), "fetch", "--depth", "1", "origin"]
+    # 获取当前 remote URL
+    get_url_cmd = ["git", "-C", str(cache_path), "remote", "get-url", "origin"]
+    try:
+        url_result = subprocess.run(
+            get_url_cmd,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        if url_result.returncode != 0:
+            return False
+        original_url = url_result.stdout.strip()
+    except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
+        return False
+
+    authed_url = inject_token(original_url)
+    fetch_cmd = ["git", "-C", str(cache_path), "fetch", "--depth", "1", authed_url]
     try:
         result = subprocess.run(
             fetch_cmd,
@@ -115,7 +155,7 @@ def _fetch_index(cache_path: Path) -> bool:
     except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
         return False
 
-    reset_cmd = ["git", "-C", str(cache_path), "reset", "--hard", "origin/HEAD"]
+    reset_cmd = ["git", "-C", str(cache_path), "reset", "--hard", "FETCH_HEAD"]
     try:
         result = subprocess.run(
             reset_cmd,

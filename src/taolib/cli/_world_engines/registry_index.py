@@ -7,6 +7,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from taolib.cli._world_engines.compat_engine import matches_constraint
+from taolib.cli._world_engines.registry_cache import (
+    ensure_index_cache,
+    get_cache_config,
+)
 from taolib.cli._world_engines.registry_config import RegistrySource
 
 
@@ -51,24 +55,31 @@ def _version_tuple(version: str) -> tuple[int, ...]:
         return (0,)
 
 
-def resolve_index_path(source: RegistrySource) -> Path | None:
+def resolve_index_path(
+    source: RegistrySource,
+    force_update: bool = False,
+) -> Path | None:
     """解析 Registry 源到本地 Index 目录路径。
 
     Args:
         source: Registry 源配置。
+        force_update: 是否强制更新缓存（忽略 TTL）。
 
     Returns:
-        - 若 ``source.url`` 为本地相对/绝对路径且存在：返回绝对路径。
-        - 若 ``source.url`` 为远程 URL：本次实现暂不处理，返回 ``None``。
-        - 路径不存在时返回 ``None``。
+        - 本地路径类型：解析为绝对路径并验证存在。
+        - 远程 URL 类型：通过缓存管理获取本地路径。
+        - 不可用时返回 ``None``。
     """
     url = source.url
     if not url:
         return None
 
     if _is_remote_url(url):
-        # 远程 URL 的本地缓存暂未实现
-        return None
+        config = get_cache_config(
+            ttl=source.cache_ttl,
+            force_update=force_update,
+        )
+        return ensure_index_cache(source.name, url, config)
 
     candidate = Path(url)
     if not candidate.is_absolute():

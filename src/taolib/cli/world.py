@@ -4,6 +4,9 @@
 
 - ``status``：显示当前世界配置状态，解析 ``.agents/world.toml``。
 - ``install``：安装世界 fragment（``--dry-run`` 模式）。
+- ``resolve``：解析世界 fragment 依赖与版本约束。
+- ``remove``：移除已安装的世界 fragment。
+- ``publish``：发布世界 fragment 至 registry。
 
 示例::
 
@@ -19,6 +22,9 @@ import argparse
 import sys
 
 from taolib.cli._world_commands.install import register_install_parser
+from taolib.cli._world_commands.publish import register_publish_parser
+from taolib.cli._world_commands.remove import register_remove_parser
+from taolib.cli._world_commands.resolve import register_resolve_parser
 from taolib.cli._world_commands.status import register_status_parser
 
 
@@ -36,6 +42,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     register_status_parser(subparsers)
     register_install_parser(subparsers)
+    register_resolve_parser(subparsers)
+    register_remove_parser(subparsers)
+    register_publish_parser(subparsers)
 
     return parser
 

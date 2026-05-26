@@ -9,6 +9,8 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
+from taolib.cli._world_engines.registry_cache import inject_token
+
 
 class FetchError(Exception):
     """Fetch 操作失败异常。"""
@@ -60,6 +62,7 @@ def fetch_git(
     tmpdir = Path(tempfile.mkdtemp(prefix="world-fetch-"))
     cleanup = _make_cleanup(tmpdir)
 
+    authed_url = inject_token(git_url)
     cmd = [
         "git",
         "clone",
@@ -67,7 +70,7 @@ def fetch_git(
         "1",
         "--branch",
         git_ref,
-        git_url,
+        authed_url,
         str(tmpdir),
     ]
 
@@ -89,6 +92,10 @@ def fetch_git(
     if result.returncode != 0:
         stderr = (result.stderr or "").strip()
         cleanup()
+        if "Authentication" in stderr or "could not read Username" in stderr:
+            raise FetchError(
+                f"认证失败: {git_url}\n请检查 WORLD_TOKEN 环境变量是否正确设置"
+            )
         raise FetchError(
             f"git clone 失败 (exit={result.returncode}): {git_url}@{git_ref}\n{stderr}"
         )

@@ -81,6 +81,10 @@ run = "python .agents/scripts/check_doc_links.py"
 description = "校验 docs/ 目录结构遵循 tech/general 双轨分类规范"
 run = "python .agents/scripts/check_docs_structure.py"
 
+[tasks.world-hierarchy-check]
+description = "校验多世界层级结构遵循 world-hierarchy 规范"
+run = "python .agents/scripts/check_world_hierarchy.py"
+
 [tasks.docs-build]
 description = "CI 文档构建入口"
 dir = "docs"

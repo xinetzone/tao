@@ -69,6 +69,7 @@ flowchart TD
 | 前端或 UI 开发 | [`.agents/rules/frontend.md`](.agents/rules/frontend.md)，如项目已有前端模块还需优先参考现有代码 |
 | 后端或 API 开发 | [`.agents/rules/backend.md`](.agents/rules/backend.md)，如项目已有后端模块还需优先参考现有代码 |
 | 网页内容抓取或 defuddle | 使用 `defuddle parse <url> --md -o <output>`，输出位置遵循文档治理规则 |
+| 多世界继承、子世界覆盖、AGENTS.md 层级管理 | [`.agents/rules/world-hierarchy.md`](.agents/rules/world-hierarchy.md) |
 
 ```mermaid
 flowchart TD

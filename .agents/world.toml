@@ -27,6 +27,9 @@ workflows = [
 ]
 roles_framework = "roles/README.md"  # 角色系统语义定义（框架，非实例）
 
+# 不可覆盖的宇宙法则：子世界禁止通过同名文件覆盖以下规则
+immutable_rules = ["world-hierarchy", "context-economy"]
+
 [kernel.meta]
 self-referential = true
 portable = true

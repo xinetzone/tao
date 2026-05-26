@@ -276,6 +276,7 @@ $$
 
 ## 延伸阅读
 
+- [Fragment Manifest 规格](../../../tech/fragment-manifest-spec.md) — manifest.toml 完整字段定义与片段声明规范
 - [操作世界](./world-operations.md) — 世界的七个操作原语
 - [Ψ=Ψ(Ψ) 工程元公理](../meta/psi-engineering-principles.md) — 递归自指的第一性原理
 - [宇宙与世界本体论](../ontology/universe-world-ontology.md) — 宇宙唯一、世界可操作

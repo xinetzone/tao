@@ -9,11 +9,14 @@
 intro
 quickstart
 features
+world-registry-protocol
+world-cli-spec
 github-app-token-override
 integration-guide
 api/taolib/index
 deploy
 build-conventions
+fragment-manifest-spec
 contributing
 changelog
 jupyterlite
@@ -30,11 +33,14 @@ jupyterlite
 | `intro.md` | 项目介绍与定位 |
 | `quickstart.md` | 环境初始化与首次接入 |
 | `features.md` | 核心功能与 `.agents/` 详解 |
+| `world-registry-protocol.md` | World Registry 分发协议接口规格 |
+| `world-cli-spec.md` | World CLI 工具完整规格（含兼容性校验引擎设计） |
 | `github-app-token-override.md` | GitHub App Token 覆盖头学习笔记 |
 | `integration-guide.md` | 外部项目集成指南 |
 | `api/taolib/` | sphinx-autoapi 自动生成的 API 参考 |
 | `deploy.md` | 文档托管、CI/CD 与发布流程 |
 | `build-conventions.md` | PDM / uv / mise 构建约定 |
+| `fragment-manifest-spec.md` | Fragment manifest.toml 完整格式规格 |
 | `contributing.md` | PR 流程、代码审查与测试要求 |
 | `changelog.md` + `changelogs/` | 项目级变更索引与月度/技能变更镜像页 |
 | `jupyterlite.md` | JupyterLite 集成说明 |

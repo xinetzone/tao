@@ -122,6 +122,14 @@ $$
 
 ## 延伸阅读
 
+### 工程规格参考
+
+- [Fragment Manifest 规格](../../../tech/fragment-manifest-spec.md) — 片段声明、依赖与兼容性的完整定义
+- [Registry 协议规格](../../../tech/world-registry-protocol.md) — 世界注册表的查询与分发协议
+- [CLI 工具规格](../../../tech/world-cli-spec.md) — agentforge 命令行的完整接口定义
+
+### 哲学延伸
+
 - [世界包](./world-package.md) — 世界的可安装、可版本化设计
 - [操作世界](./world-operations.md) — 世界的七个操作原语
 - [Ψ=Ψ(Ψ) 工程元公理](../meta/psi-engineering-principles.md) — 递归自指的第一性原理

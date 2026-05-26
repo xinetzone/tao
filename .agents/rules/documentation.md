@@ -165,6 +165,25 @@ flowchart LR
 - mermaid 代码栅栏应使用 `` ```{mermaid} `` 指令式写法，避免 Pygments lexer 缺失警告。
 - 跨目录迁移后必须运行 `mise run docs-strict` 即时验证，不让警告积累。
 
+### 8.4 中文标题锚点规则
+
+- **强制**：所有中文标题必须使用显式 MyST 锚点 `(锚点名)=`，不可依赖自动 slug。
+- **原因**：中文标题自动 slug 化行为不可预测，跨文档 `{ref}` 引用会因 slug 不匹配而失败。
+- **格式**：
+
+  ```markdown
+  (my-anchor-name)=
+  ## 我的中文标题
+  ```
+
+- **跨文档引用**：使用 `{ref}` 角色而非 `#slug` 形式：
+
+  ```markdown
+  详见 {ref}`my-anchor-name`
+  ```
+
+- **命名约定**：锚点名使用英文小写 + 连字符（kebab-case），语义应与标题含义对应。
+
 ## 9. AutoAPI 输出路径与 嵌套 toctree 口径
 
 ### 9.1 AutoAPI 输出路径

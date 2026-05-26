@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from .._world_engines.compat_engine import ValidationLevel, validate
+from .._world_engines.fetcher import FetchError, FetchResult, fetch_git
 from .._world_engines.file_manager import (
     PlaceContext,
     PlaceError,
@@ -20,6 +21,13 @@ from .._world_engines.manifest_parser import (
     parse_manifest,
     parse_world_toml,
 )
+from .._world_engines.registry_config import load_registry_config
+from .._world_engines.registry_index import (
+    query_entry,
+    resolve_index_path,
+    select_version,
+)
+from .._world_engines.source_parser import ParsedSource, SourceType, parse_source
 from .._world_engines.world_updater import register_fragment, unregister_fragment
 
 _LEVEL_LABELS = {
@@ -31,10 +39,7 @@ _LEVEL_LABELS = {
 
 
 def _is_local_source(source: str) -> bool:
-    """判断 source 是否为本地路径。
-
-    原型阶段仅支持本地路径：以 ``./``、``/``、``\\`` 开头，
-    或指向一个已存在的目录/文件。
+    """判断 source 是否为本地路径（保留向后兼容的工具函数）。
 
     Args:
         source: 命令行传入的 source 字符串。
@@ -134,7 +139,10 @@ def register_install_parser(subparsers: Any) -> None:
     """
     install_parser = subparsers.add_parser("install", help="安装世界 fragment")
     install_parser.set_defaults(handler=handle_install)
-    install_parser.add_argument("source", help="Fragment 源路径（本地目录）")
+    install_parser.add_argument(
+        "source",
+        help="Fragment 源（本地路径 / Registry 引用 name[@constraint] / Git URL）",
+    )
     install_parser.add_argument(
         "--dry-run",
         action="store_true",
@@ -155,14 +163,15 @@ def register_install_parser(subparsers: Any) -> None:
 def handle_install(args: argparse.Namespace) -> int:
     """执行 ``world install`` 命令逻辑。
 
-    完整流程：
+    支持三种 source 类型：
 
-    1. 验证 source 为本地路径并解析 ``manifest.toml``；
-    2. 查找并解析 ``world.toml``；
-    3. 确定 ``.agents/`` 目录；
-    4. 调用四层兼容性校验；
-    5. 若 ``--dry-run`` 则仅输出报告；否则在校验通过时执行
-       文件放置 → world.toml 注册 → 生命周期钩子。
+    - :attr:`SourceType.LOCAL`：本地路径，直接读取 ``manifest.toml``。
+    - :attr:`SourceType.REGISTRY`：``name[@constraint]`` 形式，
+      通过 ``.agents/registry.toml`` 查表 → 选择版本 → Git fetch。
+    - :attr:`SourceType.GIT_URL`：``https://`` / ``git@`` 形式，
+      直接 Git fetch。
+
+    所有路径最终复用同一套 validate → place → register → hooks 流程。
 
     Args:
         args: 已解析的命令行参数。
@@ -171,16 +180,24 @@ def handle_install(args: argparse.Namespace) -> int:
         进程退出码：``0`` 表示成功，``1`` 表示一般错误，
         ``2`` 表示校验失败或文件放置错误。
     """
-    source = args.source
+    parsed = parse_source(args.source)
 
-    if not _is_local_source(source):
-        print(
-            f"Error: source '{source}' is not a valid local path. "
-            "Prototype only supports local directories.",
-            file=sys.stderr,
-        )
-        return 1
+    match parsed.source_type:
+        case SourceType.LOCAL:
+            return _handle_local(parsed, args)
+        case SourceType.REGISTRY:
+            return _handle_registry(parsed, args)
+        case SourceType.GIT_URL:
+            return _handle_git_url(parsed, args)
 
+    # 理论不可达：parse_source 仅返回上述三种 SourceType
+    print(f"错误: 不支持的 source 类型: {parsed.source_type}", file=sys.stderr)
+    return 1
+
+
+def _handle_local(parsed: ParsedSource, args: argparse.Namespace) -> int:
+    """处理本地路径 source（保持原型阶段行为不变）。"""
+    source = parsed.raw
     source_path = Path(source)
     if not source_path.exists():
         print(f"Error: source path '{source}' does not exist", file=sys.stderr)
@@ -201,6 +218,123 @@ def handle_install(args: argparse.Namespace) -> int:
         )
         return 1
 
+    return _install_from_resolved(
+        manifest_path=manifest_path,
+        source_path=source_path,
+        args=args,
+    )
+
+
+def _handle_registry(parsed: ParsedSource, args: argparse.Namespace) -> int:
+    """处理 Registry 引用 source（``name[@constraint]``）。"""
+    if not parsed.name:
+        print("错误: Registry 引用缺少组件名", file=sys.stderr)
+        return 1
+
+    world_toml_path = find_world_toml()
+    if world_toml_path is None:
+        print(
+            "错误: 未找到 world.toml，请确认位于 AgentForge 世界目录",
+            file=sys.stderr,
+        )
+        return 1
+    agents_dir = world_toml_path.parent
+
+    registry_sources = load_registry_config(agents_dir)
+    if not registry_sources:
+        print(
+            "错误: 未配置 Registry 源（.agents/registry.toml）",
+            file=sys.stderr,
+        )
+        return 1
+
+    entry = None
+    for source in registry_sources:
+        index_path = resolve_index_path(source)
+        if index_path is None:
+            continue
+        entry = query_entry(index_path, parsed.name)
+        if entry is not None:
+            break
+
+    if entry is None:
+        print(
+            f"错误: 在 Registry 中未找到 '{parsed.name}'",
+            file=sys.stderr,
+        )
+        return 1
+
+    version = select_version(entry, parsed.constraint)
+    if version is None:
+        constraint_desc = parsed.constraint or "latest.stable"
+        print(
+            f"错误: '{parsed.name}' 无匹配版本 ({constraint_desc})",
+            file=sys.stderr,
+        )
+        return 1
+
+    try:
+        fetch_result = fetch_git(
+            version.git_url,
+            version.git_ref,
+            version.manifest_path,
+        )
+    except FetchError as exc:
+        print(f"错误: 获取 Fragment 失败: {exc}", file=sys.stderr)
+        return 1
+
+    return _install_with_cleanup(fetch_result, args)
+
+
+def _handle_git_url(parsed: ParsedSource, args: argparse.Namespace) -> int:
+    """处理 Git URL 直接拉取 source。"""
+    if not parsed.url:
+        print("错误: Git URL 为空", file=sys.stderr)
+        return 1
+
+    try:
+        fetch_result = fetch_git(parsed.url, parsed.ref or "HEAD")
+    except FetchError as exc:
+        print(f"错误: 获取 Fragment 失败: {exc}", file=sys.stderr)
+        return 1
+
+    return _install_with_cleanup(fetch_result, args)
+
+
+def _install_with_cleanup(
+    fetch_result: FetchResult,
+    args: argparse.Namespace,
+) -> int:
+    """对已 fetch 到本地的 Fragment 执行通用安装流程，并保证临时目录回收。"""
+    try:
+        return _install_from_resolved(
+            manifest_path=fetch_result.manifest_path,
+            source_path=fetch_result.local_path,
+            args=args,
+        )
+    finally:
+        fetch_result.cleanup()
+
+
+def _install_from_resolved(
+    *,
+    manifest_path: Path,
+    source_path: Path,
+    args: argparse.Namespace,
+) -> int:
+    """已解析到本地后的通用安装流程。
+
+    流程：parse_manifest → parse_world_toml → validate →
+    （--dry-run 输出报告 / 否则执行 place → register → hooks）。
+
+    Args:
+        manifest_path: Fragment 的 ``manifest.toml`` 完整路径。
+        source_path: Fragment 源目录（manifest 所在目录或仓库根）。
+        args: 命令行参数（透传 ``--dry-run`` / ``--force`` / ``--no-hooks``）。
+
+    Returns:
+        进程退出码：``0`` 成功；``1`` 一般错误；``2`` 校验失败或放置错误。
+    """
     try:
         manifest = parse_manifest(manifest_path)
     except Exception as exc:

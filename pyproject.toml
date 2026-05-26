@@ -36,6 +36,7 @@ dev = [
   "uv",
   "typer",
   "pre-commit",
+  "python-dotenv",
 ]
 
 docs = [

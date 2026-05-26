@@ -24,12 +24,15 @@
 
 ```
 agent-services/
-├── webhook-handler/         # Webhook 处理服务
+├── github-app-token-service/   # GitHub App 令牌签发与缓存服务
 │   ├── src/
 │   ├── pyproject.toml
-│   ├── Containerfile
 │   └── README.md
-├── task-scheduler/          # 定时任务调度
-│   └── ...
-└── README.md                # 本文件
+├── chaos/                      # 孵化中：完整 taolib 子项目，含 symphony / testing 等模块
+│                                # 待功能完善与稳定后再考虑迁回顶层 src/
+└── README.md                   # 本文件
 ```
+
+## 孵化区说明
+
+`chaos/` 是当前唯一的孵化中子项目，保留独立的 `pyproject.toml`、`tests/`、`doc/`、CI 配置与 `AGENTS.md`，与 AgentForge 顶层 `src/taolib/` 通过独立虚拟环境隔离（请勿在 AgentForge 主 venv 中安装）。完成功能稳定与边界收敛后，再决定是否将其模块迁回 AgentForge 顶层 `src/taolib/` 进行集成。

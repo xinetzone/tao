@@ -7,7 +7,6 @@ uv = "0.11.16"
 node = { version = "22.22.3", postinstall = "corepack enable" }
 "npm:defuddle" = { version = "0.18.1", depends = ["node"] }
 ruff = "0.15.14"
-"uv:pre-commit" = "4.6.0"
 
 [tasks.check-env]
 description = "校验本地工具链版本"

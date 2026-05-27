@@ -146,6 +146,7 @@ jobs:
       - name: Run pre-commit hooks
         run: |
           mise install
+          uv sync --group dev
           mise run lint
 
       - name: Check internal documentation links

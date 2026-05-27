@@ -15,6 +15,19 @@ REQUIRED_SECTIONS = [
     ("Changelog", r"(?:Changelog|版本|Version|History|变更|更新记录)"),
 ]
 
+# 建议章节（非强制但推荐）
+RECOMMENDED_SECTIONS = [
+    ("快速开始", r"(?:Quick\s*Start|快速开始|入门|使用方法)"),
+    ("执行流程", r"(?:Execution\s*Flow|执行流程|工作流程|调用流程)"),
+    ("最佳实践", r"(?:Best\s*Practices?|最佳实践|注意事项|FAQ)"),
+]
+
+# 技能目录预期文件结构
+EXPECTED_STRUCTURE = {
+    "scripts": ["*.py"],
+    "tests": ["*.py"],
+}
+
 
 def load_config(project_root: Path) -> list[tuple[str, str]]:
     """从 .validate-config.toml 加载必填章节配置，不存在则使用默认值。"""
@@ -73,6 +86,75 @@ def parse_skill_md_headers(skill_md_path: Path) -> set[str]:
     return headers
 
 
+def check_markdown_quality(content: str) -> list[dict]:
+    """检查 Markdown 质量问题"""
+    issues = []
+    
+    # 检查中文标题是否有显式锚点
+    lines = content.splitlines()
+    for i, line in enumerate(lines):
+        if line.startswith("#") and any(chinese_char in line for chinese_char in "一-龥"):
+            if not re.match(r"^\(#.*\)=\s*#", line):
+                # 检查前一行是否有锚点定义
+                if i == 0 or not lines[i-1].strip().startswith("("):
+                    issues.append({
+                        "severity": "WARN",
+                        "item": "Markdown 质量",
+                        "detail": f"中文标题建议添加显式锚点: {line.strip()}"
+                    })
+    
+    # 检查链接有效性（简单检查格式）
+    link_pattern = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
+    for match in link_pattern.finditer(content):
+        link_text, link_url = match.groups()
+        if not link_url.startswith(("http://", "https://", "/", "./", "../")):
+            # 相对路径但不在 docs 树内
+            if not link_url.startswith("references/") and not link_url.startswith("evals/"):
+                issues.append({
+                    "severity": "WARN",
+                    "item": "链接格式",
+                    "detail": f"潜在无效链接: [{link_text}]({link_url})"
+                })
+    
+    # 检查 H1 数量（应该只有一个）
+    h1_count = sum(1 for line in lines if line.startswith("# ") and len(line.lstrip("#").strip()) > 0)
+    if h1_count != 1:
+        issues.append({
+            "severity": "WARN",
+            "item": "标题结构",
+            "detail": f"发现 {h1_count} 个 H1 标题，建议只有一个主标题"
+        })
+    
+    return issues
+
+
+def check_skill_directory(skill_dir: Path) -> list[dict]:
+    """检查技能目录结构"""
+    issues = []
+    
+    # 检查 scripts 目录
+    scripts_dir = skill_dir / "scripts"
+    if scripts_dir.exists():
+        py_files = list(scripts_dir.glob("*.py"))
+        if not py_files:
+            issues.append({
+                "severity": "WARN",
+                "item": "脚本文件",
+                "detail": "scripts/ 目录为空，建议添加技能实现脚本"
+            })
+    
+    # 检查是否有测试文件
+    has_tests = any((skill_dir / "tests").glob("*.py")) or any(skill_dir.glob("test_*.py"))
+    if not has_tests:
+        issues.append({
+            "severity": "WARN",
+            "item": "测试覆盖",
+            "detail": "建议添加测试文件以保障技能质量"
+        })
+    
+    return issues
+
+
 def check_skill_md(skill_name: str, skill_dir: Path, required_sections: list[tuple[str, str]] | None = None) -> list[dict]:
     if required_sections is None:
         required_sections = REQUIRED_SECTIONS
@@ -89,8 +171,10 @@ def check_skill_md(skill_name: str, skill_dir: Path, required_sections: list[tup
         )
         return issues
 
+    content = skill_md.read_text(encoding="utf-8")
     headers = parse_skill_md_headers(skill_md)
 
+    # 检查必填章节
     for section_name, pattern in required_sections:
         found = any(re.search(pattern, h) for h in headers)
         if not found:
@@ -102,13 +186,39 @@ def check_skill_md(skill_name: str, skill_dir: Path, required_sections: list[tup
                 }
             )
 
-    if not issues:
+    # 检查建议章节（只警告）
+    recommended_found = 0
+    for section_name, pattern in RECOMMENDED_SECTIONS:
+        if any(re.search(pattern, h) for h in headers):
+            recommended_found += 1
+    
+    if recommended_found < len(RECOMMENDED_SECTIONS):
         issues.append(
+            {
+                "severity": "WARN",
+                "item": "建议章节",
+                "detail": f"建议补充 {len(RECOMMENDED_SECTIONS) - recommended_found} 个建议章节（快速开始、执行流程、最佳实践）",
+            }
+        )
+
+    # 检查 Markdown 质量
+    quality_issues = check_markdown_quality(content)
+    issues.extend(quality_issues)
+
+    # 检查目录结构
+    structure_issues = check_skill_directory(skill_dir)
+    issues.extend(structure_issues)
+
+    # 统计合规情况
+    if not any(i["severity"] == "MISSING" for i in issues):
+        missing_count = sum(1 for i in issues if i["severity"] == "MISSING")
+        issues.insert(
+            0,
             {
                 "severity": "PASS",
                 "item": "SKILL.md 合规性",
-                "detail": f"{skill_name} 的 SKILL.md 包含全部 {len(required_sections)} 个必填章节",
-            }
+                "detail": f"{skill_name} 通过全部 {len(required_sections)} 个必填章节校验",
+            },
         )
     else:
         remaining = len(required_sections) - sum(

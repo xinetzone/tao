@@ -1,6 +1,6 @@
 [build-system]
 build-backend = "pdm.backend"
-requires = ["pdm-backend"]
+requires = ["pdm-backend>=2.3", "setuptools-scm>=9.0"]
 
 [project]
 authors = [{ name = "xinetzone", email = "735613050@qq.com" }]
@@ -11,6 +11,17 @@ maintainers = [{ name = "xinetzone", email = "735613050@qq.com" }]
 name = "taolib"
 readme = "README.md"
 requires-python = ">=3.14"
+
+[tool.pdm.version]
+source = "scm"
+write_to = "src/taolib/_version.py"
+
+[tool.pdm.build]
+includes = ["src/taolib"]
+package-dir = "src"
+
+[tool.setuptools_scm]
+local_scheme = "no-local-version"
 
 [project.optional-dependencies]
 github-app = [
@@ -65,19 +76,18 @@ test = [
     "pytest-xdist",
     "pytest-ruff",
     "fpdf2",
+    "pdfplumber>=0.11",
+    "pypdfium2",
 ]
 
-[tool.pdm.version]
-# 勿删：与 [project] 中的 dynamic = ["version"] 联动。
-# pdm-backend 要求 “dynamic 声明 + 有效的版本源” 二者并存。
-# 缺少本段时会兜底为 0.0.0，导致 wheel 版本号与 git tag 脱节。
-source = "scm"
-write_to = "taolib/_version.py"
-write_template = "__version__ = '{}'\n"
+[tool.setuptools.packages.find]
+where = ["src"]
 
-[tool.pdm.build]
-includes = ["src/taolib"]
-package-dir = "src"
+[tool.setuptools_scm]
+local_scheme = "no-local-version"
+write_to = "src/taolib/_version.py"
+root = "."
+version_file = "src/taolib/_version.py"
 
 [tool.ruff]
 exclude = [".git", ".venv", "doc/_build", ".pytest_cache", "__pycache__"]

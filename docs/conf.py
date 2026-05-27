@@ -194,6 +194,7 @@ myst_enable_extensions = [
     "substitution",
 ]
 myst_footnote_transition = False
+myst_suppress_warnings = ["myst.header"]
 
 templates_path = ["_templates"]
 

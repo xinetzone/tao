@@ -2,26 +2,35 @@
 # 注意: detectron2 需从源码编译，构建时间较长且需要网络访问 GitHub
 # 使用方式: podman build -t eval-mineru -f containers/eval/Containerfile.mineru .
 # 运行方式: podman run --rm -it -m 24g -v ./data:/eval/data eval-mineru
-FROM python:3.12
+FROM python:3.14-slim
 
+# 系统依赖（包含 build-essential 用于编译）
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git curl libgl1 libglib2.0-0 build-essential && \
     rm -rf /var/lib/apt/lists/*
 
+# 安装 uv 包管理器
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
+WORKDIR /eval
+
+# 使用 uv 创建虚拟环境
+RUN uv venv
+
 # CPU 版 PyTorch（避免安装 1.5GB CUDA 版本）
-RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
+RUN uv pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
 
 # MinerU 核心包 + 已知隐藏依赖
-RUN pip install --no-cache-dir \
+RUN uv pip install --no-cache-dir \
     magic-pdf \
     opencv-python openai ultralytics doclayout-yolo rapid-table \
     ftfy pycocotools
 
 # detectron2 需从 GitHub 源码安装（已知瓶颈）
-# RUN pip install 'git+https://github.com/facebookresearch/detectron2.git'
+# 取消注释以启用 detectron2 支持（构建时间约 10-15 分钟）
+# RUN uv pip install 'git+https://github.com/facebookresearch/detectron2.git'
 
-# MinerU 配置
+# MinerU 配置（CPU 模式）
 RUN echo '{"device-mode":"cpu"}' > /root/magic-pdf.json
 
-WORKDIR /eval
-CMD ["bash"]
+CMD ["bash", "-c", "source /eval/.venv/bin/activate && bash"]

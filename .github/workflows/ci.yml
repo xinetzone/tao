@@ -15,6 +15,7 @@ concurrency:
 
 env:
   MISE_EXPERIMENTAL: "1"
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
   init-check:

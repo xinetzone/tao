@@ -110,7 +110,9 @@ def sample_meta_json(output_dir: Path) -> Path:
         ],
     }
     meta_path = output_dir / "pdf_page_meta.json"
-    meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+    meta_path.write_text(
+        json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     return meta_path
 
 

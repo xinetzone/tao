@@ -11,6 +11,7 @@ quickstart
 features
 world-registry-protocol
 world-cli-spec
+world-session-spec
 github-app-token-override
 integration-guide
 api/taolib/index
@@ -35,6 +36,7 @@ jupyterlite
 | `features.md` | 核心功能与 `.agents/` 详解 |
 | `world-registry-protocol.md` | World Registry 分发协议接口规格 |
 | `world-cli-spec.md` | World CLI 工具完整规格（含兼容性校验引擎设计） |
+| `world-session-spec.md` | World Session 多端协同上下文容器协议（Draft v0.1） |
 | `github-app-token-override.md` | GitHub App Token 覆盖头学习笔记 |
 | `integration-guide.md` | 外部项目集成指南 |
 | `api/taolib/` | sphinx-autoapi 自动生成的 API 参考 |

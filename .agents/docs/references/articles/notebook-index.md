@@ -5,5 +5,3 @@
 ```{toctree}
 Clippings/index
 ```
-
-

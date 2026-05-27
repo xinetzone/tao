@@ -304,14 +304,14 @@ flowchart TD
     PDF["PDF 转 Markdown"] --> marker["marker-pdf\n8.5/10\n页码追溯 ✅\n古籍首选"]
     PDF --> docling["Docling\n8.0/10\n段落分段 ⭐\nIBM MIT 许可"]
     PDF --> mineru["MinerU\n5.0/10\n高精度但依赖致命"]
-    
+
     marker --> scripts["6 个自动化脚本"]
     marker --> podman["Podman 统一环境"]
-    
+
     docling --> cpu_torch["CPU torch 192MB"]
     docling --> libgl1["libgl1 (Trixie)"]
     docling --> torchvision["torchvision CPU 匹配"]
-    
+
     mineru --> detectron2["detectron2 ❌\n不在 PyPI"]
     mineru --> modelscope["ModelScope 14GB ✅"]
     mineru --> hidden_deps["9 隐藏依赖"]

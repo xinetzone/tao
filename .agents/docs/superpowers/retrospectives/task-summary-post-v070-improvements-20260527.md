@@ -1,8 +1,8 @@
 # 任务执行总结：v0.7.0 后续改进建议落地
 
-> **任务名称**：P2-P4 改进建议执行（Containerfile 模板库 + 校验工具增强 + 英文 PDF 支持）  
-> **执行时间**：2026-05-27  
-> **任务类型**：工程改进 → 工具链建设 → 能力扩展  
+> **任务名称**：P2-P4 改进建议执行（Containerfile 模板库 + 校验工具增强 + 英文 PDF 支持）
+> **执行时间**：2026-05-27
+> **任务类型**：工程改进 → 工具链建设 → 能力扩展
 > **提交记录**：4 commits（cdceada → 2647aa6）
 
 ---
@@ -88,5 +88,5 @@ cdceada feat(containers): add evaluation Containerfile template library
 
 ---
 
-*报告生成时间：2026-05-27*  
+*报告生成时间：2026-05-27*
 *归档路径：`.agents/docs/superpowers/retrospectives/task-summary-post-v070-improvements-20260527.md`*

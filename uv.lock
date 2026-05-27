@@ -1887,7 +1887,7 @@ dev = [
     { name = "invoke" },
     { name = "pre-commit" },
     { name = "python-dotenv" },
-    { name = "ruff" },
+    { name = "ruff", specifier = ">=0.15.14,<0.16" },
     { name = "typer" },
     { name = "uv" },
 ]

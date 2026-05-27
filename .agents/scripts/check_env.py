@@ -90,7 +90,7 @@ def build_tool_specs(project_root: Path) -> tuple[ToolSpec, ...]:
         ),
         ToolSpec(
             name="ruff",
-            command=["uv", "run", "ruff", "--version"],
+            command=["ruff", "--version"],
             expected="0.15.14",
             fix="mise run sync",
         ),

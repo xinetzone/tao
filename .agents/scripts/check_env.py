@@ -96,7 +96,7 @@ def build_tool_specs(project_root: Path) -> tuple[ToolSpec, ...]:
         ),
         ToolSpec(
             name="pre-commit",
-            command=["uv", "run", "pre-commit", "--version"],
+            command=["pre-commit", "--version"],
             expected="4.6.0",
             fix="mise run sync",
         ),

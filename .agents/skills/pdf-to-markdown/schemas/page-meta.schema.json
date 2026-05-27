@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PDF Page Meta",
+  "description": "PDF 提取脚本输出的章节结构元数据格式",
+  "type": "object",
+  "required": ["total_pages", "scan_pages", "text_pages", "headings"],
+  "properties": {
+    "total_pages": { "type": "integer", "minimum": 1 },
+    "scan_pages": { "type": "array", "items": { "type": "integer", "minimum": 1 } },
+    "text_pages": { "type": "array", "items": { "type": "integer", "minimum": 1 } },
+    "headings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["page", "end_page", "level", "title", "raw"],
+        "properties": {
+          "page": { "type": "integer", "minimum": 1 },
+          "end_page": { "type": "integer", "minimum": 1 },
+          "level": { "type": "string", "enum": ["pian", "chapter", "appendix", "front"] },
+          "title": { "type": "string" },
+          "raw": { "type": "string" },
+          "chapter_index": { "type": ["integer", "null"] },
+          "modern_chapter": { "type": ["integer", "null"] }
+        }
+      }
+    }
+  }
+}

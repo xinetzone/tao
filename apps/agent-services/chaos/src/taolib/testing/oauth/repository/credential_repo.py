@@ -57,5 +57,3 @@ class OAuthAppCredentialRepository(AsyncRepository[OAuthAppCredentialDocument]):
         """创建 MongoDB 索引。"""
         await self._collection.create_index("provider", unique=True)
         await self._collection.create_index("enabled")
-
-

@@ -77,5 +77,3 @@ class AuthConfig:
             token_issuer=issuer,
             blacklist_key_prefix=blacklist_prefix,
         )
-
-

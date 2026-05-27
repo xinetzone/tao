@@ -90,7 +90,10 @@ class AgentRunner:
         workspace_path: str,
         *,
         build_prompt: Callable[[IssueInfo, int, int], str],
-        check_issue_status: Callable[[IssueInfo], asyncio.Coroutine[Any, Any, str | None]] | None = None,
+        check_issue_status: Callable[
+            [IssueInfo], asyncio.Coroutine[Any, Any, str | None]
+        ]
+        | None = None,
         on_event: Callable[[AppServerEvent], None] | None = None,
     ) -> TurnResult:
         """执行一次完整的运行尝试。

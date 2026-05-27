@@ -65,5 +65,3 @@ __all__ = [
     "ValidatorRegistry",
     "__version__",
 ]
-
-

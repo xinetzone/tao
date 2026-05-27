@@ -69,5 +69,3 @@ class SyncJobRepository(AsyncRepository[SyncJobDocument]):
         """创建索引。"""
         await self._collection.create_index("name", unique=True)
         await self._collection.create_index([("enabled", 1), ("schedule_cron", 1)])
-
-

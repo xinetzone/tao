@@ -57,5 +57,3 @@ class InMemoryEmailQueue:
             "low": 0,
             "total": total,
         }
-
-

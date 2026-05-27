@@ -69,5 +69,3 @@ async def readiness_check():
         },
         status_code=status_code,
     )
-
-

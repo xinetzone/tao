@@ -10,5 +10,3 @@ __all__ = [
     "EventRepository",
     "SessionRepository",
 ]
-
-

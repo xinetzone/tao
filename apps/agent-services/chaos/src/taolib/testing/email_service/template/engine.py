@@ -152,5 +152,3 @@ class TemplateEngine:
         if text_body:
             text_body += _UNSUBSCRIBE_TEXT.format(url=url)
         return html_body, text_body
-
-

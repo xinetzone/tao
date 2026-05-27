@@ -74,5 +74,3 @@ class ConfigVersionDocument(BaseModel):
             is_rollback_target=self.is_rollback_target,
             created_at=self.created_at,
         )
-
-

@@ -58,5 +58,3 @@ class DuplicateObjectError(StorageError):
 
 class SignedUrlError(StorageError):
     """签名 URL 验证失败。"""
-
-

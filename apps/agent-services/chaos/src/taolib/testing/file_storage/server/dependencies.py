@@ -221,5 +221,3 @@ def get_stats_service(
     upload_repo: UploadSessionRepository = get_upload_repo,
 ) -> StatsService:
     return StatsService(bucket_repo, file_repo, upload_repo)
-
-

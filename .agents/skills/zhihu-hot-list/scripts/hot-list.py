@@ -5,6 +5,7 @@ from __future__ import annotations
 
 try:
     from dotenv import load_dotenv
+
     load_dotenv()
 except ImportError:
     pass
@@ -13,7 +14,7 @@ import json
 import os
 import sys
 import time
-from typing import Any, Dict, NoReturn
+from typing import Any, NoReturn
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -25,7 +26,7 @@ REQUEST_TIMEOUT_SECONDS = 5
 def print_usage() -> None:
     print(
         "Usage:\n"
-        '  python3 hot-list.py \'{"limit":10}\'\n\n'
+        "  python3 hot-list.py '{\"limit\":10}'\n\n"
         "Environment:\n"
         "  ZHIHU_ACCESS_SECRET   Bearer auth secret\n"
         "  ZHIHU_OPENAPI_BASE_URL Optional, default https://developer.zhihu.com\n"
@@ -34,14 +35,14 @@ def print_usage() -> None:
 
 
 def die(message: str, *, body: Any | None = None) -> NoReturn:
-    payload: Dict[str, Any] = {"error": message, "exit_code": 1}
+    payload: dict[str, Any] = {"error": message, "exit_code": 1}
     if body is not None:
         payload["body"] = body
     print(json.dumps(payload, ensure_ascii=False))
     raise SystemExit(1)
 
 
-def parse_payload(raw: str) -> Dict[str, Any]:
+def parse_payload(raw: str) -> dict[str, Any]:
     if not raw.strip():
         return {}
     try:
@@ -53,7 +54,7 @@ def parse_payload(raw: str) -> Dict[str, Any]:
     return payload
 
 
-def parse_limit(payload: Dict[str, Any]) -> int:
+def parse_limit(payload: dict[str, Any]) -> int:
     raw = payload.get("limit", payload.get("Limit", 30))
     try:
         limit = int(raw)
@@ -70,7 +71,7 @@ def get_endpoint() -> str:
     return f"{base_url.rstrip('/')}/api/v1/content/hot_list"
 
 
-def request_hot_list(limit: int) -> Dict[str, Any]:
+def request_hot_list(limit: int) -> dict[str, Any]:
     secret = os.getenv("ZHIHU_ACCESS_SECRET", "").strip()
     if not secret:
         die("Set ZHIHU_ACCESS_SECRET first (Bearer auth only)")

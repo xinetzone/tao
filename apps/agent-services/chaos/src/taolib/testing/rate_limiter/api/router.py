@@ -1,4 +1,5 @@
 """Rate limit statistics API routes."""
+
 from fastapi import APIRouter, Depends, Query
 
 from taolib.testing.rate_limiter.dependencies import get_stats_service
@@ -58,5 +59,3 @@ async def get_realtime_stats(
     """
     realtime = await stats_service.get_realtime(window_seconds)
     return realtime
-
-

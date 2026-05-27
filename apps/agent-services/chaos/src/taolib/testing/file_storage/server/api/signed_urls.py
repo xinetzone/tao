@@ -45,5 +45,3 @@ async def validate_token(
     """验证签名 Token。"""
     valid = access_service.validate_token(data.file_id, data.expires, data.signature)
     return {"valid": valid}
-
-

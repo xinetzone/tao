@@ -76,5 +76,3 @@ class RedisEmailQueue:
             "normal": await self._redis.llen(_QUEUE_KEYS[EmailPriority.NORMAL]),
             "low": await self._redis.llen(_QUEUE_KEYS[EmailPriority.LOW]),
         }
-
-

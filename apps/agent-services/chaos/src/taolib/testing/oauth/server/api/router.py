@@ -20,5 +20,3 @@ api_router.include_router(accounts_router)
 api_router.include_router(sessions_router)
 api_router.include_router(onboarding_router)
 api_router.include_router(admin_router)
-
-

@@ -40,5 +40,3 @@ class OAuthActivityStatus(StrEnum):
 
     SUCCESS = "success"
     FAILED = "failed"
-
-

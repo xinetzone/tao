@@ -72,7 +72,9 @@ class LoadBalancer:
             available.append((instance_id, provider))
         return available
 
-    def _select_round_robin(self, available: list[tuple[str, BaseLLMProvider]]) -> tuple[str, BaseLLMProvider]:
+    def _select_round_robin(
+        self, available: list[tuple[str, BaseLLMProvider]]
+    ) -> tuple[str, BaseLLMProvider]:
         """轮询策略选择。
 
         Args:
@@ -88,7 +90,9 @@ class LoadBalancer:
         self._round_robin_index += 1
         return selected
 
-    def _select_least_connections(self, available: list[tuple[str, BaseLLMProvider]]) -> tuple[str, BaseLLMProvider]:
+    def _select_least_connections(
+        self, available: list[tuple[str, BaseLLMProvider]]
+    ) -> tuple[str, BaseLLMProvider]:
         """最少连接策略选择。
 
         Args:
@@ -107,7 +111,9 @@ class LoadBalancer:
 
         return min(available, key=get_concurrent)
 
-    def _select_random(self, available: list[tuple[str, BaseLLMProvider]]) -> tuple[str, BaseLLMProvider]:
+    def _select_random(
+        self, available: list[tuple[str, BaseLLMProvider]]
+    ) -> tuple[str, BaseLLMProvider]:
         """随机策略选择。
 
         Args:
@@ -120,7 +126,9 @@ class LoadBalancer:
             raise ModelUnavailableError("No available providers")
         return random.choice(available)
 
-    def _select_weighted(self, available: list[tuple[str, BaseLLMProvider]]) -> tuple[str, BaseLLMProvider]:
+    def _select_weighted(
+        self, available: list[tuple[str, BaseLLMProvider]]
+    ) -> tuple[str, BaseLLMProvider]:
         """加权随机策略选择。
 
         Args:

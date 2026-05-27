@@ -146,13 +146,13 @@ def check_file(source: Path, project_root: Path) -> list[LinkRecord]:
             url = match.group("url").strip()
             if not url or _is_external(url):
                 continue
-            
+
             if _is_placeholder(url):
                 continue
-            
+
             if _is_code_literal(url):
                 continue
-            
+
             if _is_forbidden_example(line):
                 continue
 
@@ -179,13 +179,13 @@ def check_file(source: Path, project_root: Path) -> list[LinkRecord]:
                 continue
 
             ok = resolved.exists()
-            
+
             if not ok and not path_part.endswith((".md", ".rst", ".txt")):
                 resolved_with_ext = resolved.with_suffix(".md")
                 if resolved_with_ext.exists():
                     ok = True
                     resolved = resolved_with_ext
-            
+
             records.append(
                 LinkRecord(
                     source=source,
@@ -201,10 +201,9 @@ def check_file(source: Path, project_root: Path) -> list[LinkRecord]:
 
 
 def _format_record(record: LinkRecord, project_root: Path) -> str:
-    rel_source = record.source.relative_to(project_root)
+    record.source.relative_to(project_root)
     return (
-        f"  L{record.line_no:>4}  [{record.text}]({record.url})"
-        f"  ->  {record.reason}"
+        f"  L{record.line_no:>4}  [{record.text}]({record.url})  ->  {record.reason}"
         if not record.ok
         else f"  L{record.line_no:>4}  [{record.text}]({record.url})  ✅"
     )

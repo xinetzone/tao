@@ -38,5 +38,3 @@ def oauth_user_sessions_key(user_id: str) -> str:
         Redis key
     """
     return f"oauth:user_sessions:{user_id}"
-
-

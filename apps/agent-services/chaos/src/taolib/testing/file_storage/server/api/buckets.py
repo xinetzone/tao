@@ -84,5 +84,3 @@ async def get_bucket_stats(
     if stats is None:
         raise HTTPException(status_code=404, detail="存储桶不存在")
     return stats.model_dump()
-
-

@@ -50,5 +50,3 @@ async def _send_test(args) -> None:
 
 if __name__ == "__main__":
     main()
-
-

@@ -43,5 +43,3 @@ class RegexValidator(ConfigValidator):
         if self._pattern.match(value):
             return ValidationResult(valid=True)
         return ValidationResult(valid=False, errors=[self._error_message])
-
-

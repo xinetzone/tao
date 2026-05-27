@@ -120,5 +120,3 @@ class SyncJobDocument(SyncJobBase):
             last_run_at=self.last_run_at,
             last_run_status=self.last_run_status,
         )
-
-

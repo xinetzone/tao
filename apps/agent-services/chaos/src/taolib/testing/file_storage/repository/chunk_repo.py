@@ -52,5 +52,3 @@ class ChunkRepository(AsyncRepository[ChunkRecord]):
             [("session_id", 1), ("chunk_index", 1)], unique=True
         )
         await self._collection.create_index("session_id")
-
-

@@ -464,5 +464,3 @@ class EventRepository(AsyncRepository[EventDocument]):
             "timestamp",
             expireAfterSeconds=90 * 24 * 3600,
         )
-
-

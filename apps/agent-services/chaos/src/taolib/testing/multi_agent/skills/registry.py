@@ -130,7 +130,9 @@ class SkillRegistry:
         if skill_id in self._skill_paths:
             del self._skill_paths[skill_id]
 
-    def load_skill_from_file(self, file_path: Path, skill_class_name: str | None = None) -> str:
+    def load_skill_from_file(
+        self, file_path: Path, skill_class_name: str | None = None
+    ) -> str:
         """从文件加载技能。
 
         Args:
@@ -163,11 +165,7 @@ class SkillRegistry:
         else:
             # 自动查找继承自Skill的类
             for _name, obj in inspect.getmembers(module, inspect.isclass):
-                if (
-                    issubclass(obj, Skill)
-                    and obj is not Skill
-                    and obj is not BaseSkill
-                ):
+                if issubclass(obj, Skill) and obj is not Skill and obj is not BaseSkill:
                     skill_class = obj
                     break
 

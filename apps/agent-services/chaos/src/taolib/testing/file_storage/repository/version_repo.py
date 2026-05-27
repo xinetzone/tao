@@ -63,5 +63,3 @@ class FileVersionRepository(AsyncRepository[FileVersionDocument]):
             [("file_id", 1), ("version_number", 1)], unique=True
         )
         await self._collection.create_index("file_id")
-
-

@@ -89,5 +89,3 @@ class DataValidator:
                 valid.append(doc)
 
         return ValidateResult(valid=valid, failures=failures)
-
-

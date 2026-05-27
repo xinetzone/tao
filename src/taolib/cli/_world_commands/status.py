@@ -65,7 +65,7 @@ def _format_status(data: dict) -> str:  # type: ignore[type-arg]
     if cap_items:
         lines.append("")
         lines.append("CAPABILITIES")
-        for cap_key, cap_val in cap_items.items():
+        for cap_key, _cap_val in cap_items.items():
             lines.append(f"  {cap_key + '/':<14}directory")
 
     return "\n".join(lines)
@@ -88,7 +88,7 @@ def register_status_parser(
     parser.set_defaults(handler=handle_status)
 
 
-def handle_status(args: argparse.Namespace) -> int:  # noqa: ARG001
+def handle_status(args: argparse.Namespace) -> int:
     """执行 ``world status`` 命令逻辑。
 
     Args:

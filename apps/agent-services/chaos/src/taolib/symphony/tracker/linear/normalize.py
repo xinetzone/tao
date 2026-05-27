@@ -58,7 +58,9 @@ def _extract_labels(node: dict) -> list[str]:
     return [
         name.lower()
         for n in nodes
-        if isinstance(n, dict) and isinstance(n.get("name"), str) and (name := n["name"].strip())
+        if isinstance(n, dict)
+        and isinstance(n.get("name"), str)
+        and (name := n["name"].strip())
     ]
 
 

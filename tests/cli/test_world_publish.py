@@ -225,9 +225,7 @@ def test_publish_dry_run(
         lambda source, force_update=False: index_path,
     )
 
-    args = argparse.Namespace(
-        path=str(comp_dir), registry=None, tag=None, dry_run=True
-    )
+    args = argparse.Namespace(path=str(comp_dir), registry=None, tag=None, dry_run=True)
 
     with patch("subprocess.run") as mock_run:
         rc = handle_publish(args)
@@ -264,11 +262,12 @@ def test_publish_success(
     )
 
     # mock subprocess.run 对 git tag/push 返回 0
-    def _fake_subprocess_run(cmd, **kwargs):  # noqa: ANN001, ANN003
+    def _fake_subprocess_run(cmd, **kwargs):
         class FakeResult:
             returncode = 0
             stdout = ""
             stderr = ""
+
         return FakeResult()
 
     with patch("subprocess.run", side_effect=_fake_subprocess_run):
@@ -313,11 +312,12 @@ def test_publish_appends_to_existing_index(
         lambda source, force_update=False: index_path,
     )
 
-    def _fake_subprocess_run(cmd, **kwargs):  # noqa: ANN001, ANN003
+    def _fake_subprocess_run(cmd, **kwargs):
         class FakeResult:
             returncode = 0
             stdout = ""
             stderr = ""
+
         return FakeResult()
 
     with patch("subprocess.run", side_effect=_fake_subprocess_run):

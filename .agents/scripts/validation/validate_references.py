@@ -167,7 +167,9 @@ def print_report(results: dict[str, list[dict]]) -> None:
 
     for source, issues in sorted(results.items()):
         print(f"\n## {source}")
-        sorted_issues = sorted(issues, key=lambda i: severity_order.get(i["severity"], 3))
+        sorted_issues = sorted(
+            issues, key=lambda i: severity_order.get(i["severity"], 3)
+        )
         for issue in sorted_issues:
             tag = issue["severity"]
             print(f"  [{tag}] {issue['item']}: {issue['detail']}")
@@ -181,7 +183,7 @@ def main() -> int:
     print_report(results)
 
     exit_code = 0
-    for source, issues in results.items():
+    for _source, issues in results.items():
         if any(i["severity"] == "MISSING" for i in issues):
             exit_code = 1
             break

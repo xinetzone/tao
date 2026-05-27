@@ -92,10 +92,7 @@ def assert_within_root(path: Path, root: Path) -> None:
                     f"不在 {resolved_root} 内"
                 )
                 raise ValueError(msg) from None
-        msg = (
-            f"路径脱离工作区根目录: {canonical_path} "
-            f"不在 {canonical_root} 内"
-        )
+        msg = f"路径脱离工作区根目录: {canonical_path} 不在 {canonical_root} 内"
         raise ValueError(msg)
 
 
@@ -164,7 +161,9 @@ def _is_protected_path(path: Path) -> bool:
     path_str = str(path.resolve()).replace("\\", "/")
     for protected in _PROTECTED_DIRS:
         protected_clean = protected.rstrip("/")
-        if f"/{protected_clean}" in path_str or path_str.endswith(f"/{protected_clean}"):
+        if f"/{protected_clean}" in path_str or path_str.endswith(
+            f"/{protected_clean}"
+        ):
             return True
     return False
 

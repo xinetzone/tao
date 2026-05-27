@@ -69,5 +69,3 @@ class ValidatorRegistry:
 
 # 全局注册表实例
 registry = ValidatorRegistry()
-
-

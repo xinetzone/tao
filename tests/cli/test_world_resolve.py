@@ -309,11 +309,11 @@ def test_lock_generator_roundtrip(tmp_path: Path) -> None:
 def test_compute_world_toml_hash(tmp_path: Path) -> None:
     """验证 hash 前缀为 'sha256:' 且长度正确 (sha256: + 64 hex)。"""
     f = tmp_path / "world.toml"
-    f.write_text("[world]\nname = \"test\"\n", encoding="utf-8")
+    f.write_text('[world]\nname = "test"\n', encoding="utf-8")
 
     result = compute_world_toml_hash(f)
     assert result.startswith("sha256:")
-    hex_part = result[len("sha256:"):]
+    hex_part = result[len("sha256:") :]
     assert len(hex_part) == 64
     # 确保全是十六进制字符
     int(hex_part, 16)

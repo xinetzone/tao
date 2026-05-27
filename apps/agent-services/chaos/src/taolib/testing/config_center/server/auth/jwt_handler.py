@@ -89,5 +89,3 @@ def verify_access_token(token: str) -> dict[str, Any]:
     if payload.get("type") != "access":
         raise JWTError("Invalid token type")
     return payload
-
-

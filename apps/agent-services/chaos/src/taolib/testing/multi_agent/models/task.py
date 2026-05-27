@@ -15,10 +15,14 @@ from taolib.testing.multi_agent.models.enums import TaskStatus
 class TaskConstraint(BaseModel):
     """任务约束条件。"""
 
-    max_duration_seconds: int | None = Field(None, ge=60, description="最大持续时间(秒)")
+    max_duration_seconds: int | None = Field(
+        None, ge=60, description="最大持续时间(秒)"
+    )
     max_cost: float | None = Field(None, ge=0.0, description="最大成本")
     required_skills: list[str] = Field(default_factory=list, description="必需技能")
-    forbidden_skills: list[str] = Field(default_factory=list, description="禁止使用的技能")
+    forbidden_skills: list[str] = Field(
+        default_factory=list, description="禁止使用的技能"
+    )
     priority: int = Field(default=5, ge=1, le=10, description="优先级(1-10)")
 
 
@@ -27,9 +31,13 @@ class TaskProgress(BaseModel):
 
     current_step: str = Field("", description="当前步骤")
     step_description: str = Field("", description="步骤描述")
-    progress_percent: float = Field(default=0.0, ge=0.0, le=100.0, description="进度百分比")
+    progress_percent: float = Field(
+        default=0.0, ge=0.0, le=100.0, description="进度百分比"
+    )
     completed_steps: list[str] = Field(default_factory=list, description="已完成步骤")
-    estimated_remaining_seconds: int | None = Field(None, ge=0, description="预计剩余时间(秒)")
+    estimated_remaining_seconds: int | None = Field(
+        None, ge=0, description="预计剩余时间(秒)"
+    )
 
 
 class TaskResult(BaseModel):
@@ -64,7 +72,9 @@ class TaskBase(BaseModel):
     description: str = Field("", description="任务描述", max_length=5000)
     user_input: str = Field("", description="用户输入", max_length=10000)
     status: TaskStatus = Field(default=TaskStatus.PENDING, description="任务状态")
-    constraints: TaskConstraint = Field(default_factory=TaskConstraint, description="约束条件")
+    constraints: TaskConstraint = Field(
+        default_factory=TaskConstraint, description="约束条件"
+    )
     progress: TaskProgress = Field(default_factory=TaskProgress, description="进度")
     result: TaskResult | None = Field(None, description="结果")
     subtasks: list[SubTask] = Field(default_factory=list, description="子任务列表")

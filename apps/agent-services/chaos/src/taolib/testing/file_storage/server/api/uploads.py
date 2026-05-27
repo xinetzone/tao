@@ -91,5 +91,3 @@ async def abort_upload(
         return {"success": success}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-
-

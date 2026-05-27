@@ -170,5 +170,3 @@ class ProviderFailoverManager:
             )
             for s in self._states
         ]
-
-

@@ -48,8 +48,12 @@ async def run_hook(script: str, cwd: Path, timeout_ms: int) -> int:
         raise HookTimeoutError(f"Hook timed out after {timeout_ms}ms") from None
 
     if proc.returncode != 0:
-        stdout = (await proc.stdout.read()).decode(errors="replace") if proc.stdout else ""
-        stderr = (await proc.stderr.read()).decode(errors="replace") if proc.stderr else ""
+        stdout = (
+            (await proc.stdout.read()).decode(errors="replace") if proc.stdout else ""
+        )
+        stderr = (
+            (await proc.stderr.read()).decode(errors="replace") if proc.stderr else ""
+        )
         msg = (
             f"Hook exited with code {proc.returncode}\n"
             f"  command: {script}\n"

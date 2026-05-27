@@ -59,5 +59,3 @@ class CloudFrontCDNProvider:
     async def invalidate_all(self) -> None:
         """CloudFront 全量缓存刷新。"""
         await self.invalidate_paths(["/*"])
-
-

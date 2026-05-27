@@ -82,5 +82,3 @@ __all__ = [
     "SyncCheckpoint",
     "FailureRecordDocument",
 ]
-
-

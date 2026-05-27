@@ -25,5 +25,3 @@ async def get_upload_stats(
 ):
     """获取上传统计。"""
     return await stats_service.get_upload_stats()
-
-

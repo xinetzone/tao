@@ -131,5 +131,3 @@ def get_default_registry() -> TaskHandlerRegistry:
         默认 TaskHandlerRegistry 实例
     """
     return _default_registry
-
-

@@ -143,5 +143,3 @@ class SubscriptionService:
         """获取退订令牌（自动创建订阅记录）。"""
         doc = await self.get_or_create_subscription(email)
         return doc.unsubscribe_token
-
-

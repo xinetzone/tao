@@ -11,5 +11,3 @@ __all__ = [
     "close_redis_client",
     "get_redis_client",
 ]
-
-

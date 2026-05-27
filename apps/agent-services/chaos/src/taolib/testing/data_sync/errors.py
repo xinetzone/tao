@@ -38,5 +38,3 @@ class SyncAbortError(SyncError):
     """当 failure_action == abort 时达到阈值触发。"""
 
     pass
-
-

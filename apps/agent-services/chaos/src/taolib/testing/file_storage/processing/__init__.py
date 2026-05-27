@@ -24,5 +24,3 @@ __all__ = [
     "ThumbnailGeneratorProtocol",
     "ThumbnailOutput",
 ]
-
-

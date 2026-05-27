@@ -52,5 +52,3 @@ def parse_identifier_type(identifier: str) -> str:
     if ":" in identifier:
         return identifier.split(":", 1)[0]
     return "unknown"
-
-

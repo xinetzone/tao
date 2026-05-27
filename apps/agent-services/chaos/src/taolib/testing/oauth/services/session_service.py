@@ -233,5 +233,3 @@ class OAuthSessionService:
         """
         sessions = await self._session_repo.find_active_sessions(user_id)
         return [s.to_response() for s in sessions]
-
-

@@ -134,5 +134,3 @@ class TemplateService:
             recipient_email=recipient_email,
             unsubscribe_token=unsubscribe_token,
         )
-
-

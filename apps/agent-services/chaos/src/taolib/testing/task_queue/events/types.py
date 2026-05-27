@@ -102,5 +102,3 @@ class TaskRetriedEvent:
             "next_retry_at": self.next_retry_at.isoformat(),
             "timestamp": self.timestamp.isoformat(),
         }
-
-

@@ -1,4 +1,3 @@
-
 from pydantic import BaseModel, Field
 
 
@@ -34,5 +33,3 @@ class QRBatchResponse(BaseModel):
     success: bool
     count: int
     error: str | None = None
-
-

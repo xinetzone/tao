@@ -132,5 +132,3 @@ class DefaultFileValidator:
             detected_content_type=detected_type,
             media_type=media_type,
         )
-
-

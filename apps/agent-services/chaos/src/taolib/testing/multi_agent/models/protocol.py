@@ -23,18 +23,26 @@ class ProtocolHeader(BaseModel):
     """协议头部。"""
 
     version: ProtocolVersion = Field(default=ProtocolVersion.V1, description="协议版本")
-    message_id: str = Field(default_factory=lambda: str(uuid4()), description="消息唯一标识")
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC), description="消息时间戳")
+    message_id: str = Field(
+        default_factory=lambda: str(uuid4()), description="消息唯一标识"
+    )
+    timestamp: datetime = Field(
+        default_factory=lambda: datetime.now(UTC), description="消息时间戳"
+    )
     ttl: int = Field(default=30, description="消息生存时间（秒）", ge=1)
 
 
 class ProtocolMessage(BaseModel):
     """协议消息。"""
 
-    header: ProtocolHeader = Field(default_factory=ProtocolHeader, description="消息头部")
+    header: ProtocolHeader = Field(
+        default_factory=ProtocolHeader, description="消息头部"
+    )
     message_type: MessageType = Field(default=MessageType.TEXT, description="消息类型")
     sender: str = Field(..., description="发送者标识", min_length=1, max_length=255)
-    receiver: str | None = Field(default=None, description="接收者标识（None 表示广播）")
+    receiver: str | None = Field(
+        default=None, description="接收者标识（None 表示广播）"
+    )
     body: dict[str, Any] = Field(default_factory=dict, description="消息体")
     metadata: dict[str, Any] = Field(default_factory=dict, description="元数据")
 

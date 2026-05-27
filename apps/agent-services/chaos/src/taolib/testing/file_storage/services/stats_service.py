@@ -104,5 +104,3 @@ class StatsService:
             in_progress=in_progress,
             total_bytes_uploaded=total_bytes,
         )
-
-

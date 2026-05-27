@@ -188,5 +188,3 @@ class VersionService:
             "change_type_1": version1.change_type,
             "change_type_2": version2.change_type,
         }
-
-

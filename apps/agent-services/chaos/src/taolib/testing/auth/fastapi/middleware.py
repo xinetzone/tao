@@ -168,5 +168,3 @@ class SimpleAuthMiddleware(BaseHTTPMiddleware):
             content={"detail": "未提供认证凭据"},
             headers={"WWW-Authenticate": "Bearer"},
         )
-
-

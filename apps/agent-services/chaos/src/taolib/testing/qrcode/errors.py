@@ -16,5 +16,3 @@ class InvalidSizeError(QRCodeError):
 
 class LogoProcessingError(QRCodeError):
     pass
-
-

@@ -44,5 +44,3 @@ class TaskMaxRetriesExceededError(TaskQueueError):
     """任务重试次数已达上限。"""
 
     pass
-
-

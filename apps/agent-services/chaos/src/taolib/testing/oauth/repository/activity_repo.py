@@ -140,5 +140,3 @@ class OAuthActivityLogRepository(AsyncRepository[OAuthActivityLogDocument]):
         await self._collection.create_index(
             "timestamp", expireAfterSeconds=90 * 24 * 60 * 60
         )
-
-

@@ -3,6 +3,7 @@
 管理所有 WebSocket 连接、频道订阅、消息投递、心跳检测和 ACK 重传。
 支持数万级并发连接和分布式多实例部署。
 """
+
 import asyncio
 import json
 import logging
@@ -463,5 +464,3 @@ class WebSocketConnectionManager:
 
 # 全局默认管理器实例（轻量级回退，生产环境使用 app.state.push_manager）
 manager = WebSocketConnectionManager()
-
-

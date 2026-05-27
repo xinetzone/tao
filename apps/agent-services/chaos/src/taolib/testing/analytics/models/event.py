@@ -100,5 +100,3 @@ class SessionDocument(BaseModel):
     pages_visited: list[str] = Field(default_factory=list, description="浏览过的页面")
 
     model_config = {"populate_by_name": True}
-
-

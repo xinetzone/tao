@@ -2,6 +2,7 @@
 
 提供 WebSocket 实时推送、HTTP 轮询降级、在线状态查询和连接统计端点。
 """
+
 from datetime import UTC, datetime
 
 from fastapi import (
@@ -185,5 +186,3 @@ async def get_all_online_users(
     tracker = _get_presence(request)
     users = await tracker.get_all_online()
     return [u.to_dict() for u in users]
-
-

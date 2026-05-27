@@ -24,5 +24,3 @@ class FailureRecordDocument(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
     model_config = {"populate_by_name": True}
-
-

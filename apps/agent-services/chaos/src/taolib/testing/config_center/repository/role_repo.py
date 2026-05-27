@@ -36,5 +36,3 @@ class RoleRepository(AsyncRepository[RoleDocument]):
     async def create_indexes(self) -> None:
         """创建索引。"""
         await self._collection.create_index([("name", 1)], unique=True)
-
-

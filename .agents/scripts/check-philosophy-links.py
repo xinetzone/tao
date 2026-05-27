@@ -9,9 +9,9 @@ Usage:
     python .agents/scripts/check-philosophy-links.py
 """
 
-from pathlib import Path
 import re
 import sys
+from pathlib import Path
 
 
 def find_project_root() -> Path:

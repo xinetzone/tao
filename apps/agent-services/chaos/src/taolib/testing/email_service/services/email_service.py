@@ -244,5 +244,3 @@ class EmailService:
             sort=[("created_at", -1)],
         )
         return [d.to_response() for d in docs]
-
-

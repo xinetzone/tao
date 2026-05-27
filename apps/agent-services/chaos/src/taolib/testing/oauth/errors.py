@@ -108,5 +108,3 @@ class OAuthOnboardingError(OAuthError):
 
     def __init__(self, message: str = "引导流程数据无效") -> None:
         super().__init__(message)
-
-

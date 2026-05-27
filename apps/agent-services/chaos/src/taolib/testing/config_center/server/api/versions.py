@@ -185,5 +185,3 @@ async def compare_versions(
     }
 
     return diff
-
-

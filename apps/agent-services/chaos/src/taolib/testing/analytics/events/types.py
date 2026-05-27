@@ -40,5 +40,3 @@ class AnalyticsQueryEvent:
             "query_type": self.query_type,
             "timestamp": self.timestamp.isoformat(),
         }
-
-

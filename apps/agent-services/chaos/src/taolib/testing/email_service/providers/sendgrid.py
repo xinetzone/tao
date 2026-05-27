@@ -139,5 +139,3 @@ class SendGridProvider:
             payload["categories"] = email.tags[:10]  # SendGrid 最多 10 个
 
         return payload
-
-

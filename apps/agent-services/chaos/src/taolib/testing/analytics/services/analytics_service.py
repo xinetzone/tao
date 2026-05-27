@@ -266,5 +266,3 @@ class AnalyticsService:
 
         start = end - timedelta(days=7)
         return start, end
-
-

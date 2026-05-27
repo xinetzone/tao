@@ -45,16 +45,29 @@ def check_pip_wheel_availability() -> dict:
     """检查 Pillow 预编译 wheel 是否可用"""
     try:
         # 尝试查询 Pillow 的可用 wheel
-        result = subprocess.run(
+        subprocess.run(
             [sys.executable, "-m", "pip", "index", "versions", "pillow"],
-            capture_output=True, text=True, encoding="utf-8"
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
         )
 
         # 备选方案：直接尝试安装并回滚
         test_result = subprocess.run(
-            [sys.executable, "-m", "pip", "install", "pillow", "--only-binary", ":all:",
-             "--dry-run", "--quiet"],
-            capture_output=True, text=True, encoding="utf-8"
+            [
+                sys.executable,
+                "-m",
+                "pip",
+                "install",
+                "pillow",
+                "--only-binary",
+                ":all:",
+                "--dry-run",
+                "--quiet",
+            ],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
         )
 
         is_ok = test_result.returncode == 0
@@ -63,7 +76,9 @@ def check_pip_wheel_availability() -> dict:
             "status": "通过" if is_ok else "警告",
             "value": "可用" if is_ok else "可能需从源码编译",
             "required": "预编译 wheel 可用",
-            "fix": None if is_ok else "安装 Visual Studio Build Tools 或使用 --only-binary :all: 参数",
+            "fix": None
+            if is_ok
+            else "安装 Visual Studio Build Tools 或使用 --only-binary :all: 参数",
         }
     except Exception as e:
         return {
@@ -83,15 +98,17 @@ def check_marker_installed() -> dict:
         "status": "通过" if installed else "未安装",
         "value": "已安装" if installed else "未找到",
         "required": "已安装",
-        "fix": None if installed else "运行: pip install marker-pdf --only-binary :all:",
+        "fix": None
+        if installed
+        else "运行: pip install marker-pdf --only-binary :all:",
     }
 
 
 def check_disk_space() -> dict:
     """检查磁盘空间（marker-pdf 模型约需 4GB）"""
     try:
-        total, used, free = shutil.disk_usage(".")
-        free_gb = free / (1024 ** 3)
+        _total, _used, free = shutil.disk_usage(".")
+        free_gb = free / (1024**3)
         is_ok = free_gb >= 5  # 至少 5GB
 
         return {
@@ -115,8 +132,9 @@ def check_memory() -> dict:
     """检查系统内存"""
     try:
         import psutil
+
         mem = psutil.virtual_memory()
-        total_gb = mem.total / (1024 ** 3)
+        total_gb = mem.total / (1024**3)
         is_ok = total_gb >= 8  # 建议至少 8GB
 
         return {
@@ -175,7 +193,9 @@ def check_os_compatibility() -> dict:
         "value": f"{system} {platform.release()}",
         "required": "Windows / Linux / macOS",
         "fix": None,
-        "note": "Windows 用户注意使用 pip --only-binary 安装策略" if is_windows else None,
+        "note": "Windows 用户注意使用 pip --only-binary 安装策略"
+        if is_windows
+        else None,
     }
 
 
@@ -205,7 +225,9 @@ def print_report(checks: list) -> int:
 
     for check in checks:
         status = check["status"]
-        icon = "✅" if status == "通过" else "⚠️" if status in ("警告", "未安装") else "❌"
+        icon = (
+            "✅" if status == "通过" else "⚠️" if status in ("警告", "未安装") else "❌"
+        )
 
         if status == "通过":
             passed += 1
@@ -248,6 +270,7 @@ def main():
 
     if args.json:
         import json
+
         print(json.dumps(checks, ensure_ascii=False, indent=2))
         sys.exit(0)
 

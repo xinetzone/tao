@@ -33,5 +33,3 @@ class ConfigChangedHandler:
         """
         # 删除缓存
         await self._cache.delete(event.environment, event.service, event.config_key)
-
-

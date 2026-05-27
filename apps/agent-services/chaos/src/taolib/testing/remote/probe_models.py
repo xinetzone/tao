@@ -71,5 +71,3 @@ class RemoteProbeRunOptions:
         if self.timeout is not None:
             merged["timeout"] = self.timeout
         return merged
-
-

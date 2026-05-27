@@ -357,6 +357,7 @@ class Orchestrator:
         Returns:
             回调函数
         """
+
         def on_update(event: str, identifier: str, payload: dict[str, Any]) -> None:
             entry = self.state.running.get(issue_id)
             if entry is None:
@@ -368,7 +369,9 @@ class Orchestrator:
             # 提取消息摘要
             if "message" in payload:
                 msg = payload["message"]
-                entry.last_codex_message = msg[:200] if isinstance(msg, str) else str(msg)[:200]
+                entry.last_codex_message = (
+                    msg[:200] if isinstance(msg, str) else str(msg)[:200]
+                )
 
             # 提取会话 ID
             if "session_id" in payload:
@@ -383,7 +386,11 @@ class Orchestrator:
                 out = usage.get("output_tokens", 0)
                 tot = usage.get("total_tokens", 0)
 
-                if isinstance(inp, int) and isinstance(out, int) and isinstance(tot, int):
+                if (
+                    isinstance(inp, int)
+                    and isinstance(out, int)
+                    and isinstance(tot, int)
+                ):
                     # 使用绝对总计：计算增量避免重复计数
                     delta_inp = max(inp - entry.last_reported_input_tokens, 0)
                     delta_out = max(out - entry.last_reported_output_tokens, 0)
@@ -609,7 +616,9 @@ class Orchestrator:
 
         identifier = retry_entry.identifier
         attempt = retry_entry.attempt
-        log = logger.bind(issue_id=issue_id, issue_identifier=identifier, attempt=attempt)
+        log = logger.bind(
+            issue_id=issue_id, issue_identifier=identifier, attempt=attempt
+        )
 
         # 获取活跃候选
         try:
@@ -921,7 +930,9 @@ class Orchestrator:
             return False
 
         # 检查是否有基本字段
-        return not (not issue.id or not issue.identifier or not issue.title or not issue.state)
+        return not (
+            not issue.id or not issue.identifier or not issue.title or not issue.state
+        )
 
     def _select_worker_host(self) -> str | None:
         """SSH 场景下最小负载主机选择。
@@ -968,16 +979,17 @@ class Orchestrator:
         if not self._config.tracker.kind:
             reasons.append("tracker.kind is required")
         elif self._config.tracker.kind != "linear":
-            reasons.append(
-                f"unsupported tracker.kind: {self._config.tracker.kind!r}"
-            )
+            reasons.append(f"unsupported tracker.kind: {self._config.tracker.kind!r}")
 
         # tracker.api_key
         if not self._config.tracker.api_key:
             reasons.append("tracker.api_key is required")
 
         # tracker.project_slug（linear 必须）
-        if self._config.tracker.kind == "linear" and not self._config.tracker.project_slug:
+        if (
+            self._config.tracker.kind == "linear"
+            and not self._config.tracker.project_slug
+        ):
             reasons.append("tracker.project_slug is required for linear tracker")
 
         # codex.command

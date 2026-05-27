@@ -20,7 +20,6 @@ import json
 import os
 import re
 import sys
-from pathlib import Path
 
 
 def analyze_markdown(md_path: str) -> dict:
@@ -41,7 +40,7 @@ def analyze_markdown(md_path: str) -> dict:
 
     in_code_block = False
 
-    with open(md_path, "r", encoding="utf-8") as f:
+    with open(md_path, encoding="utf-8") as f:
         for line in f:
             stats["line_count"] += 1
             stats["char_count"] += len(line)
@@ -116,7 +115,12 @@ def check_quality_rules(stats: dict, md_path: str) -> list:
 
     # P2: 一般问题
     if stats["headers"]["h1"] < 3:
-        warnings.append({"level": "P2", "msg": f"一级标题过少 ({stats['headers']['h1']} 个)，章节可能遗漏"})
+        warnings.append(
+            {
+                "level": "P2",
+                "msg": f"一级标题过少 ({stats['headers']['h1']} 个)，章节可能遗漏",
+            }
+        )
 
     # P3: 提示信息
     if stats["images"] > 0:
@@ -132,6 +136,7 @@ def compare_with_pdf(md_stats: dict, pdf_path: str) -> dict:
     """将 Markdown 结果与原始 PDF 进行对比"""
     try:
         import pypdfium2 as pdfium
+
         doc = pdfium.PdfDocument(pdf_path)
         pdf_pages = len(doc)
         doc.close()
@@ -150,10 +155,14 @@ def compare_with_pdf(md_stats: dict, pdf_path: str) -> dict:
 
         if actual_sections < expected_sections_min:
             comparison["status"] = "可能遗漏"
-            comparison["note"] = f"章节数 ({actual_sections}) 明显低于预期 ({expected_sections_min}+)"
+            comparison["note"] = (
+                f"章节数 ({actual_sections}) 明显低于预期 ({expected_sections_min}+)"
+            )
         elif actual_sections > expected_sections_max:
             comparison["status"] = "可能过细"
-            comparison["note"] = f"章节数 ({actual_sections}) 高于预期，可能拆分了过细的标题"
+            comparison["note"] = (
+                f"章节数 ({actual_sections}) 高于预期，可能拆分了过细的标题"
+            )
         else:
             comparison["status"] = "正常"
             comparison["note"] = "章节数在合理范围内"
@@ -233,7 +242,13 @@ def print_report(md_path: str, stats: dict, issues: list, comparison: dict, scor
     if issues:
         print("--- 检查项 ---")
         for issue in issues:
-            icon = "🔴" if issue["level"] == "P0" else "🟡" if issue["level"].startswith("P") else "🟢"
+            icon = (
+                "🔴"
+                if issue["level"] == "P0"
+                else "🟡"
+                if issue["level"].startswith("P")
+                else "🟢"
+            )
             print(f"  {icon} [{issue['level']}] {issue['msg']}")
         print()
 

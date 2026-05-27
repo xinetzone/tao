@@ -2,6 +2,7 @@
 
 基于 Redis LIST 实现的消息缓冲，支持用户离线消息暂存和频道消息轮询。
 """
+
 import json
 import logging
 from collections import deque
@@ -139,5 +140,3 @@ class InMemoryMessageBuffer:
         if not buf:
             return []
         return [m for m in buf if m.timestamp >= since][:limit]
-
-

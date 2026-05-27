@@ -28,5 +28,3 @@ class RateLimitExceededError(Exception):
             f"Retry after {retry_after}s."
         )
         super().__init__(message)
-
-

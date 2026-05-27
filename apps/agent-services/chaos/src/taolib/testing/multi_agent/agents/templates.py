@@ -305,4 +305,3 @@ __all__ = [
     "get_template",
     "get_all_templates",
 ]
-

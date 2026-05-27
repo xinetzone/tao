@@ -18,10 +18,14 @@ class SkillTestResult(BaseModel):
     test_name: str = Field(..., description="测试名称")
     success: bool = Field(False, description="是否通过")
     input_data: dict[str, Any] = Field(default_factory=dict, description="输入数据")
-    expected_output: dict[str, Any] = Field(default_factory=dict, description="预期输出")
+    expected_output: dict[str, Any] = Field(
+        default_factory=dict, description="预期输出"
+    )
     actual_output: dict[str, Any] = Field(default_factory=dict, description="实际输出")
     error_message: str = Field("", description="错误信息")
-    execution_time_seconds: float = Field(default=0.0, ge=0.0, description="执行时间(秒)")
+    execution_time_seconds: float = Field(
+        default=0.0, ge=0.0, description="执行时间(秒)"
+    )
 
 
 class SkillEvaluation(BaseModel):
@@ -31,7 +35,9 @@ class SkillEvaluation(BaseModel):
     accuracy: float = Field(default=0.0, ge=0.0, le=1.0, description="准确性")
     efficiency: float = Field(default=0.0, ge=0.0, le=1.0, description="效率")
     reliability: float = Field(default=0.0, ge=0.0, le=1.0, description="可靠性")
-    test_results: list[SkillTestResult] = Field(default_factory=list, description="测试结果")
+    test_results: list[SkillTestResult] = Field(
+        default_factory=list, description="测试结果"
+    )
     evaluated_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     evaluator: str = Field("system", description="评估者")
     comments: str = Field("", description="评估意见")
@@ -57,10 +63,14 @@ class SkillBase(BaseModel):
     status: SkillStatus = Field(default=SkillStatus.DRAFT, description="技能状态")
     version: str = Field(default="1.0.0", description="版本号")
     content: str = Field("", description="技能内容(prompt或代码)")
-    parameters: list[SkillParameter] = Field(default_factory=list, description="参数列表")
+    parameters: list[SkillParameter] = Field(
+        default_factory=list, description="参数列表"
+    )
     tags: list[str] = Field(default_factory=list, description="标签")
     categories: list[str] = Field(default_factory=list, description="分类")
-    dependencies: list[str] = Field(default_factory=list, description="依赖的技能ID列表")
+    dependencies: list[str] = Field(
+        default_factory=list, description="依赖的技能ID列表"
+    )
     evaluation: SkillEvaluation | None = Field(None, description="评估结果")
     usage_count: int = Field(default=0, ge=0, description="使用次数")
     success_count: int = Field(default=0, ge=0, description="成功次数")

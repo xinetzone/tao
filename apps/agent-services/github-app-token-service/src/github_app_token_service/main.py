@@ -4,6 +4,7 @@
 """
 
 import asyncio
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -51,13 +52,13 @@ def get_token_manager() -> GitHubInstallationTokenManager:
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """应用生命周期上下文管理器。
 
     启动时：初始化配置、启动后台缓存过期清理协程。
     关闭时：取消后台任务、关闭 HTTP 客户端连接池。
     """
-    config = get_config()
+    get_config()
     manager = get_token_manager()
 
     # 启动后台缓存清理任务（每 300 秒清理一次过期条目）

@@ -122,7 +122,7 @@ def run(project_root: Path) -> dict[str, list[dict]]:
         missing_files = check_files_exist(spec_dir)
         for mf in missing_files:
             issues.append(
-                {"severity": "MISSING", "item": f"工作台文件缺失", "detail": mf}
+                {"severity": "MISSING", "item": "工作台文件缺失", "detail": mf}
             )
 
         checklist_statuses = parse_checklist_statuses(spec_dir)
@@ -130,7 +130,9 @@ def run(project_root: Path) -> dict[str, list[dict]]:
         for w in checklist_warnings:
             severity = "MISSING" if w.startswith("MISSING:") else "WARN"
             detail = w.split(": ", 1)[1] if ": " in w else w
-            issues.append({"severity": severity, "item": "checklist 完整性", "detail": detail})
+            issues.append(
+                {"severity": severity, "item": "checklist 完整性", "detail": detail}
+            )
 
         tasks_statuses = parse_tasks_statuses(spec_dir)
         tasks_done = sum(1 for v in tasks_statuses.values() if v == "x")
@@ -170,7 +172,9 @@ def print_report(results: dict[str, list[dict]]) -> None:
 
     for topic, issues in sorted(results.items()):
         print(f"\n## {topic}")
-        sorted_issues = sorted(issues, key=lambda i: severity_order.get(i["severity"], 3))
+        sorted_issues = sorted(
+            issues, key=lambda i: severity_order.get(i["severity"], 3)
+        )
         for issue in sorted_issues:
             tag = issue["severity"]
             print(f"  [{tag}] {issue['item']}: {issue['detail']}")
@@ -189,7 +193,7 @@ def main() -> int:
     print_report(results)
 
     exit_code = 0
-    for topic, issues in results.items():
+    for _topic, issues in results.items():
         if any(i["severity"] == "MISSING" for i in issues):
             exit_code = 1
             break

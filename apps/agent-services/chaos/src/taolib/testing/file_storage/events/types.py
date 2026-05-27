@@ -96,5 +96,3 @@ class FileExpiredEvent:
         data["expired_at"] = self.expired_at.isoformat()
         data["event_type"] = "file.expired"
         return data
-
-

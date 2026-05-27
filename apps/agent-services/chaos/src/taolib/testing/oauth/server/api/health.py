@@ -16,5 +16,3 @@ async def health_check():
         健康状态响应
     """
     return {"status": "ok", "service": "oauth"}
-
-

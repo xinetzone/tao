@@ -63,5 +63,3 @@ def truncate_snapshot(
             break
 
     return result
-
-

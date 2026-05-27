@@ -78,5 +78,3 @@ class FailureRecordRepository(AsyncRepository[FailureRecordDocument]):
             "created_at",
             expireAfterSeconds=30 * 24 * 3600,
         )
-
-

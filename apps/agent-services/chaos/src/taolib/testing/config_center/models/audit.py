@@ -80,5 +80,3 @@ class AuditLogDocument(BaseModel):
             status=self.status,
             timestamp=self.timestamp,
         )
-
-

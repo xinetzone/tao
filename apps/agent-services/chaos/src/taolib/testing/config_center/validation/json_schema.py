@@ -39,5 +39,3 @@ class JsonSchemaValidator(ConfigValidator):
             return ValidationResult(valid=True)
         except jsonschema.ValidationError as e:
             return ValidationResult(valid=False, errors=[e.message])
-
-

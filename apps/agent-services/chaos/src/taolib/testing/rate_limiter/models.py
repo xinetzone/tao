@@ -1,4 +1,5 @@
 """Pydantic models for rate limiter configuration, responses, and documents."""
+
 from __future__ import annotations
 
 from datetime import UTC, datetime
@@ -162,5 +163,3 @@ class ViolationDocument(BaseModel):
 
             data["_id"] = str(ObjectId())
         return data
-
-

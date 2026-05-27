@@ -129,5 +129,3 @@ class ValidatorProtocol(Protocol):
             验证结果（通过的文档 + 失败记录）
         """
         ...
-
-

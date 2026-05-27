@@ -98,5 +98,3 @@ class BucketService:
         """列出所有存储桶。"""
         buckets = await self._bucket_repo.list(skip=skip, limit=limit)
         return [b.to_response() for b in buckets]
-
-

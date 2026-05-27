@@ -200,5 +200,3 @@ async def delete_task(request: Request, task_id: str) -> None:
 
     repo = TaskRepository(request.app.state.db.tasks)
     await repo.delete(task_id)
-
-

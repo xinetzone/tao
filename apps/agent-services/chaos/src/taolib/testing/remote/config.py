@@ -58,5 +58,3 @@ def redact_ssh_config(config: SshConfig | dict[str, Any]) -> dict[str, Any]:
 def clear_ssh_config_cache() -> None:
     """清理配置读取缓存（用于测试或动态更新配置文件的场景）。"""
     _load_toml_table_from_path.cache_clear()
-
-

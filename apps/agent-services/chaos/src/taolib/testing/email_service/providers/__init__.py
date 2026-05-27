@@ -22,5 +22,3 @@ __all__ = [
 ]
 if SMTPProvider is not None:
     __all__.append("SMTPProvider")
-
-

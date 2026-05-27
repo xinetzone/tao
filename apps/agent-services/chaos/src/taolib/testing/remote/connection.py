@@ -34,5 +34,3 @@ def fabric_connection_factory() -> ConnectionFactory:
             "缺少依赖：fabric。请先安装 fabric 后再使用该接口。"
         ) from exc
     return Connection
-
-

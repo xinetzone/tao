@@ -62,5 +62,3 @@ __all__ = [
     "EventDocument",
     "SessionDocument",
 ]
-
-

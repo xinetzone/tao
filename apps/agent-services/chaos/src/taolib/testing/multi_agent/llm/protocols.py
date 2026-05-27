@@ -138,7 +138,9 @@ class BaseLLMProvider(ABC):
         """流式生成文本。"""
         ...
 
-    def _update_stats_success(self, latency_seconds: float, tokens_used: int = 0) -> None:
+    def _update_stats_success(
+        self, latency_seconds: float, tokens_used: int = 0
+    ) -> None:
         """更新成功请求的统计信息。
 
         Args:

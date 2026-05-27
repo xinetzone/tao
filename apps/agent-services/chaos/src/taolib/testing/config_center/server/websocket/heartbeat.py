@@ -2,6 +2,7 @@
 
 独立的心跳监控器，定期向所有连接发送 ping 并检测僵尸连接。
 """
+
 import asyncio
 import json
 import logging
@@ -122,5 +123,3 @@ class HeartbeatMonitor:
             await ws.send_text(ping_msg)
         except Exception:
             pass  # 发送失败将在下次检查时被检测为僵尸
-
-

@@ -1,4 +1,5 @@
 """FastAPI middleware for rate limiting."""
+
 import logging
 from typing import Any
 
@@ -194,5 +195,3 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         response.headers["X-RateLimit-Reset"] = str(int(result.reset_timestamp))
 
         return response
-
-

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 try:
     from dotenv import load_dotenv
+
     load_dotenv()
 except ImportError:
     pass
@@ -13,7 +14,7 @@ import json
 import os
 import sys
 import time
-from typing import Any, Dict, NoReturn, Tuple
+from typing import Any, NoReturn
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
@@ -34,14 +35,14 @@ def print_usage() -> None:
 
 
 def die(message: str, *, body: Any | None = None) -> NoReturn:
-    payload: Dict[str, Any] = {"error": message, "exit_code": 1}
+    payload: dict[str, Any] = {"error": message, "exit_code": 1}
     if body is not None:
         payload["body"] = body
     print(json.dumps(payload, ensure_ascii=False))
     raise SystemExit(1)
 
 
-def parse_payload(raw: str) -> Dict[str, Any]:
+def parse_payload(raw: str) -> dict[str, Any]:
     try:
         payload = json.loads(raw)
     except json.JSONDecodeError:
@@ -59,12 +60,12 @@ def get_endpoint() -> str:
     return f"{base_url.rstrip('/')}/v1/chat/completions"
 
 
-def build_request_body(payload: Dict[str, Any]) -> Dict[str, Any]:
+def build_request_body(payload: dict[str, Any]) -> dict[str, Any]:
     model = str(payload.get("model", "")).strip().lower()
     if not model:
         die("model is required")
 
-    body: Dict[str, Any] = {"model": model}
+    body: dict[str, Any] = {"model": model}
 
     if isinstance(payload.get("messages"), list) and payload["messages"]:
         body["messages"] = payload["messages"]
@@ -74,7 +75,7 @@ def build_request_body(payload: Dict[str, Any]) -> Dict[str, Any]:
     return body
 
 
-def auth_headers() -> Dict[str, str]:
+def auth_headers() -> dict[str, str]:
     secret = os.getenv("ZHIHU_ACCESS_SECRET", "").strip()
     if not secret:
         die("Set ZHIHU_ACCESS_SECRET first (Bearer auth only)")
@@ -92,7 +93,7 @@ def parse_http_error_body(body_text: str) -> Any:
         return body_text
 
 
-def post_json(body: Dict[str, Any]) -> Tuple[int, Dict[str, str], Any]:
+def post_json(body: dict[str, Any]) -> tuple[int, dict[str, str], Any]:
     request = Request(
         url=get_endpoint(),
         method="POST",
@@ -101,7 +102,11 @@ def post_json(body: Dict[str, Any]) -> Tuple[int, Dict[str, str], Any]:
     )
     try:
         with urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as resp:
-            return resp.status, dict(resp.headers), resp.read().decode("utf-8", errors="replace")
+            return (
+                resp.status,
+                dict(resp.headers),
+                resp.read().decode("utf-8", errors="replace"),
+            )
     except HTTPError as err:
         body_text = err.read().decode("utf-8", errors="replace")
         die(f"HTTP {err.code}", body=parse_http_error_body(body_text))
@@ -109,7 +114,7 @@ def post_json(body: Dict[str, Any]) -> Tuple[int, Dict[str, str], Any]:
         die("HTTP request failed (timeout or network error)")
 
 
-def normalize_non_stream(payload: Dict[str, Any]) -> Dict[str, Any]:
+def normalize_non_stream(payload: dict[str, Any]) -> dict[str, Any]:
     choice = {}
     if isinstance(payload.get("choices"), list) and payload["choices"]:
         choice = payload["choices"][0] or {}

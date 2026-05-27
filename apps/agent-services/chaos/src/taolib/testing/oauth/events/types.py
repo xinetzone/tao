@@ -69,5 +69,3 @@ class OAuthTokenRefreshEvent:
             "success": self.success,
             "timestamp": self.timestamp.isoformat(),
         }
-
-

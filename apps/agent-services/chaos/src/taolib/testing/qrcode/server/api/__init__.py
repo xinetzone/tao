@@ -4,5 +4,3 @@ from taolib.testing.qrcode.server.config import QRCodeServerConfig
 from taolib.testing.qrcode.server.main import main
 
 __all__ = ["api_router", "create_app", "QRCodeServerConfig", "main"]
-
-

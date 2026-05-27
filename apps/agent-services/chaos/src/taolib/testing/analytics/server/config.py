@@ -46,5 +46,3 @@ class Settings(BaseSettings):
 
 # 全局设置实例
 settings = Settings()  # type: ignore[call-arg]
-
-

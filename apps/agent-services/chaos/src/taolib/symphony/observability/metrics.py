@@ -82,7 +82,9 @@ class MetricsCollector:
 
         # 记住当前报告值，用于下次增量计算
         self._last_reported_input = usage.get("input_tokens", self._last_reported_input)
-        self._last_reported_output = usage.get("output_tokens", self._last_reported_output)
+        self._last_reported_output = usage.get(
+            "output_tokens", self._last_reported_output
+        )
         self._last_reported_total = usage.get("total_tokens", self._last_reported_total)
 
     def update_from_thread(self, thread_data: dict[str, Any]) -> None:

@@ -60,5 +60,3 @@ class SubscriptionError(EmailServiceError):
     """订阅操作错误。"""
 
     pass
-
-

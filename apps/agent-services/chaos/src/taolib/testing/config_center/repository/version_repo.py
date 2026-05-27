@@ -89,5 +89,3 @@ class VersionRepository(AsyncRepository[ConfigVersionDocument]):
         """创建索引。"""
         await self._collection.create_index([("config_id", 1), ("version", 1)])
         await self._collection.create_index([("config_id", 1)])
-
-

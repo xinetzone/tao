@@ -95,5 +95,3 @@ async def revoke_all_sessions(
     """
     count = await session_service.revoke_all_sessions(user_id)
     return {"status": "all_revoked", "revoked_count": count}
-
-

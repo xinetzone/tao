@@ -22,7 +22,7 @@ import os
 import sys
 
 
-def download_models(cache_dir: str = None) -> dict:
+def download_models(cache_dir: str | None = None) -> dict:
     """
     触发 marker-pdf 模型下载。
 
@@ -30,9 +30,9 @@ def download_models(cache_dir: str = None) -> dict:
     我们通过创建一个空白 PDF 的转换请求来触发所有模型的下载。
     """
     try:
-        from marker.converters.pdf import PdfConverter
+        from marker.converters.pdf import PdfConverter  # noqa: F401
         from marker.models import create_model_dict
-        from marker.settings import settings
+        from marker.settings import settings  # noqa: F401
 
         print("[信息] 初始化 marker-pdf 模型下载...")
 
@@ -59,7 +59,7 @@ def download_models(cache_dir: str = None) -> dict:
         return {"success": False, "error": str(e)}
 
 
-def check_models_cached(cache_dir: str = None) -> dict:
+def check_models_cached(cache_dir: str | None = None) -> dict:
     """检查哪些模型已经缓存"""
     try:
         from marker.models import create_model_dict
@@ -75,14 +75,14 @@ def check_models_cached(cache_dir: str = None) -> dict:
         return {"success": False, "error": str(e)}
 
 
-def get_cache_size(cache_dir: str = None) -> int:
+def get_cache_size(cache_dir: str | None = None) -> int:
     """计算缓存目录总大小"""
     target_dir = cache_dir or os.path.expanduser("~/.cache/huggingface")
     if not os.path.exists(target_dir):
         return 0
 
     total = 0
-    for dirpath, dirnames, filenames in os.walk(target_dir):
+    for dirpath, _dirnames, filenames in os.walk(target_dir):
         for f in filenames:
             fp = os.path.join(dirpath, f)
             if os.path.exists(fp):
@@ -101,10 +101,14 @@ def format_size(size_bytes: int) -> str:
 
 def main():
     parser = argparse.ArgumentParser(description="预下载 marker-pdf 模型")
-    parser.add_argument("--cache-dir", default=None,
-                        help="模型缓存目录（默认使用 HuggingFace 默认缓存）")
-    parser.add_argument("--check-only", action="store_true",
-                        help="仅检查模型是否已缓存，不执行下载")
+    parser.add_argument(
+        "--cache-dir",
+        default=None,
+        help="模型缓存目录（默认使用 HuggingFace 默认缓存）",
+    )
+    parser.add_argument(
+        "--check-only", action="store_true", help="仅检查模型是否已缓存，不执行下载"
+    )
     args = parser.parse_args()
 
     print("=" * 50)

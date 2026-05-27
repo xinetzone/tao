@@ -100,5 +100,3 @@ class AccessService:
 
         # SIGNED_URL 级别需要额外的 token 验证
         return False
-
-

@@ -45,9 +45,7 @@ def load_toml(path: Path) -> dict:
         return {}
 
     if not isinstance(defaults, dict):
-        msg = (
-            f"[defaults] 段必须是表，实际类型为 {type(defaults).__name__} ({path})"
-        )
+        msg = f"[defaults] 段必须是表，实际类型为 {type(defaults).__name__} ({path})"
         raise ConfigError(msg)
 
     return dict(defaults)

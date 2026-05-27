@@ -36,5 +36,3 @@ def create_api_key_header(
         APIKeyHeader 实例
     """
     return APIKeyHeader(name=name, auto_error=auto_error)
-
-

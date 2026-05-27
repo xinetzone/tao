@@ -332,5 +332,3 @@ class S3StorageBackend:
                 return True
         except Exception:
             return False
-
-

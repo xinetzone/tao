@@ -102,5 +102,3 @@ class OAuthProviderProtocol(Protocol):
             是否成功撤销
         """
         ...
-
-

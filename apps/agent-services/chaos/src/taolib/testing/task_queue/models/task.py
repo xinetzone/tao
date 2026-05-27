@@ -102,5 +102,3 @@ class TaskDocument(TaskBase):
             completed_at=self.completed_at,
             next_retry_at=self.next_retry_at,
         )
-
-

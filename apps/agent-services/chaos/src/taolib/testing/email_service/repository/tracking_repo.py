@@ -95,5 +95,3 @@ class TrackingRepository(AsyncRepository[TrackingEventDocument]):
             "created_at",
             expireAfterSeconds=7776000,  # 90 天 TTL
         )
-
-

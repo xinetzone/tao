@@ -118,5 +118,3 @@ class MailgunProvider:
             data["o:tag"] = email.tags
 
         return data
-
-

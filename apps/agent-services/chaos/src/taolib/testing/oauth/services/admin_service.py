@@ -215,5 +215,3 @@ class OAuthAdminService:
             "total_connections": total_connections,
             "active_connections": active_connections,
         }
-
-

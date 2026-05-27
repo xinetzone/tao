@@ -34,5 +34,3 @@ class UploadStatsResponse(BaseModel):
     failed: int = Field(default=0, description="已失败")
     in_progress: int = Field(default=0, description="进行中")
     total_bytes_uploaded: int = Field(default=0, description="总上传字节数")
-
-

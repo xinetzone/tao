@@ -152,5 +152,3 @@ class OAuthTokenService:
                 metadata={"error": str(e)},
             )
             raise OAuthTokenRefreshError(f"Token 刷新失败: {e}")
-
-

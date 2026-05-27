@@ -261,7 +261,13 @@ class MainAgent(BaseAgent):
             task.progress = TaskProgress(
                 current_step="完成",
                 progress_percent=100.0,
-                completed_steps=["任务接收", "任务分析", "调度子任务", "执行子任务", "聚合结果"],
+                completed_steps=[
+                    "任务接收",
+                    "任务分析",
+                    "调度子任务",
+                    "执行子任务",
+                    "聚合结果",
+                ],
             )
 
             execution_time = time.time() - start_time
@@ -325,7 +331,7 @@ class MainAgent(BaseAgent):
             for i, subtask_info in enumerate(analysis["subtasks"]):
                 subtask = SubTask(
                     id=str(uuid.uuid4()),
-                    name=subtask_info.get("name", f"子任务 {i+1}"),
+                    name=subtask_info.get("name", f"子任务 {i + 1}"),
                     description=subtask_info.get("description", ""),
                     status=TaskStatus.PENDING,
                 )

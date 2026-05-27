@@ -105,5 +105,3 @@ class SyncLogRepository(AsyncRepository[SyncLogDocument]):
             "started_at",
             expireAfterSeconds=90 * 24 * 3600,
         )
-
-

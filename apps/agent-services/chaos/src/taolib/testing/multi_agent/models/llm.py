@@ -24,8 +24,12 @@ class ModelConfig(BaseModel):
     api_key: str | None = Field(None, description="API密钥(可选)")
     timeout_seconds: int = Field(default=60, ge=10, description="超时时间(秒)")
     max_retries: int = Field(default=3, ge=0, le=10, description="最大重试次数")
-    rate_limit_requests_per_minute: int = Field(default=60, ge=1, description="每分钟请求限制")
-    rate_limit_tokens_per_minute: int | None = Field(None, ge=1, description="每分钟Token限制")
+    rate_limit_requests_per_minute: int = Field(
+        default=60, ge=1, description="每分钟请求限制"
+    )
+    rate_limit_tokens_per_minute: int | None = Field(
+        None, ge=1, description="每分钟Token限制"
+    )
     max_concurrent_requests: int = Field(default=5, ge=1, description="最大并发请求数")
     temperature: float = Field(default=0.7, ge=0.0, le=2.0, description="默认温度参数")
     max_tokens: int | None = Field(None, ge=1, description="最大Token数")
@@ -40,8 +44,12 @@ class ModelStats(BaseModel):
     successful_requests: int = Field(default=0, ge=0, description="成功请求数")
     failed_requests: int = Field(default=0, ge=0, description="失败请求数")
     total_tokens_used: int = Field(default=0, ge=0, description="总使用Token数")
-    average_latency_seconds: float = Field(default=0.0, ge=0.0, description="平均延迟(秒)")
-    current_concurrent_requests: int = Field(default=0, ge=0, description="当前并发请求数")
+    average_latency_seconds: float = Field(
+        default=0.0, ge=0.0, description="平均延迟(秒)"
+    )
+    current_concurrent_requests: int = Field(
+        default=0, ge=0, description="当前并发请求数"
+    )
     requests_this_minute: int = Field(default=0, ge=0, description="本分钟请求数")
     tokens_this_minute: int = Field(default=0, ge=0, description="本分钟Token数")
     last_health_check_at: datetime | None = Field(None, description="上次健康检查时间")
@@ -63,9 +71,17 @@ class ModelInstance(BaseModel):
 class LoadBalanceConfig(BaseModel):
     """负载均衡配置。"""
 
-    strategy: LoadBalanceStrategy = Field(default=LoadBalanceStrategy.ROUND_ROBIN, description="策略")
+    strategy: LoadBalanceStrategy = Field(
+        default=LoadBalanceStrategy.ROUND_ROBIN, description="策略"
+    )
     fallback_enabled: bool = Field(default=True, description="是否启用降级")
-    health_check_interval_seconds: int = Field(default=30, ge=5, description="健康检查间隔(秒)")
+    health_check_interval_seconds: int = Field(
+        default=30, ge=5, description="健康检查间隔(秒)"
+    )
     circuit_breaker_enabled: bool = Field(default=True, description="是否启用熔断器")
-    circuit_breaker_failure_threshold: int = Field(default=5, ge=1, description="熔断器失败阈值")
-    circuit_breaker_reset_timeout_seconds: int = Field(default=60, ge=10, description="熔断器重置超时(秒)")
+    circuit_breaker_failure_threshold: int = Field(
+        default=5, ge=1, description="熔断器失败阈值"
+    )
+    circuit_breaker_reset_timeout_seconds: int = Field(
+        default=60, ge=10, description="熔断器重置超时(秒)"
+    )

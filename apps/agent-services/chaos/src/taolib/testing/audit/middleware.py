@@ -2,6 +2,7 @@
 
 自动记录所有 API 请求的审计日志。
 """
+
 import logging
 import time
 from typing import Any
@@ -226,7 +227,9 @@ class AuditMiddleware(BaseHTTPMiddleware):
         details["response_time_ms"] = round(response_time_ms, 2)
         details["status_code"] = response.status_code
 
-        status = AuditStatus.SUCCESS if response.status_code < 400 else AuditStatus.FAILED
+        status = (
+            AuditStatus.SUCCESS if response.status_code < 400 else AuditStatus.FAILED
+        )
 
         action = self._determine_action(method, path)
 
@@ -270,5 +273,3 @@ class AuditMiddleware(BaseHTTPMiddleware):
         }
 
         return method_action_map.get(method.upper(), AuditAction.ACCESS)
-
-

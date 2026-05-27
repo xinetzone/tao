@@ -110,11 +110,13 @@ class AppServerClient:
         Raises:
             AppServerError: 通信错误。
         """
-        await self._send({
-            "type": "start_turn",
-            "session_id": session_id,
-            "prompt": prompt,
-        })
+        await self._send(
+            {
+                "type": "start_turn",
+                "session_id": session_id,
+                "prompt": prompt,
+            }
+        )
 
         turn_tokens = 0
         async for event in self._stream_events():
@@ -132,11 +134,15 @@ class AppServerClient:
             if event.type == "error":
                 error_msg = event.data.get("message", "未知错误")
                 self._token_accounting.record(turn_tokens)
-                return TurnResult(success=False, token_usage=turn_tokens, error=error_msg)
+                return TurnResult(
+                    success=False, token_usage=turn_tokens, error=error_msg
+                )
 
         # 流意外结束
         self._token_accounting.record(turn_tokens)
-        return TurnResult(success=False, token_usage=turn_tokens, error="事件流意外结束")
+        return TurnResult(
+            success=False, token_usage=turn_tokens, error="事件流意外结束"
+        )
 
     async def stop(self, session_id: str) -> None:
         """停止会话并关闭进程。

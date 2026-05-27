@@ -181,5 +181,3 @@ class GoogleOAuthProvider:
                 params={"token": token},
             )
             return response.status_code == 200
-
-

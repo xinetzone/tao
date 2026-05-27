@@ -167,5 +167,3 @@ class SyncJobService:
         """
         await self.get_job(job_id)  # 验证作业存在
         return await checkpoint_repo.delete_by_job(job_id)
-
-

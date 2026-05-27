@@ -167,5 +167,3 @@ class InMemoryConfigCache:
         keys_to_delete = [k for k in self._cache if fnmatch.fnmatch(k, pattern)]
         for key in keys_to_delete:
             del self._cache[key]
-
-

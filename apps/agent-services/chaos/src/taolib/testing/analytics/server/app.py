@@ -58,7 +58,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
 
 def _load_sdk_js() -> str:
     """加载 JavaScript SDK 文件内容。"""
-    sdk_path = importlib.resources.files("taolib.testing.analytics.sdk") / "analytics.js"
+    sdk_path = (
+        importlib.resources.files("taolib.testing.analytics.sdk") / "analytics.js"
+    )
     return sdk_path.read_text(encoding="utf-8")
 
 
@@ -238,5 +240,3 @@ loadAll();setInterval(loadAll,30000);
 </body>
 </html>
 """
-
-

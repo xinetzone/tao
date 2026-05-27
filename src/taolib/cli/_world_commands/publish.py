@@ -136,9 +136,7 @@ def handle_publish(args: argparse.Namespace) -> int:
     # 查询已有条目，进行版本递增检查
     existing_entry = query_entry(index_path, manifest.name)
     if existing_entry is not None and existing_entry.versions:
-        max_existing = max(
-            _version_tuple(v.version) for v in existing_entry.versions
-        )
+        max_existing = max(_version_tuple(v.version) for v in existing_entry.versions)
         new_version = _version_tuple(manifest.version)
         if new_version <= max_existing:
             max_version_str = ".".join(str(p) for p in max_existing)
@@ -219,8 +217,7 @@ def handle_publish(args: argparse.Namespace) -> int:
                 re.MULTILINE,
             )
             new_latest = (
-                f"[latest]\n"
-                f'stable = "{_escape_toml_string(manifest.version)}"\n'
+                f'[latest]\nstable = "{_escape_toml_string(manifest.version)}"\n'
             )
 
             if latest_pattern.search(existing_text):
@@ -253,7 +250,7 @@ def handle_publish(args: argparse.Namespace) -> int:
                 f"[metadata]\n"
                 f'name = "{_escape_toml_string(manifest.name)}"\n'
                 f'description = "{_escape_toml_string(manifest.description)}"\n'
-                f'authors = []\n'
+                f"authors = []\n"
                 f'license = "MIT"\n'
                 f"keywords = []\n"
                 f'category = "{_escape_toml_string(category)}"\n'

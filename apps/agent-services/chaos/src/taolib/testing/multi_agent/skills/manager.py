@@ -44,7 +44,9 @@ class SkillManager:
         self._skill_documents: dict[str, SkillDocument] = {}
         self._execution_history: list[dict[str, Any]] = []
 
-    def register_skill(self, skill: Skill, document: SkillDocument | None = None) -> None:
+    def register_skill(
+        self, skill: Skill, document: SkillDocument | None = None
+    ) -> None:
         """注册技能。
 
         Args:
@@ -203,22 +205,26 @@ class SkillManager:
                 else:
                     failed += 1
 
-                results.append({
-                    "test_case": i,
-                    "success": success,
-                    "parameters": parameters,
-                    "expected": expected,
-                    "actual": actual,
-                })
+                results.append(
+                    {
+                        "test_case": i,
+                        "success": success,
+                        "parameters": parameters,
+                        "expected": expected,
+                        "actual": actual,
+                    }
+                )
 
             except Exception as e:
                 failed += 1
-                results.append({
-                    "test_case": i,
-                    "success": False,
-                    "parameters": parameters,
-                    "error": str(e),
-                })
+                results.append(
+                    {
+                        "test_case": i,
+                        "success": False,
+                        "parameters": parameters,
+                        "error": str(e),
+                    }
+                )
 
         total = passed + failed
         success_rate = passed / total if total > 0 else 0.0

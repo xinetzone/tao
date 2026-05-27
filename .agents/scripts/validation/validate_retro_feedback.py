@@ -5,7 +5,9 @@ import sys
 from pathlib import Path
 
 NEXT_ACTION_HEADING = re.compile(r"Next\s*Action|下一步", re.IGNORECASE)
-NEXT_ACTION_FALLBACK = re.compile(r"后续\s*(?:动作|步骤|行动|计划)|follow.?up\s*actions?", re.IGNORECASE)
+NEXT_ACTION_FALLBACK = re.compile(
+    r"后续\s*(?:动作|步骤|行动|计划)|follow.?up\s*actions?", re.IGNORECASE
+)
 
 ACTION_PATTERNS = [
     (r"更新\S*(?:模板|规则|协议|场景目录|参考)", "回流动作: 资产更新"),
@@ -27,7 +29,7 @@ def find_next_actions(content: str) -> list[str]:
     actions: list[str] = []
     buffer: list[str] = []
 
-    for i, line in enumerate(lines):
+    for _i, line in enumerate(lines):
         stripped = line.strip()
         if stripped.startswith("#") and NEXT_ACTION_HEADING.search(stripped):
             in_section = True
@@ -100,7 +102,9 @@ def check_retro(project_root: Path, retro_path: Path) -> list[dict]:
         if not matched:
             categorized.setdefault("回流动作: 其他", []).append(action)
 
-    report = ", ".join(f"{cat}: {len(acts)}条" for cat, acts in sorted(categorized.items()))
+    report = ", ".join(
+        f"{cat}: {len(acts)}条" for cat, acts in sorted(categorized.items())
+    )
     issues.append(
         {
             "severity": "PASS",
@@ -131,17 +135,19 @@ def print_report(retros: dict[str, list[dict]]) -> None:
     with_action = sum(
         1
         for issues in retros.values()
-        if any(
-            i["item"] == "回流动作" and i["severity"] == "PASS" for i in issues
-        )
+        if any(i["item"] == "回流动作" and i["severity"] == "PASS" for i in issues)
     )
 
     print(f"复盘回流动作存在性校验报告 ({with_action}/{total} 含回流动作)")
     print("=" * 60)
 
     for filename, issues in sorted(retros.items()):
-        sorted_issues = sorted(issues, key=lambda i: severity_order.get(i["severity"], 3))
-        status = "PASS" if all(i["severity"] == "PASS" for i in sorted_issues) else "ISSUE"
+        sorted_issues = sorted(
+            issues, key=lambda i: severity_order.get(i["severity"], 3)
+        )
+        status = (
+            "PASS" if all(i["severity"] == "PASS" for i in sorted_issues) else "ISSUE"
+        )
         print(f"\n[{status}] {filename}")
         for issue in sorted_issues:
             tag = issue["severity"]
@@ -159,7 +165,7 @@ def main() -> int:
     print_report(results)
 
     exit_code = 0
-    for filename, issues in results.items():
+    for _filename, issues in results.items():
         if any(i["severity"] == "MISSING" for i in issues):
             exit_code = 1
             break

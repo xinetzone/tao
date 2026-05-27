@@ -249,5 +249,3 @@ class LocalStorageBackend:
     async def bucket_exists(self, bucket: str) -> bool:
         """检查本地存储桶目录是否存在。"""
         return self._bucket_path(bucket).exists()
-
-

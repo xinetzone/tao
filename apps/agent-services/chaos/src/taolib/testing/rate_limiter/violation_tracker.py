@@ -1,4 +1,5 @@
 """Violation tracker for recording rate limit violations to MongoDB."""
+
 from typing import Any
 
 from .models import ViolationDocument
@@ -77,5 +78,3 @@ class ViolationTracker:
         await self._collection.create_index([("identifier", 1), ("timestamp", 1)])
         # Index for aggregation by type
         await self._collection.create_index([("identifier_type", 1), ("timestamp", 1)])
-
-

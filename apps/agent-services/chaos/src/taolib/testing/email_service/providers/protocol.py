@@ -72,5 +72,3 @@ class EmailProviderProtocol(Protocol):
             健康状态
         """
         ...
-
-

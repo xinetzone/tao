@@ -2,6 +2,7 @@
 
 定义消息、连接信息、在线状态等核心数据类型。
 """
+
 from __future__ import annotations
 
 import uuid
@@ -179,5 +180,3 @@ class UserPresence:
             "connection_count": self.connection_count,
             "active_channels": self.active_channels,
         }
-
-

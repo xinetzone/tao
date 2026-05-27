@@ -47,5 +47,3 @@ class GenericCDNProvider:
 
     async def invalidate_all(self) -> None:
         """通用 CDN 无内置全量刷新机制。"""
-
-

@@ -43,5 +43,3 @@ async def list_events(
         skip=skip, limit=limit, sort=[("timestamp", -1)]
     )
     return [d.to_response() for d in docs]
-
-

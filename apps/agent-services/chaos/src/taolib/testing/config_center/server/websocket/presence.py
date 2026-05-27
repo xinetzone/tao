@@ -2,6 +2,7 @@
 
 基于 Redis HASH 实现的分布式在线状态管理，支持多实例部署。
 """
+
 import json
 import logging
 from datetime import UTC, datetime
@@ -180,5 +181,3 @@ class InMemoryPresenceTracker:
     async def refresh(self, user_id: str) -> None:
         if user_id in self._state:
             self._state[user_id].last_seen = datetime.now(UTC)
-
-

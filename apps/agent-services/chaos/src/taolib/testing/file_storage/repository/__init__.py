@@ -18,5 +18,3 @@ __all__ = [
     "ThumbnailRepository",
     "UploadSessionRepository",
 ]
-
-

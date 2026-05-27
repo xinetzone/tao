@@ -172,5 +172,3 @@ async def get_stats(
         统计数据字典
     """
     return await admin_service.get_stats()
-
-

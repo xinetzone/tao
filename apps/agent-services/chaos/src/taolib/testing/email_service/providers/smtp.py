@@ -128,5 +128,3 @@ class SMTPProvider:
             msg.attach(MIMEText(email.html_body, "html", "utf-8"))
 
         return msg
-
-

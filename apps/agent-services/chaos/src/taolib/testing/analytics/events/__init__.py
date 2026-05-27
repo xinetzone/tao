@@ -12,5 +12,3 @@ __all__ = [
     "EventsReceivedEvent",
     "AnalyticsQueryEvent",
 ]
-
-

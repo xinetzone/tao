@@ -38,7 +38,9 @@ class AgentTemplate(BaseModel):
     name: str = Field(..., description="模板名称")
     description: str = Field("", description="模板描述")
     agent_type: AgentType = Field(default=AgentType.SUB, description="智能体类型")
-    capabilities: list[AgentCapability] = Field(default_factory=list, description="预设能力")
+    capabilities: list[AgentCapability] = Field(
+        default_factory=list, description="预设能力"
+    )
     config: AgentConfig = Field(default_factory=AgentConfig, description="默认配置")
     skills: list[str] = Field(default_factory=list, description="预加载的技能ID列表")
     tags: list[str] = Field(default_factory=list, description="模板标签")
@@ -51,7 +53,9 @@ class AgentBase(BaseModel):
     description: str = Field("", description="智能体描述", max_length=1000)
     agent_type: AgentType = Field(default=AgentType.SUB, description="智能体类型")
     status: AgentStatus = Field(default=AgentStatus.IDLE, description="智能体状态")
-    capabilities: list[AgentCapability] = Field(default_factory=list, description="能力列表")
+    capabilities: list[AgentCapability] = Field(
+        default_factory=list, description="能力列表"
+    )
     config: AgentConfig = Field(default_factory=AgentConfig, description="配置")
     template_id: str | None = Field(None, description="基于的模板ID")
     skills: list[str] = Field(default_factory=list, description="已加载的技能ID列表")

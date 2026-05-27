@@ -192,9 +192,7 @@ async def get_funnel(
 }
 ```
 """,
-    responses={
-        200: {"description": "成功获取功能排名"}
-    },
+    responses={200: {"description": "成功获取功能排名"}},
 )
 async def get_features(
     request: Request,
@@ -236,9 +234,7 @@ async def get_features(
 }
 ```
 """,
-    responses={
-        200: {"description": "成功获取导航路径"}
-    },
+    responses={200: {"description": "成功获取导航路径"}},
 )
 async def get_paths(
     request: Request,
@@ -276,9 +272,7 @@ async def get_paths(
 }
 ```
 """,
-    responses={
-        200: {"description": "成功获取停留分析"}
-    },
+    responses={200: {"description": "成功获取停留分析"}},
 )
 async def get_retention(
     request: Request,
@@ -322,9 +316,7 @@ GET /drop-off?app_id=myapp&steps=landing,signup,verify,complete
 }
 ```
 """,
-    responses={
-        200: {"description": "成功获取流失分析"}
-    },
+    responses={200: {"description": "成功获取流失分析"}},
 )
 async def get_drop_off(
     request: Request,
@@ -338,5 +330,3 @@ async def get_drop_off(
     step_list = [s.strip() for s in steps.split(",") if s.strip()]
     service = get_analytics_service(request)
     return await service.get_drop_off(app_id, step_list, start_dt, end_dt)
-
-

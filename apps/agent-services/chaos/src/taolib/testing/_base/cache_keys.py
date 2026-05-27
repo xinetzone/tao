@@ -65,5 +65,3 @@ OAUTH_USER_SESSIONS_PREFIX = "oauth:user_sessions:"
 # ==================== 邮件服务 ====================
 # 邮件发送队列: email:queue:{priority}
 EMAIL_QUEUE_PREFIX = "email:queue:"
-
-

@@ -50,5 +50,3 @@ class TemplateRepository(AsyncRepository[TemplateDocument]):
         await self._collection.create_index("is_active")
         await self._collection.create_index("email_type")
         await self._collection.create_index("tags")
-
-

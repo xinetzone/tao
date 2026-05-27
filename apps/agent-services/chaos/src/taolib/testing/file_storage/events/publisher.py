@@ -51,5 +51,3 @@ class StorageEventPublisher:
     async def publish_bucket_created(self, event) -> None:
         """发布存储桶创建事件。"""
         await self.publish("bucket.created", event.to_dict())
-
-

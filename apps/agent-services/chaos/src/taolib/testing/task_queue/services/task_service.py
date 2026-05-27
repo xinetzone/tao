@@ -254,5 +254,3 @@ class TaskService:
             "total_failed": redis_stats["total_failed"],
             "total_retried": redis_stats["total_retried"],
         }
-
-

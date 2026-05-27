@@ -9,5 +9,3 @@ router = APIRouter()
 async def health_check():
     """健康检查端点。"""
     return {"status": "ok"}
-
-

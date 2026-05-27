@@ -68,5 +68,3 @@ class SyncFailedEvent:
             "error_message": self.error_message,
             "timestamp": self.timestamp.isoformat(),
         }
-
-

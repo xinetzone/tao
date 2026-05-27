@@ -157,5 +157,3 @@ class RBACService:
             if service in svc_scope:
                 return True
         return False
-
-

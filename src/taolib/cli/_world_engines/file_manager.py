@@ -144,9 +144,7 @@ def place_fragment(
             counter = 0
             while backup_target.exists():
                 counter += 1
-                backup_target = (
-                    context.backup_dir / f"{dst.name}.{counter}"
-                )
+                backup_target = context.backup_dir / f"{dst.name}.{counter}"
             if dst.is_dir():
                 shutil.copytree(dst, backup_target)
             else:

@@ -106,5 +106,3 @@ class CheckpointRepository(AsyncRepository[SyncCheckpoint]):
             [("job_id", 1), ("collection_name", 1)],
             unique=True,
         )
-
-

@@ -47,5 +47,3 @@ class FileVersionDocument(BaseModel):
             created_by=self.created_by,
             created_at=self.created_at,
         )
-
-

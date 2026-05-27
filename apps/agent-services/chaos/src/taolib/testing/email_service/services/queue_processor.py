@@ -105,5 +105,3 @@ class QueueProcessor:
         for doc in ready:
             await self._queue.enqueue(doc.id, doc.priority)
             logger.debug("Scheduled email %s enqueued", doc.id)
-
-

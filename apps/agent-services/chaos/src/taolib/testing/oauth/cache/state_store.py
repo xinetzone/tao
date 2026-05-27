@@ -64,5 +64,3 @@ class OAuthStateStore:
         if isinstance(value, bytes):
             value = value.decode()
         return json.loads(value)
-
-

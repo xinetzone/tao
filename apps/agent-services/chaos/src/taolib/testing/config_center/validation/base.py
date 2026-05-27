@@ -35,5 +35,3 @@ class ConfigValidator(Protocol):
             验证结果
         """
         ...
-
-

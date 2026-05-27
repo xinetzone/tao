@@ -118,5 +118,3 @@ class OAuthFlowService:
         user_info = await provider_impl.fetch_user_info(access_token)
 
         return user_info, token_data
-
-

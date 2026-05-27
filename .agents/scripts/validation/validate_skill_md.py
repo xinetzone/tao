@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import re
 import sys
-from pathlib import Path
 import tomllib
+from pathlib import Path
 
 REQUIRED_SECTIONS = [
-    ("Skill ID/Name", r"(?:Skill\s*(?:ID|Name|唯一标识)|Name)" ),
+    ("Skill ID/Name", r"(?:Skill\s*(?:ID|Name|唯一标识)|Name)"),
     ("Description", r"(?:Description|功能描述|功能|用途|Summary)"),
     ("I/O Parameters", r"(?:I/?O\s*Parameters?|Input|Output|输入|输出|Parameters?)"),
     ("Dependencies", r"(?:Dependencies?|依赖|依赖项|Requirements?)"),
@@ -89,73 +89,97 @@ def parse_skill_md_headers(skill_md_path: Path) -> set[str]:
 def check_markdown_quality(content: str) -> list[dict]:
     """检查 Markdown 质量问题"""
     issues = []
-    
+
     # 检查中文标题是否有显式锚点
     lines = content.splitlines()
     for i, line in enumerate(lines):
-        if line.startswith("#") and any(chinese_char in line for chinese_char in "一-龥"):
+        if line.startswith("#") and any(
+            chinese_char in line for chinese_char in "一-龥"
+        ):
             if not re.match(r"^\(#.*\)=\s*#", line):
                 # 检查前一行是否有锚点定义
-                if i == 0 or not lines[i-1].strip().startswith("("):
-                    issues.append({
-                        "severity": "WARN",
-                        "item": "Markdown 质量",
-                        "detail": f"中文标题建议添加显式锚点: {line.strip()}"
-                    })
-    
+                if i == 0 or not lines[i - 1].strip().startswith("("):
+                    issues.append(
+                        {
+                            "severity": "WARN",
+                            "item": "Markdown 质量",
+                            "detail": f"中文标题建议添加显式锚点: {line.strip()}",
+                        }
+                    )
+
     # 检查链接有效性（简单检查格式）
     link_pattern = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
     for match in link_pattern.finditer(content):
         link_text, link_url = match.groups()
         if not link_url.startswith(("http://", "https://", "/", "./", "../")):
             # 相对路径但不在 docs 树内
-            if not link_url.startswith("references/") and not link_url.startswith("evals/"):
-                issues.append({
-                    "severity": "WARN",
-                    "item": "链接格式",
-                    "detail": f"潜在无效链接: [{link_text}]({link_url})"
-                })
-    
+            if not link_url.startswith("references/") and not link_url.startswith(
+                "evals/"
+            ):
+                issues.append(
+                    {
+                        "severity": "WARN",
+                        "item": "链接格式",
+                        "detail": f"潜在无效链接: [{link_text}]({link_url})",
+                    }
+                )
+
     # 检查 H1 数量（应该只有一个）
-    h1_count = sum(1 for line in lines if line.startswith("# ") and len(line.lstrip("#").strip()) > 0)
+    h1_count = sum(
+        1
+        for line in lines
+        if line.startswith("# ") and len(line.lstrip("#").strip()) > 0
+    )
     if h1_count != 1:
-        issues.append({
-            "severity": "WARN",
-            "item": "标题结构",
-            "detail": f"发现 {h1_count} 个 H1 标题，建议只有一个主标题"
-        })
-    
+        issues.append(
+            {
+                "severity": "WARN",
+                "item": "标题结构",
+                "detail": f"发现 {h1_count} 个 H1 标题，建议只有一个主标题",
+            }
+        )
+
     return issues
 
 
 def check_skill_directory(skill_dir: Path) -> list[dict]:
     """检查技能目录结构"""
     issues = []
-    
+
     # 检查 scripts 目录
     scripts_dir = skill_dir / "scripts"
     if scripts_dir.exists():
         py_files = list(scripts_dir.glob("*.py"))
         if not py_files:
-            issues.append({
-                "severity": "WARN",
-                "item": "脚本文件",
-                "detail": "scripts/ 目录为空，建议添加技能实现脚本"
-            })
-    
+            issues.append(
+                {
+                    "severity": "WARN",
+                    "item": "脚本文件",
+                    "detail": "scripts/ 目录为空，建议添加技能实现脚本",
+                }
+            )
+
     # 检查是否有测试文件
-    has_tests = any((skill_dir / "tests").glob("*.py")) or any(skill_dir.glob("test_*.py"))
+    has_tests = any((skill_dir / "tests").glob("*.py")) or any(
+        skill_dir.glob("test_*.py")
+    )
     if not has_tests:
-        issues.append({
-            "severity": "WARN",
-            "item": "测试覆盖",
-            "detail": "建议添加测试文件以保障技能质量"
-        })
-    
+        issues.append(
+            {
+                "severity": "WARN",
+                "item": "测试覆盖",
+                "detail": "建议添加测试文件以保障技能质量",
+            }
+        )
+
     return issues
 
 
-def check_skill_md(skill_name: str, skill_dir: Path, required_sections: list[tuple[str, str]] | None = None) -> list[dict]:
+def check_skill_md(
+    skill_name: str,
+    skill_dir: Path,
+    required_sections: list[tuple[str, str]] | None = None,
+) -> list[dict]:
     if required_sections is None:
         required_sections = REQUIRED_SECTIONS
     issues: list[dict] = []
@@ -188,10 +212,10 @@ def check_skill_md(skill_name: str, skill_dir: Path, required_sections: list[tup
 
     # 检查建议章节（只警告）
     recommended_found = 0
-    for section_name, pattern in RECOMMENDED_SECTIONS:
+    for _section_name, pattern in RECOMMENDED_SECTIONS:
         if any(re.search(pattern, h) for h in headers):
             recommended_found += 1
-    
+
     if recommended_found < len(RECOMMENDED_SECTIONS):
         issues.append(
             {
@@ -211,7 +235,7 @@ def check_skill_md(skill_name: str, skill_dir: Path, required_sections: list[tup
 
     # 统计合规情况
     if not any(i["severity"] == "MISSING" for i in issues):
-        missing_count = sum(1 for i in issues if i["severity"] == "MISSING")
+        sum(1 for i in issues if i["severity"] == "MISSING")
         issues.insert(
             0,
             {
@@ -222,9 +246,7 @@ def check_skill_md(skill_name: str, skill_dir: Path, required_sections: list[tup
         )
     else:
         remaining = len(required_sections) - sum(
-            1
-            for i in issues
-            if i["severity"] == "MISSING" and i["item"] == "必填章节"
+            1 for i in issues if i["severity"] == "MISSING" and i["item"] == "必填章节"
         )
         issues.insert(
             0,
@@ -255,7 +277,9 @@ def print_report(results: dict[str, list[dict]]) -> None:
 
     for skill_name, issues in sorted(results.items()):
         print(f"\n## {skill_name}")
-        sorted_issues = sorted(issues, key=lambda i: severity_order.get(i["severity"], 3))
+        sorted_issues = sorted(
+            issues, key=lambda i: severity_order.get(i["severity"], 3)
+        )
         for issue in sorted_issues:
             tag = issue["severity"]
             print(f"  [{tag}] {issue['item']}: {issue['detail']}")
@@ -280,7 +304,7 @@ def main() -> int:
             print(f"  - {name}")
 
     exit_code = 0
-    for skill_name, issues in results.items():
+    for _skill_name, issues in results.items():
         if any(i["severity"] == "MISSING" for i in issues):
             exit_code = 1
             break

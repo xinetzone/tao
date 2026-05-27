@@ -58,5 +58,3 @@ async def create_events_batch(request: Request, data: EventBatchCreate):
     service = get_analytics_service(request)
     result = await service.ingest_events(data.events)
     return result
-
-

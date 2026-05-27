@@ -60,5 +60,3 @@ class OAuthActivityLogDocument(BaseModel):
             metadata=self.metadata,
             timestamp=self.timestamp,
         )
-
-

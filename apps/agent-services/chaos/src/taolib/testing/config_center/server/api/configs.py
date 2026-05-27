@@ -115,7 +115,9 @@ GET /configs?environment=production&service=user-service&skip=0&limit=50
     },
 )
 async def list_configs(
-    environment: str | None = Query(default=None, description="环境过滤（development/staging/production）"),
+    environment: str | None = Query(
+        default=None, description="环境过滤（development/staging/production）"
+    ),
     service: str | None = Query(default=None, description="服务名称过滤"),
     skip: int = Query(default=0, ge=0, description="跳过记录数"),
     limit: int = Query(default=100, ge=1, le=1000, description="返回记录数限制"),
@@ -380,5 +382,3 @@ async def publish_config(
     if config is None:
         raise HTTPException(status_code=404, detail="配置不存在")
     return config
-
-

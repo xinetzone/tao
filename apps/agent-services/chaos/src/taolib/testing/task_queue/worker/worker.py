@@ -270,5 +270,3 @@ class TaskWorker:
                 new_retry_count,
                 error_msg,
             )
-
-

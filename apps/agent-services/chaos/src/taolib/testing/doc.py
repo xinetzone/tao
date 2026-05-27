@@ -608,5 +608,3 @@ def multi_sites(
         配置好的 Invoke Collection 对象，包含多个命名的 doc 子命令集合。
     """
     return create_docs(project_configs)  # type: ignore
-
-

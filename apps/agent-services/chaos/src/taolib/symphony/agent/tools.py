@@ -66,7 +66,9 @@ class LinearGraphQLTool(DynamicTool):
     复用 Symphony 的 Linear 认证信息。
     """
 
-    def __init__(self, api_key: str, endpoint: str = "https://api.linear.app/graphql") -> None:
+    def __init__(
+        self, api_key: str, endpoint: str = "https://api.linear.app/graphql"
+    ) -> None:
         self._api_key = api_key
         self._endpoint = endpoint
 
@@ -127,7 +129,9 @@ class LinearGraphQLTool(DynamicTool):
                 output=json.dumps(data.get("data", {}), ensure_ascii=False),
             )
         except httpx.HTTPStatusError as e:
-            return ToolResult(success=False, error=f"HTTP {e.response.status_code}: {e}")
+            return ToolResult(
+                success=False, error=f"HTTP {e.response.status_code}: {e}"
+            )
         except httpx.RequestError as e:
             return ToolResult(success=False, error=f"请求失败: {e}")
 

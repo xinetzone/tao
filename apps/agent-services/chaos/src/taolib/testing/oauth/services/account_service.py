@@ -265,5 +265,3 @@ class OAuthAccountService:
         """
         connections = await self._connection_repo.find_all_for_user(user_id)
         return [conn.to_response() for conn in connections]
-
-

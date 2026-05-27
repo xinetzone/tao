@@ -5,6 +5,7 @@ from __future__ import annotations
 
 try:
     from dotenv import load_dotenv
+
     load_dotenv()
 except ImportError:
     pass
@@ -13,7 +14,7 @@ import json
 import os
 import sys
 import time
-from typing import Any, Dict, NoReturn
+from typing import Any, NoReturn
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
@@ -35,14 +36,14 @@ def print_usage() -> None:
 
 
 def die(message: str, *, body: Any | None = None) -> NoReturn:
-    payload: Dict[str, Any] = {"error": message, "exit_code": 1}
+    payload: dict[str, Any] = {"error": message, "exit_code": 1}
     if body is not None:
         payload["body"] = body
     print(json.dumps(payload, ensure_ascii=False))
     raise SystemExit(1)
 
 
-def parse_payload(raw: str) -> Dict[str, Any]:
+def parse_payload(raw: str) -> dict[str, Any]:
     try:
         data = json.loads(raw)
     except json.JSONDecodeError:
@@ -52,7 +53,7 @@ def parse_payload(raw: str) -> Dict[str, Any]:
     return data
 
 
-def parse_query(payload: Dict[str, Any]) -> str:
+def parse_query(payload: dict[str, Any]) -> str:
     query = payload.get("query") or payload.get("Query") or ""
     if not isinstance(query, str) or not query.strip():
         die("query is required")
@@ -60,7 +61,7 @@ def parse_query(payload: Dict[str, Any]) -> str:
     return query
 
 
-def parse_count(payload: Dict[str, Any]) -> int:
+def parse_count(payload: dict[str, Any]) -> int:
     raw = payload.get("count", payload.get("Count", 10))
     try:
         count = int(raw)
@@ -69,7 +70,7 @@ def parse_count(payload: Dict[str, Any]) -> int:
     return max(1, min(20, count))
 
 
-def parse_filter(payload: Dict[str, Any]) -> str:
+def parse_filter(payload: dict[str, Any]) -> str:
     raw = payload.get("filter", payload.get("Filter", ""))
     if raw is None:
         return ""
@@ -78,7 +79,7 @@ def parse_filter(payload: Dict[str, Any]) -> str:
     return raw.strip()
 
 
-def parse_search_db(payload: Dict[str, Any]) -> str:
+def parse_search_db(payload: dict[str, Any]) -> str:
     raw = payload.get("search_db", payload.get("SearchDB", ""))
     if raw is None:
         return ""
@@ -98,7 +99,9 @@ def get_endpoint() -> str:
     return f"{base_url.rstrip('/')}/api/v1/content/global_search"
 
 
-def request_global_search(query: str, count: int, filter_expr: str, search_db: str) -> Dict[str, Any]:
+def request_global_search(
+    query: str, count: int, filter_expr: str, search_db: str
+) -> dict[str, Any]:
     secret = os.getenv("ZHIHU_ACCESS_SECRET", "").strip()
     if not secret:
         die("Set ZHIHU_ACCESS_SECRET first (Bearer auth only)")
@@ -134,7 +137,7 @@ def request_global_search(query: str, count: int, filter_expr: str, search_db: s
         die("Non-JSON response from API")
 
 
-def normalize_items(api_resp: Dict[str, Any]) -> Dict[str, Any]:
+def normalize_items(api_resp: dict[str, Any]) -> dict[str, Any]:
     data = api_resp.get("Data") if isinstance(api_resp.get("Data"), dict) else {}
     items = data.get("Items") if isinstance(data.get("Items"), list) else []
     normalized_items = []

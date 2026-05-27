@@ -18,5 +18,3 @@ class AppNotFoundError(AnalyticsError):
 
 class AggregationError(AnalyticsError):
     """MongoDB 聚合管道执行失败。"""
-
-

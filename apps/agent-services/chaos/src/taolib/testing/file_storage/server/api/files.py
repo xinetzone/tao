@@ -66,9 +66,7 @@ FILES_API_DESCRIPTION = """
 ]
 ```
 """,
-    responses={
-        200: {"description": "成功获取文件列表"}
-    },
+    responses={200: {"description": "成功获取文件列表"}},
 )
 async def list_files(
     bucket_id: str | None = Query(None),
@@ -76,7 +74,9 @@ async def list_files(
     tags: str | None = Query(None),
     media_type: MediaType | None = Query(None),
     skip: int = Query(0, ge=0),
-    limit: int = 100, ge=1, le=1000,
+    limit: int = 100,
+    ge=1,
+    le=1000,
     file_service: FileService = Depends(),
 ):
     """列出文件（支持多种过滤条件）。"""
@@ -348,5 +348,3 @@ async def get_file_url(
         return {"url": url}
     except Exception as e:
         raise HTTPException(status_code=404, detail=str(e))
-
-

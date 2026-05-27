@@ -31,7 +31,9 @@ class OAuthSettings(BaseSettings):
     )
 
     # JWT 配置（应与 config_center 共享）
-    jwt_secret: str = Field(default="", description="JWT 密钥（生产环境必须设置，>=32 字符）")
+    jwt_secret: str = Field(
+        default="", description="JWT 密钥（生产环境必须设置，>=32 字符）"
+    )
     jwt_algorithm: str = Field(default="HS256", description="JWT 算法")
     access_token_expire_minutes: int = Field(
         default=15, description="Access Token 过期时间（分钟）"
@@ -77,5 +79,3 @@ class OAuthSettings(BaseSettings):
 
 # 全局设置实例
 settings = OAuthSettings()  # type: ignore[call-arg]
-
-

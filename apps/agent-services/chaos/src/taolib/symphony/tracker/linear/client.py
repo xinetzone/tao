@@ -220,9 +220,7 @@ class LinearClient(TrackerClient):
                 )
         except Exception as exc:
             # gql 会在传输错误时抛出异常
-            raise LinearAPIRequestError(
-                f"Linear API 请求失败: {exc}"
-            ) from exc
+            raise LinearAPIRequestError(f"Linear API 请求失败: {exc}") from exc
 
         # 检查 GraphQL errors
         if isinstance(result, dict) and "errors" in result:

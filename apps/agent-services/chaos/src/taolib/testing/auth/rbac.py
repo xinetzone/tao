@@ -155,5 +155,3 @@ class RBACPolicy:
                 scopes=scopes,
             )
         return cls(roles)
-
-

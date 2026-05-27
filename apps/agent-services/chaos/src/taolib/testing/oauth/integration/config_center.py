@@ -142,5 +142,3 @@ class ConfigCenterIntegration:
             "roles": roles,
             "user": user,
         }
-
-

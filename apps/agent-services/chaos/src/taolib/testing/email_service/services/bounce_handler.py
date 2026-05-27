@@ -104,5 +104,3 @@ class BounceHandler:
         await self._subscription.unsubscribe_by_email(
             recipient, reason="Spam complaint"
         )
-
-

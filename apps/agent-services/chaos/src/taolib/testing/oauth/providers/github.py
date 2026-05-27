@@ -200,5 +200,3 @@ class GitHubOAuthProvider:
                 json={"access_token": token},
             )
             return response.status_code == 204
-
-

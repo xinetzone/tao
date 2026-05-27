@@ -64,5 +64,3 @@ async def get_failure(
         )
 
     return record.model_dump(by_alias=True)
-
-

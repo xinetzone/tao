@@ -13,7 +13,6 @@ import math
 import os
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 
 
@@ -21,6 +20,7 @@ def get_pdf_page_count(pdf_path: str) -> int:
     """获取 PDF 总页数（使用 pypdfium2，marker-pdf 已依赖）"""
     try:
         import pypdfium2 as pdfium
+
         doc = pdfium.PdfDocument(pdf_path)
         count = len(doc)
         doc.close()
@@ -36,9 +36,12 @@ def convert_page_range(pdf_path: str, start: int, end: int, output_dir: str) -> 
     cmd = [
         "marker_single",
         pdf_path,
-        "--output_dir", output_dir,
-        "--output_format", "markdown",
-        "--page_range", range_str,
+        "--output_dir",
+        output_dir,
+        "--output_format",
+        "markdown",
+        "--page_range",
+        range_str,
         "--disable_tqdm",
     ]
     print(f"  转换页码 {range_str} -> {output_dir}")
@@ -70,7 +73,9 @@ def merge_batch_outputs(batch_dirs: list, final_output: str) -> None:
 def main():
     parser = argparse.ArgumentParser(description="分批转换 PDF 为 Markdown")
     parser.add_argument("pdf_path", help="输入 PDF 文件路径")
-    parser.add_argument("--batch-size", type=int, default=30, help="每批处理的页数（默认 30）")
+    parser.add_argument(
+        "--batch-size", type=int, default=30, help="每批处理的页数（默认 30）"
+    )
     parser.add_argument("--output-dir", default=".", help="输出目录")
     parser.add_argument("--output-name", default=None, help="最终合并文件名")
     args = parser.parse_args()

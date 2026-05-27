@@ -47,5 +47,3 @@ class ConfigChangedEvent:
             "timestamp": self.timestamp.isoformat(),
             "new_value": self.new_value,
         }
-
-

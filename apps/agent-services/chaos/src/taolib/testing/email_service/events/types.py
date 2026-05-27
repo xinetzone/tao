@@ -152,5 +152,3 @@ class EmailFailedEvent:
             "retry_count": self.retry_count,
             "timestamp": self.timestamp.isoformat(),
         }
-
-

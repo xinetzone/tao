@@ -291,5 +291,3 @@ class UploadService:
             except Exception:
                 continue
         return count
-
-

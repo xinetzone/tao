@@ -267,5 +267,3 @@ async def delete_user(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="用户不存在",
         )
-
-

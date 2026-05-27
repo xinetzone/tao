@@ -28,8 +28,12 @@ class Message(BaseModel):
     message_type: MessageType = Field(..., description="消息类型")
     sender_id: str = Field(..., description="发送者ID")
     receiver_id: str | None = Field(None, description="接收者ID(None表示广播)")
-    payload: MessagePayload = Field(default_factory=MessagePayload, description="消息载荷")
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC), description="时间戳")
+    payload: MessagePayload = Field(
+        default_factory=MessagePayload, description="消息载荷"
+    )
+    timestamp: datetime = Field(
+        default_factory=lambda: datetime.now(UTC), description="时间戳"
+    )
     priority: int = Field(default=5, ge=1, le=10, description="优先级(1-10)")
     requires_response: bool = Field(default=False, description="是否需要响应")
     response_to: str | None = Field(None, description="响应的消息ID")

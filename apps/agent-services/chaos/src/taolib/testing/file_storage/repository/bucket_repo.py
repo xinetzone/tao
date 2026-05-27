@@ -61,5 +61,3 @@ class BucketRepository(AsyncRepository[BucketDocument]):
         await self._collection.create_index("name", unique=True)
         await self._collection.create_index("tags")
         await self._collection.create_index("storage_class")
-
-

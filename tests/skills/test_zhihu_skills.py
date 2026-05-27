@@ -8,8 +8,6 @@ from __future__ import annotations
 
 import importlib.util
 import json
-import os
-import sys
 from io import BytesIO
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -36,11 +34,10 @@ zhihu_search = _load_module(
     "zhihu_search", _SKILLS_DIR / "zhihu-search" / "scripts" / "zhihu-search.py"
 )
 global_search = _load_module(
-    "global_search", _SKILLS_DIR / "zhihu-global-search" / "scripts" / "global-search.py"
+    "global_search",
+    _SKILLS_DIR / "zhihu-global-search" / "scripts" / "global-search.py",
 )
-zhida = _load_module(
-    "zhida", _SKILLS_DIR / "zhihu-zhida" / "scripts" / "zhida.py"
-)
+zhida = _load_module("zhida", _SKILLS_DIR / "zhihu-zhida" / "scripts" / "zhida.py")
 hot_list = _load_module(
     "hot_list", _SKILLS_DIR / "zhihu-hot-list" / "scripts" / "hot-list.py"
 )
@@ -176,8 +173,12 @@ class TestZhihuSearch:
 
     def test_request_zhihu_success(self, monkeypatch):
         monkeypatch.setenv("ZHIHU_ACCESS_SECRET", "test-token")
-        resp_body = json.dumps({"Code": 0, "Message": "ok", "Data": {"Items": []}}).encode()
-        with patch.object(zhihu_search, "urlopen", return_value=_fake_urlopen_bytes(resp_body)):
+        resp_body = json.dumps(
+            {"Code": 0, "Message": "ok", "Data": {"Items": []}}
+        ).encode()
+        with patch.object(
+            zhihu_search, "urlopen", return_value=_fake_urlopen_bytes(resp_body)
+        ):
             result = zhihu_search.request_zhihu("hello", 3)
         assert result["Code"] == 0
 
@@ -186,9 +187,11 @@ class TestZhihuSearch:
     def test_request_zhihu_http_error(self, monkeypatch):
         monkeypatch.setenv("ZHIHU_ACCESS_SECRET", "test-token")
         err = _fake_urlopen_http_error(403, b'{"error":"forbidden"}')
-        with patch.object(zhihu_search, "urlopen", side_effect=err):
-            with pytest.raises(SystemExit):
-                zhihu_search.request_zhihu("hello", 3)
+        with (
+            patch.object(zhihu_search, "urlopen", side_effect=err),
+            pytest.raises(SystemExit),
+        ):
+            zhihu_search.request_zhihu("hello", 3)
 
     # --- request_zhihu: network / timeout error ---
 
@@ -196,9 +199,11 @@ class TestZhihuSearch:
         monkeypatch.setenv("ZHIHU_ACCESS_SECRET", "test-token")
         from urllib.error import URLError
 
-        with patch.object(zhihu_search, "urlopen", side_effect=URLError("timeout")):
-            with pytest.raises(SystemExit):
-                zhihu_search.request_zhihu("hello", 3)
+        with (
+            patch.object(zhihu_search, "urlopen", side_effect=URLError("timeout")),
+            pytest.raises(SystemExit),
+        ):
+            zhihu_search.request_zhihu("hello", 3)
 
 
 # ===================================================================
@@ -212,7 +217,10 @@ class TestGlobalSearch:
     # --- parse_filter / parse_search_db ---
 
     def test_parse_filter_valid(self):
-        assert global_search.parse_filter({"filter": 'host=="example.com"'}) == 'host=="example.com"'
+        assert (
+            global_search.parse_filter({"filter": 'host=="example.com"'})
+            == 'host=="example.com"'
+        )
 
     def test_parse_filter_empty(self):
         assert global_search.parse_filter({}) == ""
@@ -279,8 +287,12 @@ class TestGlobalSearch:
 
     def test_request_success(self, monkeypatch):
         monkeypatch.setenv("ZHIHU_ACCESS_SECRET", "test-token")
-        resp_body = json.dumps({"Code": 0, "Message": "ok", "Data": {"Items": []}}).encode()
-        with patch.object(global_search, "urlopen", return_value=_fake_urlopen_bytes(resp_body)):
+        resp_body = json.dumps(
+            {"Code": 0, "Message": "ok", "Data": {"Items": []}}
+        ).encode()
+        with patch.object(
+            global_search, "urlopen", return_value=_fake_urlopen_bytes(resp_body)
+        ):
             result = global_search.request_global_search("hello", 5, "", "all")
         assert result["Code"] == 0
 
@@ -289,9 +301,11 @@ class TestGlobalSearch:
     def test_request_http_error(self, monkeypatch):
         monkeypatch.setenv("ZHIHU_ACCESS_SECRET", "test-token")
         err = _fake_urlopen_http_error(500, b'{"error":"internal"}')
-        with patch.object(global_search, "urlopen", side_effect=err):
-            with pytest.raises(SystemExit):
-                global_search.request_global_search("hello", 5, "", "")
+        with (
+            patch.object(global_search, "urlopen", side_effect=err),
+            pytest.raises(SystemExit),
+        ):
+            global_search.request_global_search("hello", 5, "", "")
 
     # --- parse_count: clamped to 20 max ---
 
@@ -408,8 +422,9 @@ class TestZhida:
         monkeypatch.setenv("ZHIHU_ACCESS_SECRET", "test-token")
         from urllib.error import URLError
 
-        with patch.object(zhida, "urlopen", side_effect=URLError("timeout")), pytest.raises(
-            SystemExit
+        with (
+            patch.object(zhida, "urlopen", side_effect=URLError("timeout")),
+            pytest.raises(SystemExit),
         ):
             zhida.post_json({"model": "m", "messages": []})
 
@@ -500,7 +515,9 @@ class TestHotList:
             },
         }
         resp_body = json.dumps(api_resp).encode()
-        with patch.object(hot_list, "urlopen", return_value=_fake_urlopen_bytes(resp_body)):
+        with patch.object(
+            hot_list, "urlopen", return_value=_fake_urlopen_bytes(resp_body)
+        ):
             result = hot_list.request_hot_list(5)
         assert result["Code"] == 0
         assert result["Data"]["Total"] == 1
@@ -510,7 +527,10 @@ class TestHotList:
     def test_request_http_error(self, monkeypatch):
         monkeypatch.setenv("ZHIHU_ACCESS_SECRET", "test-token")
         err = _fake_urlopen_http_error(401, b'{"error":"unauthorized"}')
-        with patch.object(hot_list, "urlopen", side_effect=err), pytest.raises(SystemExit):
+        with (
+            patch.object(hot_list, "urlopen", side_effect=err),
+            pytest.raises(SystemExit),
+        ):
             hot_list.request_hot_list(5)
 
     # --- request_hot_list: timeout ---
@@ -519,7 +539,8 @@ class TestHotList:
         monkeypatch.setenv("ZHIHU_ACCESS_SECRET", "test-token")
         from urllib.error import URLError
 
-        with patch.object(
-            hot_list, "urlopen", side_effect=URLError("timeout")
-        ), pytest.raises(SystemExit):
+        with (
+            patch.object(hot_list, "urlopen", side_effect=URLError("timeout")),
+            pytest.raises(SystemExit),
+        ):
             hot_list.request_hot_list(5)

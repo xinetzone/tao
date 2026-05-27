@@ -14,5 +14,3 @@ except Exception:
     import os
 
     __version__ = os.environ.get("TAOLIB_VERSION", "0.0.0")
-
-

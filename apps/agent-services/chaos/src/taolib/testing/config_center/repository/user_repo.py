@@ -133,5 +133,3 @@ class UserRepository(AsyncRepository[UserDocument]):
             role["_id"] = str(role["_id"])
 
         return roles
-
-

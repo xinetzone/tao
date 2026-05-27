@@ -49,5 +49,3 @@ async def batch_generate_qr(request: QRBatchRequest) -> StreamingResponse:
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-

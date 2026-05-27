@@ -19,5 +19,3 @@ __all__ = [
     "EmailQueuedEvent",
     "EmailSentEvent",
 ]
-
-

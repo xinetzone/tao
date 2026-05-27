@@ -52,5 +52,3 @@ class ProviderRegistry:
     def list_providers(self) -> list[str]:
         """列出所有已注册的提供商名称。"""
         return list(self._providers.keys())
-
-

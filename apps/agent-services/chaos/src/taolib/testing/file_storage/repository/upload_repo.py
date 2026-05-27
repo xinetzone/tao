@@ -93,5 +93,3 @@ class UploadSessionRepository(AsyncRepository[UploadSessionDocument]):
         await self._collection.create_index("status")
         await self._collection.create_index("created_by")
         await self._collection.create_index("expires_at")
-
-

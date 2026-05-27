@@ -74,5 +74,3 @@ def config_pattern(environment: str | None = None, service: str | None = None) -
     if service:
         return f"config:*:{service}:*"
     return "config:*"
-
-

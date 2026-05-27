@@ -2,6 +2,7 @@
 
 Provides Protocol definition, Redis implementation, and in-memory implementation for testing.
 """
+
 import time
 from typing import Any, Protocol
 
@@ -331,5 +332,3 @@ class InMemoryRateLimitStore:
             "requests_per_second": round(rps, 2),
             "top_paths": [{"path": p, "count": c} for p, c in top_paths],
         }
-
-

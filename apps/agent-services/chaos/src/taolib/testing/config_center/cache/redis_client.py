@@ -6,5 +6,3 @@
 from taolib.testing._base.redis_pool import close_redis_client, get_redis_client
 
 __all__ = ["close_redis_client", "get_redis_client"]
-
-

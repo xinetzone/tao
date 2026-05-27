@@ -232,5 +232,3 @@ class JWTService:
             type=data.get("type", "access"),
             jti=data.get("jti", ""),
         )
-
-

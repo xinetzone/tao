@@ -42,5 +42,3 @@ async def health_check(request: Request) -> HealthResponse:
         database=db_status,
         redis=redis_status,
     )
-
-

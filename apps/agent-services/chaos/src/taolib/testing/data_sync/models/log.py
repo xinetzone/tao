@@ -79,5 +79,3 @@ class SyncLogDocument(SyncLogBase):
             error_message=self.error_message,
             checkpoint_snapshot=self.checkpoint_snapshot,
         )
-
-

@@ -62,5 +62,3 @@ class OAuthSessionDocument(BaseModel):
             expires_at=self.expires_at,
             last_activity_at=self.last_activity_at,
         )
-
-

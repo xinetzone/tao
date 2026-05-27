@@ -123,5 +123,3 @@ class FileRepository(AsyncRepository[FileMetadataDocument]):
         await self._collection.create_index("media_type")
         await self._collection.create_index("expires_at")
         await self._collection.create_index([("bucket_id", 1), ("created_at", -1)])
-
-

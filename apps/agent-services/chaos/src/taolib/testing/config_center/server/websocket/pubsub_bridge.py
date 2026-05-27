@@ -3,6 +3,7 @@
 桥接 Redis PubSub 与 WebSocket Manager，实现多实例部署时的消息广播。
 支持模式订阅、健康监控和自动指数退避重连。
 """
+
 import asyncio
 import json
 import logging
@@ -218,5 +219,3 @@ class PubSubBridge:
             except Exception:
                 logger.exception("PubSub 重连失败")
                 continue
-
-

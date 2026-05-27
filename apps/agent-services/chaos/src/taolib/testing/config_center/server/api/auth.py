@@ -265,5 +265,3 @@ async def get_current_user_info(
 ):
     """获取当前用户信息。"""
     return current_user.to_response()
-
-

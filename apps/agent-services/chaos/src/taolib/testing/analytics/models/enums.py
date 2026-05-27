@@ -26,5 +26,3 @@ class DeviceType(StrEnum):
     MOBILE = "mobile"
     TABLET = "tablet"
     UNKNOWN = "unknown"
-
-

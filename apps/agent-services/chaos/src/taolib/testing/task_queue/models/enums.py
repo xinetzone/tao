@@ -23,5 +23,3 @@ class TaskPriority(StrEnum):
     HIGH = "high"
     NORMAL = "normal"
     LOW = "low"
-
-

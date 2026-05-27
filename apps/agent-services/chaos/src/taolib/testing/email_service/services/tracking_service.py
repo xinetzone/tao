@@ -139,5 +139,3 @@ class TrackingService:
         if mapping:
             status, extra = mapping
             await self._email_repo.update_status(email_id, status, **extra)
-
-

@@ -151,9 +151,7 @@ async def send_bulk(data: list[EmailCreate], request: Request):
 ]
 ```
 """,
-    responses={
-        200: {"description": "成功获取邮件列表"}
-    },
+    responses={200: {"description": "成功获取邮件列表"}},
 )
 async def list_emails(
     request: Request,
@@ -244,13 +242,9 @@ async def get_email(email_id: str, request: Request):
 ]
 ```
 """,
-    responses={
-        200: {"description": "成功获取追踪事件"}
-    },
+    responses={200: {"description": "成功获取追踪事件"}},
 )
 async def get_email_events(email_id: str, request: Request):
     """获取邮件的追踪事件。"""
     events = await request.app.state.tracking_service.get_events_for_email(email_id)
     return events
-
-

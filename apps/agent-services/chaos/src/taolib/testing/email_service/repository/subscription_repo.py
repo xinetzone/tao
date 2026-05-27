@@ -57,5 +57,3 @@ class SubscriptionRepository(AsyncRepository[SubscriptionDocument]):
         await self._collection.create_index("email", unique=True)
         await self._collection.create_index("unsubscribe_token", unique=True)
         await self._collection.create_index("status")
-
-

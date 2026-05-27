@@ -220,5 +220,3 @@ class WorkerManager:
 
         except Exception:
             logger.exception("Error during crash recovery.")
-
-

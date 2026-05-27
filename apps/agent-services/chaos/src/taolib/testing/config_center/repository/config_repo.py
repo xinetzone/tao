@@ -140,5 +140,3 @@ class ConfigRepository(AsyncRepository[ConfigDocument]):
         await self._collection.create_index([("status", 1)])
         await self._collection.create_index([("tags", 1)])
         await self._collection.create_index([("environment", 1), ("service", 1)])
-
-

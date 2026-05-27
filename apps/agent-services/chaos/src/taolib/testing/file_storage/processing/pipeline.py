@@ -112,5 +112,3 @@ class ProcessingPipeline:
         if not self._thumbnail_generator.supports(content_type):
             return []
         return await self._thumbnail_generator.generate(data, content_type, sizes)
-
-

@@ -59,5 +59,3 @@ __all__ = [
     "SubscriptionResponse",
     "SubscriptionStatus",
 ]
-
-

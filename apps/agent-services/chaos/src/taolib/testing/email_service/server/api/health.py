@@ -52,5 +52,3 @@ async def health_check(request: Request):
         result["status"] = "degraded"
 
     return result
-
-

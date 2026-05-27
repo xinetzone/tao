@@ -3,6 +3,7 @@
 Implements the sliding window rate limiting logic with whitelist support
 and path-specific rules.
 """
+
 import ipaddress
 import time
 
@@ -197,5 +198,3 @@ class RateLimiter:
 
         # Update stats
         await self._store.increment_stats(identifier, path)
-
-

@@ -194,5 +194,3 @@ class RequestAuditInfo(BaseModel):
     headers: dict[str, str] = Field(default_factory=dict, description="请求头")
     status_code: int | None = Field(default=None, description="响应状态码")
     response_time_ms: float | None = Field(default=None, description="响应时间（毫秒）")
-
-

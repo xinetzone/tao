@@ -18,5 +18,3 @@ def remote_prefixes(connection: SupportsPrefix, *prefix_cmds: str) -> Iterator[N
             if normalized:
                 stack.enter_context(connection.prefix(normalized))
         yield
-
-

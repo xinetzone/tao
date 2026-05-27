@@ -50,5 +50,3 @@ class APIKeyInvalidError(AuthError):
 
     def __init__(self, message: str = "无效的 API 密钥") -> None:
         super().__init__(message)
-
-

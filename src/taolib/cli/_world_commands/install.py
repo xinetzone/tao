@@ -86,10 +86,7 @@ def _print_dry_run_report(
         result: :class:`~taolib.cli._world_engines.compat_engine.ValidationResult`
             实例。
     """
-    print(
-        f"[dry-run] Installing {manifest.name}@{manifest.version}"
-        f" from {source_path}"
-    )
+    print(f"[dry-run] Installing {manifest.name}@{manifest.version} from {source_path}")
     print("\nCompatibility check:")
 
     errors_by_level = {level: [] for level in ValidationLevel}
@@ -212,9 +209,7 @@ def _handle_local(parsed: ParsedSource, args: argparse.Namespace) -> int:
     if source_path.is_dir():
         manifest_path = source_path / "manifest.toml"
     else:
-        print(
-            f"Error: source '{source}' is not a directory", file=sys.stderr
-        )
+        print(f"Error: source '{source}' is not a directory", file=sys.stderr)
         return 1
 
     if not manifest_path.exists():
@@ -350,8 +345,7 @@ def _install_from_resolved(
     world_toml_path = find_world_toml()
     if world_toml_path is None:
         print(
-            "Error: world.toml not found. "
-            "Are you in an AgentForge world directory?",
+            "Error: world.toml not found. Are you in an AgentForge world directory?",
             file=sys.stderr,
         )
         return 1
@@ -369,7 +363,8 @@ def _install_from_resolved(
     # --force 模式允许覆盖 L4 文件冲突
     if args.force and not args.dry_run:
         filtered_errors = [
-            err for err in result.errors
+            err
+            for err in result.errors
             if err.level != ValidationLevel.L4_FILE_CONFLICTS
         ]
         result.errors = filtered_errors
@@ -446,7 +441,7 @@ def _perform_install(
 
     try:
         register_fragment(manifest, world_toml_path)
-    except Exception as exc:  # noqa: BLE001 - 注册失败统一回滚
+    except Exception as exc:
         print(f"Error during world.toml registration: {exc}", file=sys.stderr)
         print("Rolling back...")
         rollback(context)
@@ -469,8 +464,7 @@ def _perform_install(
         print(f"  {rel}")
     print()
     print(
-        f"Registered in world.toml: [fragments.{manifest.name}]"
-        f" v{manifest.version}",
+        f"Registered in world.toml: [fragments.{manifest.name}] v{manifest.version}",
     )
     print()
     print("Done.")

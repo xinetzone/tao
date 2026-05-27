@@ -126,5 +126,3 @@ class AsyncRepository(ABC, Generic[T]):
             符合条件的文档数量
         """
         return await self._collection.count_documents(filters or {})
-
-

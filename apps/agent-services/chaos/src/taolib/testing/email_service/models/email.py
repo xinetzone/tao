@@ -147,5 +147,3 @@ class EmailDocument(EmailBase):
             updated_at=self.updated_at,
             metadata=self.metadata,
         )
-
-

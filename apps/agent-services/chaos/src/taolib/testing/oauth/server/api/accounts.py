@@ -173,5 +173,3 @@ async def unlink_provider(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=e.message,
         )
-
-

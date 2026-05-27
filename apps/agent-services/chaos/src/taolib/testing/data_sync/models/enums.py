@@ -37,5 +37,3 @@ class FailureAction(StrEnum):
     SKIP = "skip"
     RETRY = "retry"
     ABORT = "abort"
-
-

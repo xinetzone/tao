@@ -58,5 +58,3 @@ class MediaType(StrEnum):
     DOCUMENT = "document"
     AUDIO = "audio"
     OTHER = "other"
-
-

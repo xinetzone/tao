@@ -7,5 +7,3 @@ class QRCodeServerConfig(BaseSettings):
     host: str = "0.0.0.0"
     port: int = 5174
     debug: bool = False
-
-

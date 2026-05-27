@@ -166,5 +166,3 @@ class LifecycleService:
             await self._file_repo.delete(file.id)
             count += 1
         return count
-
-

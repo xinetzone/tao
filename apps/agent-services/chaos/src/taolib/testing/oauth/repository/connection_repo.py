@@ -100,5 +100,3 @@ class OAuthConnectionRepository(AsyncRepository[OAuthConnectionDocument]):
         )
         await self._collection.create_index("user_id")
         await self._collection.create_index("status")
-
-

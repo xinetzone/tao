@@ -108,5 +108,3 @@ class NullTokenBlacklist:
     async def is_blacklisted(self, jti: str) -> bool:
         """始终返回 False。"""
         return False
-
-

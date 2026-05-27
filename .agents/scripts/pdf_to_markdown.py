@@ -22,7 +22,6 @@ PDF → Markdown 全流程转换脚本
 """
 
 import argparse
-import importlib.util
 import math
 import os
 import shutil
@@ -38,6 +37,7 @@ MARKER_CMD = "marker_single"
 
 # --- 工具函数 ---
 
+
 def check_marker_installed() -> bool:
     """检查 marker-pdf 是否已安装"""
     return shutil.which(MARKER_CMD) is not None
@@ -46,7 +46,15 @@ def check_marker_installed() -> bool:
 def install_marker_pdf() -> bool:
     """安装 marker-pdf（Windows 使用 --only-binary 策略）"""
     print("[安装] marker-pdf 未安装，开始安装...")
-    cmd = [sys.executable, "-m", "pip", "install", "marker-pdf", "--only-binary", ":all:"]
+    cmd = [
+        sys.executable,
+        "-m",
+        "pip",
+        "install",
+        "marker-pdf",
+        "--only-binary",
+        ":all:",
+    ]
     result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
     if result.returncode == 0:
         print("[安装] marker-pdf 安装成功")
@@ -60,6 +68,7 @@ def get_pdf_page_count(pdf_path: str) -> int:
     """获取 PDF 总页数"""
     try:
         import pypdfium2 as pdfium
+
         doc = pdfium.PdfDocument(pdf_path)
         count = len(doc)
         doc.close()
@@ -75,8 +84,10 @@ def convert_all_pages(pdf_path: str, output_dir: str) -> bool:
     cmd = [
         MARKER_CMD,
         pdf_path,
-        "--output_dir", output_dir,
-        "--output_format", "markdown",
+        "--output_dir",
+        output_dir,
+        "--output_format",
+        "markdown",
         "--disable_tqdm",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
@@ -92,9 +103,12 @@ def convert_page_range(pdf_path: str, start: int, end: int, output_dir: str) -> 
     cmd = [
         MARKER_CMD,
         pdf_path,
-        "--output_dir", output_dir,
-        "--output_format", "markdown",
-        "--page_range", range_str,
+        "--output_dir",
+        output_dir,
+        "--output_format",
+        "markdown",
+        "--page_range",
+        range_str,
         "--disable_tqdm",
     ]
     result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
@@ -131,7 +145,7 @@ def quality_check(md_file: str, original_pdf: str) -> dict:
         "warnings": [],
     }
 
-    with open(md_file, "r", encoding="utf-8") as f:
+    with open(md_file, encoding="utf-8") as f:
         for line in f:
             stats["line_count"] += 1
             stats["char_count"] += len(line)
@@ -158,8 +172,12 @@ def main():
     parser = argparse.ArgumentParser(description="PDF → Markdown 全流程转换")
     parser.add_argument("pdf_path", help="输入 PDF 文件路径")
     parser.add_argument("--output", "-o", default=None, help="输出 Markdown 文件路径")
-    parser.add_argument("--batch-size", type=int, default=0,
-                        help="分批大小（0=自动判断，默认>100页自动分批）")
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=0,
+        help="分批大小（0=自动判断，默认>100页自动分批）",
+    )
     parser.add_argument("--work-dir", default=None, help="临时工作目录")
     parser.add_argument("--skip-check", action="store_true", help="跳过环境检查")
     parser.add_argument("--keep-temp", action="store_true", help="保留临时文件")
@@ -196,10 +214,7 @@ def main():
     else:
         final_output = os.path.join(os.path.dirname(pdf_path), f"{pdf_name}.md")
 
-    if args.work_dir:
-        work_dir = args.work_dir
-    else:
-        work_dir = tempfile.mkdtemp(prefix="pdf2md_")
+    work_dir = args.work_dir or tempfile.mkdtemp(prefix="pdf2md_")
 
     os.makedirs(work_dir, exist_ok=True)
     print(f"[信息] 工作目录: {work_dir}")
@@ -256,7 +271,7 @@ def main():
     print(f"二级标题: {stats['h2_count']}")
 
     if stats["warnings"]:
-        print(f"\n⚠️ 质量警告:")
+        print("\n⚠️ 质量警告:")
         for w in stats["warnings"]:
             print(f"  - {w}")
     else:

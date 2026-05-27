@@ -66,5 +66,3 @@ def configure_matplotlib_fonts(
 
 if __name__ == "__main__":
     configure_matplotlib_fonts()
-
-

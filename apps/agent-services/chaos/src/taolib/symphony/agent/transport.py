@@ -66,7 +66,9 @@ class LocalTransport(AgentTransport):
     async def start_process(self, command: str, cwd: str) -> AgentProcess:
         """在本机启动子进程。"""
         proc = await asyncio.create_subprocess_exec(
-            "bash", "-lc", command,
+            "bash",
+            "-lc",
+            command,
             cwd=cwd,
             stdin=asyncio.subprocess.PIPE,
             stdout=asyncio.subprocess.PIPE,

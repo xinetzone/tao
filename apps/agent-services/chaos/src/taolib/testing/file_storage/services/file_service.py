@@ -269,5 +269,3 @@ class FileService:
         return await self._storage_backend.generate_presigned_url(
             file.bucket_id, file.object_key, expires_in
         )
-
-

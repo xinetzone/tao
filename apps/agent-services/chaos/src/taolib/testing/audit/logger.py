@@ -170,7 +170,10 @@ class InMemoryAuditStorage:
             return False
         if filter_params.action and log.action != filter_params.action:
             return False
-        if filter_params.resource_type and log.resource_type != filter_params.resource_type:
+        if (
+            filter_params.resource_type
+            and log.resource_type != filter_params.resource_type
+        ):
             return False
         if filter_params.resource_id and log.resource_id != filter_params.resource_id:
             return False
@@ -180,7 +183,9 @@ class InMemoryAuditStorage:
             return False
         if filter_params.end_time and log.timestamp > filter_params.end_time:
             return False
-        return not (filter_params.ip_address and log.ip_address != filter_params.ip_address)
+        return not (
+            filter_params.ip_address and log.ip_address != filter_params.ip_address
+        )
 
 
 class FileAuditStorage:
@@ -309,7 +314,10 @@ class FileAuditStorage:
             return False
         if filter_params.action and log.action != filter_params.action:
             return False
-        if filter_params.resource_type and log.resource_type != filter_params.resource_type:
+        if (
+            filter_params.resource_type
+            and log.resource_type != filter_params.resource_type
+        ):
             return False
         if filter_params.resource_id and log.resource_id != filter_params.resource_id:
             return False
@@ -319,7 +327,9 @@ class FileAuditStorage:
             return False
         if filter_params.end_time and log.timestamp > filter_params.end_time:
             return False
-        return not (filter_params.ip_address and log.ip_address != filter_params.ip_address)
+        return not (
+            filter_params.ip_address and log.ip_address != filter_params.ip_address
+        )
 
 
 class MongoDBAuditStorage:
@@ -735,12 +745,8 @@ class AuditLogger:
         Returns:
             删除的日志数量
         """
-        before = datetime.now(UTC).replace(
-            hour=0, minute=0, second=0, microsecond=0
-        )
+        before = datetime.now(UTC).replace(hour=0, minute=0, second=0, microsecond=0)
         from datetime import timedelta
 
         before = before - timedelta(days=days)
         return await self._storage.delete_old_logs(before)
-
-

@@ -26,5 +26,3 @@ __all__ = [
     # Session models
     "SessionDocument",
 ]
-
-

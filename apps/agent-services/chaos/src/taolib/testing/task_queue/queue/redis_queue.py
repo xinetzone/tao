@@ -312,5 +312,3 @@ class RedisTaskQueue:
             task_id: 任务 ID
         """
         await self._redis.srem(self._key("failed"), task_id)
-
-

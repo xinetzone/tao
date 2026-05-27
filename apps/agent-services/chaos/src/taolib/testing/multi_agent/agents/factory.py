@@ -117,7 +117,10 @@ class AgentFactory:
         return agent
 
     async def create_agent_from_template(
-        self, template_id: str, agent_name: str | None = None, agent_id: str | None = None
+        self,
+        template_id: str,
+        agent_name: str | None = None,
+        agent_id: str | None = None,
     ) -> BaseAgent:
         """从模板创建智能体。
 
@@ -178,7 +181,9 @@ class AgentFactory:
                 agent_type=AgentType.MAIN,
                 capabilities=[
                     AgentCapability(name="任务分析", description="分析任务需求"),
-                    AgentCapability(name="智能体调度", description="调度和管理子智能体"),
+                    AgentCapability(
+                        name="智能体调度", description="调度和管理子智能体"
+                    ),
                     AgentCapability(name="结果聚合", description="聚合子任务结果"),
                 ],
                 skills=[],

@@ -75,9 +75,7 @@ def _create_fragment_files(tmp_path: Path, rel_paths: list[str]) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_remove_success(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_remove_success(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """正常卸载：文件被删除，world.toml 中该段已移除。"""
     _setup_world(tmp_path, _WORLD_TOML_WITH_FRAGMENT)
     _create_fragment_files(tmp_path, ["rules/citations.md"])
@@ -96,9 +94,7 @@ def test_remove_success(
     assert "[fragments.citations]" not in text
 
 
-def test_remove_not_installed(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_remove_not_installed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """目标未安装时返回 1。"""
     _setup_world(tmp_path, _WORLD_TOML_WITH_FRAGMENT)
     monkeypatch.chdir(tmp_path)
@@ -147,9 +143,7 @@ def test_remove_force_skips_dependents(
     assert "[fragments.citations]" not in text
 
 
-def test_remove_keep_files(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_remove_keep_files(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """--keep-files 仅注销，保留文件。"""
     _setup_world(tmp_path, _WORLD_TOML_WITH_FRAGMENT)
     _create_fragment_files(tmp_path, ["rules/citations.md"])

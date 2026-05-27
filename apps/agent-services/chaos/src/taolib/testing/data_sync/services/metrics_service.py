@@ -110,5 +110,3 @@ class MetricsService:
             "job_id": job_id,
             "total_failures": total_failures,
         }
-
-

@@ -9,10 +9,10 @@ from pathlib import Path
 script_dir = Path(__file__).resolve().parent
 sys.path.insert(0, str(script_dir))
 
-from validate_skill_md import run as validate_skill_md
-from validate_workbench import run as validate_workbench
-from validate_retro_feedback import run as validate_retro_feedback
-from validate_references import run as validate_references
+from validate_references import run as validate_references  # noqa: E402
+from validate_retro_feedback import run as validate_retro_feedback  # noqa: E402
+from validate_skill_md import run as validate_skill_md  # noqa: E402
+from validate_workbench import run as validate_workbench  # noqa: E402
 
 
 def print_summary_report(results: dict[str, dict[str, list[dict]]]) -> int:
@@ -35,12 +35,19 @@ def print_summary_report(results: dict[str, dict[str, list[dict]]]) -> int:
             continue
 
         for item_name, issues in sorted(validator_results.items()):
-            sorted_issues = sorted(issues, key=lambda i: severity_order.get(i["severity"], 3))
-            
+            sorted_issues = sorted(
+                issues, key=lambda i: severity_order.get(i["severity"], 3)
+            )
+
             has_issue = any(i["severity"] in ("MISSING", "WARN") for i in sorted_issues)
-            status = "❌" if any(i["severity"] == "MISSING" for i in sorted_issues) else \
-                     "⚠️" if has_issue else "✅"
-            
+            status = (
+                "❌"
+                if any(i["severity"] == "MISSING" for i in sorted_issues)
+                else "⚠️"
+                if has_issue
+                else "✅"
+            )
+
             print(f"\n  {status} {item_name}")
             for issue in sorted_issues:
                 tag = issue["severity"]
@@ -65,9 +72,9 @@ def print_summary_report(results: dict[str, dict[str, list[dict]]]) -> int:
 
 def main() -> int:
     project_root = Path(__file__).resolve().parents[3]
-    
+
     print("🚀 正在运行技能验证体系综合校验...\n")
-    
+
     results = {
         "技能 SKILL.md 合规性": validate_skill_md(project_root),
         "探索工作台完整性": validate_workbench(project_root),

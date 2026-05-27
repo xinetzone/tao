@@ -3,6 +3,7 @@
 定义 FileMetadata 的 4-tier Pydantic 模型：
 Base → Create/Update → Response → Document
 """
+
 from datetime import UTC, datetime
 from typing import Any
 
@@ -112,5 +113,3 @@ class FileMetadataDocument(FileMetadataBase):
             created_at=self.created_at,
             updated_at=self.updated_at,
         )
-
-

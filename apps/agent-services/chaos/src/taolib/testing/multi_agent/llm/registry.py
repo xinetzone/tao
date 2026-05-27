@@ -3,7 +3,6 @@
 管理和注册所有可用的LLM模型提供商。
 """
 
-
 from typing import ClassVar
 
 from taolib.testing.multi_agent.llm.protocols import BaseLLMProvider
@@ -16,7 +15,9 @@ class ModelRegistry:
     _providers: ClassVar[dict[ModelProvider, type[BaseLLMProvider]]] = {}
 
     @classmethod
-    def register(cls, provider_type: ModelProvider, provider_class: type[BaseLLMProvider]) -> None:
+    def register(
+        cls, provider_type: ModelProvider, provider_class: type[BaseLLMProvider]
+    ) -> None:
         """注册模型提供商。
 
         Args:
@@ -68,6 +69,7 @@ class ModelRegistry:
 # 尝试注册提供商
 try:
     from taolib.testing.multi_agent.llm.ollama_provider import OllamaProvider
+
     ModelRegistry.register(ModelProvider.OLLAMA, OllamaProvider)
 except ImportError:
     pass

@@ -87,5 +87,3 @@ class OAuthSessionRepository(AsyncRepository[OAuthSessionDocument]):
         await self._collection.create_index("user_id")
         await self._collection.create_index("expires_at", expireAfterSeconds=0)
         await self._collection.create_index([("is_active", 1), ("user_id", 1)])
-
-

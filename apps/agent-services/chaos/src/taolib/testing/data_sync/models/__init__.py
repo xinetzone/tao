@@ -47,5 +47,3 @@ __all__ = [
     # Failure models
     "FailureRecordDocument",
 ]
-
-

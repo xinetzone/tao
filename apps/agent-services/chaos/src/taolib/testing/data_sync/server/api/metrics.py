@@ -54,5 +54,3 @@ async def get_job_failure_summary(
     """获取指定作业的失败统计。"""
     svc = get_metrics_service(request)
     return await svc.get_failure_summary(job_id)
-
-

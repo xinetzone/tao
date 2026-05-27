@@ -82,5 +82,3 @@ class ThumbnailGeneratorProtocol(Protocol):
             缩略图输出列表
         """
         ...
-
-

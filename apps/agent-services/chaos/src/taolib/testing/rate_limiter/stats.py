@@ -1,4 +1,5 @@
 """Statistics aggregation and query service for rate limiter."""
+
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
@@ -104,5 +105,3 @@ class RateLimitStatsService:
         """
         data = await self._store.get_realtime_requests(window_seconds)
         return RealtimeStats(**data)
-
-

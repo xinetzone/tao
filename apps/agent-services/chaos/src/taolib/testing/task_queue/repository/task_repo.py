@@ -164,5 +164,3 @@ class TaskRepository(AsyncRepository[TaskDocument]):
         await self._collection.create_index(
             "created_at", expireAfterSeconds=2592000
         )  # 30 days TTL
-
-

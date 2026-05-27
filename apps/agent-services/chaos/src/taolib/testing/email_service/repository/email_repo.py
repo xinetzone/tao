@@ -111,5 +111,3 @@ class EmailRepository(AsyncRepository[EmailDocument]):
         await self._collection.create_index("schedule_at")
         await self._collection.create_index("recipients.email")
         await self._collection.create_index("tags")
-
-

@@ -167,5 +167,3 @@ async def delete_role(
         )
 
     await role_repo.delete(role_id)
-
-

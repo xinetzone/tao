@@ -14,5 +14,3 @@ api_router.include_router(
 )
 api_router.include_router(webhooks.router, prefix="/webhooks", tags=["Webhooks"])
 api_router.include_router(health.router, prefix="/health", tags=["Health"])
-
-

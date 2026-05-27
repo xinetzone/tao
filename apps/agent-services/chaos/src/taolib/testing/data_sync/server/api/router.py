@@ -12,5 +12,3 @@ api_router.include_router(logs.router, prefix="/logs", tags=["Logs"])
 api_router.include_router(health.router, prefix="/health", tags=["Health"])
 api_router.include_router(metrics.router, prefix="/metrics", tags=["Metrics"])
 api_router.include_router(failures.router, prefix="/failures", tags=["Failures"])
-
-

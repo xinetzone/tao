@@ -315,14 +315,12 @@ description = "demo"
 def test_fetch_git_success(monkeypatch: pytest.MonkeyPatch) -> None:
     """成功 clone 时返回 FetchResult，且 manifest 路径存在。"""
 
-    def fake_run(cmd, **kwargs):  # noqa: ANN001, ANN003
+    def fake_run(cmd, **kwargs):
         # 提取 git clone 的目标目录（命令最后一个参数）
         target = Path(cmd[-1])
         target.mkdir(parents=True, exist_ok=True)
         (target / "manifest.toml").write_text(_FETCH_MANIFEST, encoding="utf-8")
-        return subprocess.CompletedProcess(
-            args=cmd, returncode=0, stdout="", stderr=""
-        )
+        return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
 
     with patch("subprocess.run", side_effect=fake_run):
         result = fetch_git("https://example.com/demo", "v1.0.0")
@@ -338,22 +336,26 @@ def test_fetch_git_success(monkeypatch: pytest.MonkeyPatch) -> None:
 
 def test_fetch_git_missing_git_command() -> None:
     """git 不可用时（FileNotFoundError）应抛 FetchError。"""
-    with patch("subprocess.run", side_effect=FileNotFoundError("git")):
-        with pytest.raises(FetchError, match="git"):
-            fetch_git("https://example.com/demo", "v1.0.0")
+    with (
+        patch("subprocess.run", side_effect=FileNotFoundError("git")),
+        pytest.raises(FetchError, match="git"),
+    ):
+        fetch_git("https://example.com/demo", "v1.0.0")
 
 
 def test_fetch_git_clone_failure() -> None:
     """returncode != 0 时应抛 FetchError 并清理临时目录。"""
 
-    def fake_run(cmd, **kwargs):  # noqa: ANN001, ANN003
+    def fake_run(cmd, **kwargs):
         return subprocess.CompletedProcess(
             args=cmd, returncode=128, stdout="", stderr="fatal: not found"
         )
 
-    with patch("subprocess.run", side_effect=fake_run):
-        with pytest.raises(FetchError, match="git clone 失败"):
-            fetch_git("https://example.com/demo", "v1.0.0")
+    with (
+        patch("subprocess.run", side_effect=fake_run),
+        pytest.raises(FetchError, match="git clone 失败"),
+    ):
+        fetch_git("https://example.com/demo", "v1.0.0")
 
 
 # ---------------------------------------------------------------------------
@@ -437,9 +439,7 @@ def test_registry_install_dry_run(
     # 2) 构造 mock registry-index：tmp_path/registry-index/fragments/ci/citations.toml
     index_dir = tmp_path / "registry-index" / "fragments" / "ci"
     index_dir.mkdir(parents=True)
-    (index_dir / "citations.toml").write_text(
-        _CITATIONS_INDEX_TOML, encoding="utf-8"
-    )
+    (index_dir / "citations.toml").write_text(_CITATIONS_INDEX_TOML, encoding="utf-8")
 
     # 3) 构造 fetch_git 返回的临时目录（含 manifest.toml）
     fetched_dir = tmp_path / "fetched-citations"
@@ -449,7 +449,7 @@ def test_registry_install_dry_run(
 
     cleanup_called: list[bool] = []
 
-    def fake_fetch_git(git_url, git_ref, manifest_path="manifest.toml"):  # noqa: ANN001
+    def fake_fetch_git(git_url, git_ref, manifest_path="manifest.toml"):
         return FetchResult(
             local_path=fetched_dir,
             manifest_path=fetched_manifest,

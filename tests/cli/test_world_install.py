@@ -155,7 +155,9 @@ def _make_fragment_dir(tmp_path: Path, name: str, manifest_content: str) -> Path
 # ---------------------------------------------------------------------------
 
 
-def test_install_dry_run_success(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
+def test_install_dry_run_success(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
     """兼容的 manifest + world.toml，--dry-run 输出 PASS 并返回 0。"""
     _write_world_toml(tmp_path, _WORLD_TOML_EMPTY_FRAGMENTS)
     frag_dir = _make_fragment_dir(tmp_path, "my-frag", _MANIFEST_PASS)
@@ -168,7 +170,9 @@ def test_install_dry_run_success(tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     assert "PASS" in out
 
 
-def test_install_dry_run_kernel_compat_fail(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
+def test_install_dry_run_kernel_compat_fail(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
     """manifest 要求 kernel >=5.0.0 但 world version=2.0.0，验证 L1 FAIL 返回 2。"""
     _write_world_toml(tmp_path)
     frag_dir = _make_fragment_dir(tmp_path, "my-frag", _MANIFEST_KERNEL_FAIL)
@@ -182,7 +186,9 @@ def test_install_dry_run_kernel_compat_fail(tmp_path: Path, monkeypatch: pytest.
     assert "L1" in out
 
 
-def test_install_dry_run_conflict_fail(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
+def test_install_dry_run_conflict_fail(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
     """manifest conflicts 包含已安装 fragment，验证 L2 FAIL 返回 2。"""
     _write_world_toml(tmp_path)
     frag_dir = _make_fragment_dir(tmp_path, "my-frag", _MANIFEST_CONFLICT_FAIL)
@@ -196,7 +202,9 @@ def test_install_dry_run_conflict_fail(tmp_path: Path, monkeypatch: pytest.Monke
     assert "L2" in out
 
 
-def test_install_dry_run_dependency_missing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
+def test_install_dry_run_dependency_missing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
     """manifest 依赖未安装的 fragment，验证 L3 FAIL 返回 2。"""
     _write_world_toml(tmp_path, _WORLD_TOML_EMPTY_FRAGMENTS)
     frag_dir = _make_fragment_dir(tmp_path, "my-frag", _MANIFEST_DEP_MISSING)
@@ -210,7 +218,9 @@ def test_install_dry_run_dependency_missing(tmp_path: Path, monkeypatch: pytest.
     assert "L3" in out
 
 
-def test_install_dry_run_file_conflict(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
+def test_install_dry_run_file_conflict(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
     """manifest contents 中的文件已存在于 .agents/，验证 L4 FAIL 返回 2。"""
     _write_world_toml(tmp_path, _WORLD_TOML_EMPTY_FRAGMENTS)
     # 预先在 .agents/ 创建冲突文件
@@ -229,7 +239,9 @@ def test_install_dry_run_file_conflict(tmp_path: Path, monkeypatch: pytest.Monke
     assert "L4" in out
 
 
-def test_install_without_dry_run(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
+def test_install_without_dry_run(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
     """不加 --dry-run 但校验失败时（这里使用 conflict_fail manifest），返回 2。"""
     _write_world_toml(tmp_path)
     frag_dir = _make_fragment_dir(tmp_path, "my-frag", _MANIFEST_CONFLICT_FAIL)
@@ -240,7 +252,9 @@ def test_install_without_dry_run(tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     assert rc == 2
 
 
-def test_install_invalid_source(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_install_invalid_source(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """source 路径不存在，验证返回 1。"""
     _write_world_toml(tmp_path)
     monkeypatch.chdir(tmp_path)
@@ -370,7 +384,7 @@ def test_install_rollback_on_failure(
     )
     monkeypatch.chdir(tmp_path)
 
-    def _boom(*args, **kwargs):  # noqa: ANN001, ANN002, ANN003
+    def _boom(*args, **kwargs):
         raise RuntimeError("simulated registration failure")
 
     monkeypatch.setattr(
@@ -401,7 +415,7 @@ def test_install_hooks_execution(
 
     called: list[tuple[str, str]] = []
 
-    def _fake_execute(manifest, agents_dir, phase, *args, **kwargs):  # noqa: ANN001, ANN002, ANN003
+    def _fake_execute(manifest, agents_dir, phase, *args, **kwargs):
         called.append((manifest.name, phase))
         return True
 

@@ -43,5 +43,3 @@ class ThumbnailRepository(AsyncRepository[ThumbnailDocument]):
         """创建索引。"""
         await self._collection.create_index([("file_id", 1), ("size", 1)], unique=True)
         await self._collection.create_index("file_id")
-
-

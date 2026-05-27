@@ -95,5 +95,3 @@ h2{color:#059669}p{color:#6b7280}</style></head><body><div class="box">
 </div></body></html>""")
     except SubscriptionError as e:
         raise HTTPException(400, str(e))
-
-

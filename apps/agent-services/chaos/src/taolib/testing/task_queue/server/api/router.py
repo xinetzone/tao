@@ -10,5 +10,3 @@ api_router = APIRouter(prefix="/api/v1")
 api_router.include_router(tasks.router, prefix="/tasks", tags=["Tasks"])
 api_router.include_router(stats.router, prefix="/stats", tags=["Stats"])
 api_router.include_router(health.router, prefix="/health", tags=["Health"])
-
-

@@ -13,6 +13,7 @@ from pydantic import BaseModel, Field, field_validator
 # Tracker
 # ---------------------------------------------------------------------------
 
+
 class TrackerConfig(BaseModel):
     """问题跟踪器配置。"""
 
@@ -30,6 +31,7 @@ class TrackerConfig(BaseModel):
 # Polling
 # ---------------------------------------------------------------------------
 
+
 class PollingConfig(BaseModel):
     """轮询配置。"""
 
@@ -40,6 +42,7 @@ class PollingConfig(BaseModel):
 # Workspace
 # ---------------------------------------------------------------------------
 
+
 class WorkspaceConfig(BaseModel):
     """工作区配置。"""
 
@@ -49,6 +52,7 @@ class WorkspaceConfig(BaseModel):
 # ---------------------------------------------------------------------------
 # Hooks
 # ---------------------------------------------------------------------------
+
 
 class HooksConfig(BaseModel):
     """工作区钩子配置。"""
@@ -63,6 +67,7 @@ class HooksConfig(BaseModel):
 # ---------------------------------------------------------------------------
 # Agent
 # ---------------------------------------------------------------------------
+
 
 class AgentConfig(BaseModel):
     """Agent 并发与重试配置。"""
@@ -87,6 +92,7 @@ class AgentConfig(BaseModel):
 # Codex
 # ---------------------------------------------------------------------------
 
+
 class CodexConfig(BaseModel):
     """Codex app-server 配置。"""
 
@@ -103,6 +109,7 @@ class CodexConfig(BaseModel):
 # Worker
 # ---------------------------------------------------------------------------
 
+
 class WorkerConfig(BaseModel):
     """SSH Worker 扩展配置。"""
 
@@ -114,6 +121,7 @@ class WorkerConfig(BaseModel):
 # Server
 # ---------------------------------------------------------------------------
 
+
 class ServerConfig(BaseModel):
     """HTTP Server 扩展配置。"""
 
@@ -124,6 +132,7 @@ class ServerConfig(BaseModel):
 # ---------------------------------------------------------------------------
 # Top-level
 # ---------------------------------------------------------------------------
+
 
 class SymphonyConfig(BaseModel):
     """Symphony 编排服务完整配置。"""

@@ -265,5 +265,3 @@ def probe_remote(
     return RemoteProber(
         connection_factory=factory, commands=commands, options=options
     ).probe(ssh_config)
-
-

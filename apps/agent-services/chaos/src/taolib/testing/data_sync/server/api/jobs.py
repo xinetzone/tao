@@ -209,5 +209,3 @@ async def run_job(request: Request, job_id: str) -> JobRunResponse:
             status=SyncStatus.FAILED,
             message=str(e),
         )
-
-

@@ -8,7 +8,6 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 
-
 # 默认 TTL（秒）
 DEFAULT_TTL = 3600
 

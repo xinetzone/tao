@@ -103,10 +103,12 @@ class OllamaProvider(BaseLLMProvider):
 
             messages = []
             if system_prompt or self._config.system_prompt:
-                messages.append({
-                    "role": "system",
-                    "content": system_prompt or self._config.system_prompt,
-                })
+                messages.append(
+                    {
+                        "role": "system",
+                        "content": system_prompt or self._config.system_prompt,
+                    }
+                )
             messages.append({"role": "user", "content": prompt})
 
             payload = {
@@ -125,7 +127,9 @@ class OllamaProvider(BaseLLMProvider):
 
             if response.status_code != 200:
                 self._update_stats_failure()
-                raise LLMError(f"Ollama API error: {response.status_code} - {response.text}")
+                raise LLMError(
+                    f"Ollama API error: {response.status_code} - {response.text}"
+                )
 
             result = response.json()
             generated_text = result.get("message", {}).get("content", "")
@@ -180,10 +184,12 @@ class OllamaProvider(BaseLLMProvider):
 
             messages = []
             if system_prompt or self._config.system_prompt:
-                messages.append({
-                    "role": "system",
-                    "content": system_prompt or self._config.system_prompt,
-                })
+                messages.append(
+                    {
+                        "role": "system",
+                        "content": system_prompt or self._config.system_prompt,
+                    }
+                )
             messages.append({"role": "user", "content": prompt})
 
             payload = {
@@ -207,6 +213,7 @@ class OllamaProvider(BaseLLMProvider):
                 async for line in response.aiter_lines():
                     if line.strip():
                         import json
+
                         data = json.loads(line)
                         chunk = data.get("message", {}).get("content", "")
                         if chunk:

@@ -73,5 +73,3 @@ class MongoExtractor:
         if batch:
             logger.debug("提取最后批次: %d 条文档", len(batch))
             yield batch
-
-

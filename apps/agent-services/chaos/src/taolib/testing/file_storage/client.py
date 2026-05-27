@@ -209,5 +209,3 @@ class FileStorageClient:
             response = client.get(f"/api/v1/uploads/{session_id}")
             response.raise_for_status()
             return response.json()
-
-

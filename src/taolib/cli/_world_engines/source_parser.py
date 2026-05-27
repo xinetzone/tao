@@ -22,7 +22,9 @@ class ParsedSource:
     source_type: SourceType
     raw: str
     name: str | None = None  # registry 类型时的组件名
-    constraint: str | None = None  # registry 类型时的版本约束（None 表示取 latest.stable）
+    constraint: str | None = (
+        None  # registry 类型时的版本约束（None 表示取 latest.stable）
+    )
     url: str | None = None  # git_url 类型时的 URL
     ref: str | None = None  # git_url 类型时的 ref
 

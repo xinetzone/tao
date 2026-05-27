@@ -106,7 +106,7 @@ class SensitiveDataFilter(logging.Filter):
                         r'(password|passwd|pwd|密码)(["\s:=]+)(["\']?)([^"\'\s,;}\]]+)\3',
                         re.IGNORECASE,
                     ),
-                    lambda m: f'{m.group(1)}{m.group(2)}{m.group(3)}***{m.group(3)}',
+                    lambda m: f"{m.group(1)}{m.group(2)}{m.group(3)}***{m.group(3)}",
                 )
             )
 
@@ -117,7 +117,7 @@ class SensitiveDataFilter(logging.Filter):
                         r'(jwt[_-]?secret|jwt[_-]?key|secret[_-]?key)(["\s:=]+)(["\']?)([^"\'\s,;}\]]+)\3',
                         re.IGNORECASE,
                     ),
-                    lambda m: f'{m.group(1)}{m.group(2)}{m.group(3)}***{m.group(3)}',
+                    lambda m: f"{m.group(1)}{m.group(2)}{m.group(3)}***{m.group(3)}",
                 )
             )
 
@@ -135,7 +135,9 @@ class SensitiveDataFilter(logging.Filter):
         if self.enable_email:
             self._patterns.append(
                 (
-                    re.compile(r'\b([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\b'),
+                    re.compile(
+                        r"\b([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})\b"
+                    ),
                     self._mask_email,
                 )
             )
@@ -143,16 +145,16 @@ class SensitiveDataFilter(logging.Filter):
         if self.enable_phone:
             self._patterns.append(
                 (
-                    re.compile(r'\b(1[3-9]\d)(\d{4})(\d{4})\b'),
-                    lambda m: f'{m.group(1)}***{m.group(3)}',
+                    re.compile(r"\b(1[3-9]\d)(\d{4})(\d{4})\b"),
+                    lambda m: f"{m.group(1)}***{m.group(3)}",
                 )
             )
 
         if self.enable_ip:
             self._patterns.append(
                 (
-                    re.compile(r'\b(\d{1,3}\.\d{1,3})\.(\d{1,3}\.\d{1,3})\b'),
-                    lambda m: f'{m.group(1)}.***',
+                    re.compile(r"\b(\d{1,3}\.\d{1,3})\.(\d{1,3}\.\d{1,3})\b"),
+                    lambda m: f"{m.group(1)}.***",
                 )
             )
 
@@ -175,7 +177,7 @@ class SensitiveDataFilter(logging.Filter):
 
         masked = "***" if len(key) <= 8 else f"{key[:4]}***{key[-4:]}"
 
-        return f'{prefix}{separator}{quote}{masked}{quote}'
+        return f"{prefix}{separator}{quote}{masked}{quote}"
 
     def _mask_email(self, match: re.Match) -> str:
         """对邮箱地址进行脱敏处理。
@@ -298,7 +300,9 @@ def configure_logging(
     use_json = format_mode == "json"
 
     if use_json:
-        formatter: logging.Formatter = JSONFormatter(service=service, datefmt=log_date_fmt)
+        formatter: logging.Formatter = JSONFormatter(
+            service=service, datefmt=log_date_fmt
+        )
     else:
         log_fmt = format_string or _LOG_FORMAT
         formatter = logging.Formatter(log_fmt, datefmt=log_date_fmt)
@@ -326,9 +330,7 @@ def configure_logging(
 
     sanitize_filter: SensitiveDataFilter | None = None
     if enable_sanitize:
-        sanitize_filter = SensitiveDataFilter(
-            **(sanitize_config or {})
-        )
+        sanitize_filter = SensitiveDataFilter(**(sanitize_config or {}))
         root_logger = logging.getLogger()
         root_logger.addFilter(sanitize_filter)
 
@@ -535,5 +537,3 @@ def configure_remote_logging(
     logging.getLogger().addHandler(remote_handler)
 
     return remote_handler
-
-

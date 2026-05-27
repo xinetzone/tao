@@ -226,5 +226,3 @@ async def get_current_user_id(
             detail="无效的认证凭据",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
-

@@ -80,9 +80,7 @@ def test_markdown_conversion(
     """运行完整流水线，验证 Markdown 输出目录至少包含一个 .md 文件。"""
     extract_script = skill_scripts_dir / "pdf_extract.py"
     extract_result = _run_extract(extract_script, sample_pdf, output_dir)
-    assert extract_result.returncode == 0, (
-        f"Extract failed: {extract_result.stderr}"
-    )
+    assert extract_result.returncode == 0, f"Extract failed: {extract_result.stderr}"
 
     convert_script = skill_scripts_dir / "pdf_to_markdown.py"
     meta_path = output_dir / "pdf_page_meta.json"
@@ -103,9 +101,7 @@ def test_no_crlf_in_output(
     """验证所有输出 Markdown 文件均不包含 CRLF 换行。"""
     extract_script = skill_scripts_dir / "pdf_extract.py"
     extract_result = _run_extract(extract_script, sample_pdf, output_dir)
-    assert extract_result.returncode == 0, (
-        f"Extract failed: {extract_result.stderr}"
-    )
+    assert extract_result.returncode == 0, f"Extract failed: {extract_result.stderr}"
 
     convert_script = skill_scripts_dir / "pdf_to_markdown.py"
     meta_path = output_dir / "pdf_page_meta.json"
@@ -114,9 +110,7 @@ def test_no_crlf_in_output(
     md_output.mkdir(exist_ok=True)
 
     convert_result = _run_convert(convert_script, meta_path, raw_path, md_output)
-    assert convert_result.returncode == 0, (
-        f"Convert failed: {convert_result.stderr}"
-    )
+    assert convert_result.returncode == 0, f"Convert failed: {convert_result.stderr}"
 
     for md_file in md_output.rglob("*.md"):
         raw_bytes = md_file.read_bytes()

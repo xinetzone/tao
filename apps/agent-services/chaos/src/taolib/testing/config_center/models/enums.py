@@ -60,5 +60,3 @@ class AuditStatus(StrEnum):
 
     SUCCESS = "success"
     FAILED = "failed"
-
-

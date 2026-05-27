@@ -25,5 +25,3 @@ api_router.include_router(audit_router)
 api_router.include_router(users_router)
 api_router.include_router(roles_router)
 api_router.include_router(push_router)
-
-

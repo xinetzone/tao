@@ -38,7 +38,7 @@ def run_hook(hook_cmd: str, cwd: Path, timeout: int = DEFAULT_HOOK_TIMEOUT) -> i
     """
     _emit(f"Running hook: {hook_cmd}")
     try:
-        result = subprocess.run(  # noqa: S602 - 钩子命令由 manifest 信任来源声明
+        result = subprocess.run(
             hook_cmd,
             shell=True,
             cwd=str(cwd),

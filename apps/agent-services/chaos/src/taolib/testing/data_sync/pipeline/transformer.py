@@ -103,5 +103,3 @@ class TransformChain:
             return getattr(module, "transform", None)
         except ImportError:
             return None
-
-

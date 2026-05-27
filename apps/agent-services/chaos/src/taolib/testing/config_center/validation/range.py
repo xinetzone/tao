@@ -48,5 +48,3 @@ class RangeValidator(ConfigValidator):
         if errors:
             return ValidationResult(valid=False, errors=errors)
         return ValidationResult(valid=True)
-
-

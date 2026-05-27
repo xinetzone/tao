@@ -24,5 +24,3 @@ class AuditConfigError(AuditError):
 
     def __init__(self, message: str = "审计日志配置错误") -> None:
         super().__init__(message)
-
-

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import io
 from pathlib import Path
 
 import pytest
@@ -42,7 +41,9 @@ def _write_world_toml(tmp_path: Path, content: str = _WORLD_TOML) -> Path:
 # ---------------------------------------------------------------------------
 
 
-def test_status_finds_world_toml(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
+def test_status_finds_world_toml(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
     """status 能找到 world.toml 并输出世界名称和版本。"""
     _write_world_toml(tmp_path)
     monkeypatch.chdir(tmp_path)
@@ -55,7 +56,9 @@ def test_status_finds_world_toml(tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     assert "2.0.0" in out
 
 
-def test_status_shows_fragments(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
+def test_status_shows_fragments(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
     """status 输出包含 fragment 名称和版本。"""
     _write_world_toml(tmp_path)
     monkeypatch.chdir(tmp_path)
@@ -68,7 +71,9 @@ def test_status_shows_fragments(tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
     assert "1.0.0" in out
 
 
-def test_status_shows_capabilities(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
+def test_status_shows_capabilities(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
+) -> None:
     """status 输出包含 capabilities 信息。"""
     _write_world_toml(tmp_path)
     monkeypatch.chdir(tmp_path)
@@ -81,7 +86,9 @@ def test_status_shows_capabilities(tmp_path: Path, monkeypatch: pytest.MonkeyPat
     assert "skills" in out or "templates" in out
 
 
-def test_status_missing_world_toml(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_status_missing_world_toml(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """无 world.toml 时 status 退出码为 1。"""
     monkeypatch.chdir(tmp_path)
 

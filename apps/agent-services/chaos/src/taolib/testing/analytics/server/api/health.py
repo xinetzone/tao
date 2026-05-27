@@ -18,5 +18,3 @@ async def health_check(request: Request):
         "status": "healthy" if db_status == "connected" else "unhealthy",
         "database": db_status,
     }
-
-

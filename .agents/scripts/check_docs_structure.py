@@ -41,9 +41,7 @@ _TECH_FORBIDDEN_SUBDIRS: frozenset[str] = frozenset(
 )
 
 # 严禁出现在 docs/general/ 顶层的技术专属命名子目录
-_GENERAL_FORBIDDEN_SUBDIRS: frozenset[str] = frozenset(
-    {"api", "changelogs"}
-)
+_GENERAL_FORBIDDEN_SUBDIRS: frozenset[str] = frozenset({"api", "changelogs"})
 
 
 @dataclass(frozen=True)

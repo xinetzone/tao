@@ -24,5 +24,3 @@ class CDNProviderProtocol(Protocol):
     async def invalidate_all(self) -> None:
         """刷新 CDN 全部缓存。"""
         ...
-
-

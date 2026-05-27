@@ -192,5 +192,3 @@ class SessionRepository(AsyncRepository[SessionDocument]):
             "started_at",
             expireAfterSeconds=180 * 24 * 3600,
         )
-
-

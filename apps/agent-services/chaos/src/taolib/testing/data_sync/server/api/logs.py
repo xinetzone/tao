@@ -58,5 +58,3 @@ async def get_log(request: Request, log_id: str) -> SyncLogResponse:
         )
 
     return log.to_response()
-
-

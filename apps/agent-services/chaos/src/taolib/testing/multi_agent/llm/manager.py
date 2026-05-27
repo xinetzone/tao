@@ -21,8 +21,7 @@ from taolib.testing.multi_agent.models import (
 class LLMManager:
     """LLM模型管理器。"""
 
-    def __init__(
-        self, load_balance_config: LoadBalanceConfig | None = None):
+    def __init__(self, load_balance_config: LoadBalanceConfig | None = None):
         """初始化LLM管理器。
 
         Args:
@@ -43,6 +42,7 @@ class LLMManager:
         """
         if instance_id is None:
             import uuid
+
             instance_id = f"{config.provider.value}-{uuid.uuid4().hex[:8]}"
 
         provider = ModelRegistry.create_provider(config)
@@ -179,7 +179,10 @@ class LLMManager:
         Returns:
             list[str]: 可用的模型实例ID列表
         """
-        return [instance_id for instance_id, _ in self._load_balancer.get_available_providers()]
+        return [
+            instance_id
+            for instance_id, _ in self._load_balancer.get_available_providers()
+        ]
 
     def get_model_stats(self, instance_id: str):
         """获取模型统计信息。

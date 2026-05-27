@@ -98,5 +98,3 @@ class AuditLogRepository(AsyncRepository[AuditLogDocument]):
             [("timestamp", 1)],
             expireAfterSeconds=180 * 24 * 60 * 60,
         )
-
-

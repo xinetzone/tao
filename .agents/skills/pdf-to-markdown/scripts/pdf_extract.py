@@ -109,23 +109,30 @@ def extract_pages(
         else:
             start, end = page_range
         print(
-            f"[INFO] 打开 PDF：{pdf_path.name}，共 {total} 页；"
-            f"提取范围 P{start}-P{end}"
+            f"[INFO] 打开 PDF：{pdf_path.name}，共 {total} 页；提取范围 P{start}-P{end}"
         )
         for idx, page in enumerate(pdf.pages, start=1):
             if idx < start or idx > end:
                 continue
             try:
                 text = page.extract_text() or ""
-            except Exception as exc:  # noqa: BLE001
+            except Exception as exc:
                 pages.append(
-                    PageInfo(page=idx, char_count=0, is_scan=False, text="", extract_error=str(exc))
+                    PageInfo(
+                        page=idx,
+                        char_count=0,
+                        is_scan=False,
+                        text="",
+                        extract_error=str(exc),
+                    )
                 )
                 print(f"[WARN] 第 {idx} 页提取失败：{exc}")
                 continue
             char_count = len(text.strip())
             is_scan = char_count == 0
-            pages.append(PageInfo(page=idx, char_count=char_count, is_scan=is_scan, text=text))
+            pages.append(
+                PageInfo(page=idx, char_count=char_count, is_scan=is_scan, text=text)
+            )
             if idx % 30 == 0 or idx == end:
                 print(f"[INFO] 已处理 {idx}/{end} 页")
     return pages
@@ -162,17 +169,19 @@ def render_cover(pdf_path: Path, out_png: Path) -> bool:
         pdf.close()
         print(f"[OK] 封面已渲染至 {out_png}")
         return True
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"[WARN] pypdfium2 渲染封面失败：{exc}")
         try:
             from pdf2image import convert_from_path
 
-            images = convert_from_path(str(pdf_path), first_page=1, last_page=1, dpi=200)
+            images = convert_from_path(
+                str(pdf_path), first_page=1, last_page=1, dpi=200
+            )
             if images:
                 images[0].save(out_png, "PNG")
                 print(f"[OK] pdf2image 渲染封面 -> {out_png}")
                 return True
-        except Exception as exc2:  # noqa: BLE001
+        except Exception as exc2:
             print(f"[WARN] pdf2image 渲染失败：{exc2}")
     return False
 
@@ -180,9 +189,18 @@ def render_cover(pdf_path: Path, out_png: Path) -> bool:
 # ---------- 结构分析 ----------
 
 CN_NUM_MAP = {
-    "零": 0, "〇": 0, "○": 0,
-    "一": 1, "二": 2, "三": 3, "四": 4, "五": 5,
-    "六": 6, "七": 7, "八": 8, "九": 9,
+    "零": 0,
+    "〇": 0,
+    "○": 0,
+    "一": 1,
+    "二": 2,
+    "三": 3,
+    "四": 4,
+    "五": 5,
+    "六": 6,
+    "七": 7,
+    "八": 8,
+    "九": 9,
 }
 
 
@@ -215,7 +233,7 @@ def cn_to_int(text: str) -> int | None:
                 ones = rest[ten_idx + 1 :]
                 tail = t * 10 + (CN_NUM_MAP.get(ones, 0) if ones else 0)
             return h * 100 + tail
-        except Exception:  # noqa: BLE001
+        except Exception:
             return None
     if "十" in text:
         ten_idx = text.index("十")
@@ -227,9 +245,7 @@ def cn_to_int(text: str) -> int | None:
     return None
 
 
-RE_CHAPTER_PREFIX = re.compile(
-    r"^\s*[一二三四五六七八九十百零〇○]{1,5}、"
-)
+RE_CHAPTER_PREFIX = re.compile(r"^\s*[一二三四五六七八九十百零〇○]{1,5}、")
 
 
 def _merge_wrapped_lines(text: str) -> list[str]:
@@ -246,10 +262,7 @@ def _merge_wrapped_lines(text: str) -> list[str]:
             skip_count -= 1
             continue
         stripped = line.strip()
-        if (
-            RE_CHAPTER_PREFIX.match(stripped)
-            and "章）" not in stripped
-        ):
+        if RE_CHAPTER_PREFIX.match(stripped) and "章）" not in stripped:
             combined = stripped
             consumed = 0
             for j in (1, 2):
@@ -307,7 +320,7 @@ def _merge_cross_page_titles(pages: list[PageInfo]) -> None:
                 if "章）" in combined:
                     cur_lines[-tail_offset] = combined
                     cur.text = "\n".join(cur_lines)
-                    nxt_remaining = nxt_lines[len(fragment_lines):]
+                    nxt_remaining = nxt_lines[len(fragment_lines) :]
                     nxt.text = "\n".join(nxt_remaining)
                     break
 
@@ -386,7 +399,7 @@ def detect_headings(pages: list[PageInfo]) -> list[Heading]:
             # 3) 附录
             ma = RE_APPENDIX.match(line)
             if ma and len(line) <= 30:
-                title = line if ma.group(1) is None else line
+                title = line
                 if not any(h.level == "appendix" for h in headings):
                     headings.append(
                         Heading(
@@ -412,7 +425,9 @@ def detect_headings(pages: list[PageInfo]) -> list[Heading]:
     return headings
 
 
-def detect_front_matter(pages: list[PageInfo], first_pian_page: int | None) -> list[dict]:
+def detect_front_matter(
+    pages: list[PageInfo], first_pian_page: int | None
+) -> list[dict]:
     """识别前置内容：版权、目录、作者简介、序、注读说明等。"""
     found: list[dict] = []
     upto = first_pian_page - 1 if first_pian_page else 20
@@ -486,7 +501,9 @@ def write_structure_report(
         for fm in front_matter:
             lines.append(f"| P{fm['page']} | {fm['title']} | {fm['keyword']} |")
     else:
-        lines.append("未检测到典型的「序/前言/凡例/目录」标记，前置内容可能融入正文或扫描化。")
+        lines.append(
+            "未检测到典型的「序/前言/凡例/目录」标记，前置内容可能融入正文或扫描化。"
+        )
     lines.append("")
 
     lines.append("## 4. 篇章")
@@ -566,12 +583,16 @@ def write_structure_report(
     print(f"[OK] 结构分析报告 -> {target}")
 
 
-def write_page_meta(pages: list[PageInfo], headings: list[Heading], target: Path) -> dict:
+def write_page_meta(
+    pages: list[PageInfo], headings: list[Heading], target: Path
+) -> dict:
     payload = {
         "total_pages": len(pages),
         "scan_pages": [p.page for p in pages if p.is_scan],
         "text_pages": [p.page for p in pages if not p.is_scan and not p.extract_error],
-        "errors": [{"page": p.page, "error": p.extract_error} for p in pages if p.extract_error],
+        "errors": [
+            {"page": p.page, "error": p.extract_error} for p in pages if p.extract_error
+        ],
         "headings": [
             {
                 "page": h.page,
@@ -585,7 +606,9 @@ def write_page_meta(pages: list[PageInfo], headings: list[Heading], target: Path
             for h in headings
         ],
     }
-    target.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    target.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     print(f"[OK] 页面元数据 -> {target}")
     return payload
 
@@ -655,7 +678,9 @@ def main() -> int:
     meta = write_page_meta(pages, headings, page_meta_json)
 
     # Schema 验证（可选，schema 文件存在时执行）
-    schema_path = Path(__file__).resolve().parent.parent / "schemas" / "page-meta.schema.json"
+    schema_path = (
+        Path(__file__).resolve().parent.parent / "schemas" / "page-meta.schema.json"
+    )
     if schema_path.exists():
         schema = json.loads(schema_path.read_text(encoding="utf-8"))
         try:
@@ -664,7 +689,7 @@ def main() -> int:
         except AssertionError as exc:
             print(f"[ERR] Schema 轻量验证失败：{exc}", file=sys.stderr)
             return 2
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             print(f"[ERR] Schema 验证失败：{exc}", file=sys.stderr)
             return 2
 

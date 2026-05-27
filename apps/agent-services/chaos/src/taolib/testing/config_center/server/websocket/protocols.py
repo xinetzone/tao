@@ -3,6 +3,7 @@
 定义消息缓冲、在线状态追踪和连接管理的抽象接口，
 遵循现有 ConfigCacheProtocol 模式实现依赖注入和测试解耦。
 """
+
 from datetime import datetime
 from typing import Protocol, runtime_checkable
 
@@ -71,5 +72,3 @@ class ConnectionManagerProtocol(Protocol):
     def get_stats(self) -> ConnectionStats:
         """获取连接统计信息。"""
         ...
-
-

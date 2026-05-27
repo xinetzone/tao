@@ -52,9 +52,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="PDF 结构元数据 -> Markdown 文件集")
     parser.add_argument("meta_json", help="pdf_page_meta.json 路径")
     parser.add_argument("raw_txt", help="pdf_raw_text.txt 路径")
-    parser.add_argument(
-        "--output-dir", "-o", required=True, help="Markdown 输出目录"
-    )
+    parser.add_argument("--output-dir", "-o", required=True, help="Markdown 输出目录")
     parser.add_argument("--cover", help="封面图片路径（可选）")
     return parser.parse_args()
 
@@ -73,10 +71,10 @@ class Heading:
     modern_chapter: int | None
 
 
-def load_pages(raw_path: Path) -> "OrderedDict[int, list[str]]":
+def load_pages(raw_path: Path) -> OrderedDict[int, list[str]]:
     """按页码加载原始文本。"""
     text = raw_path.read_text(encoding="utf-8")
-    pages: "OrderedDict[int, list[str]]" = OrderedDict()
+    pages: OrderedDict[int, list[str]] = OrderedDict()
     current: int | None = None
     buffer: list[str] = []
     page_re = re.compile(r"^=====\s*PAGE\s*(\d+)\s*=====\s*$")
@@ -114,7 +112,7 @@ def load_headings(meta_path: Path) -> list[Heading]:
 
 
 def collect_lines(
-    pages: "OrderedDict[int, list[str]]", start: int, end: int
+    pages: OrderedDict[int, list[str]], start: int, end: int
 ) -> list[str]:
     """汇集 [start, end] 闭区间内的所有行。"""
     out: list[str] = []
@@ -229,7 +227,7 @@ class ChapterFile:
 
 def write_chapter(
     heading: Heading,
-    pages: "OrderedDict[int, list[str]]",
+    pages: OrderedDict[int, list[str]],
     target: Path,
 ) -> int:
     """写入单个章节 Markdown 文件，返回字符数。"""
@@ -258,7 +256,7 @@ def write_chapter(
 
 def write_simple_page(
     title: str,
-    pages: "OrderedDict[int, list[str]]",
+    pages: OrderedDict[int, list[str]],
     page_range: tuple[int, int],
     target: Path,
     *,
@@ -282,7 +280,7 @@ def write_simple_page(
 
 
 def write_appendix(
-    pages: "OrderedDict[int, list[str]]",
+    pages: OrderedDict[int, list[str]],
     page_range: tuple[int, int],
     target: Path,
 ) -> int:
@@ -300,7 +298,9 @@ def write_appendix(
     md: list[str] = []
     md.append("# 附录·帛书《老子》注音版")
     md.append("")
-    md.append("> 本附录按帛书篇次（德经在前、道经在后）逐章注音，保留原书拼音与汉字交错的排版。")
+    md.append(
+        "> 本附录按帛书篇次（德经在前、道经在后）逐章注音，保留原书拼音与汉字交错的排版。"
+    )
     md.append("")
     md.append("```text")
     md.extend(raw_lines)
@@ -398,7 +398,7 @@ def _process_chapter_group(
     sub_dir: Path,
     relpath_root: str,
     offset: int,
-    pages: "OrderedDict[int, list[str]]",
+    pages: OrderedDict[int, list[str]],
 ) -> tuple[list[ChapterFile], int, int]:
     """处理一组章节（德经或道经），返回 (chapter_files, file_count, char_count)。"""
     chapters: list[ChapterFile] = []
@@ -411,12 +411,14 @@ def _process_chapter_group(
         chars = write_chapter(h, pages, target)
         total_chars += chars
         count += 1
-        chapters.append(ChapterFile(
-            relpath=f"{relpath_root}/chapter-{seq:02d}",
-            title=h.raw,
-            chapter_index=seq,
-            modern_chapter=h.modern_chapter or 0,
-        ))
+        chapters.append(
+            ChapterFile(
+                relpath=f"{relpath_root}/chapter-{seq:02d}",
+                title=h.raw,
+                chapter_index=seq,
+                modern_chapter=h.modern_chapter or 0,
+            )
+        )
     return chapters, count, total_chars
 
 
@@ -508,12 +510,10 @@ def main() -> int:
     # 并行处理德经和道经
     with ThreadPoolExecutor(max_workers=2) as executor:
         fut_de = executor.submit(
-            _process_chapter_group, de_headings,
-            de_dir, "de-jing", 0, pages
+            _process_chapter_group, de_headings, de_dir, "de-jing", 0, pages
         )
         fut_dao = executor.submit(
-            _process_chapter_group, dao_headings,
-            dao_dir, "dao-jing", 44, pages
+            _process_chapter_group, dao_headings, dao_dir, "dao-jing", 44, pages
         )
         de_chapters, de_count, de_chars = fut_de.result()
         dao_chapters, dao_count, dao_chars = fut_dao.result()

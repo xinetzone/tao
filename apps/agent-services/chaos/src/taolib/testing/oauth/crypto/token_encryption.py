@@ -81,5 +81,3 @@ class TokenEncryptor:
         new_encryptor = TokenEncryptor(new_key)
         plaintext = old_encryptor.decrypt(ciphertext)
         return new_encryptor.encrypt(plaintext)
-
-

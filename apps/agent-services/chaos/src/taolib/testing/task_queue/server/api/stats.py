@@ -60,5 +60,3 @@ async def get_queue_depths(request: Request) -> QueueDepthsResponse:
     )
     depths = await redis_queue.get_queue_lengths()
     return QueueDepthsResponse(**depths)
-
-

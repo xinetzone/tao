@@ -46,5 +46,3 @@ class ThumbnailDocument(BaseModel):
             storage_path=self.storage_path,
             size_bytes=self.size_bytes,
         )
-
-

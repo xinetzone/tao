@@ -36,5 +36,3 @@ class OnboardingData(BaseModel):
     display_name: str | None = Field(
         default=None, description="显示名称（覆盖提供商名称）", max_length=255
     )
-
-

@@ -389,5 +389,3 @@ _DASHBOARD_HTML = """
 </body>
 </html>
 """
-
-

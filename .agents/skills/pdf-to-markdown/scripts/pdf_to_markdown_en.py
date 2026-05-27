@@ -24,7 +24,6 @@ CLI usage::
 from __future__ import annotations
 
 import argparse
-import json
 import re
 import shutil
 import sys
@@ -35,9 +34,7 @@ from pathlib import Path
 # ---------- Constants ----------
 
 # Numbered section pattern: "1.", "1.1", "2.3.1" etc. (line-start, uppercase first letter)
-NUMBERED_SECTION_RE = re.compile(
-    r"^(\d+(?:\.\d+)*)\s+([A-Z][^\n]{2,})$", re.MULTILINE
-)
+NUMBERED_SECTION_RE = re.compile(r"^(\d+(?:\.\d+)*)\s+([A-Z][^\n]{2,})$", re.MULTILINE)
 
 # Standard un-numbered sections (case-insensitive matching)
 STANDARD_SECTIONS = [
@@ -173,22 +170,26 @@ def detect_sections(flat_lines: list[str]) -> list[Section]:
             number = m.group(1)
             title = m.group(2).strip()
             level = _compute_level(number)
-            sections.append(Section(
-                number=number,
-                title=title,
-                level=level,
-                start_line=idx,
-            ))
+            sections.append(
+                Section(
+                    number=number,
+                    title=title,
+                    level=level,
+                    start_line=idx,
+                )
+            )
             continue
 
         # Check standard un-numbered sections
         if stripped.lower() in _STANDARD_SECTIONS_LOWER:
-            sections.append(Section(
-                number="",
-                title=stripped,
-                level=1,
-                start_line=idx,
-            ))
+            sections.append(
+                Section(
+                    number="",
+                    title=stripped,
+                    level=1,
+                    start_line=idx,
+                )
+            )
 
     # Set end_line for each section
     for i in range(len(sections) - 1):
@@ -200,15 +201,13 @@ def detect_sections(flat_lines: list[str]) -> list[Section]:
     for sec in sections:
         # Skip the heading line itself
         content_start = sec.start_line + 1
-        content_lines = flat_lines[content_start:sec.end_line]
+        content_lines = flat_lines[content_start : sec.end_line]
         sec.content = "\n".join(content_lines).strip()
 
     return sections
 
 
-def extract_paper_meta(
-    flat_lines: list[str], sections: list[Section]
-) -> PaperMeta:
+def extract_paper_meta(flat_lines: list[str], sections: list[Section]) -> PaperMeta:
     """Extract paper title and authors from content before the first section."""
     meta = PaperMeta()
     if not sections:
@@ -263,7 +262,7 @@ def write_section_file(sec: Section, seq: int, sections_dir: Path) -> str:
     """Write a numbered section to file. Returns the relative path (no .md)."""
     slug = _slugify(sec.title)
     fname = f"{seq:02d}-{slug}.md"
-    heading_prefix = "#" * min(sec.level + 1, 4)
+    "#" * min(sec.level + 1, 4)
 
     md_parts: list[str] = []
     if sec.number:
@@ -463,8 +462,12 @@ def main() -> int:
 
     # 7. Write index
     chars = write_index(
-        meta, section_entries,
-        has_abstract, has_references, has_appendix, has_cover,
+        meta,
+        section_entries,
+        has_abstract,
+        has_references,
+        has_appendix,
+        has_cover,
         out_dir,
     )
     stats["files"] += 1

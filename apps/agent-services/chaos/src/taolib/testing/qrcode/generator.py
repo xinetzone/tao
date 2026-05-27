@@ -116,5 +116,3 @@ def create_qr_svg(
     buffer = io.BytesIO()
     img.save(buffer)
     return buffer.getvalue().decode("utf-8")
-
-

@@ -36,7 +36,6 @@ from taolib.cli._world_engines.registry_config import (
 )
 from taolib.cli._world_engines.registry_index import resolve_index_path
 
-
 # ---------------------------------------------------------------------------
 # 1. get_cache_config() — 环境变量读取
 # ---------------------------------------------------------------------------
@@ -426,10 +425,8 @@ def test_clone_index_success(tmp_path: Path) -> None:
     """``git clone`` returncode=0 时返回 True。"""
     dest = tmp_path / "cache" / "default"
 
-    def fake_run(cmd, **kwargs):  # noqa: ANN001, ANN003
-        return subprocess.CompletedProcess(
-            args=cmd, returncode=0, stdout="", stderr=""
-        )
+    def fake_run(cmd, **kwargs):
+        return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
 
     with patch("subprocess.run", side_effect=fake_run):
         assert _clone_index("https://example.com/index", dest) is True
@@ -439,7 +436,7 @@ def test_clone_index_failure(tmp_path: Path) -> None:
     """``git clone`` returncode!=0 时返回 False。"""
     dest = tmp_path / "cache" / "default"
 
-    def fake_run(cmd, **kwargs):  # noqa: ANN001, ANN003
+    def fake_run(cmd, **kwargs):
         return subprocess.CompletedProcess(
             args=cmd, returncode=128, stdout="", stderr="fatal: not found"
         )
@@ -461,10 +458,8 @@ def test_fetch_index_success(tmp_path: Path) -> None:
     cache_path = tmp_path / "cache" / "default"
     cache_path.mkdir(parents=True)
 
-    def fake_run(cmd, **kwargs):  # noqa: ANN001, ANN003
-        return subprocess.CompletedProcess(
-            args=cmd, returncode=0, stdout="", stderr=""
-        )
+    def fake_run(cmd, **kwargs):
+        return subprocess.CompletedProcess(args=cmd, returncode=0, stdout="", stderr="")
 
     with patch("subprocess.run", side_effect=fake_run):
         assert _fetch_index(cache_path) is True
@@ -475,7 +470,7 @@ def test_fetch_index_fetch_failure(tmp_path: Path) -> None:
     cache_path = tmp_path / "cache" / "default"
     cache_path.mkdir(parents=True)
 
-    def fake_run(cmd, **kwargs):  # noqa: ANN001, ANN003
+    def fake_run(cmd, **kwargs):
         return subprocess.CompletedProcess(
             args=cmd, returncode=1, stdout="", stderr="fatal"
         )
@@ -491,7 +486,7 @@ def test_fetch_index_reset_failure(tmp_path: Path) -> None:
 
     call_count = {"n": 0}
 
-    def fake_run(cmd, **kwargs):  # noqa: ANN001, ANN003
+    def fake_run(cmd, **kwargs):
         call_count["n"] += 1
         rc = 0 if call_count["n"] == 1 else 1
         return subprocess.CompletedProcess(
@@ -574,7 +569,7 @@ def test_resolve_index_path_local_path_bypasses_cache(
 
     call_log: list[str] = []
 
-    def spy(name, url, config):  # noqa: ANN001
+    def spy(name, url, config):
         call_log.append(name)
         return None
 

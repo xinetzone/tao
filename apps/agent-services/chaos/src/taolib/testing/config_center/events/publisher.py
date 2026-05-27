@@ -3,6 +3,7 @@
 实现消息的发布功能，支持优先级、批量发布和离线消息缓冲，
 确保 at-least-once 投递保证。
 """
+
 import json
 import logging
 import uuid
@@ -189,5 +190,3 @@ class EventPublisher:
                 await self._buffer.push_to_channel(message.channel, message)
             except Exception:
                 logger.exception("消息缓冲写入失败: channel=%s", message.channel)
-
-

@@ -107,5 +107,3 @@ class AuditService:
             limit=limit,
         )
         return [log.to_response() for log in logs]
-
-

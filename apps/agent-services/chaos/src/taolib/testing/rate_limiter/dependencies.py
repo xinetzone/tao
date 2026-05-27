@@ -2,6 +2,7 @@
 
 Provides dependency injection functions for use in FastAPI routes.
 """
+
 from fastapi import Request
 
 from .limiter import RateLimiter
@@ -49,5 +50,3 @@ def get_stats_service(request: Request) -> RateLimitStatsService:
         统计服务实例
     """
     return request.app.state.rate_limit_stats_service
-
-

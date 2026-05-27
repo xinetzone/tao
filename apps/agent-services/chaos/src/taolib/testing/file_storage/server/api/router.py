@@ -24,5 +24,3 @@ api_router.include_router(
 )
 api_router.include_router(stats_router, prefix="/stats", tags=["Stats"])
 api_router.include_router(health_router, tags=["Health"])
-
-

@@ -84,5 +84,3 @@ async def preview_template(
         raise HTTPException(404, "Template not found")
     except TemplateRenderError as e:
         raise HTTPException(422, str(e))
-
-

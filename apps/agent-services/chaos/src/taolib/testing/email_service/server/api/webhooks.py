@@ -189,5 +189,3 @@ async def generic_webhook(request: Request):
         raw_payload=data,
     )
     return {"status": "ok"}
-
-

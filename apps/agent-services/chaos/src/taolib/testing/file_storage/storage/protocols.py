@@ -154,5 +154,3 @@ class StorageBackendProtocol(Protocol):
     async def bucket_exists(self, bucket: str) -> bool:
         """检查存储桶是否存在。"""
         ...
-
-

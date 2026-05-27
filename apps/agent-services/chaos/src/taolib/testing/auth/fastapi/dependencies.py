@@ -286,5 +286,3 @@ def require_scope(
         return user
 
     return _check_scope
-
-

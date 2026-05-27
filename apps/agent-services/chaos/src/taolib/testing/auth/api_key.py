@@ -43,5 +43,3 @@ class StaticAPIKeyLookup:
     async def lookup(self, api_key: str) -> AuthenticatedUser | None:
         """从静态配置中查找 API 密钥。"""
         return self._keys.get(api_key)
-
-

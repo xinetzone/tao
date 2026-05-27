@@ -2,6 +2,7 @@
 
 Supports TOML configuration files with environment variable overrides.
 """
+
 import os
 from pathlib import Path
 
@@ -77,5 +78,3 @@ def _apply_env_overrides(config: RateLimitConfig) -> RateLimitConfig:
         return config
 
     return config.model_copy(update=overrides)
-
-

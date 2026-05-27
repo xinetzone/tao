@@ -201,5 +201,3 @@ def require_environment_access(environment: Environment):
 async def get_event_publisher(request: Request) -> EventPublisher | None:
     """获取事件发布器（从 app.state）。"""
     return getattr(request.app.state, "event_publisher", None)
-
-

@@ -41,5 +41,3 @@ __all__ = [
     "redact_ssh_config",
     "remote_prefixes",
 ]
-
-

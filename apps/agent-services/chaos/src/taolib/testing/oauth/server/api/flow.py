@@ -300,5 +300,3 @@ async def callback(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail=e.message,
         )
-
-

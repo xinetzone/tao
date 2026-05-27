@@ -56,5 +56,3 @@ class EmailQueueProtocol(Protocol):
             {priority: count} 字典
         """
         ...
-
-

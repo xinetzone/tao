@@ -66,5 +66,3 @@ class SubscriptionStatus(StrEnum):
 
     ACTIVE = "active"
     UNSUBSCRIBED = "unsubscribed"
-
-

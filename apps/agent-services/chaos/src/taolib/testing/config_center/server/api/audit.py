@@ -83,5 +83,3 @@ async def get_audit_log(
             detail="审计日志不存在",
         )
     return AuditLogResponse(**log.model_dump())
-
-

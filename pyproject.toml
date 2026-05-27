@@ -1,6 +1,6 @@
 [build-system]
 build-backend = "pdm.backend"
-requires = ["pdm-backend>=2.3"]
+requires = ["pdm-backend>=2.3", "setuptools-scm>=9.0"]
 
 [project]
 authors = [{ name = "xinetzone", email = "735613050@qq.com" }]
@@ -68,15 +68,10 @@ test = [
     "pdfplumber>=0.11",
     "pypdfium2",
 ]
-
-[tool.pdm.version]
-source = "scm"
-write_to = "src/taolib/_version.py"
-
 [tool.pdm.build]
 includes = ["src/taolib"]
 package-dir = "src"
-scm_options = { local_scheme = "no-local-version" }
+hooks = ["pdm_build_initialize"]
 
 [tool.ruff]
 exclude = [".git", ".venv", "doc/_build", ".pytest_cache", "__pycache__"]

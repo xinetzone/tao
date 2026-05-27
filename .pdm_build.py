@@ -1,7 +1,7 @@
+import subprocess
+import sys
+
 def pdm_build_initialize(context):
-    import subprocess
-    import os
-    
     try:
         result = subprocess.run(
             ["git", "describe", "--tags", "--always"],
@@ -24,4 +24,8 @@ def pdm_build_initialize(context):
             version_file.write_text(f"__version__ = '{version}'\n")
             
     except Exception as e:
-        context.metadata.version = "0.1.0"
+        context.metadata.version = "0.7.1"
+
+def pdm_build_update_files(context, files):
+    pdm_build_initialize(context)
+    return files

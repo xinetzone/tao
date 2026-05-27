@@ -88,7 +88,7 @@ class InMemoryInstallationTokenCache:
             del self._items[k]
         return len(expired_keys)
 
-    def start_purge_task(self, interval_seconds: int = 300) -> "asyncio.Task[None]":
+    def start_purge_task(self, interval_seconds: int = 300) -> asyncio.Task[None]:
         """启动后台周期清理协程。
 
         Args:

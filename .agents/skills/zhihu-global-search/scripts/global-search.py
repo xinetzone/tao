@@ -65,7 +65,7 @@ def parse_count(payload: dict[str, Any]) -> int:
     raw = payload.get("count", payload.get("Count", 10))
     try:
         count = int(raw)
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         count = 10
     return max(1, min(20, count))
 
@@ -128,7 +128,7 @@ def request_global_search(
     except HTTPError as err:
         body_text = err.read().decode("utf-8", errors="replace")
         die(f"HTTP {err.code}", body=body_text)
-    except (URLError, TimeoutError):
+    except URLError, TimeoutError:
         die("HTTP request failed (timeout or network error)")
 
     try:

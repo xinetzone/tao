@@ -36,7 +36,7 @@ def load_registry_config(agents_dir: Path) -> list[RegistrySource]:
     try:
         with config_path.open("rb") as f:
             data = tomllib.load(f)
-    except (OSError, tomllib.TOMLDecodeError):
+    except OSError, tomllib.TOMLDecodeError:
         return []
 
     registries_data = data.get("registries", {})

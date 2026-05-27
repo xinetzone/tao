@@ -98,7 +98,7 @@ def _parse_index_toml(path: Path) -> IndexEntry | None:
     try:
         with path.open("rb") as f:
             data = tomllib.load(f)
-    except (OSError, tomllib.TOMLDecodeError):
+    except OSError, tomllib.TOMLDecodeError:
         return None
 
     metadata = data.get("metadata", {})

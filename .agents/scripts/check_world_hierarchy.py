@@ -53,7 +53,7 @@ def _ensure_utf8_stdout() -> None:
 
     try:
         sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[attr-defined]
-    except (AttributeError, ValueError):
+    except AttributeError, ValueError:
         pass
 
 
@@ -97,7 +97,7 @@ def _read_immutable_rules(world_toml_path: Path) -> list[str]:
         kernel = data.get("kernel", {})
         rules = kernel.get("immutable_rules", [])
         return rules if isinstance(rules, list) else []
-    except (tomllib.TOMLDecodeError, OSError):
+    except tomllib.TOMLDecodeError, OSError:
         return []
 
 

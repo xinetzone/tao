@@ -58,7 +58,7 @@ def parse_limit(payload: dict[str, Any]) -> int:
     raw = payload.get("limit", payload.get("Limit", 30))
     try:
         limit = int(raw)
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         limit = 30
     return max(1, min(30, limit))
 
@@ -94,7 +94,7 @@ def request_hot_list(limit: int) -> dict[str, Any]:
         except json.JSONDecodeError:
             body = body_text
         die(f"HTTP {err.code}", body=body)
-    except (URLError, TimeoutError):
+    except URLError, TimeoutError:
         die("HTTP request failed (timeout or network error)")
 
     try:

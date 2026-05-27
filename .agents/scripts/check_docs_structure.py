@@ -58,7 +58,7 @@ def _ensure_utf8_stdout() -> None:
 
     try:
         sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[attr-defined]
-    except (AttributeError, ValueError):
+    except AttributeError, ValueError:
         pass
 
 

@@ -15,14 +15,31 @@ REQUIRED_SECTIONS = [
 ]
 
 
+def load_skip_names(project_root: Path) -> set[str]:
+    skip_file = project_root / ".agents" / "skills" / ".validate-skip"
+    skip_names: set[str] = set()
+    if skip_file.exists():
+        for line in skip_file.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if line and not line.startswith("#"):
+                skip_names.add(line)
+    return skip_names
+
+
 def find_skill_dirs(project_root: Path) -> list[Path]:
     skills_root = project_root / ".agents" / "skills"
     if not skills_root.exists():
         return []
+
+    skip_names = load_skip_names(project_root)
+
     return sorted(
         d
         for d in skills_root.iterdir()
-        if d.is_dir() and not d.name.startswith(".") and d.name != "templates"
+        if d.is_dir()
+        and not d.name.startswith(".")
+        and d.name != "templates"
+        and d.name not in skip_names
     )
 
 
@@ -125,6 +142,12 @@ def main() -> int:
     print("技能 SKILL.md 合规性校验报告")
     print("=" * 40)
     print_report(results)
+
+    skip_names = load_skip_names(project_root)
+    if skip_names:
+        print("\n跳过的技能（见 .agents/skills/.validate-skip）：")
+        for name in sorted(skip_names):
+            print(f"  - {name}")
 
     exit_code = 0
     for skill_name, issues in results.items():

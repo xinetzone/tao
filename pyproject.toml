@@ -64,6 +64,7 @@ test = [
     "pytest-mock",
     "pytest-xdist",
     "pytest-ruff",
+    "fpdf2",
 ]
 
 [tool.pdm.version]

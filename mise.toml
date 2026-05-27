@@ -122,3 +122,11 @@ run = "podman run -it --rm -v .:/workspace:Z taolib-dev"
 [tasks.container-test]
 description = "在容器中运行测试"
 run = "podman build -f Containerfile.test -t taolib-test . && podman run --rm taolib-test"
+
+[tasks.validate-skills]
+description = "校验 .agents/skills/ 下所有技能的 SKILL.md 合规性"
+run = "python .agents/scripts/validation/validate_skill_md.py"
+
+[tasks.validate-json]
+description = "通用 JSON Schema 验证工具"
+run = "python .agents/scripts/validate_json_schema.py"

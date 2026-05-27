@@ -210,3 +210,4 @@ test_result*.txt
 # 技能优化产出的临时结果（由 skill-creator/run_loop 自动生成）
 **/optimization-results*/
 logs_70956002864.zip
+temp.txt

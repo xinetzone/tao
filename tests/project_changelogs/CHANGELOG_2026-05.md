@@ -28,3 +28,6 @@
 - 修复 pdf-to-markdown CI 测试因 fpdf2+pdfplumber CJK 文本提取不可靠导致失败的问题（通过 fixture 注入绕过 PDF 提取管线）。
 - 修复 ruff format lint 失败（Round 1 修改的测试文件未预先格式化）。
 - 修复 github-app 可选依赖（httpx/PyJWT/PyGithub）在 `mise.toml` 和 `Containerfile.test` 中缺失的问题（`uv sync --group test` 未加 `--extra github-app`）。
+- 修复 `check_env.py` 中 `ruff_target_for_python` 硬编码 `supported_minor=13` 导致 CI lint 因 Ruff `target-version=py314` 校验失败的问题（已更新为 14）。
+- 修复 Ruff `target-version` 从 `py313` 升级为 `py314` 后触发 16 个文件格式重排与 2 处 UP037（quoted-annotation）lint 错误的 CI 失败。
+- 修复 `.agents/docs/superpowers/retrospectives/task-summary-ci-pipeline-systematic-fix-20260527.md` 中 trailing-whitespace 导致的 pre-commit hook 失败。

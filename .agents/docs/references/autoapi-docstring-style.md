@@ -4,7 +4,7 @@
 >
 > 强制级别：**MUST**（CI 通过 `mise run docs-strict` / `sphinx-build -W --keep-going` 强制零警告）。
 >
-> 关联文档：人类版摘要见 [`docs/contributing.md`](../../../docs/contributing.md#docstring-风格规范autoapi-友好)。
+> 关联文档：人类版摘要见 [`docs/tech/contributing.md`](../../../docs/tech/contributing.md#docstring-风格规范autoapi-友好)。
 
 ---
 

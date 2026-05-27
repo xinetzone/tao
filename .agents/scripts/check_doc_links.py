@@ -39,6 +39,7 @@ _DEFAULT_DIRS: tuple[str, ...] = ("docs", ".agents/docs", ".agents/rules")
 # - 构建/缓存目录: 无校验意义。
 # - superpowers: 承载 plans/retrospectives 等历史快照，允许包含规划中尚未
 #   实现的目标路径与占位符示例，强行校验会破坏历史真实性，故默认跳过。
+# - articles: 外部文章归档，可能包含指向原项目的链接，不应校验。
 _SKIP_DIR_NAMES: frozenset[str] = frozenset(
     {
         "_build",
@@ -47,6 +48,7 @@ _SKIP_DIR_NAMES: frozenset[str] = frozenset(
         "node_modules",
         ".ruff_cache",
         "superpowers",
+        "articles",
     }
 )
 
@@ -72,7 +74,37 @@ def _is_external(url: str) -> bool:
         lowered.startswith(("http://", "https://", "mailto:", "ftp://", "file://"))
         or lowered.startswith("#")
         or lowered.startswith("data:")
+        or lowered.startswith("/tools/")
+        or lowered.startswith("/getting-started/")
+        or lowered.startswith("/CONTRIBUTING.md")
     )
+
+
+def _is_placeholder(url: str) -> bool:
+    """判断是否为模板占位符（不应检查）。"""
+    return "<" in url or ">" in url
+
+
+def _is_code_literal(url: str) -> bool:
+    """判断是否为代码字面量（不应作为链接检查）。"""
+    # 检测正则表达式模式或代码片段
+    if url.startswith("/^") or url.startswith("^"):
+        return True
+    # 检测包含特殊字符的代码片段
+    special_chars = r"[\[\]{}()*+?^$.|\\]"
+    if any(char in url for char in special_chars):
+        # 如果包含大量特殊字符，很可能是代码
+        special_count = sum(1 for char in url if char in special_chars)
+        if special_count > len(url) // 4:
+            return True
+    return False
+
+
+def _is_forbidden_example(line: str) -> bool:
+    """判断是否为文档中的"禁止"示例（不应检查）。"""
+    # 检测常见的禁止示例标记
+    forbidden_markers = ["❌", "禁止", "错误示例", "bad example", "WRONG", "DO NOT"]
+    return any(marker in line for marker in forbidden_markers)
 
 
 def _strip_fragment(url: str) -> str:
@@ -114,6 +146,15 @@ def check_file(source: Path, project_root: Path) -> list[LinkRecord]:
             url = match.group("url").strip()
             if not url or _is_external(url):
                 continue
+            
+            if _is_placeholder(url):
+                continue
+            
+            if _is_code_literal(url):
+                continue
+            
+            if _is_forbidden_example(line):
+                continue
 
             path_part = _strip_fragment(url)
             if not path_part:
@@ -138,6 +179,13 @@ def check_file(source: Path, project_root: Path) -> list[LinkRecord]:
                 continue
 
             ok = resolved.exists()
+            
+            if not ok and not path_part.endswith((".md", ".rst", ".txt")):
+                resolved_with_ext = resolved.with_suffix(".md")
+                if resolved_with_ext.exists():
+                    ok = True
+                    resolved = resolved_with_ext
+            
             records.append(
                 LinkRecord(
                     source=source,

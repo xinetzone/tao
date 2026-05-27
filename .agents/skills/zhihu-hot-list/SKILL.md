@@ -8,7 +8,11 @@ metadata: {"openclaw":{"emoji":"🔥","requires":{"bins":["python3"]}}}
 
 # Hot List Skill
 
-## 概述
+## Skill Name
+
+`zhihu-hot-list`
+
+## 功能描述
 本 Skill 用于调用知乎开放平台的 `hot_list` API。
 完整的 API 文档请参考：https://developer.zhihu.com/docs
 
@@ -70,3 +74,25 @@ HTTP 非 2xx 时额外携带 `body`：
 ```json
 {"error":"HTTP 403","body":"Forbidden","exit_code":1}
 ```
+
+## 依赖项
+
+- Python 3.10+
+- 环境变量 `ZHIHU_ACCESS_SECRET`（Bearer 认证）
+- 网络访问（知乎开放平台 API）
+
+## 部署
+
+无需额外部署。确保 `ZHIHU_ACCESS_SECRET` 环境变量已设置即可使用。
+
+## 错误处理
+
+见上方“失败”小节。常见错误：认证失败、网络超时、参数无效。脚本统一返回 `{"error":"...","exit_code":1}` 格式。
+
+## 版本记录
+
+| 版本 | 日期 | 变更 |
+|------|------|------|
+| 1.0.2 | 2026-05 | 统一 SKILL.md 合规性，补全必填章节 |
+| 1.0.1 | 2026-04 | 支持 endpoint 环境变量覆盖 |
+| 1.0.0 | 2026-03 | 初始版本 |

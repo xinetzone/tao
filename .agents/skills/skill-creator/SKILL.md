@@ -483,3 +483,35 @@ Repeating one more time the core loop here for emphasis:
 Please add steps to your TodoList, if you have such a thing, to make sure you don't forget. If you're in Cowork, please specifically put "Create evals JSON and run `eval-viewer/generate_review.py` so human can review test cases" in your TodoList to make sure it happens.
 
 Good luck!
+
+---
+
+## Skill Name
+
+`skill-creator`
+
+## Description
+
+Create new skills, modify and improve existing skills, and measure skill performance.
+
+## Input/Output Parameters
+
+See "Creating a skill" section above for detailed input/output specifications.
+
+## Dependencies
+
+- Python 3.10+
+- Claude API access (via host environment)
+- pytest (for eval execution)
+
+## Deployment
+
+No additional deployment needed. This skill operates as a document-driven guide within the `.agents/skills/skill-creator/` directory.
+
+## Error Handling
+
+Skill creation errors are surfaced through the eval/benchmark feedback loop. See the "Report structure" section for error reporting format.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history.

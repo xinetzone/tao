@@ -35,3 +35,4 @@
 - 修复 `mise.toml` 与 `Containerfile.test` 中 `sh` 执行 `sync-test-deps.sh` 因 dash 不支持 `set -o pipefail` 导致 CI security job 失败的问题（改为 `bash`）。
 - 修复 `Containerfile.test` 中 pdm-backend 构建时因 `LICENSE` 文件未复制到 Docker 缓存层导致容器测试 job 失败的问题。
 - 修复 `Containerfile.test` 中 pdm-backend 构建时因 `README.md` 文件未复制到 Docker 缓存层导致容器测试 job 失败的问题（与 LICENSE 同类：pyproject.toml 中所有 file 引用的元数据文件均需在缓存层 COPY）。
+- 修复 pdm-backend SCM 版本检测在 Docker 缓存层（无 `.git` 目录）失败的问题：在 `[tool.pdm.version]` 添加 `fallback_version = "0.0.0"`。

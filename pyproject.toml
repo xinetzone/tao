@@ -1,6 +1,6 @@
 [build-system]
 build-backend = "pdm.backend"
-requires = ["pdm-backend"]
+requires = ["pdm-backend>=2.3", "setuptools-scm[toml]>=9.0"]
 
 [project]
 authors = [{ name = "xinetzone", email = "735613050@qq.com" }]
@@ -72,13 +72,12 @@ test = [
 [tool.pdm.version]
 source = "scm"
 write_to = "src/taolib/_version.py"
-
-[tool.setuptools_scm]
-local_scheme = "no-local-version"
+fallback_version = "0.1.0"
 
 [tool.pdm.build]
 includes = ["src/taolib"]
 package-dir = "src"
+scm_options = { local_scheme = "no-local-version" }
 
 [tool.ruff]
 exclude = [".git", ".venv", "doc/_build", ".pytest_cache", "__pycache__"]

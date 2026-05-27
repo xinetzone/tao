@@ -1,6 +1,6 @@
 [build-system]
-build-backend = "pdm.backend"
-requires = ["pdm-backend>=2.3", "setuptools-scm>=9.0"]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=64", "setuptools-scm[toml]>=9.0"]
 
 [project]
 authors = [{ name = "xinetzone", email = "735613050@qq.com" }]
@@ -11,17 +11,6 @@ maintainers = [{ name = "xinetzone", email = "735613050@qq.com" }]
 name = "taolib"
 readme = "README.md"
 requires-python = ">=3.14"
-
-[tool.pdm.version]
-source = "scm"
-write_to = "src/taolib/_version.py"
-
-[tool.pdm.build]
-includes = ["src/taolib"]
-package-dir = "src"
-
-[tool.setuptools_scm]
-local_scheme = "no-local-version"
 
 [project.optional-dependencies]
 github-app = [
@@ -80,14 +69,15 @@ test = [
     "pypdfium2",
 ]
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.pdm.version]
+source = "file"
+
+[tool.pdm.build]
+includes = ["src/taolib"]
+package-dir = "src"
 
 [tool.setuptools_scm]
 local_scheme = "no-local-version"
-write_to = "src/taolib/_version.py"
-root = "."
-version_file = "src/taolib/_version.py"
 
 [tool.ruff]
 exclude = [".git", ".venv", "doc/_build", ".pytest_cache", "__pycache__"]

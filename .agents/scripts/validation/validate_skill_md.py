@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 import sys
 from pathlib import Path
+import tomllib
 
 REQUIRED_SECTIONS = [
     ("Skill ID/Name", r"(?:Skill\s*(?:ID|Name|唯一标识)|Name)" ),
@@ -13,6 +14,22 @@ REQUIRED_SECTIONS = [
     ("Error Handling", r"(?:Error\s*Handling|错误|异常|handling)"),
     ("Changelog", r"(?:Changelog|版本|Version|History|变更|更新记录)"),
 ]
+
+
+def load_config(project_root: Path) -> list[tuple[str, str]]:
+    """从 .validate-config.toml 加载必填章节配置，不存在则使用默认值。"""
+    config_file = project_root / ".agents" / "skills" / ".validate-config.toml"
+    if not config_file.exists():
+        return REQUIRED_SECTIONS
+
+    with open(config_file, "rb") as f:
+        config = tomllib.load(f)
+
+    sections = config.get("required_sections", {})
+    if not sections:
+        return REQUIRED_SECTIONS
+
+    return [(name, pattern) for name, pattern in sections.items()]
 
 
 def load_skip_names(project_root: Path) -> set[str]:
@@ -56,7 +73,9 @@ def parse_skill_md_headers(skill_md_path: Path) -> set[str]:
     return headers
 
 
-def check_skill_md(skill_name: str, skill_dir: Path) -> list[dict]:
+def check_skill_md(skill_name: str, skill_dir: Path, required_sections: list[tuple[str, str]] | None = None) -> list[dict]:
+    if required_sections is None:
+        required_sections = REQUIRED_SECTIONS
     issues: list[dict] = []
     skill_md = skill_dir / "SKILL.md"
 
@@ -72,7 +91,7 @@ def check_skill_md(skill_name: str, skill_dir: Path) -> list[dict]:
 
     headers = parse_skill_md_headers(skill_md)
 
-    for section_name, pattern in REQUIRED_SECTIONS:
+    for section_name, pattern in required_sections:
         found = any(re.search(pattern, h) for h in headers)
         if not found:
             issues.append(
@@ -88,11 +107,11 @@ def check_skill_md(skill_name: str, skill_dir: Path) -> list[dict]:
             {
                 "severity": "PASS",
                 "item": "SKILL.md 合规性",
-                "detail": f"{skill_name} 的 SKILL.md 包含全部 7 个必填章节",
+                "detail": f"{skill_name} 的 SKILL.md 包含全部 {len(required_sections)} 个必填章节",
             }
         )
     else:
-        remaining = 7 - sum(
+        remaining = len(required_sections) - sum(
             1
             for i in issues
             if i["severity"] == "MISSING" and i["item"] == "必填章节"
@@ -102,7 +121,7 @@ def check_skill_md(skill_name: str, skill_dir: Path) -> list[dict]:
             {
                 "severity": "WARN",
                 "item": "SKILL.md 合规性",
-                "detail": f"{skill_name} 的 SKILL.md 包含 {remaining}/7 个必填章节",
+                "detail": f"{skill_name} 的 SKILL.md 包含 {remaining}/{len(required_sections)} 个必填章节",
             },
         )
 
@@ -111,11 +130,12 @@ def check_skill_md(skill_name: str, skill_dir: Path) -> list[dict]:
 
 def run(project_root: Path) -> dict[str, list[dict]]:
     skill_dirs = find_skill_dirs(project_root)
+    required_sections = load_config(project_root)
     results: dict[str, list[dict]] = {}
 
     for skill_dir in skill_dirs:
         skill_name = skill_dir.name
-        results[skill_name] = check_skill_md(skill_name, skill_dir)
+        results[skill_name] = check_skill_md(skill_name, skill_dir, required_sections)
 
     return results
 

@@ -28,3 +28,9 @@ repos:
         language: system
         pass_filenames: false
         stages: [manual]
+      - id: validate-skills
+        name: validate-skills (SKILL.md compliance)
+        entry: uv run python .agents/scripts/validation/validate_skill_md.py
+        language: system
+        pass_filenames: false
+        files: '^\.agents/skills/.*/SKILL\.md$'

@@ -1,0 +1,12 @@
+# 技能 SKILL.md 校验配置
+# 每个 section 定义: name = "正则模式"
+# 修改此文件可自定义必填章节要求
+
+[required_sections]
+"Skill ID/Name" = "(?:Skill\\s*(?:ID|Name|唯一标识)|Name)"
+"Description" = "(?:Description|功能描述|功能|用途|Summary)"
+"I/O Parameters" = "(?:I/?O\\s*Parameters?|Input|Output|输入|输出|Parameters?)"
+"Dependencies" = "(?:Dependencies?|依赖|依赖项|Requirements?)"
+"Deployment" = "(?:Deployment|部署|Install|安装|Setup|配置)"
+"Error Handling" = "(?:Error\\s*Handling|错误|异常|handling)"
+"Changelog" = "(?:Changelog|版本|Version|History|变更|更新记录)"

@@ -11,6 +11,9 @@ on:
   release:
     types: [published]
 
+env:
+  MISE_EXPERIMENTAL: "1"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest

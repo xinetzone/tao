@@ -13,6 +13,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  MISE_EXPERIMENTAL: "1"
+
 jobs:
   init-check:
     runs-on: ${{ matrix.os }}

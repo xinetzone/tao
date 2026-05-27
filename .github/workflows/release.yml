@@ -25,6 +25,9 @@ concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: false
 
+env:
+  MISE_EXPERIMENTAL: "1"
+
 jobs:
   validate:
     name: Validate Version

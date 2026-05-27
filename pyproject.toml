@@ -5,7 +5,7 @@ requires = ["pdm-backend"]
 [project]
 authors = [{ name = "xinetzone", email = "735613050@qq.com" }]
 description = "道可道，非恒道"
-version = "0.1.0"
+dynamic = ["version"]
 license = { file = "LICENSE" }
 maintainers = [{ name = "xinetzone", email = "735613050@qq.com" }]
 name = "taolib"
@@ -68,6 +68,13 @@ test = [
     "pdfplumber>=0.11",
     "pypdfium2",
 ]
+
+[tool.pdm.version]
+source = "scm"
+write_to = "src/taolib/_version.py"
+
+[tool.setuptools_scm]
+local_scheme = "no-local-version"
 
 [tool.pdm.build]
 includes = ["src/taolib"]

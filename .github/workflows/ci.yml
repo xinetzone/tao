@@ -96,7 +96,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
 
       - name: Upload coverage HTML report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: coverage-${{ matrix.os }}-mise
           path: htmlcov/
@@ -127,7 +127,7 @@ jobs:
         run: mise run test-coverage
 
       - name: Upload coverage HTML report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: coverage-macos-latest-mise
           path: htmlcov/

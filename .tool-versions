@@ -3,4 +3,4 @@ node 22.22.3
 uv 0.11.16
 ruff 0.15.14
 pre-commit 4.6.0
-defuddle 0.18.1
+npm:defuddle 0.18.1

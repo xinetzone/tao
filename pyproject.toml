@@ -65,6 +65,8 @@ test = [
     "pytest-xdist",
     "pytest-ruff",
     "fpdf2",
+    "pdfplumber>=0.11",
+    "pypdfium2",
 ]
 
 [tool.pdm.version]

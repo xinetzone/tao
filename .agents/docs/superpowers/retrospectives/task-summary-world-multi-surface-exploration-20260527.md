@@ -89,7 +89,7 @@ flowchart LR
 | 决策 | 备选方案 | 选择 | 依据 |
 |---|---|---|---|
 | World 升级方式 | A. 重新设计 World 结构；B. 在现有四层上增量补 L2 运行时层 | **B** | 不破坏 kernel.immutable_rules 与既有契约；符合"少则得"原则 |
-| 事件日志格式 | A. JSON 单文件；B. JSONL 追加流；C. 二进制日志 | **B** | 简单 / 可 grep / Git 友好 / 单一真相源 |
+| 事件日志格式 | A. JSON 单文件；B. JSONL 追加流；C. TOML `[[event]]`；D. 二进制日志 | **C** | 人类可读性最强 / 与项目 TOML 风格统一 / 支持尾部追加 |
 | 多端冲突策略 | A. CRDT；B. 悲观锁 + lease TTL；C. 最后写入胜出 | **B** | 任务级粒度，复杂度可控；首期可先 lock 文件 |
 | Session 是否入 git | A. 全部入；B. 默认 ignore，手动 commit；C. 全部 ignore | **B** | 隐私 vs 可追溯的平衡 |
 | 跨设备同步 | A. 自建 server；B. 走 git；C. 不同步 | **B** | 极简优先，符合"大道至简" |
@@ -187,7 +187,7 @@ flowchart TB
     World --> Static["world.toml<br/>(体)"]
     World --> Runtime["world.state/<br/>(用)"]
     Runtime --> Sessions["sessions/"]
-    Runtime --> Events["events.jsonl"]
+    Runtime --> Events["events.toml"]
     Sessions --> Surfaces["CLI / Web / Skill / API"]
     Surfaces --> Artifacts["产物层"]
     Artifacts --> Retro["retrospectives/"]
@@ -216,13 +216,13 @@ flowchart TB
 |---|---|---|
 | 协议过早冻结 | 中 | spec 标记 v0.1 / Draft，明确可演进区域 |
 | session 文件膨胀污染 git | 中 | 默认 .gitignore，提供 `world session export` 显式分享 |
-| 多端时钟不一致导致事件乱序 | 低 | events.jsonl 用单调递增 seq 而非 wall clock |
+| 多端时钟不一致导致事件乱序 | 低 | events.toml 用单调递增 seq 而非 wall clock |
 | Skill 端能力不对等导致协议形同虚设 | 中 | runtimes 声明强约束，未声明端不允许执行 |
 
 ### 10.4 工具推荐
-- **JSONL 校验**：`jq -c .` 流式校验
-- **会话压缩**：`context.md` 用人类可读摘要，避免直接读 events.jsonl
-- **冲突诊断**：lock 文件中记录 `holder = {surface, pid, lease_until}`
+- **TOML 校验**：`taplo check events.toml` 或 Python `tomllib` 解析校验
+- **会话压缩**：`context.md` 用人类可读摘要，避免直接读 events.toml
+- **冲突诊断**：`lock.toml` 中记录 `holder.surface`、`lease.lease_until`
 
 ---
 
@@ -231,7 +231,7 @@ flowchart TB
 > 1. **端不是边界，世界才是边界。**
 > 2. **多端协同的本质是三流合一：上下文流 + 任务态流 + 产物流。**
 > 3. **体/用之分让 N×N 的端间集成坍缩为 N×1 的端-世界注册。**
-> 4. **JSONL + 悲观锁是首期最简可行底座，CRDT 与 server 同步留待后期。**
+> 4. **TOML `[[event]]` + 悲观锁是首期最简可行底座，CRDT 与 server 同步留待后期。**
 
 ---
 

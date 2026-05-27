@@ -37,7 +37,7 @@ flowchart LR
 | 反者道之动 | 端是"用"的发散，World 是"体"的归一 |
 | 弱者道之用 | 不强求多端同步语义，靠**追加事件 + 投影上下文**弱耦合 |
 | 多则惑，少则得 | 用一个 Session 容器收敛 N 个端的混乱 |
-| 抱一为天下式 | events.jsonl 是单一真相源 |
+| 抱一为天下式 | events.toml 是单一真相源 |
 
 详见 [`.agents/docs/references/dao-tech-foundation.md`](../../.agents/docs/references/dao-tech-foundation.md)。
 
@@ -53,7 +53,7 @@ flowchart TB
     end
     subgraph L2["L2 运行时层（本规约定义）"]
         S1["sessions/"]
-        S2["events.jsonl"]
+        S2["events.toml"]
         S3["context.md"]
         S4["locks/"]
     end
@@ -78,15 +78,15 @@ flowchart TB
 一次有边界的任务态。具有：
 - 全局唯一 `session_id`（`<topic-slug>-<timestamp-base36>`，例：`laozi-boshu-l9k2x`）
 - 一个或多个端的活跃读写
-- 一条不可变的 `events.jsonl`
+- 一条不可变的 `events.toml`
 - 一份可重建的 `context.md` 投影
 - 可选的产物目录 `artifacts/`
 
 ### Event（事件）
-对 Session 的不可变变更记录。所有端的所有写入**必须**追加到 `events.jsonl`，禁止原地修改。
+对 Session 的不可变变更记录。所有端的所有写入**必须**追加到 `events.toml`（使用 TOML `[[event]]` Array of Tables 语法），禁止原地修改已有条目。
 
 ### Context（上下文）
-`events.jsonl` 的人类可读投影，由当前持有锁的端在每次重要事件后重写。任何端都可以**从 events 完整重建** context，因此 context 是**派生数据**，非真相源。
+`events.toml` 的人类可读投影，由当前持有锁的端在每次重要事件后重写。任何端都可以**从 events 完整重建** context，因此 context 是**派生数据**，非真相源。
 
 ### Lock（互斥）
 任意时刻，至多一个端持有 Session 的写锁。读不占锁。锁是**租约式**的，过期自动释放。
@@ -109,11 +109,11 @@ Session 的物理布局位于 [`.agents/world.state/`](../../.agents/) 下（默
     │   └── laozi-boshu-l9k2x/
     │       ├── manifest.toml          # 会话元数据
     │       ├── context.md             # 当前上下文投影（人可读）
-    │       ├── events.jsonl           # WAL 追加事件流（真相源）
+    │       ├── events.toml            # WAL 追加事件流（真相源）
     │       ├── artifacts/             # 中间产物
     │       │   ├── notes.md
     │       │   └── data.csv
-    │       └── lock                   # 当前持有端的租约（JSON）
+    │       └── lock.toml              # 当前持有端的租约
     └── tasks/
         └── <task-id>.toml             # 跨 session 的长任务元数据（可选）
 ```
@@ -145,30 +145,65 @@ last_writer = "cli"
 last_touched_at = "2026-05-27T15:08:42+08:00"
 ```
 
-### `events.jsonl` 格式
+### `events.toml` 格式
 
-每行是一个独立 JSON 对象，**追加不变**：
+使用 TOML **Array of Tables**（`[[event]]`）语法，每条事件追加到文件末尾，**已有条目不可修改**：
 
-```json
-{"seq":1,"ts":"2026-05-27T14:32:11+08:00","surface":"cli","actor":"user","type":"session.created","payload":{"title":"为帛书《老子》做注疏"}}
-{"seq":2,"ts":"2026-05-27T14:33:05+08:00","surface":"cli","actor":"agent","type":"context.appended","payload":{"text":"已确认源文件位于 .temp/laozi.pdf"}}
-{"seq":3,"ts":"2026-05-27T14:35:22+08:00","surface":"cli","actor":"agent","type":"artifact.added","payload":{"path":"artifacts/notes.md","sha256":"abc..."}}
-{"seq":4,"ts":"2026-05-27T15:01:00+08:00","surface":"web","actor":"user","type":"session.resumed","payload":{"from_seq":3}}
+```toml
+[[event]]
+seq = 1
+ts = "2026-05-27T14:32:11+08:00"
+surface = "cli"
+actor = "user"
+type = "session.created"
+
+[event.payload]
+title = "为帛书《老子》做注疏"
+
+[[event]]
+seq = 2
+ts = "2026-05-27T14:33:05+08:00"
+surface = "cli"
+actor = "agent"
+type = "context.appended"
+
+[event.payload]
+text = "已确认源文件位于 .temp/laozi.pdf"
+
+[[event]]
+seq = 3
+ts = "2026-05-27T14:35:22+08:00"
+surface = "cli"
+actor = "agent"
+type = "artifact.added"
+
+[event.payload]
+path = "artifacts/notes.md"
+sha256 = "abc..."
+
+[[event]]
+seq = 4
+ts = "2026-05-27T15:01:00+08:00"
+surface = "web"
+actor = "user"
+type = "session.resumed"
+
+[event.payload]
+from_seq = 3
 ```
 
-### `lock` 格式
+### `lock.toml` 格式
 
-```json
-{
-  "holder": {
-    "surface": "web",
-    "instance_id": "browser-7f3a",
-    "actor": "user@local"
-  },
-  "acquired_at": "2026-05-27T15:01:00+08:00",
-  "lease_until": "2026-05-27T15:11:00+08:00",
-  "renew_count": 0
-}
+```toml
+[holder]
+surface = "web"
+instance_id = "browser-7f3a"
+actor = "user@local"
+
+[lease]
+acquired_at = "2026-05-27T15:01:00+08:00"
+lease_until = "2026-05-27T15:11:00+08:00"
+renew_count = 0
 ```
 
 ---
@@ -240,7 +275,7 @@ stateDiagram-v2
 | `world session archive <id>` | 归档至 `superpowers/retrospectives/` |
 | `world session export <id> [--out <path>]` | 导出为可分享 zip |
 | `world session import <path>` | 导入外部 session 包 |
-| `world session log <id> [--tail N]` | 查看 events.jsonl |
+| `world session log <id> [--tail N]` | 查看 events.toml |
 | `world session prune [--older-than <duration>]` | 清理过期 suspended |
 
 ### 关键命令详解
@@ -253,7 +288,7 @@ world session new <title>
                   [--lease <duration>]   # 默认 10m
 ```
 - 生成 `session_id`
-- 创建目录骨架（manifest.toml / context.md / events.jsonl / artifacts/）
+- 创建目录骨架（manifest.toml / context.md / events.toml / lock.toml / artifacts/）
 - 写入 `session.created` 与 `lock.acquired` 两条事件
 - 返回 `session_id` 至 stdout
 
@@ -275,7 +310,7 @@ world session archive <id> [--retro-template <name>]
 - 必须先 `release` 锁
 - 调用 task-execution-summary 风格模板生成归档 markdown
 - 移动整个 session 目录至 `superpowers/retrospectives/<date>-<title>/`
-- 写入 `session.archived` 后冻结 events.jsonl
+- 写入 `session.archived` 后冻结 events.toml
 
 ---
 
@@ -285,11 +320,11 @@ world session archive <id> [--retro-template <name>]
 
 ### A. 写入约束
 1. 写前必须持有 `lock`，`lease_until` 大于当前时间。
-2. 每次写入必须**先**追加 `events.jsonl`，**再**更新派生数据（`manifest.toml.last_event_seq`、`context.md`）。
-3. 顺序违反 = 视为腐坏，需要从 events.jsonl 完全重建。
+2. 每次写入必须**先**追加 `events.toml`，**再**更新派生数据（`manifest.toml.last_event_seq`、`context.md`）。
+3. 顺序违反 = 视为腐坏，需要从 events.toml 完全重建。
 
 ### B. 读取约束
-1. 读取无需持锁，但必须以 `events.jsonl` 为唯一真相源。
+1. 读取无需持锁，但必须以 `events.toml` 为唯一真相源。
 2. 若 `context.md` 与 events 不一致（通过 `last_event_seq` 校验），应**忽略 context.md** 并提示用户调用 `world session repair <id>`。
 
 ### C. 锁的获取与释放
@@ -297,9 +332,9 @@ world session archive <id> [--retro-template <name>]
 sequenceDiagram
     participant Client as 端
     participant FS as world.state/
-    Client->>FS: 读 lock 文件
+    Client->>FS: 读 lock.toml
     alt 锁不存在 or 已过期
-        Client->>FS: 原子写入新 lock（O_CREAT|O_EXCL）
+        Client->>FS: 原子写入新 lock.toml（O_CREAT|O_EXCL）
         FS-->>Client: 写入成功 → 拿锁
     else 锁有效且非本端
         FS-->>Client: 拒绝
@@ -365,7 +400,7 @@ Skill 在 active session 中被触发时：
 - `world session import <path>` 导入时强制重新生成 `session_id`，避免 ID 撞车
 
 ### 敏感信息
-- events.jsonl 不应记录 token、密码、私钥
+- events.toml 不应记录 token、密码、私钥
 - Skill 在 payload 中检测到敏感模式（默认正则集）时必须替换为 `<redacted>`
 - 用户可通过 `world session redact <id> --pattern <regex>` 事后脱敏（追加 `context.rewritten` 事件，原 events 仍保留但人类不再呈现）
 
@@ -410,7 +445,7 @@ description = "World Session 多端协同协议（v0.1 草案）"
 | `WS101` | 锁被他端持有 | 显示 holder 与剩余 lease |
 | `WS102` | 锁已过期需 `--steal` | 提示 steal 命令 |
 | `WS103` | 续约失败（写竞争） | 退避重试 |
-| `WS201` | events.jsonl 损坏 | 引导 `world session repair` |
+| `WS201` | events.toml 损坏 | 引导 `world session repair` |
 | `WS202` | context.md 与 events seq 不一致 | 自动从 events 重建并提醒 |
 | `WS301` | Skill 未声明 context-protocol | 拒绝调用并打印修正示例 |
 | `WS302` | 当前 session 不允许该 runtime | 列出 allowed_runtimes |
@@ -445,16 +480,16 @@ flowchart LR
 
 1. **冲突合并策略**：当前悲观锁是首选，但 v0.x 可探索"读写分离 + 异步合并"。
 2. **跨设备同步**：v0.2 可能引入 server 模式（参考 [`world-registry-protocol.md`](./world-registry-protocol.md) 的分发模式）。
-3. **events.jsonl 压缩**：超过 N 条后是否引入 snapshot + delta，待 PoC 数据后定。
+3. **events.toml 压缩**：超过 N 条后是否引入 snapshot + delta，待 PoC 数据后定。
 4. **context.md 投影策略**：摘要 vs 全量 vs LLM 总结，留给端实现自行选择。
 
 ---
 
 ## 关键设计决策记录（ADR 形式）
 
-### ADR-001：使用 JSONL 而非 SQLite
-**取舍**：SQLite 性能更好但 git 不友好；JSONL 可 grep、可 git diff、文本工具友好。
-**结论**：选 JSONL，符合"少则得"。
+### ADR-001：使用 TOML 而非 JSONL / SQLite
+**取舍**：SQLite 性能好但 git 不友好；JSONL 可流式但风格不统一；TOML 的 `[[event]]` 人类可读性最强且与项目既有格式（`world.toml`、`manifest.toml`）风格一致。
+**结论**：选 TOML Array of Tables，符合"大道至简"与项目风格统一原则。追加写入时在文件末尾追加 `[[event]]` 块即可。
 
 ### ADR-002：悲观锁而非 CRDT
 **取舍**：CRDT 支持离线并发但实现复杂；悲观锁简单但限制并行。

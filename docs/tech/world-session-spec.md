@@ -120,7 +120,7 @@ Session 的物理布局位于 [`.agents/world.state/`](../../.agents/) 下（默
 
 ### `manifest.toml` 格式
 
-```toml
+```
 [session]
 id = "laozi-boshu-l9k2x"
 title = "为帛书《老子》做注疏"
@@ -149,7 +149,7 @@ last_touched_at = "2026-05-27T15:08:42+08:00"
 
 每行是一个独立 JSON 对象，**追加不变**：
 
-```jsonl
+```json
 {"seq":1,"ts":"2026-05-27T14:32:11+08:00","surface":"cli","actor":"user","type":"session.created","payload":{"title":"为帛书《老子》做注疏"}}
 {"seq":2,"ts":"2026-05-27T14:33:05+08:00","surface":"cli","actor":"agent","type":"context.appended","payload":{"text":"已确认源文件位于 .temp/laozi.pdf"}}
 {"seq":3,"ts":"2026-05-27T14:35:22+08:00","surface":"cli","actor":"agent","type":"artifact.added","payload":{"path":"artifacts/notes.md","sha256":"abc..."}}

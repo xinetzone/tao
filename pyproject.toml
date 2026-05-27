@@ -76,6 +76,8 @@ test = [
 source = "scm"
 write_to = "taolib/_version.py"
 write_template = "__version__ = '{}'\n"
+
+[tool.setuptools_scm]
 local_scheme = "no-local-version"
 
 [tool.pdm.build]

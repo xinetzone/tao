@@ -92,7 +92,7 @@ python = "3.14.5"
 requires-python = ">=3.14"
 
 [tool.ruff]
-target-version = "py313"
+target-version = "py314"
 """.strip(),
         encoding="utf-8",
     )

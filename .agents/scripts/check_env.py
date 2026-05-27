@@ -199,7 +199,7 @@ def print_table(results: list[ToolResult]) -> None:
 
 
 def ruff_target_for_python(major: int, minor: int) -> tuple[int, int]:
-    supported_major, supported_minor = 3, 13
+    supported_major, supported_minor = 3, 14
     if major > supported_major or (
         major == supported_major and minor > supported_minor
     ):

@@ -194,7 +194,10 @@ myst_enable_extensions = [
     "substitution",
 ]
 myst_footnote_transition = False
-myst_suppress_warnings = ["myst.header"]
+
+# 抑制对 Sphinx 源码树外部的交叉引用警告（如 .agents/ 目录下的文件）
+# 这些链接是合法的相对路径引用，但 MyST 尝试将其解析为内部交叉引用会失败
+suppress_warnings = ["myst.xref_missing"]
 
 templates_path = ["_templates"]
 

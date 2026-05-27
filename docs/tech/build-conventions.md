@@ -12,6 +12,8 @@ build-backend = "pdm.backend"
 requires = ["pdm-backend"]
 ```
 
+`pdm-backend` 原生支持 PEP 621 元数据与 `src/` 布局，无需额外配置即可正确识别包结构。
+
 - **包目录映射**：源代码位于 `src/taolib/`，通过 `tool.pdm.build` 显式声明：
 
 ```toml
@@ -115,7 +117,7 @@ PYTHONUTF8 = "1"
 
 ## 版本管理
 
-项目采用 **动态版本** 策略：
+项目采用 **动态版本** 策略，由 `pdm-backend` 的 SCM 源从 git tag 自动派生：
 
 ```toml
 [project]
@@ -127,7 +129,8 @@ write_to = "taolib/_version.py"
 write_template = "__version__ = '{}'\n"
 ```
 
-版本号不硬编码于 `pyproject.toml`，而是由构建后端在打包时从 VCS 标签或版本文件中解析。这种方式确保：
+`write_to` 路径相对于 `package-dir = "src"`，因此实际写入 `src/taolib/_version.py`。
+版本号不硬编码于 `pyproject.toml`，而是由构建后端在打包时从 git tag 自动派生。这种方式确保：
 
 - 源码中无需手动维护版本字符串
 - 发布流程与 Git 标签天然对齐

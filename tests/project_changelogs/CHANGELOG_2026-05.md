@@ -14,6 +14,12 @@
 - 新增 `.agents/docs/superpowers/retrospectives/task-summary-ci-pipeline-systematic-fix-20260527.md`，记录 CI 流水线 6 轮链式故障的系统性修复过程与经验总结。
 
 ### Changed
+- 构建后端从 `setuptools.build_meta` + `setuptools-scm` 迁移至 `pdm.backend`，启用 `[tool.pdm.version] source = "scm"` 动态版本派生，统一文档与实际配置。
+- 清理遗留构建钩子 `.pdm_build.py` 与 `[tool.setuptools_scm]` 配置段。
+- Ruff `target-version` 从 `py313` 升级为 `py314`，与项目 `requires-python = ">=3.14"` 对齐。
+- 移除 `optional-dependencies.task` 中零引用的 `metaflow` 死依赖。
+- 容器测试环境 `Containerfile.test` 移除 `SETUPTOOLS_SCM_PRETEND_VERSION`（pdm-backend 无 git 时自动回退 `0.0.0`）。
+- 更新 `docs/tech/build-conventions.md` 补充 pdm-backend 原生能力与 `write_to` 路径说明。
 - 更新 `docs/index.md` 与 `README.md`，补充 GitHub App 令牌治理入口、专项测试入口与文档导航。
 - 更新 `.github/workflows/ci.yml`，在全量测试前显式执行 `tests/github_app` 专项校验，提升 GitHub App 认证层回归可见性。
 - 升级 `codecov/codecov-action` 从 v4 到 v5，消除 Node.js 20 弃用警告，并适配 v5 参数变更（`file` → `files`）。

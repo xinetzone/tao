@@ -19,7 +19,7 @@ depends = ["check-env"]
 
 [tasks.install-test-deps]
 description = "同步 CI 测试所需依赖（含 github-app 可选依赖）"
-run = "uv sync --group test --extra github-app"
+run = "sh .agents/scripts/sync-test-deps.sh"
 depends = ["check-env"]
 
 [tasks.install-docs-deps]

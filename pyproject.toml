@@ -1,6 +1,6 @@
 [build-system]
-build-backend = "pdm.backend"
-requires = ["pdm-backend>=2.3", "setuptools-scm[toml]>=9.0"]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=64", "setuptools-scm[toml]>=9.0"]
 
 [project]
 authors = [{ name = "xinetzone", email = "735613050@qq.com" }]
@@ -70,14 +70,11 @@ test = [
 ]
 
 [tool.pdm.version]
-source = "scm"
-write_to = "src/taolib/_version.py"
-fallback_version = "0.1.0"
+source = "file"
 
 [tool.pdm.build]
 includes = ["src/taolib"]
 package-dir = "src"
-hooks = ["CustomVersionHook"]
 
 [tool.setuptools_scm]
 local_scheme = "no-local-version"

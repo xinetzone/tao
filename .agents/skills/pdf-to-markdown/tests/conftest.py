@@ -54,8 +54,9 @@ def sample_pdf(tmp_path: Path) -> Path:
     """使用 fpdf2 + 系统中文字体动态生成测试 PDF。
 
     生成的 PDF 满足 pdf_extract.py 中的正则要求：
-      - 篇标题：``德经注读``
-      - 章节标题：``一、...（今38章）`` / ``二、...（今39章）``
+      - 篇标题：``德经注读`` / ``道经注读``
+      - 章节标题：``一、...（今38章）`` / ``二、...（今39章）`` / ``一、...（今1章）``
+      - 同时包含德经和道经双篇，满足 pdf_to_markdown.py 的转换要求
 
     若运行环境缺少 fpdf2 或中文字体，则跳过测试。
     """
@@ -71,7 +72,7 @@ def sample_pdf(tmp_path: Path) -> Path:
     pdf = FPDF()
     pdf.add_font("CJK", "", str(font_path))
 
-    # Page 1：篇标题 + 第一章
+    # Page 1：德经篇标题 + 第一章
     pdf.add_page()
     pdf.set_font("CJK", size=16)
     pdf.cell(text="德经注读")
@@ -81,12 +82,22 @@ def sample_pdf(tmp_path: Path) -> Path:
     pdf.ln(10)
     pdf.multi_cell(w=0, text="上德不德，是以有德。下德不失德，是以无德。")
 
-    # Page 2：第二章
+    # Page 2：第二章（德经）
     pdf.add_page()
     pdf.set_font("CJK", size=12)
     pdf.cell(text="二、昔之得一者（今39章）")
     pdf.ln(10)
     pdf.multi_cell(w=0, text="昔之得一者：天得一以清，地得一以宁。")
+
+    # Page 3：道经篇标题 + 第一章（道经）
+    pdf.add_page()
+    pdf.set_font("CJK", size=16)
+    pdf.cell(text="道经注读")
+    pdf.ln(12)
+    pdf.set_font("CJK", size=12)
+    pdf.cell(text="一、道可道（今1章）")
+    pdf.ln(10)
+    pdf.multi_cell(w=0, text="道可道，非恒道。名可名，非恒名。")
 
     out_path = tmp_path / "sample.pdf"
     pdf.output(str(out_path))

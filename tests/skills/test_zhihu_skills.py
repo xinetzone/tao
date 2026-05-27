@@ -389,7 +389,7 @@ class TestZhida:
         resp_body = json.dumps({"id": "1", "model": "m", "choices": []}).encode()
         mock_cm = _fake_urlopen_bytes(resp_body, status=200)
         with patch.object(zhida, "urlopen", return_value=mock_cm):
-            status, headers, body = zhida.post_json({"model": "m", "messages": []})
+            status, _headers, body = zhida.post_json({"model": "m", "messages": []})
         assert status == 200
         parsed = json.loads(body)
         assert parsed["id"] == "1"
@@ -399,9 +399,8 @@ class TestZhida:
     def test_post_json_http_error(self, monkeypatch):
         monkeypatch.setenv("ZHIHU_ACCESS_SECRET", "test-token")
         err = _fake_urlopen_http_error(429, b'{"error":"rate limit"}')
-        with patch.object(zhida, "urlopen", side_effect=err):
-            with pytest.raises(SystemExit):
-                zhida.post_json({"model": "m", "messages": []})
+        with patch.object(zhida, "urlopen", side_effect=err), pytest.raises(SystemExit):
+            zhida.post_json({"model": "m", "messages": []})
 
     # --- post_json: timeout ---
 
@@ -409,9 +408,10 @@ class TestZhida:
         monkeypatch.setenv("ZHIHU_ACCESS_SECRET", "test-token")
         from urllib.error import URLError
 
-        with patch.object(zhida, "urlopen", side_effect=URLError("timeout")):
-            with pytest.raises(SystemExit):
-                zhida.post_json({"model": "m", "messages": []})
+        with patch.object(zhida, "urlopen", side_effect=URLError("timeout")), pytest.raises(
+            SystemExit
+        ):
+            zhida.post_json({"model": "m", "messages": []})
 
     # --- parse_http_error_body ---
 
@@ -510,9 +510,8 @@ class TestHotList:
     def test_request_http_error(self, monkeypatch):
         monkeypatch.setenv("ZHIHU_ACCESS_SECRET", "test-token")
         err = _fake_urlopen_http_error(401, b'{"error":"unauthorized"}')
-        with patch.object(hot_list, "urlopen", side_effect=err):
-            with pytest.raises(SystemExit):
-                hot_list.request_hot_list(5)
+        with patch.object(hot_list, "urlopen", side_effect=err), pytest.raises(SystemExit):
+            hot_list.request_hot_list(5)
 
     # --- request_hot_list: timeout ---
 
@@ -520,6 +519,7 @@ class TestHotList:
         monkeypatch.setenv("ZHIHU_ACCESS_SECRET", "test-token")
         from urllib.error import URLError
 
-        with patch.object(hot_list, "urlopen", side_effect=URLError("timeout")):
-            with pytest.raises(SystemExit):
-                hot_list.request_hot_list(5)
+        with patch.object(
+            hot_list, "urlopen", side_effect=URLError("timeout")
+        ), pytest.raises(SystemExit):
+            hot_list.request_hot_list(5)

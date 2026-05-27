@@ -60,7 +60,7 @@ depends = ["check-env"]
 
 [tasks.audit]
 description = "审计 Python 依赖安全问题"
-run = "uv lock --audit"
+run = "uv run --with pip-audit pip-audit --strict --desc --skip-editable"
 depends = ["check-env"]
 
 [tasks.docs-html]

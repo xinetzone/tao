@@ -116,6 +116,9 @@ ipython_config.py
 # pyenv
 .python-version
 
+# mise legacy format (superseded by mise.toml)
+.tool-versions
+
 # pipenv
 #Pipfile.lock
 

@@ -1,6 +1,0 @@
-python 3.14.5
-node 22.22.3
-uv 0.11.16
-ruff 0.15.14
-pre-commit 4.6.0
-npm:defuddle 0.18.1

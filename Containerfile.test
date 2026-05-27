@@ -9,7 +9,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 WORKDIR /app
 COPY pyproject.toml uv.lock ./
 COPY .agents/scripts/sync-test-deps.sh ./
-RUN sh sync-test-deps.sh
+RUN bash sync-test-deps.sh
 COPY . .
 
 CMD ["uv", "run", "pytest", "tests/", "-v", "--tb=short"]

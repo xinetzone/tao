@@ -69,12 +69,6 @@ test = [
     "pypdfium2",
 ]
 
-[tool.pdm.version]
-# 勿删：与 [project] 中的 dynamic = ["version"] 联动。
-# pdm-backend 要求 “dynamic 声明 + 有效的版本源” 二者并存。
-# 缺少本段时会兜底为 0.0.0，导致 wheel 版本号与 git tag 脱节。
-source = "file"
-
 [tool.pdm.build]
 includes = ["src/taolib"]
 package-dir = "src"

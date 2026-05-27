@@ -68,6 +68,7 @@ test = [
 
 [tool.pdm.version]
 source = "scm"
+fallback_version = "0.0.0"
 write_to = "taolib/_version.py"
 write_template = "__version__ = '{}'\n"
 

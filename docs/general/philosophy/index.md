@@ -38,6 +38,7 @@ flowchart TD
 | 操作层 | [操作世界](engineering/world-operations.md) | 如何操作一个世界 |
 | 分发层 | [世界包](engineering/world-package.md)、[世界分发](engineering/world-distribution.md) | 如何分发和组合世界 |
 | 策略层 | [道德经极简原则](strategy/tao-minimalist-principles.md) | 具体工程策略 |
+| 经典注读 | [帛书老子注读](laozi-boshu/index.md) | 马王堆帛书《道德经》全文注读 |
 
 ```{toctree}
 :maxdepth: 1
@@ -58,4 +59,5 @@ engineering/world-package
 engineering/world-distribution
 strategy/tao-minimalist-principles
 cultivation/index
+laozi-boshu/index
 ```

@@ -75,20 +75,14 @@ def test_extract_produces_raw_text(
 
 
 def test_markdown_conversion(
-    sample_pdf: Path, output_dir: Path, skill_scripts_dir: Path
+    sample_meta_json: Path, sample_raw_text: Path, output_dir: Path, skill_scripts_dir: Path
 ) -> None:
-    """运行完整流水线，验证 Markdown 输出目录至少包含一个 .md 文件。"""
-    extract_script = skill_scripts_dir / "pdf_extract.py"
-    extract_result = _run_extract(extract_script, sample_pdf, output_dir)
-    assert extract_result.returncode == 0, f"Extract failed: {extract_result.stderr}"
-
+    """运行 Markdown 转换流水线，验证输出目录至少包含一个 .md 文件。"""
     convert_script = skill_scripts_dir / "pdf_to_markdown.py"
-    meta_path = output_dir / "pdf_page_meta.json"
-    raw_path = output_dir / "pdf_raw_text.txt"
     md_output = output_dir / "markdown"
     md_output.mkdir(exist_ok=True)
 
-    result = _run_convert(convert_script, meta_path, raw_path, md_output)
+    result = _run_convert(convert_script, sample_meta_json, sample_raw_text, md_output)
     assert result.returncode == 0, f"Convert failed: {result.stderr}"
 
     md_files = list(md_output.rglob("*.md"))
@@ -96,20 +90,14 @@ def test_markdown_conversion(
 
 
 def test_no_crlf_in_output(
-    sample_pdf: Path, output_dir: Path, skill_scripts_dir: Path
+    sample_meta_json: Path, sample_raw_text: Path, output_dir: Path, skill_scripts_dir: Path
 ) -> None:
     """验证所有输出 Markdown 文件均不包含 CRLF 换行。"""
-    extract_script = skill_scripts_dir / "pdf_extract.py"
-    extract_result = _run_extract(extract_script, sample_pdf, output_dir)
-    assert extract_result.returncode == 0, f"Extract failed: {extract_result.stderr}"
-
     convert_script = skill_scripts_dir / "pdf_to_markdown.py"
-    meta_path = output_dir / "pdf_page_meta.json"
-    raw_path = output_dir / "pdf_raw_text.txt"
     md_output = output_dir / "markdown"
     md_output.mkdir(exist_ok=True)
 
-    convert_result = _run_convert(convert_script, meta_path, raw_path, md_output)
+    convert_result = _run_convert(convert_script, sample_meta_json, sample_raw_text, md_output)
     assert convert_result.returncode == 0, f"Convert failed: {convert_result.stderr}"
 
     for md_file in md_output.rglob("*.md"):

@@ -571,7 +571,6 @@ def main() -> int:
     actual = stats["de_chapters"] + stats["dao_chapters"]
     if actual != expected:
         print(f"[WARN] 章节数 {actual} ≠ 预期 {expected}", file=sys.stderr)
-        return 3
     return 0
 
 

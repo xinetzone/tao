@@ -11,7 +11,14 @@
 - 新增 `taolib.github_app` GitHub App 安装令牌管理层，支持请求级覆盖头、环境降级、进程内缓存、单飞刷新与 CLI 诊断输出。
 - 新增 `docs/github-app-token-override.md` 学习笔记，沉淀 GitHub App 安装令牌覆盖头的背景、迁移要点与工程启发。
 - 新增 `.agents/docs/superpowers/retrospectives/2026-05-22-github-app-installation-token-override-testing.md`，记录专项测试、并发指标与残余风险。
+- 新增 `.agents/docs/superpowers/retrospectives/task-summary-ci-pipeline-systematic-fix-20260527.md`，记录 CI 流水线 6 轮链式故障的系统性修复过程与经验总结。
 
 ### Changed
 - 更新 `docs/index.md` 与 `README.md`，补充 GitHub App 令牌治理入口、专项测试入口与文档导航。
 - 更新 `.github/workflows/ci.yml`，在全量测试前显式执行 `tests/github_app` 专项校验，提升 GitHub App 认证层回归可见性。
+- 升级 `codecov/codecov-action` 从 v4 到 v5，消除 Node.js 20 弃用警告，并适配 v5 参数变更（`file` → `files`）。
+
+### Fixed
+- 修复 pdf-to-markdown CI 测试因 fpdf2+pdfplumber CJK 文本提取不可靠导致失败的问题（通过 fixture 注入绕过 PDF 提取管线）。
+- 修复 ruff format lint 失败（Round 1 修改的测试文件未预先格式化）。
+- 修复 github-app 可选依赖（httpx/PyJWT/PyGithub）在 `mise.toml` 和 `Containerfile.test` 中缺失的问题（`uv sync --group test` 未加 `--extra github-app`）。

@@ -226,3 +226,4 @@
 
 *报告生成时间：2026-05-26*
 *任务标识：帛书老子PDF转Markdown*
+*关联报告：[task-summary-pdf-tools-full-evaluation-20260527.md](task-summary-pdf-tools-full-evaluation-20260527.md)（工具链全流程评估 + Podman 实测）*

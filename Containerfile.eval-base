@@ -1,0 +1,10 @@
+# 评估选品测试基础镜像
+# 使用方式: podman build -t eval-base -f Containerfile.eval-base .
+FROM python:3.12
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git curl libgl1 libglib2.0-0 && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /eval
+CMD ["bash"]

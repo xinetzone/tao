@@ -24,3 +24,16 @@
 | 构建镜像 | `podman build -t <name> -f Containerfile .` |
 | 构建测试镜像 | `podman build -t <name>-test -f Containerfile.test .` |
 | 运行容器 | `podman run --rm -it <name>` |
+
+## 评估模板库
+
+项目根目录提供预置的评估容器模板，覆盖主要 PDF 工具：
+
+| 模板 | 用途 | 构建命令 |
+|------|------|---------|
+| `Containerfile.eval-base` | 通用评估基础镜像 | `podman build -t eval-base -f Containerfile.eval-base .` |
+| `Containerfile.eval-marker` | marker-pdf 评估 | `podman build -t eval-marker -f Containerfile.eval-marker .` |
+| `Containerfile.eval-docling` | Docling 评估 | `podman build -t eval-docling -f Containerfile.eval-docling .` |
+| `Containerfile.eval-mineru` | MinerU 评估（含踩坑注释） | `podman build -t eval-mineru -f Containerfile.eval-mineru .` |
+
+评估统一基线：`python:3.12` + CPU 推理 + 24GB 内存建议。

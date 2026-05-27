@@ -1,0 +1,27 @@
+# MinerU 评估环境（CPU 模式）
+# 注意: detectron2 需从源码编译，构建时间较长且需要网络访问 GitHub
+# 使用方式: podman build -t eval-mineru -f Containerfile.eval-mineru .
+# 运行方式: podman run --rm -it -m 24g -v ./data:/eval/data eval-mineru
+FROM python:3.12
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git curl libgl1 libglib2.0-0 build-essential && \
+    rm -rf /var/lib/apt/lists/*
+
+# CPU 版 PyTorch（避免安装 1.5GB CUDA 版本）
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
+
+# MinerU 核心包 + 已知隐藏依赖
+RUN pip install --no-cache-dir \
+    magic-pdf \
+    opencv-python openai ultralytics doclayout-yolo rapid-table \
+    ftfy pycocotools
+
+# detectron2 需从 GitHub 源码安装（已知瓶颈）
+# RUN pip install 'git+https://github.com/facebookresearch/detectron2.git'
+
+# MinerU 配置
+RUN echo '{"device-mode":"cpu"}' > /root/magic-pdf.json
+
+WORKDIR /eval
+CMD ["bash"]

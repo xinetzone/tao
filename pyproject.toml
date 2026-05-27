@@ -5,7 +5,7 @@ requires = ["pdm-backend"]
 [project]
 authors = [{ name = "xinetzone", email = "735613050@qq.com" }]
 description = "道可道，非恒道"
-dynamic = ["version"]
+version = "0.1.0"
 license = { file = "LICENSE" }
 maintainers = [{ name = "xinetzone", email = "735613050@qq.com" }]
 name = "taolib"
@@ -74,7 +74,6 @@ test = [
 # pdm-backend 要求 “dynamic 声明 + 有效的版本源” 二者并存。
 # 缺少本段时会兜底为 0.0.0，导致 wheel 版本号与 git tag 脱节。
 source = "file"
-version_file = "src/taolib/_version.py"
 
 [tool.pdm.build]
 includes = ["src/taolib"]

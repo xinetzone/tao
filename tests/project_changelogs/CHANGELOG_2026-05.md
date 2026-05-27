@@ -23,6 +23,7 @@
 - 更新 `docs/index.md` 与 `README.md`，补充 GitHub App 令牌治理入口、专项测试入口与文档导航。
 - 更新 `.github/workflows/ci.yml`，在全量测试前显式执行 `tests/github_app` 专项校验，提升 GitHub App 认证层回归可见性。
 - 升级 `codecov/codecov-action` 从 v4 到 v5，消除 Node.js 20 弃用警告，并适配 v5 参数变更（`file` → `files`）。
+- 清理 `.temp/` 目录：移除 PDF 评估项目的 29 个临时产物（脚本、数据、评估输出、书籍工作副本），输出已归档至 `docs/general/philosophy/laozi-boshu/`，脚本模式已沉淀为 `pdf-to-markdown` skill。
 
 ### Fixed
 - 修复 pdf-to-markdown CI 测试因 fpdf2+pdfplumber CJK 文本提取不可靠导致失败的问题（通过 fixture 注入绕过 PDF 提取管线）。

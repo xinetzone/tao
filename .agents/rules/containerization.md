@@ -30,10 +30,10 @@
 项目根目录提供预置的评估容器模板，覆盖主要 PDF 工具：
 
 | 模板 | 用途 | 构建命令 |
-|------|------|---------|
-| `Containerfile.eval-base` | 通用评估基础镜像 | `podman build -t eval-base -f Containerfile.eval-base .` |
-| `Containerfile.eval-marker` | marker-pdf 评估 | `podman build -t eval-marker -f Containerfile.eval-marker .` |
-| `Containerfile.eval-docling` | Docling 评估 | `podman build -t eval-docling -f Containerfile.eval-docling .` |
-| `Containerfile.eval-mineru` | MinerU 评估（含踩坑注释） | `podman build -t eval-mineru -f Containerfile.eval-mineru .` |
+|------|------|----------|
+| `containers/eval/Containerfile.base` | 通用评估基础镜像 | `podman build -t eval-base -f containers/eval/Containerfile.base .` |
+| `containers/eval/Containerfile.marker` | marker-pdf 评估 | `podman build -t eval-marker -f containers/eval/Containerfile.marker .` |
+| `containers/eval/Containerfile.docling` | Docling 评估 | `podman build -t eval-docling -f containers/eval/Containerfile.docling .` |
+| `containers/eval/Containerfile.mineru` | MinerU 评估（含踩坑注释） | `podman build -t eval-mineru -f containers/eval/Containerfile.mineru .` |
 
 评估统一基线：`python:3.12` + CPU 推理 + 24GB 内存建议。

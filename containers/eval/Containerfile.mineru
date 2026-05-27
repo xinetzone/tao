@@ -1,6 +1,6 @@
 # MinerU 评估环境（CPU 模式）
 # 注意: detectron2 需从源码编译，构建时间较长且需要网络访问 GitHub
-# 使用方式: podman build -t eval-mineru -f Containerfile.eval-mineru .
+# 使用方式: podman build -t eval-mineru -f containers/eval/Containerfile.mineru .
 # 运行方式: podman run --rm -it -m 24g -v ./data:/eval/data eval-mineru
 FROM python:3.12
 

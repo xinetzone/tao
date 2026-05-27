@@ -1,5 +1,5 @@
 # Docling 评估环境
-# 使用方式: podman build -t eval-docling -f Containerfile.eval-docling .
+# 使用方式: podman build -t eval-docling -f containers/eval/Containerfile.docling .
 # 运行方式: podman run --rm -it -v ./data:/eval/data eval-docling
 FROM python:3.12
 

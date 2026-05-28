@@ -285,14 +285,13 @@ def resolve_role_bindings(roles_dir: Path, role_id: str) -> list[str]:
     if not role_path.exists():
         return []
 
-    text = role_path.read_text(encoding="utf-8")
-    frontmatter = _extract_frontmatter(text)
-    if frontmatter is None:
-        return []
-
     try:
+        text = role_path.read_text(encoding="utf-8")
+        frontmatter = _extract_frontmatter(text)
+        if frontmatter is None:
+            return []
         data = tomllib.loads(frontmatter)
-    except tomllib.TOMLDecodeError:
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError):
         return []
 
     bindings = data.get("bindings", {})

@@ -286,6 +286,12 @@ def test_resolve_role_bindings_unknown_role(roles_dir: Path) -> None:
     assert resolve_role_bindings(roles_dir, "nonexistent-role-xyz") == []
 
 
+def test_resolve_role_bindings_bad_encoding(tmp_path: Path) -> None:
+    """角色文件无法按 UTF-8 解码时返回空列表，不抛异常。"""
+    (tmp_path / "bad-role.md").write_bytes(b"\xff\xfe\xfd")
+    assert resolve_role_bindings(tmp_path, "bad-role") == []
+
+
 # ---------------------------------------------------------------------------
 # 5. CLI 集成测试（subprocess + 直接 main 调用）
 # ---------------------------------------------------------------------------

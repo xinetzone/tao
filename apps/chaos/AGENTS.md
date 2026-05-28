@@ -57,6 +57,8 @@ flowchart TD
 
 遇到以下任务时，先读取对应规范或入口，再执行任务。
 
+> **机器真相源**：本路由表的结构化定义见 [`.agents/world.toml`](.agents/world.toml) 的 `[routing]` 区块。下表为人类友好视图。
+
 | 任务类型 | 必读入口 |
 |---|---|
 | 上下文节省、token 优化、长材料处理 | [`.agents/rules/context-economy.md`](.agents/rules/context-economy.md) |

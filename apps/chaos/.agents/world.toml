@@ -117,3 +117,134 @@ organization = [
 ]
 portable = false
 versionable = false  # 仅通过 git 历史追溯
+
+# ──────────────────────────────────────────────────
+# [routing] — 上下文路由规则声明
+# 运行时根据 triggers 条件，将 targets 中的资产注入 Agent 上下文
+# Draft v0.1
+# ──────────────────────────────────────────────────
+
+[routing]
+version = "0.1.0"
+conflict_resolution = "merge"  # merge | priority-first | ask
+
+[routing.phases]
+supported = ["planning", "coding", "testing", "review", "deploying"]
+
+[[routing.rules]]
+id = "context-economy"
+targets = ["rules/context-economy.md"]
+priority = 10
+roles = ["*"]
+
+[routing.rules.triggers]
+intents = ["context", "token-optimization", "summarize", "long-document"]
+phases = ["planning"]
+
+[[routing.rules]]
+id = "python-dev"
+targets = ["rules/python.md", "rules/data-flow-ordering.md"]
+priority = 5
+roles = ["python-dev", "full-stack"]
+
+[routing.rules.triggers]
+intents = ["python", "uv", "dependency", "import", "venv"]
+file_patterns = ["**/*.py", "pyproject.toml", "uv.lock"]
+phases = ["coding", "testing"]
+
+[[routing.rules]]
+id = "documentation"
+targets = ["rules/documentation.md"]
+priority = 5
+roles = ["*"]
+
+[routing.rules.triggers]
+intents = ["docs", "archive", "migration", "directory-boundary"]
+file_patterns = ["docs/**", ".agents/docs/**"]
+phases = ["planning", "coding"]
+
+[[routing.rules]]
+id = "python-upgrade"
+targets = ["docs/version-tracking.md", "rules/citations.md"]
+priority = 8
+roles = ["python-dev"]
+
+[routing.rules.triggers]
+intents = ["upgrade", "deprecation", "python-version"]
+file_patterns = ["pyproject.toml", "scripts/check_python_compat.py"]
+
+[[routing.rules]]
+id = "skills-dev"
+targets = ["rules/skills.md"]
+priority = 5
+roles = ["*"]
+
+[routing.rules.triggers]
+intents = ["skill", "skill-development", "skill-spec"]
+file_patterns = [".agents/skills/**"]
+phases = ["coding"]
+
+[[routing.rules]]
+id = "collaboration"
+targets = [
+    "docs/references/agent-collaboration-metamodel.md",
+    "roles/README.md",
+]
+priority = 7
+roles = ["collaboration-architect", "governance-auditor"]
+
+[routing.rules.triggers]
+intents = ["role", "team", "agent-collaboration", "metamodel", "governance"]
+file_patterns = [".agents/roles/**", ".agents/teams/**"]
+
+[[routing.rules]]
+id = "pr-review"
+targets = ["workflows/pr-review.md"]
+priority = 6
+roles = ["reviewer", "*"]
+
+[routing.rules.triggers]
+intents = ["review", "pr", "code-review"]
+phases = ["review"]
+
+[[routing.rules]]
+id = "frontend"
+targets = ["rules/frontend.md"]
+priority = 5
+roles = ["frontend-dev", "full-stack"]
+
+[routing.rules.triggers]
+intents = ["frontend", "ui", "component", "css", "react"]
+file_patterns = ["**/*.tsx", "**/*.jsx", "**/*.vue", "**/*.css"]
+phases = ["coding"]
+
+[[routing.rules]]
+id = "backend"
+targets = ["rules/backend.md"]
+priority = 5
+roles = ["backend-dev", "full-stack"]
+
+[routing.rules.triggers]
+intents = ["backend", "api", "endpoint", "rest", "graphql"]
+file_patterns = ["src/**/*.py", "apps/**/*.py"]
+phases = ["coding"]
+
+[[routing.rules]]
+id = "containerization"
+targets = ["rules/containerization.md"]
+priority = 4
+roles = ["devops", "python-dev"]
+
+[routing.rules.triggers]
+intents = ["container", "docker", "podman", "evaluation"]
+file_patterns = ["Containerfile*", "containers/**"]
+
+[[routing.rules]]
+id = "world-hierarchy"
+targets = ["rules/world-hierarchy.md"]
+priority = 9
+roles = ["governance-auditor", "collaboration-architect"]
+
+[routing.rules.triggers]
+intents = ["world", "inheritance", "sub-world", "hierarchy"]
+file_patterns = [".agents/world.toml", "AGENTS.md"]

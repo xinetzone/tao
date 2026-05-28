@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentforge.dev/schemas/role.schema.json",
+  "title": "AgentForge Role Definition",
+  "description": "Schema for validating Role TOML frontmatter in .agents/roles/*.md files",
+  "type": "object",
+  "required": ["id", "domain"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "description": "Unique role identifier in kebab-case, must match filename (without .md)"
+    },
+    "domain": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Domain this role belongs to (e.g., engineering, governance, infrastructure)"
+    },
+    "bindings": {
+      "type": "object",
+      "description": "Default context bindings loaded when an agent assumes this role",
+      "properties": {
+        "rules": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Rule file paths relative to .agents/"
+        },
+        "references": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Reference document paths relative to .agents/"
+        },
+        "skills": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Skill identifiers bound to this role"
+        }
+      },
+      "additionalProperties": false
+    },
+    "permissions": {
+      "type": "object",
+      "description": "File access permissions for agents assuming this role",
+      "properties": {
+        "can_modify": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Glob patterns of files this role is allowed to modify"
+        },
+        "cannot_modify": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Glob patterns of files this role must not modify"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

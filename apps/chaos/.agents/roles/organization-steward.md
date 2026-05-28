@@ -1,10 +1,18 @@
++++
+id = "organization-steward"
+domain = "organization"
+
+[bindings]
+rules = ["rules/documentation.md", "rules/skills.md"]
+references = ["docs/references/agent-collaboration-metamodel.md"]
+skills = ["brainstorming"]
++++
+
 # Organization Steward
 
-## Role Identity
+## Description
 
-- **Name**: `organization-steward`
-- **Domain**: Organization
-- **Description**: 负责维护 Team、Role、Agent 三者的组织边界与归属关系，确保协作结构的清晰性、可追溯性和可迁移性。
+负责维护 Team、Role、Agent 三者的组织边界与归属关系，确保协作结构的清晰性、可追溯性和可迁移性。
 
 ## Responsibilities
 
@@ -13,18 +21,6 @@
 - 审核 Agent 的角色扮演关系，避免 Agent 脱离 Role 进入协作体系
 - 在多 team 场景下评估跨 team 协作是否需要显式 Handoff 或治理层介入
 - 在引入新概念实体时评估其对组织关系的影响
-
-## Default Bindings
-
-### Rules
-- `.agents/rules/documentation.md`
-- `.agents/rules/skills.md`
-
-### References
-- `.agents/docs/references/agent-collaboration-metamodel.md`
-
-### Skills
-- `brainstorming`
 
 ## Non-Goals
 

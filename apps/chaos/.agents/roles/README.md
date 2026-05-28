@@ -11,21 +11,42 @@
 
 ## 角色文件约定
 
-每个角色文件至少包含以下字段：
+每个角色文件使用 `+++` 分隔符包裹 TOML 前置元数据（frontmatter），下方为 Markdown 描述正文。
 
-- **Role Identity**：角色名称与所属领域
-- **Responsibilities**：核心职责边界
-- **Default Bindings**：默认绑定的规则、参考页与能力资产
-- **Non-Goals**：明确不属于该角色的范围
+### Frontmatter 字段
+
+| 字段 | 类型 | 必填 | 说明 |
+|---|---|---|---|
+| `id` | string | 是 | 角色唯一标识（kebab-case），必须与文件名一致 |
+| `domain` | string | 是 | 所属领域 |
+| `bindings.rules` | array | 否 | 默认绑定的规则路径列表（相对 `.agents/`） |
+| `bindings.references` | array | 否 | 默认绑定的参考文档路径列表 |
+| `bindings.skills` | array | 否 | 默认绑定的技能 id 列表 |
+| `permissions.can_modify` | array | 否 | 可修改的文件 glob 列表 |
+| `permissions.cannot_modify` | array | 否 | 禁止修改的文件 glob 列表 |
+
+Markdown body 保留三个节：Description、Responsibilities、Non-Goals。
+
+### Frontmatter 与 body 的职责分界
+
+- **frontmatter** = 机器可解析的声明（`id`、`domain`、`bindings`、`permissions`），供运行时路由和校验工具消费
+- **Markdown body** = 人类可读的描述（Description、Responsibilities、Non-Goals），供评审和文档使用
+- JSON Schema 校验定义见 `.agents/schemas/role.schema.json`
 
 ## 当前角色清单
 
-| 文件 | 角色 | 领域 | 审查状态 |
+| 文件 | 角色 | 领域 | 状态 |
 |---|---|---|---|
-| `organization-steward.md` | Organization Steward | Organization | ✅ 已审查 |
-| `execution-orchestrator.md` | Execution Orchestrator | Execution | ✅ 已审查 |
-| `collaboration-architect.md` | Collaboration Architect | Governance + Knowledge | ✅ 已审查 |
-| `governance-auditor.md` | Governance Auditor | Governance | ✅ 已审查 |
+| `collaboration-architect.md` | Collaboration Architect | governance+knowledge | 已审查 |
+| `execution-orchestrator.md` | Execution Orchestrator | execution | 已审查 |
+| `governance-auditor.md` | Governance Auditor | governance | 已审查 |
+| `organization-steward.md` | Organization Steward | organization | 已审查 |
+| `python-dev.md` | Python Dev | engineering | 占位 |
+| `full-stack.md` | Full Stack | engineering | 占位 |
+| `frontend-dev.md` | Frontend Dev | engineering | 占位 |
+| `backend-dev.md` | Backend Dev | engineering | 占位 |
+| `devops.md` | DevOps | infrastructure | 占位 |
+| `reviewer.md` | Reviewer | governance | 占位 |
 
 ## 审查流程
 

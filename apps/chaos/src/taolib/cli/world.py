@@ -7,6 +7,7 @@
 - ``resolve``：解析世界 fragment 依赖与版本约束。
 - ``remove``：移除已安装的世界 fragment。
 - ``publish``：发布世界 fragment 至 registry。
+- ``session``：管理 World Session 生命周期。
 
 示例::
 
@@ -26,6 +27,7 @@ from taolib.cli._world_commands.publish import register_publish_parser
 from taolib.cli._world_commands.remove import register_remove_parser
 from taolib.cli._world_commands.resolve import register_resolve_parser
 from taolib.cli._world_commands.route import register_route_parser
+from taolib.cli._world_commands.session import register_session_parser
 from taolib.cli._world_commands.status import register_status_parser
 
 
@@ -47,6 +49,7 @@ def build_parser() -> argparse.ArgumentParser:
     register_remove_parser(subparsers)
     register_publish_parser(subparsers)
     register_route_parser(subparsers)
+    register_session_parser(subparsers)
 
     return parser
 

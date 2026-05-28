@@ -25,6 +25,7 @@ from taolib.cli._world_commands.install import register_install_parser
 from taolib.cli._world_commands.publish import register_publish_parser
 from taolib.cli._world_commands.remove import register_remove_parser
 from taolib.cli._world_commands.resolve import register_resolve_parser
+from taolib.cli._world_commands.route import register_route_parser
 from taolib.cli._world_commands.status import register_status_parser
 
 
@@ -45,6 +46,7 @@ def build_parser() -> argparse.ArgumentParser:
     register_resolve_parser(subparsers)
     register_remove_parser(subparsers)
     register_publish_parser(subparsers)
+    register_route_parser(subparsers)
 
     return parser
 

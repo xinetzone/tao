@@ -21,6 +21,7 @@ references = [
     "docs/references/dao-tech-foundation.md",           # 哲学-工程映射第一性原理
     "docs/references/agent-collaboration-metamodel.md", # 多 Agent 协作语义
     "docs/references/agent-memory-dream-protocol.md",   # 认知循环协议
+    "docs/references/design-meta-insights.md",          # 设计元层级洞察（跨场景判断规则）
 ]
 workflows = [
     "workflows/role-review.md",   # 角色治理——保护 kernel 边界的元机制
@@ -248,3 +249,21 @@ roles = ["governance-auditor", "collaboration-architect"]
 [routing.rules.triggers]
 intents = ["world", "inheritance", "sub-world", "hierarchy"]
 file_patterns = [".agents/world.toml", "AGENTS.md"]
+
+[[routing.rules]]
+id = "design-meta-insights"
+targets = ["docs/references/design-meta-insights.md"]
+priority = 8
+roles = ["collaboration-architect", "governance-auditor", "*"]
+
+[routing.rules.triggers]
+intents = [
+    "design-decision",      # 设计决策卡顿
+    "spec-drafting",         # 协议/规约起草
+    "architecture-review",   # 架构评审
+    "format-selection",      # 数据格式/结构选型
+    "protocol-design",       # 多端/多模块协同协议
+    "philosophy-alignment",  # 项目哲学一致性核查
+]
+phases = ["planning", "review"]
+file_patterns = ["docs/tech/*-spec.md", "docs/superpowers/specs/**", "docs/superpowers/plans/**"]

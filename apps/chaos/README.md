@@ -1,43 +1,5 @@
 # 🤖 AgentForge
 
-<div align="center">
-
-![repo size](https://img.shields.io/github/repo-size/xinetzone/tao.svg)
-[![PyPI][pypi-badge]][pypi-link]
-[![GitHub issues][issue-badge]][issue-link]
-[![GitHub forks][fork-badge]][fork-link]
-[![GitHub stars][star-badge]][star-link]
-[![GitHub license][license-badge]][license-link]
-[![contributors][contributor-badge]][contributor-link]
-[![watcher][watcher-badge]][watcher-link]
-[![Binder][binder-badge]][binder-link]
-[![Downloads][download-badge]][download-link]
-[![Documentation Status][status-badge]][status-link]
-[![PyPI - Downloads][install-badge]][install-link]
-
-[pypi-badge]: https://img.shields.io/pypi/v/taolib.svg
-[pypi-link]: https://pypi.org/project/taolib/
-[issue-badge]: https://img.shields.io/github/issues/xinetzone/tao
-[issue-link]: https://github.com/xinetzone/tao/issues
-[fork-badge]: https://img.shields.io/github/forks/xinetzone/tao
-[fork-link]: https://github.com/xinetzone/tao/network
-[star-badge]: https://img.shields.io/github/stars/xinetzone/tao
-[star-link]: https://github.com/xinetzone/tao/stargazers
-[license-badge]: https://img.shields.io/github/license/xinetzone/tao
-[license-link]: https://github.com/xinetzone/tao/blob/main/LICENSE
-[contributor-badge]: https://img.shields.io/github/contributors/xinetzone/tao
-[contributor-link]: https://github.com/xinetzone/tao/contributors
-[watcher-badge]: https://img.shields.io/github/watchers/xinetzone/tao
-[watcher-link]: https://github.com/xinetzone/tao/watchers
-[binder-badge]: https://mybinder.org/badge_logo.svg
-[binder-link]: https://mybinder.org/v2/gh/xinetzone/tao/main
-[install-badge]: https://img.shields.io/pypi/dw/taolib?label=pypi%20installs
-[install-link]: https://pypistats.org/packages/taolib
-[status-badge]: https://readthedocs.org/projects/taolib/badge/?version=latest
-[status-link]: https://taolib.readthedocs.io/zh-cn/latest/?badge=latest
-[download-badge]: https://pepy.tech/badge/taolib
-[download-link]: https://pepy.tech/project/taolib
-
 **Ψ=Ψ(Ψ) 驱动的智能体协作世界 (Philosophy-Driven Agent Collaboration World)**
 
 > **AgentForge** — 智能体锻造世界之所。
@@ -46,12 +8,6 @@
 > 智能体在此锻造世界，世界在呼吸中锻造智能体。
 
 *以马王堆帛书版《道德经》为哲学底座，将人与 AI 视为对等智能体（人即智能体），通过极简契约构建人机协作的统一基础设施。*
-
-</div>
-
-<!-- end-doc-include -->
-
----
 
 ## 📖 项目简介
 
@@ -119,6 +75,8 @@ flowchart LR
 | **少即是多** | "无名，天地之始" | 目录分层最小化，仅 `tech/` + `general/` 双轨 |
 | **反者道之动** | "反者道之动，弱者道之用" | 顺势而为，选型主流工具链（mise/uv/ruff），AI 作为"弱者"通过契约获得秩序 |
 | **虚实相生** | "有之以为利，无之以为用" | `.agents/`（虚）与 `docs/`（实）隔离又双向同步，形成完整信息体 |
+
+<!-- end-doc-include -->
 
 ## 🗂️ 阅读与目录导航
 

@@ -1,10 +1,23 @@
 # 技能 SKILL.md 校验配置
 # 每个 section 定义: name = "正则模式"
 # 修改此文件可自定义必填章节要求
+#
+# 双模式校验:
+#   strict   = 全部 7 章节必填（required_sections + recommended_sections）
+#   relaxed  = 仅 required_sections 必填，recommended_sections 缺失只产生 WARN
+# 与 agentskills.io 标准对齐：relaxed 模式仅强制 Name + Description 最小集。
+
+[mode]
+default = "strict"
 
 [required_sections]
+# strict / relaxed 两种模式下均强制
 "Skill ID/Name" = "(?:Skill\\s*(?:ID|Name|唯一标识)|Name)"
 "Description" = "(?:Description|功能描述|功能|用途|Summary)"
+
+[recommended_sections]
+# strict 模式下视为必填（缺失 → MISSING）
+# relaxed 模式下仅作推荐（缺失 → WARN，不阻断）
 "I/O Parameters" = "(?:I/?O\\s*Parameters?|Input|Output|输入|输出|Parameters?)"
 "Dependencies" = "(?:Dependencies?|依赖|依赖项|Requirements?)"
 "Deployment" = "(?:Deployment|部署|Install|安装|Setup|配置)"

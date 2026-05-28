@@ -14,21 +14,35 @@
 
 ## 3. SKILL.md 文件结构要求
 
-### 3.1 必填章节（强制）
+本规范采用 **双模式校验**，以兼顾项目自有 Skills 的文档完备性与外部生态 Skills 的导入友好性：
 
-每个技能的 `SKILL.md` 必须包含以下必填章节：
+- **strict 模式（默认）**：项目自有 Skills 保持全部 7 章节强制，确保文档完备性，是 PR/CI 的默认行为。
+- **relaxed 模式**：外部导入或从 [agentskills.io](https://agentskills.io/home) 发布生态获取的 Skills 仅要求最小集（**Skill ID/Name + Description**），与官方标准对齐，避免对第三方 Skills 形成过度约束。
 
-1. **技能唯一标识 (Skill ID)**：全局唯一的标识符，通常与技能目录名一致。
+模式可通过校验脚本 `--mode strict|relaxed` 参数切换，或在 `.validate-config.toml` 的 `[mode]` 段配置默认值。
+
+### 3.1 必填章节（强制，两种模式均必填）
+
+每个技能的 `SKILL.md` 必须包含以下章节，无论 strict 还是 relaxed 模式：
+
+1. **技能唯一标识 (Skill ID / Name)**：全局唯一的标识符，通常与技能目录名一致。
 2. **功能描述 (Description)**：清晰说明该技能的用途、使用场景及核心能力。
-3. **输入输出参数定义 (I/O Parameters)**：
+
+> 上述两项是与 agentskills.io 标准对齐的最小集，确保任何 SKILL.md 均可被识别和路由。
+
+### 3.2 推荐章节（strict 模式必填，relaxed 模式仅推荐）
+
+以下章节在 **strict 模式下与必填章节同等强制**；在 **relaxed 模式下仅作推荐**，缺失只产生 WARN，不阻断校验：
+
+1. **输入输出参数定义 (I/O Parameters)**：
    - **输入 (Input)**：参数名称、类型、是否必填、默认值及说明。
    - **输出 (Output)**：返回结果的数据结构和预期格式。
-4. **依赖项说明 (Dependencies)**：该技能运行所需要的系统库、第三方包、环境变量或其他前置条件。
-5. **部署要求 (Deployment)**：技能的安装、配置或初始化步骤。
-6. **错误处理规范 (Error Handling)**：常见错误码、异常场景及应对策略。
-7. **版本记录 (Changelog)**：记录技能的版本变更历史及更新内容。
+2. **依赖项说明 (Dependencies)**：该技能运行所需要的系统库、第三方包、环境变量或其他前置条件。
+3. **部署要求 (Deployment)**：技能的安装、配置或初始化步骤。
+4. **错误处理规范 (Error Handling)**：常见错误码、异常场景及应对策略。
+5. **版本记录 (Changelog)**：记录技能的版本变更历史及更新内容。
 
-### 3.2 建议章节（推荐）
+### 3.3 建议章节（推荐，两种模式均不强制）
 
 以下章节虽非强制，但强烈建议补充以提升文档质量：
 
@@ -36,7 +50,7 @@
 2. **执行流程 (Execution Flow)**：技能执行的详细流程说明。
 3. **最佳实践 (Best Practices)**：使用建议、注意事项和常见问题解答（FAQ）。
 
-### 3.3 Markdown 格式规范
+### 3.4 Markdown 格式规范
 
 - **中文标题锚点**：所有中文标题必须使用显式 MyST 锚点，例如 `(my-anchor)=`
 - **链接格式**：项目内引用使用相对路径，外部链接使用完整 URL
@@ -49,12 +63,16 @@ skills/<skill-name>/
 ├── SKILL.md           # 技能文档（必需）
 ├── scripts/           # 技能实现脚本（推荐）
 │   └── *.py
-├── tests/             # 测试文件（推荐）
+├── tests/             # 测试文件（推荐，等同于 agentskills.io 的 evals/）
 │   └── *.py
+├── evals/             # 评测集（推荐，与 tests/ 等价，侧重端到端评估）
+│   └── *.json
 ├── schemas/           # JSON Schema 定义（可选）
 ├── references/        # 参考文档（可选）
-└── evals/             # 评测集（可选）
+└── assets/            # 静态资源（可选，如模板、图标）
 ```
+
+> **命名说明**：`tests/` 与 `evals/` 均为有效目录名称。`tests/` 侧重单元测试与脚本正确性验证；`evals/` 遵循 agentskills.io 标准命名，侧重端到端评估与基准测试。项目内两者均可使用，校验工具同等识别。
 
 ## 5. 技能验证体系
 
@@ -80,15 +98,39 @@ skills/<skill-name>/
 - **AI 智能体检查**：智能体在调用或初始化新技能前，必须主动检查对应的 `SKILL.md` 是否合规。若不合规，则拒绝执行相关操作并提醒开发者补充文档。
 - **人工审查**：在 PR Review 阶段，架构师或审查者需确保技能文档的完整性与准确性。
 
+#### 双模式适用场景
+
+| 场景 | 推荐模式 | 说明 |
+|------|----------|------|
+| 项目自有 Skills（位于 `.agents/skills/` 内的本地 Skills） | `strict` | 保持 7 章节完整性，确保文档可维护、可移交 |
+| Pre-commit Hook / 默认 CI | `strict` | 阻止低质量文档进入主仓 |
+| 从 agentskills.io 拉取/导入的外部 Skills | `relaxed` | 仅校验最小集（Name + Description），避免与上游标准冲突 |
+| Skills 注册表（registry-index）抓取入库 | `relaxed` | 跨生态互通时容忍上游章节差异 |
+| 临时探索/试验型 Skills | `relaxed` | 降低快速迭代时的文档负担 |
+
+切换方式：`uv run python .agents/scripts/validation/validate_skill_md.py --mode relaxed`。
+
 ### 5.3 校验配置
 
 校验规则可通过 `.agents/skills/.validate-config.toml` 自定义：
 
 ```toml
+# 校验模式: strict = 全部必填, relaxed = 仅 Name + Description
+[mode]
+default = "strict"
+
 [required_sections]
+# 两种模式下均强制
 "Skill ID/Name" = "(?:Skill\\s*(?:ID|Name|唯一标识)|Name)"
 "Description" = "(?:Description|功能描述|功能|用途|Summary)"
-# ... 更多配置
+
+[recommended_sections]
+# strict 模式下视为必填，relaxed 模式下仅产生 WARN
+"I/O Parameters" = "(?:I/?O\\s*Parameters?|Input|Output|输入|输出|Parameters?)"
+"Dependencies" = "(?:Dependencies?|依赖|依赖项|Requirements?)"
+"Deployment" = "(?:Deployment|部署|Install|安装|Setup|配置)"
+"Error Handling" = "(?:Error\\s*Handling|错误|异常|handling)"
+"Changelog" = "(?:Changelog|版本|Version|History|变更|更新记录)"
 ```
 
 ### 5.4 跳过机制

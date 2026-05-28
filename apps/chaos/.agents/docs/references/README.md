@@ -19,6 +19,7 @@
 | [agent-collaboration-metamodel.md](./agent-collaboration-metamodel.md) | 多智能体协作元模型 |
 | [agent-memory-dream-protocol.md](./agent-memory-dream-protocol.md) | 智能体记忆梦境协议 |
 | [knowledge-driven-exploration-protocol.md](./knowledge-driven-exploration-protocol.md) | 知识驱动探索协议 |
+| [design-meta-insights.md](./design-meta-insights.md) | 设计元层级洞察（6 条跨场景判断规则） |
 | [autoapi-docstring-style.md](./autoapi-docstring-style.md) | AutoAPI 文档字符串风格规范 |
 | [doc-maintenance-workflow.md](./doc-maintenance-workflow.md) | 文档维护工作流 |
 

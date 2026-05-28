@@ -1,3 +1,9 @@
+---
+paths:
+  - "src/**/*.{tsx,jsx,ts,js,css,scss}"
+  - "apps/web/**/*"
+---
+
 # 前端开发规范 (Frontend Guidelines)
 
 > **注意**：这是一份模板文件，请根据实际项目技术栈进行修改。

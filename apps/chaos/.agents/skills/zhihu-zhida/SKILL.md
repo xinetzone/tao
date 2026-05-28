@@ -4,6 +4,10 @@ version: 1.0.2
 description: 调用知乎开放平台的 zhida 接口，返回结构化回答结果
 homepage: ../../docs/zhida_openai.md
 metadata: {"openclaw":{"emoji":"💬","requires":{"bins":["python3"]}}}
+argument-hint: "<question>"
+disable-model-invocation: false
+user-invocable: true
+paths: []
 ---
 
 # Zhida Skill

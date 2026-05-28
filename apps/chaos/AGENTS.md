@@ -105,6 +105,22 @@ flowchart TD
 - 仅检查依赖状态使用 `mise run init-check`。
 - 工具链版本校验使用 `mise run check-env`。
 
-## 7. 变更日志
+## 7. 跨工具目录桥接
+
+`.agents/` 的语义与主流 AI 工具目录存在映射关系，便于不同工具桥接消费：
+
+| `.agents/` | `.claude/` (Claude Code) | `.github/` (Copilot) | 语义 |
+|---|---|---|---|
+| `rules/` | `rules/` | `agents/` | 领域规则，支持 `paths:` glob 条件加载 |
+| `skills/` | `skills/` | — | 技能资产，SKILL.md 含 YAML frontmatter |
+| `docs/` | — | — | AI 专属知识库 |
+| `workflows/` | `commands/` | `workflows/` | 流程化任务说明 |
+| `roles/` | `agents/` | — | 角色声明（`+++` TOML 嵌入格式） |
+| `templates/` | — | — | 标准化模板文件 |
+| `scripts/` | — | — | 自动化校验/执行脚本 |
+
+规则文件支持 `paths:` YAML frontmatter 实现 glob 条件加载，与 Claude Code `.claude/rules/` 的条件加载机制对齐。
+
+## 8. 变更日志
 
 项目变更日志已独立拆分。详细变更索引见 [CHANGELOG.md](CHANGELOG.md)。

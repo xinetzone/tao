@@ -1,3 +1,9 @@
+---
+paths:
+  - ".agents/skills/**/scripts/**"
+  - ".agents/workflows/**"
+---
+
 # 浏览器代理调度规则 (Browser Agent Guidelines)
 
 本文档定义调度浏览器代理（Browser subagent）时的标准化指令规范，避免因措辞模糊导致代理拒绝执行或产物落地错误。

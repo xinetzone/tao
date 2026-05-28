@@ -1,3 +1,11 @@
+---
+paths:
+  - "**/*.py"
+  - "pyproject.toml"
+  - "uv.lock"
+  - "mise.toml"
+---
+
 # Python 开发与版本适配规则
 
 本文档定义本项目 Python 依赖管理、导入风格和版本适配任务的执行约束。

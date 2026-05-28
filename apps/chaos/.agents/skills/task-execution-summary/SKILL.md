@@ -5,6 +5,10 @@ description: >
   核心判断：同时出现完成信号（如做完、修完、结束、收尾）与回顾请求（如整理过程、总结得失、回看结果、复盘经验）即应触发。
   对刚完成的 Bug 修复、Sprint、故障排查、技术研究、项目交付和学习过程总结保持较高召回。
   不要触发：用户仍在继续执行任务、只想学习新知识、只要模板/计划/README/外部说明，而不是回顾分析已完成过程。
+argument-hint: ""
+disable-model-invocation: false
+user-invocable: true
+paths: []
 compatibility:
   - 需要访问对话历史以提取关键信息
   - 需要文件系统读写能力以保存生成的报告

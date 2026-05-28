@@ -1,3 +1,10 @@
+---
+paths:
+  - ".agents/scripts/**/*.py"
+  - ".agents/skills/**/scripts/**/*.py"
+  - "tasks.py"
+---
+
 # 数据流时序审查规则
 
 本文档定义涉及"读取 → 变换 → 写入"链条的脚本与数据流水线在执行时序上的审查约束。

@@ -1,3 +1,10 @@
+---
+paths:
+  - "src/api/**/*.py"
+  - "src/**/routes/**"
+  - "src/**/views/**"
+---
+
 # 后端开发规范 (Backend Guidelines)
 
 > **注意**：这是一份模板文件，请根据实际项目技术栈进行修改。

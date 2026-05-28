@@ -1,3 +1,10 @@
+---
+paths:
+  - "containers/**"
+  - "Containerfile*"
+  - ".containerignore"
+---
+
 # 容器化规则
 
 ## 核心约束

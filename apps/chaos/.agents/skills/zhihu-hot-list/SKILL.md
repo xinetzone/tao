@@ -4,6 +4,10 @@ version: 1.0.2
 description: 获取知乎热榜列表，返回脚本整理后的结构化结果（标题、链接、缩略图、摘要）
 homepage: ../../docs/hot_list.md
 metadata: {"openclaw":{"emoji":"🔥","requires":{"bins":["python3"]}}}
+argument-hint: ""
+disable-model-invocation: false
+user-invocable: true
+paths: []
 ---
 
 # Hot List Skill

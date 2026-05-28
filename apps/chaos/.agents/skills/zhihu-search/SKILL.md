@@ -4,6 +4,10 @@ version: 1.0.2
 description: 搜索知乎站内内容，返回脚本整理后的结构化结果（标题、链接、作者、摘要等）
 homepage: ../../docs/zhihu_search.md
 metadata: {"openclaw":{"emoji":"🔍","requires":{"bins":["python3"]}}}
+argument-hint: "<query>"
+disable-model-invocation: false
+user-invocable: true
+paths: []
 ---
 
 # Zhihu Search Skill

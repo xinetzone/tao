@@ -3,6 +3,12 @@ name: pdf-to-markdown
 version: 1.0.0
 description: 将中文学术/古籍类PDF无损转换为结构化Markdown文件集，支持章节识别、跨页标题合并、并行转换
 metadata: {"openclaw":{"requires":{"bins":["python3"],"packages":["pdfplumber","pypdfium2"]}}}
+argument-hint: "<pdf-path>"
+disable-model-invocation: false
+user-invocable: true
+paths:
+  - ".agents/skills/pdf-to-markdown/**"
+  - "**/*.pdf"
 ---
 
 # PDF → Markdown 转换技能 (PDF to Markdown)

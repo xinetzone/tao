@@ -1,3 +1,13 @@
+---
+name: skill-id-here
+version: 1.0.0
+description: "一句话功能描述，面向 AI 路由与触发"
+argument-hint: ""                    # 可选：参数提示，如 <branch-or-path>
+disable-model-invocation: false      # true = 仅用户可触发，AI 不自动调用
+user-invocable: true                 # false = 不出现在用户调用菜单
+paths: []                            # 可选：glob 匹配条件加载
+---
+
 # 技能名称 (Skill Name)
 
 ## 1. 技能唯一标识 (Skill ID)
@@ -42,4 +52,4 @@
 
 ## 7. 版本记录 (Changelog)
 <!-- 记录技能的版本变更历史及更新内容 -->
-- **v1.0.0** (YYYY-MM-DD): 初始版本发布。
+- **v1.0.0** ( YYYY-MM-DD ): 初始版本发布。

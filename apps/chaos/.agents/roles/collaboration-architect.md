@@ -6,6 +6,17 @@ domain = "governance+knowledge"
 rules = ["rules/documentation.md", "rules/context-economy.md"]
 references = ["docs/references/agent-collaboration-metamodel.md"]
 skills = ["brainstorming", "writing-plans"]
+
+[constraints]
+rules_must_exist = true
+non_goals_enforced = true
+
+[non_goals]
+items = [
+    "不直接承担运行时任务调度实现",
+    "不替代具体业务角色的职责定义",
+    "不直接修改 skills/ 实现代码",
+]
 +++
 
 # Collaboration Architect

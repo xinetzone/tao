@@ -6,6 +6,17 @@ domain = "organization"
 rules = ["rules/documentation.md", "rules/skills.md"]
 references = ["docs/references/agent-collaboration-metamodel.md"]
 skills = ["brainstorming"]
+
+[constraints]
+rules_must_exist = true
+non_goals_enforced = true
+
+[non_goals]
+items = [
+    "不直接定义具体业务角色的职责内容",
+    "不替代 Governance 层的 Policy 与 Permission 设计",
+    "不负责任务分配和运行时调度",
+]
 +++
 
 # Organization Steward

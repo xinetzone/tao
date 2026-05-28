@@ -1,0 +1,36 @@
+# constraints.toml — AgentForge 协作元模型操作性约束声明
+# Spec v0.2 Layer 2: Collaboration Protocol
+# 本文件将 agent-collaboration-metamodel.md 中的自然语言约束
+# 转化为机器可校验的 TOML 声明式协议
+
+[constraints.strong]
+# Agent 必须通过 Role 进入规范性协作体系
+agent_requires_role = true
+# Task 必须归属于某个 Mission 或更高层目标容器
+task_requires_mission = true
+# Workflow 不拥有知识，只编排执行
+workflow_owns_no_knowledge = true
+# Permission 赋给 Role 或 Agent，不赋给 Task
+permission_scoped_to_role_or_agent = true
+# Handoff 必须是显式对象，至少包含来源、目标、交接内容和状态
+handoff_explicit = true
+
+[constraints.weak]
+# Team 是否必须拥有多个 Role——由具体项目裁剪
+team_requires_multiple_roles = "project-decision"
+# Agent 是否允许跨 Team 协作——由治理层决定
+agent_cross_team = "governance-decision"
+# Memory 是否持久化及如何检索——属于实现层
+memory_persistence = "implementation-layer"
+# Skill 是工具能力还是复合工作流单元——首版不强制限定实现形态
+skill_implementation_form = "implementation-layer"
+
+[constraints.parallel]
+# 文件级隔离：每个并行 Agent 独占文件集合，不同 Agent 的文件集合不可重叠
+file_isolation = true
+# 模块级边界：以文件夹/包为最小隔离单元划分并行任务
+module_boundary = true
+# 集成串行化：跨模块操作在并行完成后串行执行
+integration_serial = true
+# 冲突策略优先级：merge > reboundary > serialize
+conflict_strategy = "merge"

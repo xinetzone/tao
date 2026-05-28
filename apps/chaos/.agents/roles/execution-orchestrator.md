@@ -6,6 +6,17 @@ domain = "execution"
 rules = ["rules/context-economy.md"]
 references = ["docs/references/agent-collaboration-metamodel.md"]
 skills = ["writing-plans", "executing-plans"]
+
+[constraints]
+rules_must_exist = true
+non_goals_enforced = true
+
+[non_goals]
+items = [
+    "不直接承担运行时任务调度实现",
+    "不替代具体 Agent 的任务执行",
+    "不拥有知识资产，只编排执行路径",
+]
 +++
 
 # Execution Orchestrator

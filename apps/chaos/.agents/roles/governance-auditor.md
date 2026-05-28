@@ -6,6 +6,17 @@ domain = "governance"
 rules = ["rules/documentation.md"]
 references = ["docs/references/agent-collaboration-metamodel.md"]
 skills = ["TRAE-code-review"]
+
+[constraints]
+rules_must_exist = true
+non_goals_enforced = true
+
+[non_goals]
+items = [
+    "不实现权限引擎或审批系统",
+    "不替代具体业务审计流程",
+    "不在第一版引入自动化合规扫描",
+]
 +++
 
 # Governance Auditor

@@ -1,8 +1,10 @@
 # AgentForge → WorldSprout 全面复盘
 
-> **复盘日期**：2026-05-28
-> **复盘范围**：从 Spec v0.1 到 GitHub 组织 worldsprout 注册完成的全过程
+> **复盘日期**：2026-05-29（终版）
+> **复盘范围**：从 Spec v0.1 到 GitHub 组织 worldsprout 上线、子模块回挂 AgentForge 的全过程
 > **参与角色**：xinetzone（核心维护者）、Qoder（AI 协作者）
+>
+> **最终状态**：✅ WorldSprout 组织正式上线，三仓库就绪，AgentForge 以 git submodule 统一管理
 
 ---
 
@@ -62,6 +64,15 @@
            ├── GitHub 组织 worldsprout 注册成功
            ├── rebirth/ 目录创建（3 个文件脱胎完成）
            └── taolib → sproutlib 包名重命名决策
+
+2026-05-29  脱胎补全 + GitHub 上线
+           ├── GOVERNANCE.md 去个人化创建
+           ├── WorldSprout Spec v1.0 脱胎自 Spec v0.2（去除所有哲学/个人内容）
+           ├── .github/profile/README.md（组织首页）
+           ├── 全面复盘 RETROSPECTIVE.md 撰写
+           ├── 三仓库创建与推送（worldsprout + spec + .github）
+           ├── Git Submodule 回挂 AgentForge（均跟踪 main 分支）
+           └── README.md 补全各仓库
 ```
 
 ---
@@ -82,7 +93,7 @@
 | **洞察文档** | 2 | design-meta-insights.md, web-content-extraction-patterns.md |
 | **脱胎文件** | 3 | rebirth/worldsprout/ (README.md, AGENTS.md, world.toml) |
 
-**总计：45 个文件变更（已提交），2,541 行新增；4 个脱胎文件（未提交）**
+**总计：45 个文件变更（已提交），2,541 行新增；11 个脱胎/组织文件（含子模块）**
 
 ---
 
@@ -190,13 +201,20 @@ After (WorldSprout Rebirth):
 
 ### 需要改进的
 
-| 项目 | 说明 |
+| 项目 | 说明 | 状态 |
+|------|------|------|
+| **脱胎未完成** | rebirth/ 目录最初只有 3 个文件（README、AGENTS.md、world.toml），GOVERNANCE.md、spec、CI 配置等缺失 | ✅ 已解决（5.29 补全） |
+| **sproutlib 改名未执行** | taolib→sproutlib 已决策但工作量最大（32+ 文件），留给了后续 PR | 📋 待执行 |
+| **首位维护者缺失** | GOVERNANCE.md 定义了完整的治理模型，但没有实际任命任何人——"有宪法没总统" | 🔲 待定 |
+| **隐私脱敏协议空壳** | privacy-spec/ 只存在于 README 的规划中 | 🔲 待创建 |
+| **世界隐喻的边界模糊** | "世界"既是技术概念（world.toml）又是品牌隐喻（WorldSprout），语义边界偶尔混淆 | ⚠️ 需注意 |
+
+### 5.29 新增决策
+
+| 决策 | 内容 |
 |------|------|
-| **脱胎未完成** | rebirth/ 目录只有 3 个文件（README、AGENTS.md、world.toml），GOVERNANCE.md、spec、CI 配置等尚未完成脱胎。 |
-| **sproutlib 改名未执行** | taolib→sproutlib 已决策但工作量最大（32+ 文件），留给了后续 PR。 |
-| **首位维护者缺失** | GOVERNANCE.md 定义了完整的治理模型，但没有实际任命任何人——这是"有宪法没总统"的状态。 |
-| **隐私脱敏协议空壳** | privacy-spec/ 只存在于 README 的规划中，没有任何实际内容。 |
-| **世界隐喻的边界模糊** | "世界"既是技术概念（world.toml）又是品牌隐喻（WorldSprout），两者之间的语义边界在文档中偶尔混淆。 |
+| **Git Submodule 方案** | 三个仓库以 git submodule 形式回挂 AgentForge 的 rebirth/ 目录，均设 `branch = main`，日常 `git submodule update --remote` 即可同步 |
+| **rebirth/ 定位** | 作为 AgentForge 的"母港"——本地文件（README.md + RETROSPECTIVE.md）记录上下文，子模块链接到独立仓库 |
 
 ---
 
@@ -204,25 +222,61 @@ After (WorldSprout Rebirth):
 
 | P | 问题 | 状态 |
 |----|------|------|
-| P1 | GOVERNANCE.md 任命首位核心维护者 | 未做 |
-| P1 | rebirth/ 脱胎完成（GOVERNANCE, spec, CI, .github/） | 进行中 |
-| P2 | taolib → sproutlib 全项目重命名 | 已决策，待执行 |
-| P2 | worldsprout 组织首个仓库推送 | 未做 |
-| P3 | privacy-spec 内容起草 | 未做 |
-| P3 | Registry 首个 fragment 发布 | 未做 |
-| P3 | world guide 的 Fragment 推荐表充实（目前只有 python/nodejs/rust/go/web/docs/container） | 未做 |
-| P4 | AgentForge 原项目（apps/chaos/）与 WorldSprout 的共存策略 | 未讨论 |
+| P1 | GOVERNANCE.md 任命首位核心维护者 | 🔲 待定 |
+| P1 | rebirth/ 脱胎完成 → **已解决** | ✅ 5.29 完成 |
+| P2 | taolib → sproutlib 全项目重命名 | 📋 已决策，待执行 |
+| P2 | worldsprout 组织首个仓库推送 → **已解决** | ✅ 5.29 完成 |
+| P2 | 各仓库 README.md → **已解决** | ✅ 5.29 补全 |
+| P3 | privacy-spec 内容起草 | 🔲 待创建 |
+| P3 | Registry 首个 fragment 发布 | 🔲 待创建 |
+| P3 | world guide 的 Fragment 推荐表充实 | 🔲 待扩充 |
+| P4 | AgentForge 原项目（apps/chaos/）与 WorldSprout 的共存策略 | 🔲 待讨论 |
 
 ---
 
-## 7. 下一步建议
+## 7. 下一步 / 后续路线
 
-1. **完成脱胎**：补全 rebirth/ 中 GOVERNANCE.md + Spec v1.0 + .github/ 组织配置
-2. **推送首仓**：将 rebirth/worldsprout/ 作为 github.com/worldsprout/worldsprout 的第一个 commit
-3. **发布 Spec v1.0**：以 WorldSprout 名义正式发布首次规范（基于 Spec v0.2 去个人化）
-4. **任命维护者**：至少任命 Layer 1 的领域维护者，让标准有"可以找的人"
-5. **sproutlib 改名 PR**：作为重生后的第一个 RFC 示范——展示完整的 RFC 流程
+| 优先级 | 事项 | 说明 |
+|--------|------|------|
+| P1 | 任命首位核心维护者 | 有宪法无总统的问题必须解决 |
+| P2 | taolib → sproutlib 重命名 | 首个 RFC 示范——展示完整流程 |
+| P3 | privacy-spec 起草 | 隐私脱敏协议从骨架到内容 |
+| P3 | Registry 首个 fragment | 证明 Fragment 模型可运作 |
 
 ---
 
-*复盘生成于 2026-05-28。下一个里程碑：WorldSprout Spec v1.0 正式发布。*
+## 8. Git Submodule 架构
+
+最终采用的子模块管理方案：
+
+```
+AgentForge/                         ← git repo (github.com/xinetzone/AgentForge)
+└── rebirth/
+    ├── .gitmodules                 ← 子模块注册表（AgentForge 跟踪）
+    ├── worldsprout/  (submodule)   ← github.com/worldsprout/worldsprout @ main
+    ├── spec/         (submodule)   ← github.com/worldsprout/spec        @ main
+    ├── .github/      (submodule)   ← github.com/worldsprout/.github     @ main
+    ├── README.md                   ← AgentForge 跟踪（仅本地上下文）
+    └── RETROSPECTIVE.md            ← AgentForge 跟踪（本文件）
+```
+
+日常操作：
+```bash
+# 拉取所有子模块最新
+git submodule update --remote
+
+# 进入子模块独立开发
+cd rebirth/worldsprout
+# ... 修改、git add、git commit、git push ...
+
+# 回主仓库锁定新 commit
+cd ../..
+git add rebirth/worldsprout
+git commit -m "chore: 更新 worldsprout 子模块"
+```
+
+---
+
+---
+
+*复盘归档于 2026-05-29。AgentForge → WorldSprout 脱胎项目阶段性完成。🌱*

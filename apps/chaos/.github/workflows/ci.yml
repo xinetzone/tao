@@ -159,6 +159,9 @@ jobs:
       - name: Validate skill SKILL.md compliance
         run: mise run validate-skills
 
+      - name: Check AgentForge Layer 2 constraints
+        run: python .agents/scripts/check_constraints.py
+
   security:
     runs-on: ubuntu-latest
     steps:

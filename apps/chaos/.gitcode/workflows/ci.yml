@@ -34,6 +34,9 @@ jobs:
       - name: 文档结构校验（docs/ 双轨分类）
         run: cd repo_workspace && python .agents/scripts/check_docs_structure.py
 
+      - name: AgentForge Layer 2 约束校验
+        run: cd repo_workspace && python .agents/scripts/check_constraints.py
+
   test:
     runs-on: euleros-2.10.1
     needs: lint

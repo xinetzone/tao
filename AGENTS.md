@@ -33,6 +33,7 @@ AgentForge/                            ← 本仓库（github.com/xinetzone/Agen
 ├── LICENSE                            ← Apache 2.0
 ├── docs/                              ← 人类文档（tech/ + general/ 双轨）
 ├── .github/workflows/                 ← CI/CD 流水线
+├── .agents/                           ← 仓库级 AI 配置骨架（world.toml + constraints.toml + registry.toml）
 │
 ├── apps/chaos/                        ← 混沌态：原始孵化器——自由探索、未精炼的一切
 │   ├── AGENTS.md                      ← chaos 子项目路由（嵌套优先）

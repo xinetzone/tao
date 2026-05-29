@@ -80,7 +80,7 @@ run = "python .agents/scripts/check_doc_links.py"
 
 [tasks.docs-structure-check]
 description = "校验 docs/ 目录结构遵循 tech/general 双轨分类规范"
-run = "python .agents/scripts/check_docs_structure.py"
+run = "python .agents/scripts/check_docs_structure.py --docs-dir ../../docs"
 
 [tasks.world-hierarchy-check]
 description = "校验多世界层级结构遵循 world-hierarchy 规范"

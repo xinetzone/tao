@@ -110,6 +110,7 @@ AgentForge/
 │
 ├── docs/                  ← 人类文档（tech/ + general/ 双轨）
 ├── .github/workflows/     ← CI/CD 流水线
+├── .agents/               ← 仓库级 AI 配置骨架
 │
 └── rebirth/               ← 脱胎态：WorldSprout 标准（git submodule）
     ├── worldsprout/       → github.com/worldsprout/worldsprout

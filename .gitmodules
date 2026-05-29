@@ -1,0 +1,12 @@
+[submodule "rebirth/worldsprout"]
+	path = rebirth/worldsprout
+	url = https://github.com/worldsprout/worldsprout.git
+	branch = main
+[submodule "rebirth/spec"]
+	path = rebirth/spec
+	url = https://github.com/worldsprout/spec.git
+	branch = main
+[submodule "rebirth/.github"]
+	path = rebirth/.github
+	url = https://github.com/worldsprout/.github.git
+	branch = main

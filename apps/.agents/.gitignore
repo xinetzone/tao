@@ -1,0 +1,3 @@
+# 运行时状态目录（由 world session 命令生成）
+world.state/*
+!world.state/.gitkeep

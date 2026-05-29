@@ -1,0 +1,12 @@
+# registry.toml — AgentForge 仓库级 Registry 源配置
+# Draft v0.1
+
+[registries.local]
+url = "../chaos/registry-index"
+type = "git"
+priority = 1
+
+[registries.default]
+url = "https://github.com/agentforge/registry-index"
+type = "git"
+priority = 2

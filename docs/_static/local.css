@@ -642,17 +642,58 @@ textarea {
 
 
 
-/* ================================= offcanvas fix ================================= */
+/* ================================= 移动端 offcanvas 侧边栏背景修复 ================================= */
+/* PyData 主题在移动端将导航栏移入 offcanvas，默认透明背景导致文字不可读 */
 @media (max-width: 768px) {
-    .offcanvas,.offcanvas-start,.offcanvas-end,.navbar-expand .offcanvas,.bd-sidebar-primary[class*=offcanvas]{background-color:var(--color-bg)!important;color:var(--color-text)!important}
-    .offcanvas-header{background-color:var(--color-bg-secondary)!important;border-bottom:1px solid var(--color-border)!important}
-    .offcanvas-header .navbar-brand,.offcanvas-header .offcanvas-title{color:var(--color-text)!important;visibility:visible!important}
-    .offcanvas .nav-link,.offcanvas .navbar-nav .nav-link,.offcanvas .sidebar-nav-item a{color:var(--color-text)!important}
-    .offcanvas .nav-link:hover,.offcanvas .sidebar-nav-item a:hover{background-color:var(--color-bg-secondary)!important;color:var(--color-accent)!important}
+    .offcanvas,
+    .offcanvas-start,
+    .offcanvas-end,
+    .navbar-expand .offcanvas,
+    .bd-sidebar-primary[class*="offcanvas"] {
+        background-color: var(--color-bg) !important;
+        color: var(--color-text) !important;
+    }
+    .offcanvas-header {
+        background-color: var(--color-bg-secondary) !important;
+        border-bottom: 1px solid var(--color-border) !important;
+    }
+    .offcanvas-header .navbar-brand,
+    .offcanvas-header .offcanvas-title {
+        color: var(--color-text) !important;
+        visibility: visible !important;
+    }
+    .offcanvas .nav-link,
+    .offcanvas .navbar-nav .nav-link,
+    .offcanvas .sidebar-nav-item a {
+        color: var(--color-text) !important;
+    }
+    .offcanvas .nav-link:hover,
+    .offcanvas .sidebar-nav-item a:hover {
+        background-color: var(--color-bg-secondary) !important;
+        color: var(--color-accent) !important;
+    }
 }
-.offcanvas-backdrop{background-color:rgba(0,0,0,.5)!important}
-.bd-header-article .btn:not(.bd-sidebar-toggle),.bd-header-article__inner .btn:not(.bd-sidebar-toggle){color:#fff!important}
-@media(max-width:480px){div.highlight pre,pre.literal-block{white-space:pre-wrap!important;word-break:break-word!important}}
+
+/* offcanvas 遮罩层半透明 */
+.offcanvas-backdrop {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* 工具栏按钮对比度修复 */
+.bd-header-article .btn:not(.bd-sidebar-toggle),
+.bd-header-article__inner .btn:not(.bd-sidebar-toggle) {
+    color: #fff !important;
+}
+
+/* 超窄屏代码块折行 */
+@media (max-width: 480px) {
+    div.highlight pre,
+    pre.literal-block {
+        white-space: pre-wrap !important;
+        word-break: break-word !important;
+    }
+}
+
 /* 减少动画偏好支持 */
 @media (prefers-reduced-motion: reduce) {
     * {

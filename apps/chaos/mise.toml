@@ -64,14 +64,12 @@ depends = ["check-env"]
 
 [tasks.docs-html]
 description = "构建 HTML 文档"
-dir = "../../docs"
-run = "uv run invoke build --target html"
+run = "uv run invoke --search-root ../../docs build --target html"
 depends = ["check-env"]
 
 [tasks.docs-linkcheck]
 description = "执行文档外链校验"
-dir = "../../docs"
-run = "uv run invoke linkcheck"
+run = "uv run invoke --search-root ../../docs linkcheck"
 depends = ["check-env"]
 
 [tasks.docs-internal-linkcheck]
@@ -88,15 +86,13 @@ run = "python .agents/scripts/check_world_hierarchy.py"
 
 [tasks.docs-build]
 description = "CI 文档构建入口"
-dir = "../../docs"
-run = "uv run invoke build --target html"
+run = "uv run invoke --search-root ../../docs build --target html"
 depends = ["check-env"]
 
 [tasks.docs-strict]
 description = "严格模式构建文档：警告即失败（CI 与 GitHub Pages 部署入口）"
-dir = "../../docs"
 env = { SPHINXOPTS = "-W --keep-going" }
-run = "uv run invoke build --target html"
+run = "uv run invoke --search-root ../../docs build --target html"
 depends = ["check-env", "docs-structure-check"]
 
 [tasks.init]

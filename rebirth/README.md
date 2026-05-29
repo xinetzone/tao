@@ -37,6 +37,7 @@ git commit -m "chore: 更新 worldsprout 子模块"
 1. **删除**：xinetzone 身份、道德经/Ψ=Ψ(Ψ) 相关、马王堆帛书引用、个人 Token/密钥/路径
 2. **中性化**："世界"隐喻保留但去哲学化、"哲学驱动"→"约定驱动"、"大道至简"→删除
 3. **重命名**：taolib → sproutlib（已决策，源码实际改名待执行）
+4. **排除**：`src/taolib/github_app/` 不迁移——属于 AgentForge 私有基础设施（Token 管理、事件处理），非通用标准
 4. **保留**：三层架构、AGENTS.md 分离声明、.agents/ 目录约定、SKILL.md 规范、Registry + Fragment 模型、world CLI 工具链、constraints-check 脚本
 
 ## 后续路线

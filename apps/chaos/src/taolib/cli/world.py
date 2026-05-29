@@ -2,6 +2,8 @@
 
 本模块提供 World CLI 的主入口，当前支持以下子命令：
 
+- ``init``：生成 AGENTS.md + .agents/ 项目骨架（新项目零配置启动）。
+- ``guide``：项目结构诊断与 Fragment 推荐（打破 init 后的静默期）。
 - ``status``：显示当前世界配置状态，解析 ``.agents/world.toml``。
 - ``install``：安装世界 fragment（``--dry-run`` 模式）。
 - ``resolve``：解析世界 fragment 依赖与版本约束。
@@ -11,8 +13,9 @@
 
 示例::
 
+    $ world init --name my-project
     $ world status
-    World: agentforge (Kernel 3.1.0)
+    World: my-project (Kernel 0.1.0)
     Installed: 7 fragments, 2 capabilities
     ...
 """
@@ -22,6 +25,9 @@ from __future__ import annotations
 import argparse
 import sys
 
+from taolib.cli._world_commands.init import register_init_parser
+from taolib.cli._world_commands.guide import register_guide_parser
+from taolib.cli._world_commands.fragment_init import register_fragment_init_parser
 from taolib.cli._world_commands.install import register_install_parser
 from taolib.cli._world_commands.publish import register_publish_parser
 from taolib.cli._world_commands.remove import register_remove_parser
@@ -43,7 +49,24 @@ def build_parser() -> argparse.ArgumentParser:
     )
     subparsers = parser.add_subparsers(dest="command")
 
+    register_init_parser(subparsers)
+    register_guide_parser(subparsers)
     register_status_parser(subparsers)
+
+    # Fragment 子命令组
+    fragment_parser = subparsers.add_parser(
+        "fragment",
+        help="Fragment 管理（创建、安装、移除、发布）",
+        description="管理 AgentForge Fragments——创建新 Fragment、从规则打包、安装、移除、发布。",
+    )
+    fragment_subparsers = fragment_parser.add_subparsers(dest="fragment_command")
+    register_fragment_init_parser(fragment_subparsers)
+    register_install_parser(fragment_subparsers)
+    register_remove_parser(fragment_subparsers)
+    register_publish_parser(fragment_subparsers)
+    register_resolve_parser(fragment_subparsers)
+
+    # 其他顶层命令（兼容旧用法，直接 world install/remove 等也可用）
     register_install_parser(subparsers)
     register_resolve_parser(subparsers)
     register_remove_parser(subparsers)

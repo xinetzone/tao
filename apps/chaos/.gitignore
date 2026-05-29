@@ -176,6 +176,9 @@ temp/
 draft/
 *.db-journal
 
+# runtime state (never commit)
+.agents/world.state/
+
 # C
 *.o
 *.dll

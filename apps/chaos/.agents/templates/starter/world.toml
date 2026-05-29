@@ -1,0 +1,21 @@
+# world.toml — AgentForge 世界声明式描述
+# Spec v0.2 Layer 1: Project Protocol (最小格式)
+# 本文件是 AgentForge 对 AGENTS.md 开放标准的唯一扩展入口。
+# 如果你不需要 AgentForge 扩展，可以删除本文件和 .agents/ 目录，
+# 仅保留 AGENTS.md 仍然兼容 30+ AI 工具。
+
+[world]
+name = "my-project"           # 必填：项目标识，kebab-case
+version = "0.1.0"             # 必填：语义化版本
+description = "项目简介"       # 可选
+
+# fragments — 可安装/卸载的领域能力组合
+# 示例：添加 Python 工程规范
+# [fragments.python-engineering]
+# version = "1.0.0"
+# includes = ["rules/python.md"]
+# optional = true
+# description = "Python 工程规范与兼容性检查"
+
+# 更多 fragments 可通过 world install 从 Registry 安装
+# 详见 https://github.com/agentforge/registry-index

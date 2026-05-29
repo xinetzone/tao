@@ -1,0 +1,25 @@
+/* === Tooltip样式定义 === */
+/* 基于CSS变量的Tippy.js提示框样式 */
+
+.tippy-box {
+    background-color: var(--pst-color-surface);
+    color: var(--pst-color-text-base);
+    border: 1px solid var(--pst-color-border);
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    max-width: 250px;
+    padding: 0.5rem 0.75rem;
+    position: relative;
+    text-align: left;
+    z-index: 9999;
+}
+
+/* 响应式调整 */
+@media screen and (max-width: 768px) {
+    .tippy-box {
+        max-width: 200px;
+        font-size: 0.8125rem;
+    }
+}

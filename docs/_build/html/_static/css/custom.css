@@ -1,0 +1,131 @@
+/* === xyzstyle 主题自定义样式 === */
+
+/* CSS 变量定义 - 按功能分类组织 */
+:root {
+  /* UI元素颜色 */
+  --color-version-stable-bg: #e2ffe2;
+  --color-version-explicit-bg: #d9dadc;
+  --color-version-explicit-text: #333;
+  --color-version-dev-bg: #ff8a3e;
+  --color-sidebar-bg: #e4e7eb;
+  
+  /* 警告框自定义颜色 */
+  --color-admonition-olive-border: hsl(60, 100%, 25%);
+  --color-admonition-olive-title-bg: hsl(60, 100%, 14%);
+  --color-admonition-olive-title-text: white;
+  
+  --color-admonition-youtube-border: hsl(0, 100%, 50%);
+  --color-admonition-youtube-title-bg: hsl(0, 99%, 18%);
+  --color-admonition-youtube-title-text: white;
+  
+  /* 动画和过渡效果 */
+  --transition-speed: 0.3s;
+}
+
+/* === 主题核心UI样式 === */
+
+/* 版本切换器样式 */
+#version_switcher a[data-version-name*="stable"] {
+  background-color: var(--color-version-stable-bg);
+  transition: background-color var(--transition-speed);
+}
+
+#version_switcher a:not([data-version-name*="stable"]):not([data-version-name="dev"]) {
+  background-color: var(--color-version-explicit-bg);
+  color: var(--color-version-explicit-text);
+  transition: background-color var(--transition-speed);
+}
+
+#version_switcher_button[data-active-version-name*="dev"] {
+  background-color: var(--color-version-dev-bg);
+  transition: background-color var(--transition-speed);
+}
+
+/* 侧边栏样式 */
+.bd-sidebar-primary,
+.bd-sidebar-secondary {
+  background-color: var(--color-sidebar-bg);
+}
+
+/* 贡献者头像样式 */
+.sphinx-contributors img {
+  border-radius: 50%;
+  transition: transform var(--transition-speed);
+}
+
+.sphinx-contributors img:hover {
+  transform: scale(1.05);
+}
+
+/* === 文档专用自定义样式 === */
+
+/* 自定义警告框样式 - 用于 docs/user_guide/extending.rst */
+/* 注意：begin-* 和 end-* 标记对部分文件包含功能至关重要，请勿移除！ */
+
+/* begin-custom-color/* <your static path>/custom.css */
+div.admonition.admonition-olive {
+  border-color: var(--color-admonition-olive-border);
+}
+
+div.admonition.admonition-olive > .admonition-title {
+  background-color: var(--color-admonition-olive-title-bg);
+  color: var(--color-admonition-olive-title-text);
+}
+
+div.admonition.admonition-olive > .admonition-title:after {
+  color: var(--color-admonition-olive-border);
+}
+/* end-custom-color */
+
+/* begin-custom-icon/* <your static path>/custom.css */
+div.admonition.admonition-icon > .admonition-title:after {
+  content: "\f24e"; /* Font Awesome scale icon */
+}
+/* end-custom-icon */
+
+/* begin-custom-youtube/* <your static path>/custom.css */
+div.admonition.admonition-youtube {
+  border-color: var(--color-admonition-youtube-border); /* YouTube red */
+}
+
+div.admonition.admonition-youtube > .admonition-title {
+  background-color: var(--color-admonition-youtube-title-bg);
+  color: var(--color-admonition-youtube-title-text);
+}
+
+div.admonition.admonition-youtube > .admonition-title:after {
+  color: var(--color-admonition-youtube-border);
+  content: "\f26c"; /* Font Awesome TV icon */
+}
+/* end-custom-youtube */
+
+/* 下游项目链接样式修复 */
+/* 修复：整个卡片是链接时，不要将项目名称本身格式化为文本链接 */
+div.downstream-project-links a {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+/* === 响应式设计优化 === */
+
+/* 移动设备适配 */
+@media screen and (max-width: 768px) {
+  .bd-sidebar-primary,
+  .bd-sidebar-secondary {
+    background-color: transparent;
+  }
+  
+  /* 调整移动设备上的字体大小 */
+  body {
+    font-size: 16px;
+  }
+}
+
+/* 高分辨率显示适配 */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* 高DPI屏幕上的样式调整 */
+  .sphinx-contributors img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}

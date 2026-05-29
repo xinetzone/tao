@@ -1,0 +1,40 @@
+/* ================================= Mermaid 图表优化 ================================= */
+div.mermaid {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+    overflow-x: auto;
+    align-items: center;
+}
+
+/* 使用高优先级选择器替代 !important */
+.bd-content div.mermaid svg,
+div.mermaid svg {
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 85vh;
+    min-width: auto;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    div.mermaid svg {
+        max-height: 80vh;
+    }
+}
+
+/* 横屏适配 */
+@media (max-height: 500px) and (orientation: landscape) {
+    div.mermaid svg {
+        max-height: 60vh;
+    }
+}
+
+/* 暗色模式 Mermaid 反色 */
+@media (prefers-color-scheme: dark) {
+    div.mermaid svg {
+        filter: invert(93%) hue-rotate(180deg);
+    }
+}

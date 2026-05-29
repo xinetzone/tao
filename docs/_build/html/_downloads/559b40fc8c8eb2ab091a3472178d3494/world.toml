@@ -1,0 +1,37 @@
+# world.toml — AgentForge 仓库根世界声明
+# AgentForge Spec v0.2 | Layer 1 最小格式
+# 本文件描述 AgentForge 仓库自身的世界身份。
+# 子世界（apps/chaos/、rebirth/worldsprout/）拥有独立的 world.toml 覆盖。
+
+[world]
+name = "agentforge"
+version = "0.1.0"
+description = "AI Agent 协作基础设施——双态孵化模型的母容器"
+spec_version = "0.2"
+spec_role = "demo"          # 本仓库是 Spec v0.2 的示范实现
+
+# ──────────────────────────────────────────────────
+# 子世界声明
+# ──────────────────────────────────────────────────
+# 本仓库包含两个子世界，各自拥有独立的 world.toml：
+#   apps/chaos/          — 混沌态孵化器（Layer 1-3 完整实现，哲学驱动）
+#   rebirth/worldsprout/  — 脱胎态参考实现（Layer 1-2 社区标准，去哲学化）
+# 子世界通过 AGENTS.md 嵌套机制实现路由，就近优先。
+
+# ──────────────────────────────────────────────────
+# [routing] — 根级上下文路由规则
+# 本路由表仅覆盖跨子世界任务，子世界内任务路由见各自的 world.toml
+# ──────────────────────────────────────────────────
+
+[routing]
+version = "0.1.0"
+conflict_resolution = "merge"
+
+[[routing.rules]]
+id = "cross-world-extraction"
+targets = ["../AGENTS.md"]
+priority = 10
+roles = ["*"]
+
+[routing.rules.triggers]
+intents = ["extraction", "chaos-to-rebirth", "sync", "脱胎", "萃取"]

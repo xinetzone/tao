@@ -1,0 +1,986 @@
+
+<!DOCTYPE html>
+
+
+<html lang="zh-CN" data-content_root="../../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>第八章 分词 &#8212; AgentForge</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=83348fa5" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1b75f815" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/tippy.css?v=7ab95025" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/try_examples.css?v=701a231f" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/variables.css?v=d4f16b25" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/local.css?v=b04def21" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mermaid.css?v=31d5edeb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
+
+    <script src="../../../../_static/documentation_options.js?v=168fd006"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../../_static/copybutton.js?v=18a8d5f5"></script>
+    <script src="../../../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../../../_static/translations.js?v=540d3cec"></script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'general/linguistics/english-grammar/chapter/chapter-08-participles';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="canonical" href="http://127.0.0.1:8000/general/linguistics/english-grammar/chapter/chapter-08-participles.html" />
+    <link rel="icon" href="../../../../_static/favicon.jpg"/>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="第九章 动词时态" href="chapter-09-verb-tenses.html" />
+    <link rel="prev" title="第七章 介词" href="chapter-07-prepositions.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="zh-CN"/>
+  <meta name="docsearch:version" content="0.7.2.dev44+g23fd824" />
+    <meta name="docbuild:last-update" content="2026-05-29, 16:17:36"/>
+  
+    
+    <script src="../../../../_static/searchtools.js"></script>
+    <script src="../../../../_static/language_data.js"></script>
+    <script src="../../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">跳转至主要内容</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>回到顶部</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="版本警告"></aside>
+</div>
+<aside class="bd-header-announcement" aria-label="Announcement">
+  <div class="bd-header-announcement__content">👋你好，世界！👋</div>
+</aside>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../_static/logo.jpg" class="logo__image only-light" alt="AgentForge - Home"/>
+    <img src="../../../../_static/logo.jpg" class="logo__image only-dark pst-js-only" alt="AgentForge - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.zhihu.com/people/xinetzone" title="知乎" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-zhihu fa-lg" aria-hidden="true"></i><span class="visually-hidden">知乎</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.jianshu.com/u/4302480a3e8e" title="简书" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-book fa-lg" aria-hidden="true"></i><span class="visually-hidden">简书</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://space.bilibili.com/252192181" title="B站" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-bilibili fa-lg" aria-hidden="true"></i><span class="visually-hidden">B站</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.cnblogs.com/q735613050/" title="博客园" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><img src="https://xinetzone.github.io/xinetzone/media/xinetzone.jpg" class="icon-link-image" alt="博客园"/></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.linkedin.com/in/xinet" title="领英" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-linkedin fa-lg" aria-hidden="true"></i><span class="visually-hidden">领英</span></a>
+        </li>
+</ul></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">搜索</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">目录</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../tech/index.html">📦 技术文档</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/intro.html">📖 项目介绍</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/quickstart.html">🚀 快速开始</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/features.html">✨ 核心功能</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/world-registry-protocol.html">🌍 World Registry Protocol (Draft v0.1)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/world-cli-spec.html">World CLI 工具规格</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/world-session-spec.html">World Session 规约</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/github-app-token-override.html">🛡️ GitHub App 安装令牌请求级覆盖头学习笔记</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/integration-guide.html">🔗 外部项目集成指南</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../../tech/api/taolib/index.html">taolib</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../tech/api/taolib/cli/index.html">taolib.cli</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tech/api/taolib/cli/github_app/index.html">taolib.cli.github_app</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tech/api/taolib/cli/world/index.html">taolib.cli.world</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../../tech/api/taolib/github_app/index.html">taolib.github_app</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tech/api/taolib/github_app/cache/index.html">taolib.github_app.cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tech/api/taolib/github_app/client/index.html">taolib.github_app.client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tech/api/taolib/github_app/config/index.html">taolib.github_app.config</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tech/api/taolib/github_app/errors/index.html">taolib.github_app.errors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tech/api/taolib/github_app/events/index.html">taolib.github_app.events</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tech/api/taolib/github_app/hooks/index.html">taolib.github_app.hooks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tech/api/taolib/github_app/models/index.html">taolib.github_app.models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tech/api/taolib/github_app/pygithub_adapter/index.html">taolib.github_app.pygithub_adapter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../tech/api/taolib/github_app/token_manager/index.html">taolib.github_app.token_manager</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/deploy.html">📦部署指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/build-conventions.html">🔧 构建约定</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/fragment-manifest-spec.html">Fragment Manifest 规格</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/contributing.html">🤝贡献规范</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/changelogs/skill-creator.html">Skill Creator 更新日志</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/changelogs/task-execution-summary.html">Task Execution Summary 更新日志</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/changelogs/project-2026-05.html">2026-05 项目级更新日志</a></li>
+
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/changelog.html">更新日志</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tech/jupyterlite.html"><code class="docutils literal notranslate"><span class="pre">jupyterlite</span></code></a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../../index.html">🌐 通用知识</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../philosophy/index.html">哲学-工程映射</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../philosophy/meta/psi-engineering-principles.html">Ψ = Ψ(Ψ) 工程元公理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../philosophy/ontology/universe-world-ontology.html">宇宙与世界：规则唯一，实例无穷</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../philosophy/ontology/inter-world-communication.html">世界间通信：结构穿越，内容重生</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../philosophy/dynamics/nesting-depth-and-alpha.html">嵌套深度与觉醒量表：α 是递归觉知的预算</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../philosophy/dynamics/alpha-acceleration.html">α 加速现象：为什么增长是指数级的</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../philosophy/dynamics/world-gravity.html">世界的重力：粘性、梦境、记忆与遗忘</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../philosophy/dynamics/cosmic-breathing.html">宇宙的呼吸：坍缩与释放的永恒交替</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../philosophy/engineering/alpha-engineering-scale.html">觉醒量表工程细化：从哲学隐喻到可测量指标</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../philosophy/engineering/three-as-interface.html">"三"的设计意义：接口比实体更根本</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../philosophy/engineering/resonance-synchronization.html">宇宙同步化：共振取代共享</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../philosophy/engineering/world-operations.html">操作世界：AGENTS.md + .agents/ = 一个世界</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../philosophy/engineering/world-package.html">世界包：可安装、可版本化、可组合的世界</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../philosophy/engineering/world-distribution.html">世界分发：分层混合策略</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../philosophy/strategy/tao-minimalist-principles.html">道德经极简设计原则</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../philosophy/cultivation/index.html">修真</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../philosophy/cultivation/dao/index.html">道</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/cultivation/dao/nature/index.html">性</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/cultivation/dao/life/index.html">命</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/cultivation/dao/authenticity/index.html">真</a></li>
+</ul>
+</details></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../philosophy/cultivation/integrity/index.html">德</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../philosophy/cultivation/practice/index.html">经</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l5 has-children"><a class="reference internal" href="../../../philosophy/cultivation/practice/method/index.html">法</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l6 has-children"><a class="reference internal" href="../../../philosophy/cultivation/practice/method/positioning/index.html">定位</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l7"><a class="reference internal" href="../../../philosophy/cultivation/practice/method/positioning/me/index.html">我</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="../../../philosophy/cultivation/practice/technique/index.html">术</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l6"><a class="reference external" href="https://daobook.github.io/pygallery/index.html">旧版文集</a></li>
+</ul>
+</details></li>
+<li class="toctree-l5 has-children"><a class="reference internal" href="../../../philosophy/cultivation/practice/tool/index.html">器</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../../philosophy/cultivation/practice/tool/configs/index.html">配置</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../philosophy/laozi-boshu/index.html">帛书老子注读</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../philosophy/laozi-boshu/front-matter/preface.html">序</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../philosophy/laozi-boshu/front-matter/introduction.html">注读说明</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../philosophy/laozi-boshu/front-matter/author.html">作者简介</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../philosophy/laozi-boshu/front-matter/copyright.html">版权信息</a></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/index.html">德经</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-01.html">一、道、德是这样沦丧的（今38章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-02.html">二、无人赞赏，才是最大的赞赏（今39章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-03.html">三、大道无名，因人高下而有差（今41章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-04.html">四、天下之物生于有，有生于无（今40章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-05.html">五、万物负阴而抱阳，以虚而至中和（今42章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-06.html">六、不言之教，更胜言传身教（今43章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-07.html">七、知足不辱，知止不殆（今44章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-08.html">八、清静可以为天下正（今45章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-09.html">九、真正的富足，在于心态（今46章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-10.html">十、不出户，为何能知天下？（今47章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-11.html">十一、无为，方能无所不为（今48章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-12.html">十二、恒德，不会因人而异（今49章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-13.html">十三、保养生命，首要保全心神（今50章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-14.html">十四、万物最好的状态，是自然（今51章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-15.html">十五、掌握了道，也就掌握了万物（今52章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-16.html">十六、不走正道而成功，是谓盗（今53章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-17.html">十七、道通为一，贯彻天下（今54章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-18.html">十八、过于壮盛，必然速亡（今55章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-19.html">十九、公正无私，天下之至贵（今56章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-20.html">二十、中正可以治国，无为可以取天下（今57章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-21.html">二十一、不能长治久安，是因为失“正”（今58章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-22.html">二十二、深根固柢，长生久视之道也（今59章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-23.html">二十三、治大国若烹小鲜（今60章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-24.html">二十四、静能制动，雌能胜雄（今61章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-25.html">二十五、有道，比有礼更重要（今62章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-26.html">二十六、要成大事，先做小事（今63章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-27.html">二十七、事成于惧，而败于忽（今64章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-28.html">二十八、幸福人生，不需要聪明（今65章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-29.html">二十九、不争，才是最高明的争（今66章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-30.html">三十、小邦寡民，不是乌托邦（今80章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-31.html">三十一、成就自己的最高形式，是成就他人（今81章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-32.html">三十二、道家三宝：慈、俭、不敢为天下先（今67章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-33.html">三十三、不争，才能做到善用人（今68章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-34.html">三十四、最大的祸事，是不懂得节制（今69章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-35.html">三十五、最简单，要做到反而最难（今70章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-36.html">三十六、明道，从认知自己的局限开始（今71章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-37.html">三十七、强力威压，只会得到厌憎（今72章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-38.html">三十八、天网恢恢，疏而不失（今73章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-39.html">三十九、替天行道，往往伤到自己（今74章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-40.html">四十、厚待自己，但不要压迫别人（今75章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-41.html">四十一、柔弱，是“生”的象征（今76章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-42.html">四十二、天之道，损有余而补不足（今77章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-43.html">四十三、柔弱胜刚强，易知却难行（今78章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/de-jing/chapter-44.html">四十四、天道无亲，恒与善人（今79章）</a></li>
+</ul>
+</details></li>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/index.html">道经</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-01.html">四十五、道，不是玄（今1章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-02.html">四十六、道，不是阴阳（今2章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-03.html">四十七、守住本根，天下自宁（今3章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-04.html">四十八、唯有虚空，可容万物（今4章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-05.html">四十九、“不仁”方是大爱（今5章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-06.html">五十、谷神不死，万物不穷（今6章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-07.html">五十一、不自生而得长生，无私而成其私（今7章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-08.html">五十二、“上善若水”与儒道理念之争（今8章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-09.html">五十三、功成容易，身退难（今9章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-10.html">五十四、修道者观照自身的六大准则（今10章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-11.html">五十五、有之以为利，无之以为用（今11章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-12.html">五十六、欲望，遮蔽人向道的途径（今12章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-13.html">五十七、养生，比治理天下更重要（今13章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-14.html">五十八、执“今”之道还是执“古”之道？（今14章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-15.html">五十九、老子眼中的有道者，是什么表现？（今15章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-16.html">六十、观天地万物，在于“观复”（今16章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-17.html">六十一、对我们最好的，反而感受不到（今17章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-18.html">六十二、道家“绝仁弃义”的内在逻辑（今18章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-19.html">六十三、为什么要“绝圣弃智”？（今19章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-20.html">六十四、有道之人与俗人有什么不一样？（今20章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-21.html">六十五、古人是如何觉知有“道”的？（今21章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-22.html">六十六、一己之力易穷尽，建功立业难有成（今24章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-23.html">六十七、道家追求的不是“委曲求全”（今22章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-24.html">六十八、越是领导者，越要讲道、德（今23章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-25.html">六十九、什么是“道法自然”？（今25章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-26.html">七十、不离辎重，才能活得轻松（今26章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-27.html">七十一、什么样的人，可称为“善人”？（今27章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-28.html">七十二、如何具备“恒德”？（今28章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-29.html">七十三、天下不可平，为者败之（今29章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-30.html">七十四、真正的强者，不会逞强（今30章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-31.html">七十五、杀伤之器勿轻用，更不能喜欢用（今31章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-32.html">七十六、面对自然规则，人要学会知止（今32章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-33.html">七十七、知人与自知，哪个更高明？（今33章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-34.html">七十八、无私欲，才能成就伟大（今34章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-35.html">七十九、道凭什么吸引人来归附？（今35章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-36.html">八十、失去德，道术也就成了阴谋（今36章）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../philosophy/laozi-boshu/dao-jing/chapter-37.html">八十一、真实，是中正不倚的基础（今37章）</a></li>
+</ul>
+</details></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../philosophy/laozi-boshu/appendix/phonetic.html">附录·帛书《老子》注音版</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../cosmology/index.html">万物理论</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../../cosmology/psi-awakening-theory/index.html">Ψhē 觉醒理论</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4 has-children"><a class="reference internal" href="../../../cosmology/psi-awakening-theory/popular-guide/index.html">觉醒指南：现实的终极秘密</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../cosmology/psi-awakening-theory/popular-guide/chapter-01-the-mirror-that-is-you.html">第1章：镜子就是你</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../cosmology/psi-awakening-theory/popular-guide/chapter-02-why-reality-feels-real.html">第2章：为什么现实感觉如此真实（其实不是）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../cosmology/psi-awakening-theory/popular-guide/chapter-03-you-are-a-universe.html">第3章：你不在宇宙之中——你就是宇宙</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../cosmology/psi-awakening-theory/popular-guide/chapter-04-the-awakening-scale.html">第4章：觉醒刻度——你在哪里？</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../cosmology/psi-awakening-theory/popular-guide/chapter-05-why-people-dont-get-you.html">第5章：为什么有些人就是不懂你</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../cosmology/psi-awakening-theory/popular-guide/chapter-06-time-is-not-what-you-think.html">第6章：时间不是你想的那样</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../cosmology/psi-awakening-theory/popular-guide/chapter-07-death-dreams-illusions.html">第7章：死亡、梦境和其他幻象</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../cosmology/psi-awakening-theory/popular-guide/chapter-08-practical-awakening.html">第8章：实践觉醒——日常练习</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../cosmology/psi-awakening-theory/popular-guide/diagrams.html">视觉指南：用图理解核心概念</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../index.html">旋元佑进阶语法笔记</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../intro.html">前言</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../preface.html">序：我学英语的经验</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide.html">引：广读学英语</a></li>
+<li class="toctree-l3 current active has-children"><a class="reference internal" href="index.html">正文</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="chapter-01-simple-sentences.html">第一章 基本句型</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-02-noun-phrases.html">第二章 名词短语</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-03-pronouns.html">第三章 代名词</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-04-adjective.html">第四章 形容词</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-05-adverb.html">第五章 副词</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-06-comparative-pattern.html">第六章 比较句法</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-07-prepositions.html">第七章 介词</a></li>
+<li class="toctree-l4 current active"><a class="current reference internal" href="#">第八章 分词</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-09-verb-tenses.html">第九章 动词时态</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-10-voice.html">第十章 语态</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-11-auxiliaries.html">第十一章 语气助动词</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-12-moods.html">第十二章 语气</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-13-gerund.html">第十三章 动名词</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-14-infinitive.html">第十四章 不定式短语</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-15-conjunction.html">第十五章 对等连词</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-16-compound-sentences.html">第十六章 复合句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-17-noun-clauses.html">第十七章 名词从句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-18-adverb-clauses.html">第十八章 副词从句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-19-relative-clauses.html">第十九章 关系从句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-20-subject-verb-agreement.html">第二十章 主语动词一致性</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-21-inversion.html">第二十一章 倒装句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-22-reduced-clauses.html">第二十二章 简化从句</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-23-relative-clauses-reduced.html">第二十三章 关系从句简化</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-24-noun-clauses-reduced.html">第二十四章 名词从句简化</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chapter-25-adverb-clauses-reduced.html">第二十五章 副词从句简化</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3"><a class="reference internal" href="../appendix/terminology.html">大陆与台湾英语术语对照表</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/xinetzone/tao" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="源码库"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/xinetzone/tao/blob/main/docs/general/linguistics/english-grammar/chapter/chapter-08-participles.md?plain=1" target="_blank"
+   class="btn btn-sm btn-source-file-button dropdown-item"
+   title="Show source"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-code"></i>
+  </span>
+<span class="btn__text-container">Show source</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/xinetzone/tao/edit/main/docs/general/linguistics/english-grammar/chapter/chapter-08-participles.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/xinetzone/tao/issues/new?title=Issue%20on%20page%20%2Fgeneral/linguistics/english-grammar/chapter/chapter-08-participles.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="创建议题"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="下载此页面">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../_sources/" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="下载源文件"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="列印成 PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="全屏模式"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="亮色"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="暗色"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>亮色</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>暗色</button></li>
+  </ul>
+</div>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="搜索" aria-label="搜索" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>第八章 分词</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> 目录 </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">分词视为形容词</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">一、名词短语中</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">二、补语位置</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">分词的动词用法与形容词用法比较</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">一、过去分词</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">二、现在分词</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="id1">
+<h1>第八章 分词<a class="headerlink" href="#id1" title="链接到此标题。">#</a></h1>
+<section id="id2">
+<h2>分词视为形容词<a class="headerlink" href="#id2" title="链接到此标题。">#</a></h2>
+<p><strong>过去分词（V-en）</strong>​，如果前面配合助动词 have，成为 have + V-en，这种构造应视为完成时的动词短语看待。除了这种情况之外，过去分词与现在分词（V-ing），这两种分词都可以当作形容词看待。</p>
+<p>如果分词的构造单纯（例如只有一个单词），可以直接视为动词的词类变化看待：把限定动词变成现在分词或过去分词，就是把动词的词类转变成形容词来使用。如果是比较庞大的分词短语（例如里面还有宾语、补语、副词等等），那么采用简化从句来诠释会比较完整，这是后话。</p>
+<p>先前在第四章介绍形容词时提过，形容词有两种主要的位​​置：名词短语中、以及补语位置。观察一下不难发现：这两个位置都可以放进分词，由此可见分词确实可以当做形容词使用。以下就形容词这两种主要位置分别说明分词的用法。</p>
+<section id="id3">
+<h3>一、名词短语中<a class="headerlink" href="#id3" title="链接到此标题。">#</a></h3>
+<p>This is a <u>good</u> book.（这是一本好书。）</p>
+<p>形容词 good 放在限定词 a 与名词 book 中间，这是「名词短语中」的形容词位置，这种形容词称为 attributive adjectives。这个位置也可以放进分词当形容词使用，如下面这两个例子：</p>
+<ol class="arabic">
+<li><p>This is a <u>best-selling</u> book.（这是一本畅销书。）</p>
+<p>现在分词 best-selling 放在「名词短语中」的形容词位置，当作形容词使用。不过现在分词多了一项特色：它的 -ing 词尾具有「持续、进行」的暗示，所以 best-selling 带有「正在畅销的、一直畅销的」暗示。也就是说，这个现在分词虽然当形容词使用，却还是能够表达「进行」状态。</p>
+</li>
+<li><p>This is a <u>well-written</u> book.（这是一本写得很好的书。）</p>
+<p>过去分词 well-written 也可以放在「名词短语中」的形容词位置，表示它同样也可以当形容词使用。过去分词也有自己的一项特色：它具有「被动」或「完成」的暗示。所以，well-written 这个过去分词虽然当作形容词使用，却仍然带有「被动」语态（表示「被写得很好」），以及「完成」​​状态（表示「已经写好」）。</p>
+</li>
+</ol>
+</section>
+<section id="id4">
+<h3>二、补语位置<a class="headerlink" href="#id4" title="链接到此标题。">#</a></h3>
+<p>形容词除了放在名词短语中，另一个主要的位置就是补语位置。这个位置的形容词称为 predicative adjectives，例如：</p>
+<ul>
+<li><p>The book is <u>good</u>.（这本书很好。）</p>
+<p>形容词 good 放在 is 后面当主语补足语使用、修饰主语 the book。这个位置也可以放进分词（现在分词与过去分词），如下：</p>
+</li>
+<li><p>The book is <u>selling well</u>.（这本书卖得很好。）</p>
+<p>依照传统语法的诠释，这个句子的动词应该是 is selling 这个动词短语，称为「现在进行时」。这是正确的诠释。但是如果采用传统语法的诠释方式，动词时态有24种之多，非常复杂。反之，如果另辟蹊径、变通一下，认定 be 动词就是动词、后面的分​​词是形容词补语，那么时态的问题就会变得非常简单。拿上面这个例子来说，简单化的诠释是这样的：动词是 is，它的时态是「一般现在时」，后面 selling well 这个分词短语是形容词短语，当主语补足语使用，修饰主语 the book。现在分词的 -ing 词尾表达「进行」状态，所以 selling well 这个形容词短语表示这本书「正在」或「一直」卖得很好。</p>
+</li>
+<li><p>The book is <u>well written</u>.（这本书写得很好。）</p>
+<p>依照传统语法的诠释，这个句子的动词应该是 is written 这个动词短语，称为「现在简单被动态」。简单化的诠释则是一律认定 be 为动词，后面 well written 这个过去分词短语就当形容词补语看待、修饰主语 the book。过去分词的词尾具有「被动」语态或「完成」状态，所以 well written 这个形容词短语表示这本书「被写」或「已经写」得很好。</p>
+</li>
+</ul>
+</section>
+</section>
+<section id="id5">
+<h2>分词的动词用法与形容词用法比较<a class="headerlink" href="#id5" title="链接到此标题。">#</a></h2>
+<p>如上所述，复杂的动词时态要想简单化，可以认定 be 为动词、后面的分​​词为形容词补语。这是取其简单化的看法，忽略掉比较细微的差别。事实上，分词可以当动词使用、也可以当形容词使用，两种用法之间是有一些差异的。要先了解有哪些差别存在，然后才可以放心地忽略这些差别。先来看看过去分词的用法。</p>
+<section id="id6">
+<h3>一、过去分词<a class="headerlink" href="#id6" title="链接到此标题。">#</a></h3>
+<p>看看下面的例子：</p>
+<ol class="arabic simple">
+<li><p>The man <u>was dressed</u> by his valet this morning.（此人今天早上是由他的仆人伺候穿衣的。）</p></li>
+<li><p>He is <u>dressed</u> in blue.（他身穿蓝色衣服。）</p></li>
+</ol>
+<p>第 1 句是个被动语态的句子，动词是被动态的动词短语 was dressed，后面有被动态专用的介系词 by 表示「被谁」。时间副词 this morning 是过去时间，因此动词采用过去式的 was dressed，表示穿衣服的「动作」发生在过去。这些观察在在都表示这个句子的动词是 was dressed，过去分词 dressed 属于动词短语中的一部分。</p>
+<p>第 2 句的情况就不一样了。动词 is 用的是现在时，表示时间是「现在」。后面的过去分词 dressed 是形容词，用来「描述」此人目前的穿着，而非表示穿衣的「动作」（那是发生在过去的事情，应采用过去式）。采用过去分词 dressed，表示的是「完成」状态：描述此人「穿了」蓝衣服。</p>
+<p>以上的观察显示，dressed 当作动词使用和当作形容词使用，两种用法之间确有差别，这项差别是语法学家必须了解的。不过这项差别非常细微，从语言学习者的角度来看，忽略这项差别也没有什么关系。换句话说，包括上列第 1 句也可以认定 was 为动词、后面的分​​词 dressed by his valet 为形容词短语作为主语补足语，句型诠释和第 2 句相同。这种诠释方式虽不十分严谨，但是有简单化的好处。</p>
+<p>再来看下面的例子：</p>
+<ol class="arabic simple">
+<li><p>I <u>was annoyed</u> by mosquitoes all night last night.（我昨晚被蚊子吵了一整夜。）</p></li>
+<li><p>I am very <u>annoyed</u> with him.（我对他相当反感。）</p></li>
+</ol>
+<p>第 1 句的时间是过去（last night），动词采用过去式的被动态动词短语 was annoyed，后面有 by 引导的介系词短语来表示「被谁」。这些观察显示这个句子的动词是 was annoyed，过去分词 annoyed 属于动词短语中的一部分。</p>
+<p>第 2 句的情况不同。在过去分词 annoyed 前面可以加上强调语气的副词 very，这表示 annoyed 在此是当形容词使用，作为主语补足语、修饰主语 I。这个句子的句型和 I am very angry with him 类似，annoyed 和 angry 同样都是当形容词补语使用。</p>
+<p>以上是详细的区分。不过，从语言学习者的角度来看，忽略上述的差别，一律认定 be 为动词、后面的过去分词为形容词补语，这种简单化的诠释也可以行得通。例如上列第 1 句，也可以选择把 was 视为动词、后面的分​​词 annoyed by mosquitoes 视为形容词补语。这是为了求其简单与统一，把第 1 句和第 2 句的句型作相同的诠释。过去分词 annoyed 本身具有「被动」语态，表示「被打扰」。</p>
+<blockquote>
+<div><p>be + V-en = 被动态？</p>
+</div></blockquote>
+<p>传统语法列出公式「be + V-en = 被动态」，这一类的公式有一些共同的缺点。首先，传统语法中的公式太多，一个小小的变化就可以产生出一条公式，结果造成语言学习者背不胜背、记忆力不堪负荷。其次，这些公式往往都是以偏盖全，语言学习者在套公式时经常会套错，因此每一条公式又会衍生出若干条「例外」。学习者不只是背公式就算了，还得把一堆例外统统背起来才行。这种学习方式徒然增加学习者的负担，令许多学习者闻语法而色变、对语法望而却步，坦白说是相当拙劣的学习方式。将动词时态归纳为多达 24 种，就是很不科学的学习方法。</p>
+<p>比较聪明的方法是不要管那些无穷无尽的公式，而是设法去理解诸如现在分词、过去分词等少数几个「元件」的性质与用法，再加以排列组合就可以应用在各式各样的情境中。这种情况有如学单词：一个个单词去死背，那么有数十万个单词要背；反之，如果熟悉了一、两百个词根词缀，再用排列组合的方式来诠释单词，记忆的负担就可大幅减轻。以「be + V-en = 被动态」这条公式而言，学习者如果能够掌握过去分词的特质，知道它可以当形容词使用、本身具有「被动」语态或「完成」状态，就能充分运用它在英文写作中、不必去背那些公式。例如：</p>
+<ul class="simple">
+<li><p>My wallet <u>was</u> <u>stolen</u> last night.（我的皮夹昨晚被偷了。）</p></li>
+</ul>
+<p>传统语法认定 was stolen 为被动态的动词短语。比较简单的看法则是一律认定 be 为动词（时间是 last night 所以采用过去式的 was），后面的过去分词 stolen 认定为形容词补语、本身具有「被动」语态，表示「被偷」，用来修饰主语 my wallet。以这种方式来诠释，就不必去背「be + V-en = 被动态」这条公式了。请比较一下这两个句子：</p>
+<ol class="arabic">
+<li><p><u>I</u> <u>found</u> <u>my wallet</u> <u>stolen</u>. S V O C（我发觉我的皮夹被偷了。）</p>
+<p>传统语法对这个句子的诠释，也必须认定 my wallet 是宾语，后面的过去分词 stolen 是形容词、当宾语补足语使用。当然，上面这个句子就是下面这句的简化：</p>
+</li>
+<li><p><u>I</u> <u>found</u> <u>that my wallet was stolen</u>. S V O（名词从句）</p>
+<p>其中的名词从句 my wallet was stolen，句型和上列第 1 句完全相同。如果把 was 视为动词，后面的 stolen 视为形容词、当主语补足语使用，那么由此简化为上面第 2 句 I found my wallet stolen（my wallet 成为宾语、stolen 成为宾语补足语）就是顺理成章的变化。</p>
+</li>
+</ol>
+<p>「be + V-en = 被动态」这条公式不仅没有必要去背它，有时还会有误导之嫌。因为，过去分词放在 be 动词后面成为 be + V-en 的形态，有时并不表示被动语态。而且，过去分词就算不放在 be 动词后面，经常还是要加上被动语态来解释。所以，「be + V-en = 被动态」这条公式实在没有多大的意义。看看下面的例子：</p>
+<ul>
+<li><p>I can’t find my wallet. It’<u>s</u> <u>gone</u>.（我找不到皮夹。不见了。）</p>
+<p>后面那一句的动词如果认定为 is gone，就符合 be + V-en 的构造，但是它并非被动态。因为 go 这个动词是个不及物动词，并没有被动态可言。过去分词 gone 虽然放在 is 后面成为 be + V-en 的构造，仍不能作被动态动词解释，而应该把 gone 当作形容词使用，解释为「跑掉了，不见了」，也就是作「完成」状态解释。前面说过，过去分词可以表示「被动」语态或「完成」状态，这里就是解释为「完成」状态的一个例子。再看看下面这个句子：</p>
+<ul>
+<li><p>I’<u>m</u> <u>done</u>. It’s all yours.（我用完了。交给你了。）</p>
+<p>比方你在提款机前面办完了手续，让给排在后面的人使用时就可以加上这么一句。这里的动词 do 是个及物动词，但是 am done 虽然符合「be + V-en」的构造，却仍然不能作被动态解释。因为它在这里的意思显然不是说我「被做掉」，而是说我「已经做完」。所以，过去分词 done 在这里要当作形容词看待，不表示被动语态而是表示「完成」状态，也就是「已经」做完的意思。还有一个明显的例子：</p>
+<ul>
+<li><p>The leaves <u>are</u> <u>fallen</u>.（叶子都落光了。）</p>
+<p>同样的，are fallen 也符合「be + V-en」的构造，但是仍然不能解释为被动态，因为动词 fall 是不及物动词、并没有被动态可言。这时候过去分词 fallen 必须当形容词解释，表示「完成」状态，也就是说叶子「已经」掉落。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>看了上面几个例子，全部都是 be + V-en 却都不能当作被动态解释。所以，「be + V-en = 被动态」这条规则显然并不可靠。反之，过去分词就算没有放在 be 动词后面，却经常要作被动态解释，例如：</p>
+<ul class="simple">
+<li><p>spilt milk 洒出来的牛奶</p></li>
+<li><p>a wounded soldier 伤兵</p></li>
+<li><p>burnt-down houses 被烧毁的房子</p></li>
+</ul>
+<p>这三个例子都是名词短语。其中 milk 是物质名词、不可数，前面采用了零冠词。中间形容词位置放的是过去分词 spilt，表示「被洒出来」和「已经洒出来」，兼具被动语态与完成状态。 A wounded soldier 这个名词短语在中间形容词位置放的是过去分词 wounded，表示「被打伤」和「已经受伤」，也是兼具被动语态与完成状态。最后一个例子中的 houses 是复数、前面采用了零冠词，中间形容词位置放的是过去分词的复合词 burnt-down，表示「被烧毁」和「已经烧毁了」，兼具被动语态与完成状态。由这三个例子可以看出：过去分词没有放在 be 动词后面，仍然可以有被动语态。</p>
+<p>由以上观察可知，be + V-en 不一定是被动语态，反而单独的 V-en 也能够表达被动语态。所以「be + V-en = 被动态」这种公式不是很有意义，不如分开来理解：be 是动词、后面的过去分词是形容词补语，V-en 本身可以表示被动语态或完成状态。</p>
+</section>
+<section id="id7">
+<h3>二、现在分词<a class="headerlink" href="#id7" title="链接到此标题。">#</a></h3>
+<p>和过去分词一样，现在分词也有动词用法与形容词用法的差别，但也可以选择忽略这个细微的差别。先看看下面的例子：</p>
+<ol class="arabic simple">
+<li><p>The dog <u>was sleeping</u> under the car then.（那只狗当时正在汽车底下睡觉。）</p></li>
+<li><p>The story is rather <u>interesting</u>.（这个故事蛮有意思的。）</p></li>
+</ol>
+<p>第 1 句中的动词是过去进行时 was sleeping，表示「正在睡觉」或「一直睡觉」。现在分词 sleeping 属于动词短语中的一部分，所以是当动词使用。第 2 句的动词则是一般现在时的 is，后面的现在分词 interesting 是个形容词、当作主语补足语。有一个比较明显的线索是在 interesting 前面有个程度副词 rather 修饰它，可以看出 interesting 不是动词、而是形容词。</p>
+<p>从上面两个句子可以看出，现在分词有时​​候是动词短语的一部分、当动词使用，也有时候独立当作形容词使用。这两种用法之间确实有差别。不过，其间的差别相当细微，从语言学习者的角度来看可以忽略。换句话说，包括上列第 1 句也可以认定 was 为动词、后面的现在分词 sleeping 为形容词作为主语补足语，句型诠释和第 2 句相同。现在分词词尾的 -ing 本身就可以表达「进行」状态。这是求其简单化的诠释。</p>
+<blockquote>
+<div><p>be + V-ing = 进行时？</p>
+</div></blockquote>
+<p>传统语法还有一条基本规则是「be + V-ing = 进行时」。这条规则也不是很有意义。因为，be + V-ing 不一定是进行时。反之，没有 be 动词时，独立的 V-ing 还是可以表达进行状态。例如：</p>
+<ul>
+<li><p>The movie was really <u>boring</u>.（这部电影真的很无聊。）</p>
+<p>这个句子里面虽然有 be + V-ing（was boring），却不是进行时。句中的动词是一般过去时的 was，后面的现在分词 boring 是形容词，当作主语补足语、修饰主语 the movie。反之：</p>
+<ul class="simple">
+<li><p>drifting leaves 随水漂流的树叶</p></li>
+<li><p>singing birds 在唱歌的鸟</p></li>
+<li><p>a sinking ship 逐渐沉没的船只</p></li>
+</ul>
+<p>这三个名词短语，中间都有现在分词当作形容词。这三个现在分词都没有放在 be 动词后面、却都表现出「进行」状态：drifting 是「正在」漂流、singing 是「正在」唱歌、sinking 是「正在」沉没。</p>
+</li>
+</ul>
+<p>另外，即使是传统语法认定的进行时，如果换个角度诠释，把 be 视为动词、后面的现在分词视为具有「进行」状态的形容词，也都可以讲得通，句型的变化也会比较灵活。例如：</p>
+<ol class="arabic simple">
+<li><p><u>I</u> <u>saw</u> <u>that the tree was swaying in the breeze</u>. S V O（名词从句）</p></li>
+<li><p><u>I</u> <u>saw</u> <u>the tree</u> <u>swaying</u> in the breeze. S V O C（我看到树在风中摇摆。）</p></li>
+</ol>
+<p>第 1 句的宾语从句中，动词是 was swaying 这个过去进行时的动词短语，现在分词 swaying 是动词中的一部分。但是，这个句子一旦简化成为第 2 句，传统语法也不得不改变诠释，将现在分词 swaying 视为形容词、当作宾语补足语看待。既然如此，为何不直接把第 1 句中 the tree was swaying 的 swaying 也视为形容词补语、was 视为动词？简单的看法是：凡是 be 动词都认定为动词、后面的分​​词（不论现在分词还是过去分词）视为形容词补语，这样做至少有驾简驭繁的好处。动词时态也会相对变得简单许多。更重要的是，以这种方式诠释各式各样的简化从句，包括分词构句、同位格、动名词、不定词短语等等，都会很容易理解。</p>
+<p>再看一个比较复杂的例子：</p>
+<ol class="arabic simple">
+<li><p><u>We</u> <u>found</u> <u>that he was teaching his son English at home</u>. S V O（我们发现他在家里教儿子英文。）</p></li>
+<li><p><u>We</u> <u>found</u> <u>him</u> <u>teaching his son English at home</u>. S V O C</p></li>
+</ol>
+<p>第 1 句中的宾语从句，传统语法一般是如此诠释：</p>
+<ul>
+<li><p><u>he</u> <u>was teaching</u> <u>his son</u> <u>English</u> at home. S V O1 O2</p>
+<p>动词是过去进行时的动词短语 was teaching，现在分词 teaching 属于动词的一部分，后面的 his son 与 English 分别是两个宾语。不过，如果采简单化的诠释一以贯之，一律认定 be 为动词、后面的分​​词短语为形容词补语，那么这个名词从句的构造如下：</p>
+</li>
+<li><p><u>he</u> <u>was</u> <u>teaching his son English at home</u>. S V C</p>
+<p>这时候动词就是 was，一般过去时，后面的 teaching his son English at home 是现在分词短语，当形容词补语使用（主语补足语），修饰主语 he。现在分词 -ing 词尾表达「进行」状态，所以有「正在」教的意思。这种诠释方式除了简单化，还有一项好处：很容易由此简化成为上列的第 2 句 We found him teaching his son English at home。在第 2 句中，teaching his son English at home 是现在分词短语，当形容词补语使用（宾语补足语），修饰宾语 him。</p>
+</li>
+</ul>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="chapter-07-prepositions.html"
+       title="上一页">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">上一页</p>
+        <p class="prev-next-title">第七章 介词</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="chapter-09-verb-tenses.html"
+       title="下一页">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">下一页</p>
+        <p class="prev-next-title">第九章 动词时态</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> 目录
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">分词视为形容词</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">一、名词短语中</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">二、补语位置</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">分词的动词用法与形容词用法比较</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">一、过去分词</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">二、现在分词</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+作者： AI Dao
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026, AI Dao.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="last-updated">
+  最后更新于 2026-05-29, 16:17:36.
+  <br/>
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

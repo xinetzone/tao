@@ -1,2 +1,4 @@
 .qoder/
 .temp/
+__pycache__/
+.git-rewrite/

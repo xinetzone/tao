@@ -1,0 +1,84 @@
+/* === Try Examples按钮样式 === */
+/* 为代码示例提供交互体验的按钮和容器样式 */
+
+:root {
+  --jupyter-light-primary: #f7dc1e;
+  --jupyter-light-primary-muted: #fff221;
+  --button-transition-speed: 0.2s;
+}
+
+/* 尝试示例按钮 */
+.try_examples_button {
+  background-color: var(--jupyter-light-primary);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-family: vibur;
+  font-size: larger;
+  box-shadow: 0 2px 5px rgba(108, 108, 108, 0.2);
+  transition: all var(--button-transition-speed) ease;
+  cursor: pointer;
+  outline: none;
+}
+
+.try_examples_button:hover {
+  background-color: var(--jupyter-light-primary-muted);
+  transform: scale(1.02);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.try_examples_button:active {
+  transform: scale(0.98);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* 按钮容器 */
+.try_examples_button_container {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px 0;
+}
+
+/* 示例容器 */
+.try_examples_outer_container,
+.try_examples_outer_iframe {
+  flex-direction: column-reverse;
+  display: flex;
+  margin: 10px 0;
+}
+
+/* 覆盖隐藏类，确保隐藏状态优先级 */
+.try_examples_outer_container.hidden,
+.try_examples_outer_iframe.hidden {
+  display: none;
+}
+
+/* blue-bottom类的自定义样式 */
+.blue-bottom .try_examples_button_container {
+  justify-content: flex-start;
+}
+
+.blue-bottom .try_examples_button {
+  background-color: #00bcd4;
+  color: white;
+}
+
+.blue-bottom button.try_examples_button:hover {
+  background-color: #2196f3;
+}
+
+/* 响应式设计 */
+@media screen and (max-width: 768px) {
+  .try_examples_button {
+    padding: 4px 8px;
+    font-size: medium;
+  }
+  
+  .try_examples_button_container {
+    justify-content: center;
+  }
+  
+  .blue-bottom .try_examples_button_container {
+    justify-content: center;
+  }
+}

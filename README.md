@@ -53,6 +53,8 @@ apps/chaos/         持续萃取      rebirth/
 - **`apps/chaos/`** — 一切未精炼的原始探索：哲学内核（Ψ=Ψ(Ψ)、道德经）、实验性代码、个人知识库、技能生态。信息在此自由生长。
 - **`rebirth/`** — 从 chaos 持续萃取、去个人化后的精炼产出，以 git submodule 链接到 [WorldSprout](https://github.com/worldsprout) 组织，作为可独立发布的社区开放标准。
 
+<!-- end-doc-include -->
+
 ## AGENTS.md 开放标准
 
 `AGENTS.md` 是一个独立的社区开放标准——只需在项目根目录放一个 `AGENTS.md` 文件，AI 工具就能自动读取项目指令。OpenAI Codex、Google Jules、GitHub Copilot、Cursor 等 30+ 工具原生支持，**零依赖**。

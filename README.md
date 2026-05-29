@@ -69,13 +69,13 @@ AgentForge 在此基础上提供渐进可选扩展（`.agents/` 目录、`world.
 cd apps/chaos
 
 # 安装依赖
-uv sync --extra docs
+uv sync --group dev --group docs
 
 # 运行测试
 uv run pytest
 
 # 构建文档
-uv run invoke docs
+mise run docs-html
 ```
 
 ### 面向 AI 协作者

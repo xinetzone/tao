@@ -33,15 +33,16 @@ AgentForge/                            ← 本仓库（github.com/xinetzone/Agen
 ├── LICENSE                            ← Apache 2.0
 ├── docs/                              ← 人类文档（tech/ + general/ 双轨）
 ├── .github/workflows/                 ← CI/CD 流水线
-├── .agents/                           ← 仓库级 AI 配置骨架（world.toml + constraints.toml + registry.toml）
 │
-├── apps/chaos/                        ← 混沌态：原始孵化器——自由探索、未精炼的一切
-│   ├── AGENTS.md                      ← chaos 子项目路由（嵌套优先）
-│   ├── .agents/                       ← 规则/技能/工作流/角色/知识库（Layer 1/2/3 完整）
-│   ├── specs/                         ← AgentForge Spec v0.2 规范文档
-│   ├── src/taolib/                    ← world CLI + 约束校验器 + 参考实现
-│   ├── tests/                         ← 测试套件
-│   └── pyproject.toml                 ← Python 项目配置（pdm-backend + SCM 动态版本）
+├── apps/                              ← 应用层
+│   ├── .agents/                       ← 仓库级 AI 配置骨架（world.toml + constraints.toml + registry.toml）
+│   └── chaos/                         ← 混沌态：原始孵化器——自由探索、未精炼的一切
+│       ├── AGENTS.md                  ← chaos 子项目路由（嵌套优先）
+│       ├── .agents/                   ← 规则/技能/工作流/角色/知识库（Layer 1/2/3 完整）
+│       ├── specs/                     ← AgentForge Spec v0.2 规范文档
+│       ├── src/taolib/                ← world CLI + 约束校验器 + 参考实现
+│       ├── tests/                     ← 测试套件
+│       └── pyproject.toml             ← Python 项目配置（pdm-backend + SCM 动态版本）
 │
 └── rebirth/                           ← 脱胎态：从 chaos 萃取精炼后的社区标准（git submodule）
     ├── worldsprout/ (submodule)       → github.com/worldsprout/worldsprout（参考实现）
@@ -104,7 +105,7 @@ flowchart TD
 | 目录 | 面向对象 | 职责 |
 |------|----------|------|
 | `README.md` + `docs/` | 人类开发者 | 项目说明、技术文档、贡献指南 |
-| `.agents/docs/` | AI 智能体 | AI 专属知识库（参考、指南、沉淀） |
+| `apps/.agents/docs/` | AI 智能体 | AI 专属知识库（参考、指南、沉淀） |
 | `specs/` | 人类与 AI 公约数 | AgentForge Spec 规范文档，独立于人与 AI 各自的知识库 |
 
 ### 4.2 产物边界
@@ -166,9 +167,9 @@ flowchart LR
 
 ## 7. 跨工具目录桥接
 
-`.agents/` 的语义与主流 AI 工具目录存在映射关系：
+`apps/.agents/` 的语义与主流 AI 工具目录存在映射关系：
 
-| `.agents/` | `.claude/` (Claude Code) | `.github/` (Copilot) | 语义 |
+| `apps/.agents/` | `.claude/` (Claude Code) | `.github/` (Copilot) | 语义 |
 |---|---|---|---|
 | `rules/` | `rules/` | `agents/` | 领域规则，支持 `paths:` glob 条件加载 |
 | `skills/` | `skills/` | — | 技能资产，SKILL.md 含 YAML frontmatter |

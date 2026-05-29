@@ -104,15 +104,16 @@ AgentForge/
 ├── README.md              ← 本文件：人类开发者入口
 ├── LICENSE                ← Apache 2.0
 │
-├── apps/chaos/            ← 混沌态：原始孵化器
-│   ├── AGENTS.md          ← chaos 子项目路由
-│   ├── .agents/           ← 规则/技能/工作流/角色
-│   ├── specs/             ← AgentForge Spec v0.2
-│   └── src/taolib/        ← world CLI + 参考实现
+├── apps/                  ← 应用层
+│   ├── .agents/           ← 仓库级 AI 配置骨架
+│   └── chaos/             ← 混沌态：原始孵化器
+│       ├── AGENTS.md      ← chaos 子项目路由
+│       ├── .agents/       ← 规则/技能/工作流/角色
+│       ├── specs/         ← AgentForge Spec v0.2
+│       └── src/taolib/    ← world CLI + 参考实现
 │
 ├── docs/                  ← 人类文档（tech/ + general/ 双轨）
 ├── .github/workflows/     ← CI/CD 流水线
-├── .agents/               ← 仓库级 AI 配置骨架
 │
 └── rebirth/               ← 脱胎态：WorldSprout 标准（git submodule）
     ├── worldsprout/       → github.com/worldsprout/worldsprout

@@ -238,7 +238,7 @@ AgentForge 当前阶段推荐 **Git 模板仓库 + 手动 compose**：
 
 ### 实例
 
-本项目的 `world.toml` 位于 [`.agents/world.toml`](../../../../.agents/world.toml)。
+本项目的 `world.toml` 位于 [`.agents/world.toml`](../../../../apps/.agents/world.toml)。
 
 ### 未来演进
 

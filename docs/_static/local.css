@@ -12,6 +12,66 @@ body {
     text-rendering: optimizeLegibility;
 }
 
+/* ================================= 窄屏核心修复 ================================= */
+
+/* 公告横幅：移动端隐藏，节省首屏空间 */
+@media (max-width: 768px) {
+    .bd-header-announcement {
+        display: none !important;
+    }
+}
+
+/* Badge 徽章：窄屏下紧凑排列 */
+@media (max-width: 768px) {
+    /* README.md 中 shields.io badge 图片容器 */
+    main img[src*="img.shields.io"] {
+        height: 18px !important;
+        margin: 2px 1px !important;
+    }
+    /* badge 所在的段落允许换行 */
+    main p:has(img[src*="img.shields.io"]) {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px 4px;
+        line-height: 1;
+        margin-bottom: 0.75rem;
+    }
+}
+
+/* 精简窄屏工具栏按钮 */
+@media (max-width: 480px) {
+    /* 隐藏下载、全屏按钮（小屏低频操作） */
+    .bd-header-article .bi-download,
+    button:has(.bi-download),
+    .bd-header-article .bi-arrows-fullscreen,
+    button:has(.bi-arrows-fullscreen) {
+        display: none !important;
+    }
+    /* 隐藏源码/编辑按钮 */
+    .bi-github + span,
+    a:has(.bi-github):not([aria-label*="repository"]) {
+        /* 保留仓库链接，隐藏源码查看 */
+    }
+}
+
+/* 窄屏下侧边栏切换按钮增强可见性 */
+@media (max-width: 768px) {
+    .bd-sidebar-toggle {
+        opacity: 1 !important;
+        background: var(--color-accent) !important;
+        color: #fff !important;
+        border-radius: 50% !important;
+        width: 40px !important;
+        height: 40px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+    }
+    /* 主侧边栏滑出时添加阴影 */
+    .bd-sidebar-primary.show,
+    .bd-sidebar-primary:not([style*="visibility: hidden"]) {
+        box-shadow: 2px 0 12px rgba(0,0,0,0.15) !important;
+    }
+}
+
 /* 移动设备通用样式 */
 @media (max-width: 768px) {
 
@@ -538,6 +598,45 @@ textarea {
     pre,
     code {
         font-size: 10pt;
+    }
+}
+
+/* ================================= 窄屏导航与排版增强 ================================= */
+
+/* 前后页导航在移动端更紧凑 */
+@media (max-width: 576px) {
+    .bd-footer-article {
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0.75rem 0;
+    }
+    .bd-footer-article .footer-article-button {
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+/* 移动端文章标题区域优化 */
+@media (max-width: 768px) {
+    article h1:first-of-type {
+        font-size: 1.65rem;
+        line-height: 1.35;
+        margin-top: 0;
+        margin-bottom: 0.75rem;
+    }
+    /* 代码块在窄屏下减小字号 */
+    div.highlight pre {
+        font-size: 0.85rem;
+        line-height: 1.5;
+        padding: 0.75rem;
+    }
+}
+
+/* 通知横幅可关闭提示 */
+@media (max-width: 768px) {
+    .bd-header-announcement .bd-header-announcement__content {
+        font-size: 0.8rem;
+        padding: 4px 8px;
     }
 }
 

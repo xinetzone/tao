@@ -5,6 +5,9 @@
 name = "agentforge"
 version = "3.1.0"
 description = "哲学驱动的人-AI 协作世界"
+spec_version = "0.2"       # 遵循的 AgentForge Spec 版本
+spec_role = "demo"          # "standard-only" | "demo" | "consumer"
+                            # demo = 本世界是 Spec 的示范实现，可能包含标准范围外内容
 min-alpha = 0.3  # 建议的最低觉醒层级（参见 α 工程量表）
 
 [kernel]
@@ -267,3 +270,24 @@ intents = [
 ]
 phases = ["planning", "review"]
 file_patterns = ["docs/tech/*-spec.md", "docs/superpowers/specs/**", "docs/superpowers/plans/**"]
+
+[[routing.rules]]
+id = "web-content-extraction"
+targets = ["docs/references/web-content-extraction-patterns.md"]
+priority = 7
+roles = ["*"]
+
+[routing.rules.triggers]
+intents = [
+    "fetch",            # 抓取网页
+    "scrape",           # 内容抓取
+    "url-content",      # URL 内容获取
+    "anti-bot",         # 反爬应对
+    "verification-page", # 验证页/挑战页
+]
+url_patterns = [
+    "mp.weixin.qq.com/*",
+    "*.zhihu.com/*",
+    "medium.com/*",
+    "*.notion.site/*",
+]

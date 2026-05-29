@@ -20,6 +20,9 @@ env:
 jobs:
   init-check:
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: apps/chaos
     strategy:
       fail-fast: false
       matrix:
@@ -37,6 +40,9 @@ jobs:
   init-check-macos:
     if: github.event_name == 'push'
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: apps/chaos
     steps:
       - uses: actions/checkout@v5
 
@@ -48,6 +54,9 @@ jobs:
 
   test:
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: apps/chaos
     strategy:
       fail-fast: false
       matrix:
@@ -106,6 +115,9 @@ jobs:
   test-macos:
     if: github.event_name == 'push'
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: apps/chaos
     steps:
       - uses: actions/checkout@v5
         with:
@@ -136,6 +148,9 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/chaos
     steps:
       - uses: actions/checkout@v5
         with:
@@ -164,6 +179,9 @@ jobs:
 
   security:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/chaos
     steps:
       - uses: actions/checkout@v5
 
@@ -181,6 +199,9 @@ jobs:
 
   docs:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/chaos
     steps:
       - uses: actions/checkout@v5
         with:
@@ -202,6 +223,9 @@ jobs:
   test-container:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/chaos
     steps:
       - uses: actions/checkout@v5
 

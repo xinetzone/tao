@@ -17,6 +17,9 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/chaos
     steps:
       - uses: actions/checkout@v5
         with:

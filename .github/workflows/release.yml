@@ -32,6 +32,9 @@ jobs:
   validate:
     name: Validate Version
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/chaos
     outputs:
       version: ${{ steps.parse.outputs.version }}
       tag: ${{ steps.parse.outputs.tag }}
@@ -81,6 +84,9 @@ jobs:
     name: Generate Changelog
     runs-on: ubuntu-latest
     needs: validate
+    defaults:
+      run:
+        working-directory: apps/chaos
     outputs:
       changelog: ${{ steps.generate.outputs.changelog }}
 
@@ -198,6 +204,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: [validate, changelog]
     if: inputs.dry_run == false
+    defaults:
+      run:
+        working-directory: apps/chaos
 
     steps:
       - name: Checkout

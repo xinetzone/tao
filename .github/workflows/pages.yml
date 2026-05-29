@@ -49,12 +49,14 @@ jobs:
       - name: Set up mise
         uses: jdx/mise-action@v4
       - name: 🔧 环境与依赖
+        working-directory: apps/chaos
         run: |
           sudo apt-get update
           sudo apt-get install -y graphviz
           mise install
           mise run install-docs-deps
       - name: 🔧 Build HTML
+        working-directory: apps/chaos
         run: mise run docs-strict
       - name: 🧹 Clean up unnecessary files
         run: |

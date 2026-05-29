@@ -104,9 +104,9 @@ flowchart TD
 
 文档边界、归档规则、临时产物、路径引用和同步机制详见 [`.agents/rules/documentation.md`](.agents/rules/documentation.md)。本入口仅保留最高层约束：
 
-- `README.md` + `docs/` 面向人类开发者。
+- `README.md` + `../docs/` 面向人类开发者。
 - `specs/` 面向人类与 AI 的公约数——AgentForge 规范文档，独立于人和 AI 各自的知识库。
-- `docs/` 采用双轨分类：`docs/tech/` 承载项目技术文档（API、集成、部署、构建、变更日志等），`docs/general/` 承载通用知识（传统文化、哲学、数学等），两轨严禁混入；入口采用嵌套 `toctree`（父 `docs/index.md` 仅引子入口）。
+- `../docs/` 采用双轨分类：`../docs/tech/` 承载项目技术文档（API、集成、部署、构建、变更日志等），`../docs/general/` 承载通用知识（传统文化、哲学、数学等），两轨严禁混入；入口采用嵌套 `toctree`（父 `../docs/index.md` 仅引子入口）。
 - `.agents/docs/` 面向 AI 智能体。
 - `.agents/rules/` 承载高频执行规则。
 - `.agents/docs/superpowers/` 承载 plans、specs、retrospectives 等长期沉淀。

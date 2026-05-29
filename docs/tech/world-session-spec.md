@@ -8,7 +8,7 @@
 
 ## 概述
 
-World Session 是 AgentForge **`World 容器`** 的运行时层，定义了一个**任务态**如何在多个端（CLI / Web / Skill / API）之间挂起、续作、归档。它是对 [`world.toml`](../../.agents/world.toml) 静态定义的**正交补充**，不修改任何现有 kernel/fragments/capabilities/memory 字段。
+World Session 是 AgentForge **`World 容器`** 的运行时层，定义了一个**任务态**如何在多个端（CLI / Web / Skill / API）之间挂起、续作、归档。它是对 [`world.toml`](../../apps/.agents/world.toml) 静态定义的**正交补充**，不修改任何现有 kernel/fragments/capabilities/memory 字段。
 
 **定位**：
 
@@ -39,7 +39,7 @@ flowchart LR
 | 多则惑，少则得 | 用一个 Session 容器收敛 N 个端的混乱 |
 | 抱一为天下式 | events.toml 是单一真相源 |
 
-详见 [`.agents/docs/references/dao-tech-foundation.md`](../../.agents/docs/references/dao-tech-foundation.md)。
+详见 [`.agents/docs/references/dao-tech-foundation.md`](../../apps/.agents/docs/references/dao-tech-foundation.md)。
 
 ---
 
@@ -66,9 +66,9 @@ flowchart TB
 
 | 层级 | 由谁定义 | 是否可变 | 由谁产生 |
 |---|---|---|---|
-| L1 定义层 | [`world.toml`](../../.agents/world.toml) | 由人显式编辑 | 设计者 |
+| L1 定义层 | [`world.toml`](../../apps/.agents/world.toml) | 由人显式编辑 | 设计者 |
 | L2 运行时层 | 本规约 | 由各端读写 | Session 操作 |
-| L3 产物层 | [`documentation.md`](../../.agents/rules/documentation.md) | 归档后不可变 | Session 收尾时迁移 |
+| L3 产物层 | [`documentation.md`](../../apps/.agents/rules/documentation.md) | 归档后不可变 | Session 收尾时迁移 |
 
 ---
 
@@ -98,7 +98,7 @@ flowchart TB
 
 ## 目录与文件结构
 
-Session 的物理布局位于 [`.agents/world.state/`](../../.agents/) 下（默认 `.gitignore`，可通过 `world session export` 显式分享）：
+Session 的物理布局位于 [`.agents/world.state/`](../../apps/.agents/) 下（默认 `.gitignore`，可通过 `world session export` 显式分享）：
 
 ```text
 .agents/
@@ -422,7 +422,7 @@ Skill 在 active session 中被触发时：
 | `[capabilities].skills` | Skill 调用需符合本规约的端集成约束 | frontmatter 新增字段 |
 | `[memory] portable=false` | session 归档后进入 memory 层 | 自动迁移到 `superpowers/retrospectives/` |
 
-**不修改 [`world.toml`](../../.agents/world.toml) 的任何字段**。如需声明项目对 world-session 协议的支持，可选地新增一个 fragment：
+**不修改 [`world.toml`](../../apps/.agents/world.toml) 的任何字段**。如需声明项目对 world-session 协议的支持，可选地新增一个 fragment：
 
 ```toml
 [fragments.world-session]
@@ -507,13 +507,13 @@ flowchart LR
 
 ## 关联资料
 
-- [`world.toml`](../../.agents/world.toml) — World 静态定义
+- [`world.toml`](../../apps/.agents/world.toml) — World 静态定义
 - [World CLI 规格](./world-cli-spec.md) — `evolve()` 原语实现
 - [Fragment Manifest 规格](./fragment-manifest-spec.md) — Fragment 声明格式
 - [World Registry 协议](./world-registry-protocol.md) — 分发协议
-- [协作元模型](../../.agents/docs/references/agent-collaboration-metamodel.md) — Team/Role/Agent 语义
-- [道-技术映射基础](../../.agents/docs/references/dao-tech-foundation.md) — 哲学锚点
-- [本规约设计复盘](../../.agents/docs/superpowers/retrospectives/task-summary-world-multi-surface-exploration-20260527.md) — 设计过程归档
+- [协作元模型](../../apps/.agents/docs/references/agent-collaboration-metamodel.md) — Team/Role/Agent 语义
+- [道-技术映射基础](../../apps/.agents/docs/references/dao-tech-foundation.md) — 哲学锚点
+- [本规约设计复盘](../../apps/.agents/docs/superpowers/retrospectives/task-summary-world-multi-surface-exploration-20260527.md) — 设计过程归档
 
 ---
 

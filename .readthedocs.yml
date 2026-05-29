@@ -15,6 +15,7 @@ formats:
 python:
   install:
     - method: uv
+      path: apps/chaos
       command: sync
       groups:
         - dev

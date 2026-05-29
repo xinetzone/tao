@@ -2,11 +2,24 @@
 
 这是本项目 AI 智能体的最高优先级入口与上下文路由。作为 AI 助手，必须先遵循本文件，再按任务类型读取 `.agents/` 下的专题规范。
 
+> **AGENTS.md 开放标准与 AgentForge 的关系**
+>
+> `AGENTS.md` 是一个独立的社区开放标准，被 OpenAI Codex、Google Jules、GitHub Copilot、Cursor、Amp 等 30+ 工具原生支持。你只需在项目根目录放置一个 `AGENTS.md` 文件，这些工具就能自动读取你的项目指令——**不需要安装任何东西，不需要了解 AgentForge**。
+>
+> AgentForge 在此基础上提供了**渐进可选的扩展层**：
+> - **`.agents/` 目录约定**：规则、技能、工作流的标准化组织
+> - **`world.toml` 声明式清单**：项目 AI 资产的依赖管理与分发
+> - **SKILL.md 规范**：技能的跨平台复用格式（与 agentskills.io 对齐）
+> - **constraints.toml**：多智能体协作的机器可校验约束
+>
+> 两者完全独立，但互操作。你可以只用 `AGENTS.md`（零依赖），也可以逐步采纳 AgentForge 扩展。本项目同时采用了二者，并将 AgentForge 自身作为 Spec v0.2 三层架构的 Layer 3 示范实现。
+
 ## 1. 全局核心规则
 
 - **沟通语言**：必须使用中文与用户交流。
 - **按需读取**：执行特定领域任务前，只读取与当前任务直接相关的 `.agents/` 规范。
 - **上下文节省**：默认遵循“先搜索、再精读、只保留相关上下文”，详见 [`.agents/rules/context-economy.md`](.agents/rules/context-economy.md)。
+- **流水线单次推理**：任何 pipeline 默认最多只允许 1 个模型调用；取数、解析、规范化、落盘等确定性步骤不用 AI，仅在语言理解与综合判断处调用，详见 [`.agents/rules/data-flow-ordering.md`](.agents/rules/data-flow-ordering.md)。
 - **代码修改**：遵循“约定优于配置”，优先参考现有代码风格和项目架构。
 - **Python 环境管理**：统一使用 `uv` 管理 Python 依赖与虚拟环境，详见 [`.agents/rules/python.md`](.agents/rules/python.md)。
 - **Mermaid 优先**：流程、架构、关系、职责映射、层级、目录流转与时序交互等可视化逻辑内容，优先使用 Mermaid 基础语法表达。
@@ -74,6 +87,8 @@ flowchart TD
 | 网页内容抓取或 defuddle | 使用 `defuddle parse <url> --md -o <output>`，输出位置遵循文档治理规则 |
 | 多世界继承、子世界覆盖、AGENTS.md 层级管理 | [`.agents/rules/world-hierarchy.md`](.agents/rules/world-hierarchy.md) |
 | 大型评估选品测试、容器化环境选择 | [`.agents/rules/containerization.md`](.agents/rules/containerization.md) |
+| AgentForge 规范查阅、标准约定、Layer 归属判断 | [`specs/agentforge-spec-v0.2.md`](specs/agentforge-spec-v0.2.md) |
+| 治理流程、RFC 提交流程、维护者权责 | [`GOVERNANCE.md`](GOVERNANCE.md) |
 
 ```mermaid
 flowchart TD
@@ -89,11 +104,13 @@ flowchart TD
 
 文档边界、归档规则、临时产物、路径引用和同步机制详见 [`.agents/rules/documentation.md`](.agents/rules/documentation.md)。本入口仅保留最高层约束：
 
-- `README.md` 与 `docs/` 面向人类开发者。
+- `README.md` + `docs/` 面向人类开发者。
+- `specs/` 面向人类与 AI 的公约数——AgentForge 规范文档，独立于人和 AI 各自的知识库。
 - `docs/` 采用双轨分类：`docs/tech/` 承载项目技术文档（API、集成、部署、构建、变更日志等），`docs/general/` 承载通用知识（传统文化、哲学、数学等），两轨严禁混入；入口采用嵌套 `toctree`（父 `docs/index.md` 仅引子入口）。
 - `.agents/docs/` 面向 AI 智能体。
 - `.agents/rules/` 承载高频执行规则。
 - `.agents/docs/superpowers/` 承载 plans、specs、retrospectives 等长期沉淀。
+- `GOVERNANCE.md` 定义项目治理模型与 RFC 流程。
 - 任务中间产物放入 `.temp/`，不得污染项目根目录。
 - 项目内引用必须使用相对路径。
 

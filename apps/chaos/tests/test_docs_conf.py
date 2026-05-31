@@ -15,9 +15,7 @@ def _find_docs_conf() -> Path:
         if candidate.exists():
             return candidate
         current = current.parent
-    raise FileNotFoundError(
-        "Cannot locate docs/conf.py — searched 6 levels upward"
-    )
+    raise FileNotFoundError("Cannot locate docs/conf.py — searched 6 levels upward")
 
 
 def _load_conf_module():

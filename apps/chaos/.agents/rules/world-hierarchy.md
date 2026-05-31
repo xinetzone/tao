@@ -71,7 +71,7 @@ immutable_rules = ["world-hierarchy", "context-economy"]
 
 - 子世界 `AGENTS.md` 可声明 `## 覆盖说明` 节，列出有意覆盖的父规则（含文件名与节名）。
 - **未声明的隐式覆盖**视为合法，但在审计时应标记为待审项。
-- 嵌套深度推荐 **≤ 3 层**，对齐嵌套深度与觉醒量表推论（见 `../../docs/general/philosophy/dynamics/nesting-depth-and-alpha.md` 推论二）。
+- 嵌套深度推荐 **≤ 3 层**，对齐嵌套深度与觉醒量表推论（见 `../../../docs/general/philosophy/dynamics/nesting-depth-and-alpha.md` 推论二）。
 
 ### 覆盖说明示例
 
@@ -86,13 +86,13 @@ immutable_rules = ["world-hierarchy", "context-economy"]
 ## 7. 哲学映射
 
 - **宇宙不可变 → Kernel 不可覆盖**：宇宙为唯一自持实体，其法则不以任何世界意志为转移。
-  参见：[`../../docs/general/philosophy/ontology/universe-world-ontology.md`](../../docs/general/philosophy/ontology/universe-world-ontology.md)
+  参见：[`../../../../docs/general/philosophy/ontology/universe-world-ontology.md`](../../../../docs/general/philosophy/ontology/universe-world-ontology.md)
 
 - **世界可操作 → Fragment / 规则可覆盖**：世界是宇宙内可被 Agent 操作的子空间，规则在此域内可被裁剪与扩展。
-  参见：[`../../docs/general/philosophy/ontology/universe-world-ontology.md`](../../docs/general/philosophy/ontology/universe-world-ontology.md)
+  参见：[`../../../../docs/general/philosophy/ontology/universe-world-ontology.md`](../../../../docs/general/philosophy/ontology/universe-world-ontology.md)
 
 - **共振对齐 → 父子世界结构共振**：父子世界通过同构协议（相同的文件命名、节标题约定）保持结构共振，避免语义漂移。
-  参见：[`../../docs/general/philosophy/engineering/resonance-synchronization.md`](../../docs/general/philosophy/engineering/resonance-synchronization.md)
+  参见：[`../../../../docs/general/philosophy/engineering/resonance-synchronization.md`](../../../../docs/general/philosophy/engineering/resonance-synchronization.md)
 
 ```mermaid
 flowchart LR

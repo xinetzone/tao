@@ -74,9 +74,7 @@ def load_config(
             else list(REQUIRED_SECTIONS_MIN)
         )
         recommended = (
-            [(n, p) for n, p in recommended_raw.items()]
-            if recommended_raw
-            else []
+            [(n, p) for n, p in recommended_raw.items()] if recommended_raw else []
         )
         return required, recommended, default_mode
 
@@ -345,9 +343,7 @@ def check_skill_md(
     return issues
 
 
-def run(
-    project_root: Path, mode: str | None = None
-) -> dict[str, list[dict]]:
+def run(project_root: Path, mode: str | None = None) -> dict[str, list[dict]]:
     """执行全量技能校验。
 
     Args:

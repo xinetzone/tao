@@ -102,7 +102,7 @@ def is_text_file(path: Path) -> bool:
             return False
         sample.decode("utf-8")
         return True
-    except (OSError, UnicodeDecodeError):
+    except OSError, UnicodeDecodeError:
         return False
 
 
@@ -164,9 +164,7 @@ def iter_skill_dirs(skills_root: Path) -> list[Path]:
     typically hold validation configs rather than skills.
     """
     return sorted(
-        p
-        for p in skills_root.iterdir()
-        if p.is_dir() and not p.name.startswith(".")
+        p for p in skills_root.iterdir() if p.is_dir() and not p.name.startswith(".")
     )
 
 
@@ -193,10 +191,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "skill_path",
         nargs="?",
-        help=(
-            "Path to a single skill directory to export. "
-            "Omit when --all is used."
-        ),
+        help=("Path to a single skill directory to export. Omit when --all is used."),
     )
     parser.add_argument(
         "--all",
@@ -245,9 +240,7 @@ def main(argv: list[str] | None = None) -> int:
             count = export_skill(skill_dir, output_dir, args.platform)
             total_files += count
             print(f"[{args.platform}] exported {skill_dir.name} ({count} files)")
-        print(
-            f"Done: {len(skill_dirs)} skills, {total_files} files -> {output_dir}"
-        )
+        print(f"Done: {len(skill_dirs)} skills, {total_files} files -> {output_dir}")
         return 0
 
     skill_dir = Path(args.skill_path).resolve()

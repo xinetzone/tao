@@ -29,7 +29,9 @@ def find_agents_dir(start_path: Path) -> Path | None:
     return None
 
 
-def check_constraints(constraints_path: Path, agents_dir: Path) -> tuple[int, list[str], list[str]]:
+def check_constraints(
+    constraints_path: Path, agents_dir: Path
+) -> tuple[int, list[str], list[str]]:
     """校验 constraints.toml。
 
     Returns:
@@ -39,7 +41,9 @@ def check_constraints(constraints_path: Path, agents_dir: Path) -> tuple[int, li
     warnings: list[str] = []
 
     if not constraints_path.exists():
-        warnings.append(f"constraints.toml 未找到 ({constraints_path})——跳过 Layer 2 约束校验")
+        warnings.append(
+            f"constraints.toml 未找到 ({constraints_path})——跳过 Layer 2 约束校验"
+        )
         return 0, errors, warnings
 
     try:
@@ -61,7 +65,9 @@ def check_constraints(constraints_path: Path, agents_dir: Path) -> tuple[int, li
         if key not in strong:
             errors.append(f"缺少强约束: constraints.strong.{key}")
         elif not strong[key]:
-            errors.append(f"强约束被禁用: constraints.strong.{key} = false（强约束不应为 false）")
+            errors.append(
+                f"强约束被禁用: constraints.strong.{key} = false（强约束不应为 false）"
+            )
 
     # 2. 校验 weak 约束
     weak = data.get("constraints", {}).get("weak", {})
@@ -79,7 +85,12 @@ def check_constraints(constraints_path: Path, agents_dir: Path) -> tuple[int, li
     if not parallel:
         warnings.append("缺少并行隔离约束: constraints.parallel")
     else:
-        required_parallel = ["file_isolation", "module_boundary", "integration_serial", "conflict_strategy"]
+        required_parallel = [
+            "file_isolation",
+            "module_boundary",
+            "integration_serial",
+            "conflict_strategy",
+        ]
         for key in required_parallel:
             if key not in parallel:
                 warnings.append(f"缺少并行约束: constraints.parallel.{key}")
@@ -111,8 +122,12 @@ def check_constraints(constraints_path: Path, agents_dir: Path) -> tuple[int, li
 
             # 检查 constraints 声明的规则
             role_constraints = role_data.get("role", {}).get("constraints", {})
-            if role_constraints.get("rules_must_exist", False) and not bindings.get("rules"):
-                warnings.append(f"Role '{role_name}' 声明 rules_must_exist=true 但未绑定任何规则")
+            if role_constraints.get("rules_must_exist", False) and not bindings.get(
+                "rules"
+            ):
+                warnings.append(
+                    f"Role '{role_name}' 声明 rules_must_exist=true 但未绑定任何规则"
+                )
 
     # 5. 校验 world.toml 中的 kernel 引用的文件
     world_toml = agents_dir / "world.toml"

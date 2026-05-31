@@ -33,7 +33,7 @@ def _ensure_utf8_stdout() -> None:
         if callable(reconfigure):
             try:
                 reconfigure(encoding="utf-8")
-            except (OSError, ValueError):
+            except OSError, ValueError:
                 pass
 
 
@@ -49,7 +49,7 @@ def _parse_frontmatter(filepath: Path) -> dict[str, Any] | None:
 
     try:
         text = filepath.read_text(encoding="utf-8")
-    except (OSError, UnicodeDecodeError):
+    except OSError, UnicodeDecodeError:
         return None
     if not text.startswith("+++"):
         return None
@@ -90,9 +90,7 @@ def _check_targets(
     warnings: list[str] = []
     for target in targets:
         if not isinstance(target, str):
-            errors.append(
-                f"ERROR: rule '{rule_id}' has non-string target: {target!r}"
-            )
+            errors.append(f"ERROR: rule '{rule_id}' has non-string target: {target!r}")
             continue
         target_path = (agents_root / target).resolve()
         try:
@@ -103,9 +101,7 @@ def _check_targets(
             )
             continue
         if not target_path.exists():
-            errors.append(
-                f"ERROR: rule '{rule_id}' target path not found: {target}"
-            )
+            errors.append(f"ERROR: rule '{rule_id}' target path not found: {target}")
     return errors, warnings
 
 
@@ -118,9 +114,7 @@ def _check_roles(
     warnings: list[str] = []
     for role in roles:
         if not isinstance(role, str):
-            errors.append(
-                f"ERROR: rule '{rule_id}' has non-string role: {role!r}"
-            )
+            errors.append(f"ERROR: rule '{rule_id}' has non-string role: {role!r}")
             continue
         if role == "*":
             continue
@@ -140,9 +134,7 @@ def _check_priority(rule_id: str, priority: Any) -> list[str]:
             f"{type(priority).__name__}: {priority!r}"
         ]
     if not 0 <= priority <= 10:
-        return [
-            f"ERROR: rule '{rule_id}' priority {priority} out of range [0, 10]"
-        ]
+        return [f"ERROR: rule '{rule_id}' priority {priority} out of range [0, 10]"]
     return []
 
 
@@ -200,16 +192,12 @@ def validate(agents_root: Path) -> tuple[list[str], list[str]]:
 
     for index, rule in enumerate(rules):
         if not isinstance(rule, dict):
-            errors.append(
-                f"ERROR: routing.rules[{index}] is not a table: {rule!r}"
-            )
+            errors.append(f"ERROR: routing.rules[{index}] is not a table: {rule!r}")
             continue
 
         rule_id = rule.get("id")
         if not isinstance(rule_id, str) or not rule_id:
-            errors.append(
-                f"ERROR: routing.rules[{index}] missing required string 'id'"
-            )
+            errors.append(f"ERROR: routing.rules[{index}] missing required string 'id'")
             rule_id = f"<index {index}>"
         else:
             if rule_id in seen_ids:

@@ -41,14 +41,10 @@ _ALLOWED_TOP_LEVEL: frozenset[str] = frozenset(
 )
 
 # bindings 子键白名单。
-_ALLOWED_BINDINGS_KEYS: frozenset[str] = frozenset(
-    {"rules", "references", "skills"}
-)
+_ALLOWED_BINDINGS_KEYS: frozenset[str] = frozenset({"rules", "references", "skills"})
 
 # permissions 子键白名单。
-_ALLOWED_PERMISSIONS_KEYS: frozenset[str] = frozenset(
-    {"can_modify", "cannot_modify"}
-)
+_ALLOWED_PERMISSIONS_KEYS: frozenset[str] = frozenset({"can_modify", "cannot_modify"})
 
 # frontmatter 分隔符。
 _FRONTMATTER_DELIM = "+++"
@@ -62,7 +58,7 @@ def _ensure_utf8_stdout() -> None:
         if callable(reconfigure):
             try:
                 reconfigure(encoding="utf-8")
-            except (OSError, ValueError):
+            except OSError, ValueError:
                 pass
 
 
@@ -108,8 +104,7 @@ def _check_path_list(
     for item in values:
         if not isinstance(item, str):
             errors.append(
-                f"ERROR: role '{role_id}' {field_name} contains non-string: "
-                f"{item!r}"
+                f"ERROR: role '{role_id}' {field_name} contains non-string: {item!r}"
             )
             continue
         target_path = (agents_root / item).resolve()
@@ -158,15 +153,11 @@ def _validate_role_file(
     try:
         data = tomllib.loads(toml_text)
     except tomllib.TOMLDecodeError as exc:
-        errors.append(
-            f"ERROR: role file '{md_path.name}' TOML parse error: {exc}"
-        )
+        errors.append(f"ERROR: role file '{md_path.name}' TOML parse error: {exc}")
         return file_stem, errors, warnings
 
     if not isinstance(data, dict):
-        errors.append(
-            f"ERROR: role file '{md_path.name}' frontmatter is not a table"
-        )
+        errors.append(f"ERROR: role file '{md_path.name}' frontmatter is not a table")
         return file_stem, errors, warnings
 
     # 未知顶层字段。
@@ -181,9 +172,7 @@ def _validate_role_file(
     role_id_raw = data.get("id")
     role_id: str
     if not isinstance(role_id_raw, str) or not role_id_raw:
-        errors.append(
-            f"ERROR: role file '{md_path.name}' missing required string 'id'"
-        )
+        errors.append(f"ERROR: role file '{md_path.name}' missing required string 'id'")
         role_id = file_stem
     else:
         role_id = role_id_raw
@@ -202,8 +191,7 @@ def _validate_role_file(
     domain = data.get("domain")
     if not isinstance(domain, str) or not domain.strip():
         errors.append(
-            f"ERROR: role '{role_id}' missing required non-empty string "
-            "'domain'"
+            f"ERROR: role '{role_id}' missing required non-empty string 'domain'"
         )
 
     # bindings 校验。
@@ -218,8 +206,7 @@ def _validate_role_file(
             unknown_b = sorted(set(bindings.keys()) - _ALLOWED_BINDINGS_KEYS)
             if unknown_b:
                 errors.append(
-                    f"ERROR: role '{role_id}' bindings has unknown key(s): "
-                    f"{unknown_b}"
+                    f"ERROR: role '{role_id}' bindings has unknown key(s): {unknown_b}"
                 )
 
             for field in ("rules", "references"):
@@ -251,18 +238,14 @@ def _validate_role_file(
                 f"{type(permissions).__name__}"
             )
         else:
-            unknown_p = sorted(
-                set(permissions.keys()) - _ALLOWED_PERMISSIONS_KEYS
-            )
+            unknown_p = sorted(set(permissions.keys()) - _ALLOWED_PERMISSIONS_KEYS)
             if unknown_p:
                 errors.append(
                     f"ERROR: role '{role_id}' permissions has unknown key(s): "
                     f"{unknown_p}"
                 )
             for field in ("can_modify", "cannot_modify"):
-                if field in permissions and not isinstance(
-                    permissions[field], list
-                ):
+                if field in permissions and not isinstance(permissions[field], list):
                     errors.append(
                         f"ERROR: role '{role_id}' permissions.{field} must "
                         f"be a list, got {type(permissions[field]).__name__}"
@@ -279,8 +262,7 @@ def validate(agents_root: Path) -> tuple[list[str], list[str], list[str]]:
         return ([f"ERROR: roles directory not found at {roles_dir}"], [], [])
 
     md_files = sorted(
-        p for p in roles_dir.glob("*.md")
-        if p.is_file() and p.name != "README.md"
+        p for p in roles_dir.glob("*.md") if p.is_file() and p.name != "README.md"
     )
 
     errors: list[str] = []

@@ -74,7 +74,7 @@ depends = ["check-env"]
 
 [tasks.docs-internal-linkcheck]
 description = "校验 README/CHANGELOG/AGENTS 中的相对路径引用是否有效"
-run = "python .agents/scripts/check_doc_links.py"
+run = "python .agents/scripts/check_doc_links.py --root ../.. && python .agents/scripts/check_doc_links.py --root . --files CHANGELOG.md --dirs .agents/docs .agents/rules"
 
 [tasks.docs-structure-check]
 description = "校验 docs/ 目录结构遵循 tech/general 双轨分类规范"

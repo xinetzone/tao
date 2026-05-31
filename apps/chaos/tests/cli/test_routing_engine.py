@@ -75,7 +75,7 @@ def test_parse_routing_config_top_level(routing_config: RoutingConfig) -> None:
         "review",
         "deploying",
     ]
-    assert len(routing_config.rules) == 11
+    assert len(routing_config.rules) == 13
 
 
 def test_parse_routing_config_python_dev_rule(routing_config: RoutingConfig) -> None:

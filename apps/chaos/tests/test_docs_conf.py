@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 def _load_conf_module():
-    conf_path = Path(__file__).resolve().parents[1] / "docs" / "conf.py"
+    conf_path = Path(__file__).resolve().parents[3] / "docs" / "conf.py"
     spec = spec_from_file_location("docs_conf", conf_path)
     assert spec is not None
     assert spec.loader is not None

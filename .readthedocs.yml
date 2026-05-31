@@ -8,7 +8,7 @@ build:
   commands:
     - pip install uv
     - uv sync --directory apps/chaos --group dev --group docs
-    - uv run --directory apps/chaos sphinx-build -T -b html -d _build/doctrees -D language=zh_CN ../docs $READTHEDOCS_OUTPUT/html
+    - uv run --directory apps/chaos sphinx-build -T -b html -d _build/doctrees -D language=zh_CN ../../docs $READTHEDOCS_OUTPUT/html
 
 formats:
   - htmlzip

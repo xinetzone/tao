@@ -18,6 +18,7 @@
 from __future__ import annotations
 
 import argparse
+import functools
 import re
 import sys
 from dataclasses import dataclass
@@ -107,6 +108,32 @@ def _is_forbidden_example(line: str) -> bool:
     return any(marker in line for marker in forbidden_markers)
 
 
+@functools.lru_cache(maxsize=1)
+def _get_submodule_paths(project_root: Path) -> frozenset[Path]:
+    """解析 .gitmodules 获取子模块物理路径（已 resolve）。"""
+    gitmodules = project_root / ".gitmodules"
+    if not gitmodules.is_file():
+        return frozenset()
+    paths: set[Path] = set()
+    for line in gitmodules.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if stripped.startswith("path = ") or stripped.startswith("path="):
+            path_str = stripped.split("=", 1)[1].strip()
+            paths.add((project_root / path_str).resolve())
+    return frozenset(paths)
+
+
+def _is_submodule(resolved: Path, submodule_paths: frozenset[Path]) -> bool:
+    """判断已解析的链接目标是否位于子模块目录下。"""
+    for sub_path in submodule_paths:
+        try:
+            resolved.relative_to(sub_path)
+            return True
+        except ValueError:
+            pass
+    return False
+
+
 def _strip_fragment(url: str) -> str:
     """剥离 URL 末尾的 ``#fragment`` 与 ``?query`` 部分。"""
 
@@ -141,6 +168,9 @@ def check_file(source: Path, project_root: Path) -> list[LinkRecord]:
         ]
 
     text = source.read_text(encoding="utf-8")
+
+    submodule_paths = _get_submodule_paths(project_root)
+
     for line_no, line in enumerate(text.splitlines(), start=1):
         for match in _LINK_PATTERN.finditer(line):
             url = match.group("url").strip()
@@ -161,6 +191,10 @@ def check_file(source: Path, project_root: Path) -> list[LinkRecord]:
                 continue
 
             resolved = _resolve(source, path_part)
+
+            # 跳过指向 git 子模块的链接（子模块可能未检出）
+            if _is_submodule(resolved, submodule_paths):
+                continue
 
             ok = resolved.exists()
 

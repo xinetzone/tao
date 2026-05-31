@@ -166,13 +166,15 @@ def _generate(
 
     print()
     print(f"  ✨ 项目 '{name}' 已就绪！下一步：")
-    print(f"    - 编辑 AGENTS.md 定制你的全局契约")
-    print(f"    - 编辑 .agents/world.toml 声明项目元信息")
-    print(f"    - 运行 world guide 获取 Fragment 推荐")
-    print(f"    - 运行 world fragment init <name> --from-rules .agents/rules/ 将规则打包为 Fragment")
-    print(f"    - 运行 world status 查看当前状态")
-    print(f"    - 查看规范: specs/agentforge-spec-v0.2.md 了解三层架构")
-    print(f"    - 查看治理: GOVERNANCE.md 了解如何参与标准制定")
+    print("    - 编辑 AGENTS.md 定制你的全局契约")
+    print("    - 编辑 .agents/world.toml 声明项目元信息")
+    print("    - 运行 world guide 获取 Fragment 推荐")
+    print(
+        "    - 运行 world fragment init <name> --from-rules .agents/rules/ 将规则打包为 Fragment"
+    )
+    print("    - 运行 world status 查看当前状态")
+    print("    - 查看规范: specs/agentforge-spec-v0.2.md 了解三层架构")
+    print("    - 查看治理: GOVERNANCE.md 了解如何参与标准制定")
     return 0
 
 
@@ -188,8 +190,7 @@ def register_init_parser(
         "init",
         help="生成 AGENTS.md + .agents/ 项目骨架",
         description=(
-            "从模板生成 AGENTS.md + .agents/ 最小骨架。"
-            "新项目零配置启动的唯一命令。"
+            "从模板生成 AGENTS.md + .agents/ 最小骨架。新项目零配置启动的唯一命令。"
         ),
     )
     parser.add_argument(

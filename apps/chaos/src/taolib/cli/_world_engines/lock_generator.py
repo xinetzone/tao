@@ -114,7 +114,7 @@ def parse_lock(path: Path) -> LockFile | None:
     try:
         with path.open("rb") as f:
             data = tomllib.load(f)
-    except (OSError, tomllib.TOMLDecodeError):
+    except OSError, tomllib.TOMLDecodeError:
         return None
 
     lock_data = data.get("lock")

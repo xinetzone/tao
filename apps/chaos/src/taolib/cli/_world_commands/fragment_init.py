@@ -8,12 +8,10 @@
 from __future__ import annotations
 
 import argparse
-import sys
 from pathlib import Path
-from typing import Optional
 
 
-def _find_agents_dir(start_path: Path) -> Optional[Path]:
+def _find_agents_dir(start_path: Path) -> Path | None:
     """向上查找 .agents/ 目录。"""
     current = start_path.resolve()
     for _ in range(10):
@@ -27,7 +25,7 @@ def _find_agents_dir(start_path: Path) -> Optional[Path]:
     return None
 
 
-def _init_from_scratch(project_root: Path, name: str, target_dir: Optional[str]) -> int:
+def _init_from_scratch(project_root: Path, name: str, target_dir: str | None) -> int:
     """从零创建 Fragment 骨架。"""
     agents_dir = project_root / ".agents"
     if not agents_dir.is_dir():
@@ -85,7 +83,7 @@ references = []
     (skills_dir / ".gitkeep").touch()
 
     print(f"✅ Fragment `{name}` 骨架已创建: {frag_dir}")
-    print(f"\n💡 下一步:")
+    print("\n💡 下一步:")
     print(f"   1. 编辑 {fragment_toml} 完善描述和依赖")
     print(f"   2. 将规则放入 {rules_dir}/")
     print(f"   3. world fragment publish {name}")
@@ -199,6 +197,7 @@ def handle_fragment_init(args: argparse.Namespace) -> int:
 
     # 验证名称格式
     import re
+
     if not re.match(r"^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$", name):
         print(f"❌ 无效的 Fragment 名称: {name}")
         print("   名称必须为 kebab-case，如 python-engineering")

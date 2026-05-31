@@ -174,10 +174,12 @@ def resolve_routes(
         if intents and any(i in rule.triggers.intents for i in intents):
             matched_by.append("intent")
 
-        if files and rule.triggers.file_patterns and any(
-            fnmatch(f, pat)
-            for f in files
-            for pat in rule.triggers.file_patterns
+        if (
+            files
+            and rule.triggers.file_patterns
+            and any(
+                fnmatch(f, pat) for f in files for pat in rule.triggers.file_patterns
+            )
         ):
             matched_by.append("file_pattern")
 
@@ -291,7 +293,7 @@ def resolve_role_bindings(roles_dir: Path, role_id: str) -> list[str]:
         if frontmatter is None:
             return []
         data = tomllib.loads(frontmatter)
-    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError):
+    except OSError, UnicodeDecodeError, tomllib.TOMLDecodeError:
         return []
 
     bindings = data.get("bindings", {})

@@ -25,9 +25,9 @@ from __future__ import annotations
 import argparse
 import sys
 
-from taolib.cli._world_commands.init import register_init_parser
-from taolib.cli._world_commands.guide import register_guide_parser
 from taolib.cli._world_commands.fragment_init import register_fragment_init_parser
+from taolib.cli._world_commands.guide import register_guide_parser
+from taolib.cli._world_commands.init import register_init_parser
 from taolib.cli._world_commands.install import register_install_parser
 from taolib.cli._world_commands.publish import register_publish_parser
 from taolib.cli._world_commands.remove import register_remove_parser

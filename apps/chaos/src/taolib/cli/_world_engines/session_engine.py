@@ -22,7 +22,7 @@ import os
 import re
 import tomllib
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 __all__ = [
@@ -157,7 +157,7 @@ class SessionEvent:
 
 def _now_iso() -> str:
     """返回当前时间的 ISO 8601 with offset 字符串。"""
-    return datetime.now(timezone.utc).astimezone().isoformat()
+    return datetime.now(UTC).astimezone().isoformat()
 
 
 def _parse_iso(ts: str) -> datetime:
@@ -167,7 +167,7 @@ def _parse_iso(ts: str) -> datetime:
 
 def _lease_until_iso(lease_minutes: int) -> str:
     """计算从现在起 lease_minutes 分钟后的 ISO 8601 时间戳。"""
-    dt = datetime.now(timezone.utc).astimezone() + timedelta(minutes=lease_minutes)
+    dt = datetime.now(UTC).astimezone() + timedelta(minutes=lease_minutes)
     return dt.isoformat()
 
 
@@ -200,7 +200,7 @@ def generate_session_id(title: str) -> str:
     slug = "-".join(slug_parts)
 
     # base36 编码当前时间戳（整秒）
-    ts_int = int(datetime.now(timezone.utc).timestamp())
+    ts_int = int(datetime.now(UTC).timestamp())
     base36_chars = "0123456789abcdefghijklmnopqrstuvwxyz"
     if ts_int == 0:
         b36 = "0"
@@ -245,9 +245,7 @@ def _format_manifest_toml(manifest: SessionManifest) -> str:
     runtimes = ", ".join(f'"{r}"' for r in manifest.allowed_runtimes)
     # TOML 无 null 字面量；task_id 缺省时写空字符串，加载时再转为 None
     task_id_line = (
-        f'task_id = "{manifest.task_id}"'
-        if manifest.task_id
-        else 'task_id = ""'
+        f'task_id = "{manifest.task_id}"' if manifest.task_id else 'task_id = ""'
     )
     return (
         "[session]\n"
@@ -307,9 +305,7 @@ def _format_event_block(event: SessionEvent) -> str:
             lines.append(f'{k} = ""')
         elif isinstance(v, bool):
             lines.append(f"{k} = {str(v).lower()}")
-        elif isinstance(v, int):
-            lines.append(f"{k} = {v}")
-        elif isinstance(v, float):
+        elif isinstance(v, int | float):
             lines.append(f"{k} = {v}")
         elif isinstance(v, list):
             items = ", ".join(f'"{i}"' if isinstance(i, str) else str(i) for i in v)
@@ -433,9 +429,7 @@ def create_session(
         lease_until=lease_until,
         renew_count=0,
     )
-    (session_dir / "lock.toml").write_text(
-        _format_lock_toml(lock), encoding="utf-8"
-    )
+    (session_dir / "lock.toml").write_text(_format_lock_toml(lock), encoding="utf-8")
 
     # 8. 更新 index.toml（重新加载最新 manifest 以获取正确 last_event_seq）
     final_manifest = load_manifest(session_dir)
@@ -694,9 +688,9 @@ def _is_lease_expired(lock: LockInfo) -> bool:
     """判断锁的租约是否已过期。"""
     try:
         lease_dt = _parse_iso(lock.lease_until)
-        now_dt = datetime.now(timezone.utc).astimezone()
+        now_dt = datetime.now(UTC).astimezone()
         return now_dt >= lease_dt
-    except (ValueError, TypeError):
+    except ValueError, TypeError:
         # 无法解析时视为过期
         return True
 
@@ -819,9 +813,7 @@ def acquire_lock(
                 f"Use steal=True only after lease expires."
             )
 
-    (session_dir / "lock.toml").write_text(
-        _format_lock_toml(lock), encoding="utf-8"
-    )
+    (session_dir / "lock.toml").write_text(_format_lock_toml(lock), encoding="utf-8")
     return lock
 
 

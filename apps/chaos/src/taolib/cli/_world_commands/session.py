@@ -24,10 +24,10 @@ from __future__ import annotations
 
 import argparse
 import sys
+from datetime import UTC
 from pathlib import Path
 
 from taolib.cli._world_engines import session_engine
-
 
 # ---------------------------------------------------------------------------
 # 辅助函数
@@ -142,7 +142,7 @@ def handle_new(args: argparse.Namespace) -> int:
             task_id=args.task or None,
             lease_minutes=args.lease,
         )
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"错误：创建 session 失败：{exc}", file=sys.stderr)
         return 1
 
@@ -172,7 +172,7 @@ def handle_list(args: argparse.Namespace) -> int:
 
     try:
         entries = session_engine.load_index(state_dir)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"错误：加载索引失败：{exc}", file=sys.stderr)
         return 1
 
@@ -187,8 +187,15 @@ def handle_list(args: argparse.Namespace) -> int:
 
     # 表头
     id_w, title_w, state_w = 28, 28, 12
-    header = _format_table_row("ID", "TITLE", "STATE", "CREATED_AT",
-                               id_width=id_w, title_width=title_w, state_width=state_w)
+    header = _format_table_row(
+        "ID",
+        "TITLE",
+        "STATE",
+        "CREATED_AT",
+        id_width=id_w,
+        title_width=title_w,
+        state_width=state_w,
+    )
     print(header)
     print("-" * len(header))
 
@@ -237,7 +244,7 @@ def handle_show(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return 1
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"错误：加载 manifest 失败：{exc}", file=sys.stderr)
         return 1
 
@@ -270,7 +277,7 @@ def handle_show(args: argparse.Namespace) -> int:
     print("最近 5 条事件：")
     try:
         recent_events = session_engine.read_events(session_dir, tail=5)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"  （读取事件失败：{exc}）")
         recent_events = []
 
@@ -334,7 +341,7 @@ def handle_resume(args: argparse.Namespace) -> int:
     except session_engine.SessionArchivedError as exc:
         print(f"错误 [WS002]：{exc}", file=sys.stderr)
         return 1
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"错误：获取锁失败：{exc}", file=sys.stderr)
         return 1
 
@@ -350,7 +357,7 @@ def handle_resume(args: argparse.Namespace) -> int:
     )
     try:
         session_engine.append_event(session_dir, event)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"错误：追加事件失败：{exc}", file=sys.stderr)
         return 1
 
@@ -431,14 +438,14 @@ def handle_release(args: argparse.Namespace) -> int:
     )
     try:
         session_engine.append_event(session_dir, event)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"错误：追加事件失败：{exc}", file=sys.stderr)
         return 1
 
     # 释放锁文件
     try:
         session_engine.release_lock(session_dir)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"错误：释放锁失败：{exc}", file=sys.stderr)
         return 1
 
@@ -524,7 +531,7 @@ def handle_archive(args: argparse.Namespace) -> int:
     )
     try:
         session_engine.append_event(session_dir, event)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"错误：追加事件失败：{exc}", file=sys.stderr)
         return 1
 
@@ -573,7 +580,7 @@ def handle_log(args: argparse.Namespace) -> int:
 
     try:
         events = session_engine.read_events(session_dir, tail=args.tail)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"错误：读取事件失败：{exc}", file=sys.stderr)
         return 1
 
@@ -595,9 +602,9 @@ def _now_iso() -> str:
     Returns:
         当前时间的 ISO 8601 字符串（含时区偏移）。
     """
-    from datetime import datetime, timezone
+    from datetime import datetime
 
-    return datetime.now(timezone.utc).astimezone().isoformat()
+    return datetime.now(UTC).astimezone().isoformat()
 
 
 def _find_active_session_id(state_dir: Path) -> str | None:
@@ -611,7 +618,7 @@ def _find_active_session_id(state_dir: Path) -> str | None:
     """
     try:
         entries = session_engine.load_index(state_dir)
-    except Exception:  # noqa: BLE001
+    except Exception:
         return None
     for entry in entries:
         if entry.get("state") == "active":
@@ -817,7 +824,7 @@ def _handle_session_help(
         handler 函数，接受 args 并打印帮助后返回 0。
     """
 
-    def _handler(args: argparse.Namespace) -> int:  # noqa: ARG001
+    def _handler(args: argparse.Namespace) -> int:
         parser.print_help()
         return 0
 

@@ -7,12 +7,10 @@
 from __future__ import annotations
 
 import argparse
-import sys
 from pathlib import Path
-from typing import Optional
 
 
-def _find_world_toml(start_path: Path) -> Optional[Path]:
+def _find_world_toml(start_path: Path) -> Path | None:
     """向上查找 world.toml，返回其目录路径。"""
     current = start_path.resolve()
     for _ in range(10):
@@ -31,7 +29,9 @@ def _detect_project_type(project_root: Path) -> list[str]:
     types = []
 
     # Python 项目
-    if (project_root / "pyproject.toml").exists() or (project_root / "setup.py").exists():
+    if (project_root / "pyproject.toml").exists() or (
+        project_root / "setup.py"
+    ).exists():
         types.append("python")
 
     # Node.js 项目
@@ -48,8 +48,11 @@ def _detect_project_type(project_root: Path) -> list[str]:
 
     # Web 项目（检测常见前端配置）
     web_indicators = [
-        "next.config", "vite.config", "webpack.config",
-        "tailwind.config", "astro.config",
+        "next.config",
+        "vite.config",
+        "webpack.config",
+        "tailwind.config",
+        "astro.config",
     ]
     for pattern in web_indicators:
         matches = list(project_root.glob(f"{pattern}.*"))
@@ -59,7 +62,9 @@ def _detect_project_type(project_root: Path) -> list[str]:
             break
 
     # 文档项目
-    if (project_root / ".readthedocs.yml").exists() or (project_root / "mkdocs.yml").exists():
+    if (project_root / ".readthedocs.yml").exists() or (
+        project_root / "mkdocs.yml"
+    ).exists():
         types.append("docs")
 
     # AgentForge 项目（自身检测）
@@ -67,7 +72,9 @@ def _detect_project_type(project_root: Path) -> list[str]:
         types.append("agentforge")
 
     # Containerized
-    if (project_root / "Containerfile").exists() or (project_root / "Dockerfile").exists():
+    if (project_root / "Containerfile").exists() or (
+        project_root / "Dockerfile"
+    ).exists():
         types.append("container")
 
     return types
@@ -161,6 +168,7 @@ def _print_guide(project_root: Path, types: list[str]):
     if world_toml.exists():
         content = world_toml.read_text(encoding="utf-8")
         import re
+
         frag_names = re.findall(r"^\[fragments\.(.+)\]", content, re.MULTILINE)
         if frag_names:
             print(f"   已安装 fragments: {', '.join(frag_names)}")
@@ -184,9 +192,11 @@ def _print_guide(project_root: Path, types: list[str]):
             print(f"   • {rec['name']}")
             print(f"     {rec['description']}{url_hint}")
 
-        print(f"\n💡 安装命令: world fragment install <name>")
+        print("\n💡 安装命令: world fragment install <name>")
     else:
-        print("\n📋 暂无针对性推荐。使用 `world fragment search` 浏览所有可用 fragments。")
+        print(
+            "\n📋 暂无针对性推荐。使用 `world fragment search` 浏览所有可用 fragments。"
+        )
 
     # 下一步
     print("\n📖 下一步:")
@@ -194,8 +204,8 @@ def _print_guide(project_root: Path, types: list[str]):
         print("   1. world init           — 创建项目骨架")
     print("   2. world fragment list    — 浏览可用 fragments")
     print("   3. world fragment install <name> — 安装 fragment")
-    print(f"   4. 查看规范: specs/agentforge-spec-v0.2.md")
-    print(f"   5. 了解治理: GOVERNANCE.md\n")
+    print("   4. 查看规范: specs/agentforge-spec-v0.2.md")
+    print("   5. 了解治理: GOVERNANCE.md\n")
 
 
 def handle_guide(args: argparse.Namespace) -> int:

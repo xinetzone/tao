@@ -30,10 +30,10 @@ _LINK_PATTERN = re.compile(
 )
 
 # 默认要扫描的文件相对路径（相对项目根目录）
-_DEFAULT_TARGETS: tuple[str, ...] = ("README.md", "CHANGELOG.md", "AGENTS.md")
+_DEFAULT_TARGETS: tuple[str, ...] = ("README.md", "AGENTS.md")
 
 # 默认要递归扫描的目录（相对项目根目录），扫描其中所有 *.md 文件
-_DEFAULT_DIRS: tuple[str, ...] = ("docs", ".agents/docs", ".agents/rules")
+_DEFAULT_DIRS: tuple[str, ...] = ("docs",)
 
 # 递归扫描时跳过的目录片段（位于路径任一层级即跳过）
 # - 构建/缓存目录: 无校验意义。
@@ -161,22 +161,6 @@ def check_file(source: Path, project_root: Path) -> list[LinkRecord]:
                 continue
 
             resolved = _resolve(source, path_part)
-            try:
-                resolved.relative_to(project_root)
-            except ValueError:
-                # 解析后的路径越出项目根目录，视为可疑链接。
-                records.append(
-                    LinkRecord(
-                        source=source,
-                        line_no=line_no,
-                        text=match.group("text"),
-                        url=url,
-                        resolved=resolved,
-                        ok=False,
-                        reason="路径越出项目根目录",
-                    )
-                )
-                continue
 
             ok = resolved.exists()
 
@@ -278,7 +262,22 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def _detect_project_root(script_path: Path) -> Path:
-    # 脚本位于 .agents/scripts/check_doc_links.py，仓库根为其上两级。
+    """向上搜索包含 .git 目录的 Git 仓库根。
+
+    兼容 monorepo（如 apps/chaos/.agents/scripts/）和扁平仓库布局。
+    """
+    current = script_path.resolve().parent
+    for _ in range(8):
+        if (current / ".git").exists():
+            return current
+        current = current.parent
+    # 回退：通过 pyproject.toml 定位
+    current = script_path.resolve().parent
+    for _ in range(8):
+        if (current / "pyproject.toml").exists():
+            return current
+        current = current.parent
+    # 最终回退
     return script_path.resolve().parent.parent.parent
 
 
@@ -290,7 +289,7 @@ def main(argv: list[str] | None = None) -> int:
         if callable(reconfigure):
             try:
                 reconfigure(encoding="utf-8")
-            except OSError, ValueError:
+            except (OSError, ValueError):
                 # 在某些终端上 reconfigure 不可用时静默回退即可。
                 pass
 

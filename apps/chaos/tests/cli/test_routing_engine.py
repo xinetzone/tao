@@ -18,7 +18,6 @@ from pathlib import Path
 
 import pytest
 
-from taolib.cli._world_engines import routing_engine
 from taolib.cli._world_engines.routing_engine import (
     RoutingConfig,
     collect_targets,
@@ -120,9 +119,7 @@ def test_parse_routing_config_missing_routing_section(tmp_path: Path) -> None:
 
 def test_resolve_routes_intent_only(routing_config: RoutingConfig) -> None:
     """纯 intent 匹配 → 命中 python-dev 且 matched_by 仅含 intent。"""
-    matches = resolve_routes(
-        routing_config, intents=["python"], role="python-dev"
-    )
+    matches = resolve_routes(routing_config, intents=["python"], role="python-dev")
     rule_ids = [m.rule_id for m in matches]
     assert "python-dev" in rule_ids
     target = next(m for m in matches if m.rule_id == "python-dev")
@@ -165,17 +162,13 @@ def test_resolve_routes_multi_dimension(routing_config: RoutingConfig) -> None:
 
 def test_resolve_routes_role_filter_excludes(routing_config: RoutingConfig) -> None:
     """frontend-dev 不在 python-dev.roles 中 → 不命中 python-dev。"""
-    matches = resolve_routes(
-        routing_config, intents=["python"], role="frontend-dev"
-    )
+    matches = resolve_routes(routing_config, intents=["python"], role="frontend-dev")
     assert all(m.rule_id != "python-dev" for m in matches)
 
 
 def test_resolve_routes_wildcard_role(routing_config: RoutingConfig) -> None:
     """``roles=["*"]`` 应匹配任意 role（含未在任何规则中声明的角色）。"""
-    matches = resolve_routes(
-        routing_config, intents=["context"], role="any-role"
-    )
+    matches = resolve_routes(routing_config, intents=["context"], role="any-role")
     rule_ids = [m.rule_id for m in matches]
     assert "context-economy" in rule_ids
 
@@ -258,9 +251,7 @@ def test_collect_targets_empty() -> None:
 
 def test_collect_targets_invalid_strategy(routing_config: RoutingConfig) -> None:
     """非法策略名抛 ValueError。"""
-    matches = resolve_routes(
-        routing_config, intents=["python"], role="python-dev"
-    )
+    matches = resolve_routes(routing_config, intents=["python"], role="python-dev")
     assert matches  # 前置：确保非空
     with pytest.raises(ValueError):
         collect_targets(matches, "ask")
@@ -297,9 +288,7 @@ def test_resolve_role_bindings_bad_encoding(tmp_path: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def _run_world_cli(
-    args: list[str], cwd: Path
-) -> subprocess.CompletedProcess[str]:
+def _run_world_cli(args: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
     """以子进程方式调用 ``python -m taolib.cli.world ...``。
 
     将 ``apps/chaos/src`` 注入 PYTHONPATH，确保未安装时也能正确导入。
@@ -307,9 +296,7 @@ def _run_world_cli(
     env = os.environ.copy()
     src_dir = str(_CHAOS_ROOT / "src")
     existing = env.get("PYTHONPATH", "")
-    env["PYTHONPATH"] = (
-        src_dir + os.pathsep + existing if existing else src_dir
-    )
+    env["PYTHONPATH"] = src_dir + os.pathsep + existing if existing else src_dir
     return subprocess.run(
         [sys.executable, "-m", "taolib.cli.world", *args],
         cwd=str(cwd),

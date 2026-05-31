@@ -11,7 +11,7 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta, timezone
 from pathlib import Path
 from unittest.mock import patch
 
@@ -20,7 +20,6 @@ import pytest
 from taolib.cli._world_engines import session_engine
 from taolib.cli._world_engines.session_engine import (
     LockHeldError,
-    LockInfo,
     SessionArchivedError,
     SessionEvent,
     SessionManifest,
@@ -274,13 +273,13 @@ def test_acquire_expired_lock(state_dir: Path) -> None:
     manifest = create_session(state_dir, "Expired Test")
     session_dir = state_dir / "sessions" / manifest.id
 
-    far_future = datetime.now(timezone.utc).astimezone() + timedelta(hours=1)
+    far_future = datetime.now(UTC).astimezone() + timedelta(hours=1)
 
     # datetime 是不可变 C 类型，直接 patch datetime.now 会失败；
     # 因此将 session_engine 模块中的 datetime 整个替换为 mock 对象。
-    class MockDatetime:  # noqa: D106
+    class MockDatetime:
         @staticmethod
-        def now(tz=None):  # noqa: ARG004
+        def now(tz=None):
             return far_future
 
         fromisoformat = datetime.fromisoformat
@@ -383,9 +382,7 @@ def test_cli_session_lifecycle(agents_dir: Path) -> None:
     assert "test task" in result.stdout
 
     # release
-    result = _run_world_cli(
-        ["session", "release", "--id", sid], cwd=agents_dir.parent
-    )
+    result = _run_world_cli(["session", "release", "--id", sid], cwd=agents_dir.parent)
     assert result.returncode == 0, result.stderr
 
     # resume
@@ -393,9 +390,7 @@ def test_cli_session_lifecycle(agents_dir: Path) -> None:
     assert result.returncode == 0, result.stderr
 
     # release again
-    result = _run_world_cli(
-        ["session", "release", "--id", sid], cwd=agents_dir.parent
-    )
+    result = _run_world_cli(["session", "release", "--id", sid], cwd=agents_dir.parent)
     assert result.returncode == 0, result.stderr
 
     # archive
@@ -412,15 +407,11 @@ def test_cli_session_lifecycle(agents_dir: Path) -> None:
 
 def test_cli_session_list_state_filter(agents_dir: Path) -> None:
     """验证 --state 过滤逻辑：active 和 archived 互不包含。"""
-    result = _run_world_cli(
-        ["session", "new", "active task"], cwd=agents_dir.parent
-    )
+    result = _run_world_cli(["session", "new", "active task"], cwd=agents_dir.parent)
     assert result.returncode == 0, result.stderr
     active_sid = result.stdout.strip().splitlines()[0]
 
-    result = _run_world_cli(
-        ["session", "new", "archive task"], cwd=agents_dir.parent
-    )
+    result = _run_world_cli(["session", "new", "archive task"], cwd=agents_dir.parent)
     assert result.returncode == 0, result.stderr
     archive_sid = result.stdout.strip().splitlines()[0]
 
@@ -429,9 +420,7 @@ def test_cli_session_list_state_filter(agents_dir: Path) -> None:
         ["session", "release", "--id", archive_sid], cwd=agents_dir.parent
     )
     assert result.returncode == 0, result.stderr
-    result = _run_world_cli(
-        ["session", "archive", archive_sid], cwd=agents_dir.parent
-    )
+    result = _run_world_cli(["session", "archive", archive_sid], cwd=agents_dir.parent)
     assert result.returncode == 0, result.stderr
 
     # list --state active 只包含 active_sid

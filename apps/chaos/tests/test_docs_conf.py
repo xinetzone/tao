@@ -2,24 +2,34 @@ import importlib.metadata
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 
+import pytest
 
-def _find_docs_conf() -> Path:
+
+def _get_docs_conf() -> Path | None:
     """Search upward from the test file to locate docs/conf.py.
 
     Works in both monorepo (tests/ nested under apps/chaos/) and
     container (tests/ directly under /app/) layouts.
+    Returns None if not found (e.g., container without docs/).
     """
     current = Path(__file__).resolve().parent
-    for _ in range(6):
+    for _ in range(10):
         candidate = current / "docs" / "conf.py"
         if candidate.exists():
             return candidate
         current = current.parent
-    raise FileNotFoundError("Cannot locate docs/conf.py — searched 6 levels upward")
+    return None
+
+
+DOCS_CONF = _get_docs_conf()
 
 
 def _load_conf_module():
-    conf_path = _find_docs_conf()
+    if DOCS_CONF is None:
+        pytest.skip(
+            "docs/conf.py not found (likely running in container without docs/)"
+        )
+    conf_path = DOCS_CONF
     spec = spec_from_file_location("docs_conf", conf_path)
     assert spec is not None
     assert spec.loader is not None

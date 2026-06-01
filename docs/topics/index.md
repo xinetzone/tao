@@ -11,6 +11,9 @@
 design-philosophy
 industry-analysis
 philosophical-insights
+product-organization-insights
+code-architecture-insights
+rule-lifecycle
 ```
 
 ## 内容概览
@@ -20,6 +23,9 @@ philosophical-insights
 | `design-philosophy` | 架构师、核心贡献者 | AgentForge 的设计决策从何而来？约束即代码如何落地？ |
 | `industry-analysis` | 研究者、战略决策者 | AI Agent 协作标准的行业格局与演进趋势如何？ |
 | `philosophical-insights` | 深度贡献者、跨学科探索者 | 东方哲学如何映射为工程设计模式？元层级洞察有何价值？ |
+| `product-organization-insights` | 产品经理、组织设计者 | 上下文治理如何从产品与组织视角落地？约束如何成为赋能而非负担？ |
+| `code-architecture-insights` | 架构师、核心贡献者 | 道法术用如何映射到 `world.toml` / `constraints.toml` / 路由引擎的代码层落地？ |
+| `rule-lifecycle` | 架构师、规则治理者 | 规则如何诞生、成长、衰老、重生？宇宙/世界分层如何指导规则的生命周期管理？ |
 
 ## 边界
 

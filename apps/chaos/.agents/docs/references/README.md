@@ -20,6 +20,7 @@
 | [agent-memory-dream-protocol.md](./agent-memory-dream-protocol.md) | 智能体记忆梦境协议 |
 | [knowledge-driven-exploration-protocol.md](./knowledge-driven-exploration-protocol.md) | 知识驱动探索协议 |
 | [design-meta-insights.md](./design-meta-insights.md) | 设计元层级洞察（6 条跨场景判断规则） |
+| [standardization-strategy.md](./standardization-strategy.md) | 标准化战略分析：行业格局、核心挑战、三层分离方案与路线图 |
 | [web-content-extraction-patterns.md](./web-content-extraction-patterns.md) | 网页内容抓取模式（URL→工具映射 + 反爬应对） |
 | [autoapi-docstring-style.md](./autoapi-docstring-style.md) | AutoAPI 文档字符串风格规范 |
 | [doc-maintenance-workflow.md](./doc-maintenance-workflow.md) | 文档维护工作流 |

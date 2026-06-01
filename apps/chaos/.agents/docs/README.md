@@ -15,6 +15,10 @@
 | [`sources/`](./sources/) | 保留原始资料和追溯入口 | 官方文档摘录、抓取结果、工作底稿 | 当你需要追溯原文、版本、抓取时间或尚未提炼的资料时 |
 | [`superpowers/`](./superpowers/) | 沉淀历史设计、计划和复盘 | specs、plans、retrospectives 等长期资产 | 当你要理解历史决策、实施计划或复盘结论时 |
 | [`superpowers/memories/`](./superpowers/memories/) | 沉淀长期记忆 | 按模板格式提取的稳定知识（原则、经验、约束、反例等），待做梦重组或回流至 rules/references | 当你需要查证"这个规则/经验是如何形成的"或"这个约束的适用边界是什么"时 |
+| [`repository-structure.md`](./repository-structure.md) | 说明仓库物理目录结构与层级关系 | 目录树、混沌→脱胎信息流转模型、嵌套 AGENTS.md 规则 | 当你需要理解项目整体组织方式或查找某个目录的职责时 |
+| [`governance-and-specs.md`](./governance-and-specs.md) | 说明核心治理框架与规范体系 | Spec v0.2 三层架构、脱胎萃取管道规则 | 当你需要理解 AgentForge 的治理模型或脱胎迁移规则时 |
+| [`tech-stack.md`](./tech-stack.md) | 列出项目使用的技术组件与工具链 | 技术栈表格（uv、pdm-backend、ruff、Sphinx 等） | 当你需要确认项目使用的工具、版本管理或构建系统时 |
+| [`cross-tool-bridging.md`](./cross-tool-bridging.md) | 说明 .agents/ 与其他 AI 工具目录的映射关系 | `.agents/` ↔ `.claude/` ↔ `.github/` 映射表、规则条件加载说明 | 当你需要跨工具消费或迁移 .agents/ 资产时 |
 
 ## 按场景导航
 

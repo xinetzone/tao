@@ -28,8 +28,13 @@
 
 | 规则 | 适用任务 |
 |------|----------|
+| [`rules/core-principles.md`](./rules/core-principles.md) | 全局核心原则：沟通语言、按需读取、上下文节省、代码修改、Mermaid 优先等。 |
+| [`rules/context-routing.md`](./rules/context-routing.md) | 任务路由策略：工作区选择、详细路由表、嵌套 AGENTS.md 规则。 |
 | [`rules/context-economy.md`](./rules/context-economy.md) | 上下文节省、token 优化、长材料预处理、输出预算。 |
+| [`rules/document-boundaries.md`](./rules/document-boundaries.md) | 文档与产物边界：物理隔离原则、面向对象边界规则。 |
 | [`rules/documentation.md`](./rules/documentation.md) | 文档边界、归档位置、临时产物、路径引用、同步机制。 |
+| [`rules/information-sanitization.md`](./rules/information-sanitization.md) | 信息脱敏规则：脱敏类型矩阵、实施步骤、验证方法、CI/CD 门禁。 |
+| [`rules/project-independence.md`](./rules/project-independence.md) | 项目独立性规则：路径引用原则、模块间引用规范、正反例对照。 |
 | [`rules/python.md`](./rules/python.md) | Python 依赖管理、导入规则、路径独立性、版本适配。 |
 | [`rules/skills.md`](./rules/skills.md) | 技能开发、`SKILL.md` 结构、技能验收约束。 |
 | [`docs/references/agent-collaboration-metamodel.md`](./docs/references/agent-collaboration-metamodel.md) | 多 team、多角色、多智能体协作语义建模。 |

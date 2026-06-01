@@ -18,6 +18,7 @@ api/taolib/index
 deploy
 build-conventions
 fragment-manifest-spec
+resource-curation-guide
 contributing
 changelog
 jupyterlite
@@ -43,6 +44,7 @@ jupyterlite
 | `deploy.md` | 文档托管、CI/CD 与发布流程 |
 | `build-conventions.md` | PDM / uv / mise 构建约定 |
 | `fragment-manifest-spec.md` | Fragment manifest.toml 完整格式规格 |
+| `resource-curation-guide.md` | 学习资源缺口分析方法论与条目筛选准则 |
 | `contributing.md` | PR 流程、代码审查与测试要求 |
 | `changelog.md` + `changelogs/` | 项目级变更索引与月度/技能变更镜像页 |
 | `jupyterlite.md` | JupyterLite 集成说明 |

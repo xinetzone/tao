@@ -74,6 +74,7 @@ flowchart TD
 | CI/CD 流水线、构建 | `.github/workflows/ci.yml`、`apps/chaos/pyproject.toml` |
 | AgentForge Spec 规范查阅 | `apps/chaos/specs/agentforge-spec-v0.2.md` |
 | 信息脱敏合规 | `apps/chaos/.agents/rules/information-sanitization.md` |
+| 规则演化、经验准入、元规则 | `apps/chaos/.agents/rules/rule-evolution.md` |
 | 路径独立性合规 | `apps/chaos/.agents/rules/project-independence.md` |
 
 ## 4. 文档边界
@@ -102,6 +103,7 @@ flowchart TD
 | [`rules/context-economy.md`](apps/chaos/.agents/rules/context-economy.md) | 上下文节省策略：文件读取策略、长材料预处理、输出预算 |
 | [`rules/python.md`](apps/chaos/.agents/rules/python.md) | Python 开发规则：环境管理、导入规则、路径独立性、版本适配 |
 | [`rules/skills.md`](apps/chaos/.agents/rules/skills.md) | 技能开发规范 |
+| [`rules/rule-evolution.md`](apps/chaos/.agents/rules/rule-evolution.md) | 规则演化机制：生长通道准入标准、三条元规则、规则生命周期状态机 |
 | **文档 (docs/)** | |
 | [`docs/repository-structure.md`](apps/chaos/.agents/docs/repository-structure.md) | 仓库目录结构与混沌→脱胎信息流转模型 |
 | [`docs/governance-and-specs.md`](apps/chaos/.agents/docs/governance-and-specs.md) | 治理框架：Spec v0.2 三层架构、脱胎萃取管道 |

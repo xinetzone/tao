@@ -113,10 +113,10 @@ paths = [
 ]
 # 角色实例和团队配置也属于本世界特有
 organization = [
-    "roles/collaboration-architect.md",
-    "roles/execution-orchestrator.md",
-    "roles/governance-auditor.md",
-    "roles/organization-steward.md",
+    "roles/governance/collaboration-architect.md",
+    "roles/governance/execution-orchestrator.md",
+    "roles/governance/governance-auditor.md",
+    "roles/governance/organization-steward.md",
     "teams/",
 ]
 portable = false

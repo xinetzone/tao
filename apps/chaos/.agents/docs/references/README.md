@@ -35,3 +35,4 @@
 | [python/](./python/) | Python 包、运行时特性与排障参考 |
 | [podman/](./podman/) | Podman 命令、容器场景与常见故障参考 |
 | [mise/](./mise/) | mise 多语言版本管理、配置与任务运行器参考 |
+| [agents-design-system/](./agents-design-system/) | AGENTS.md 与 .agents/ 设计体系完整讨论（29 篇） |

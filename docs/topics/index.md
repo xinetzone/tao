@@ -14,6 +14,7 @@ philosophical-insights
 product-organization-insights
 code-architecture-insights
 rule-lifecycle
+layered-development-practice
 ```
 
 ## 内容概览
@@ -26,6 +27,7 @@ rule-lifecycle
 | `product-organization-insights` | 产品经理、组织设计者 | 上下文治理如何从产品与组织视角落地？约束如何成为赋能而非负担？ |
 | `code-architecture-insights` | 架构师、核心贡献者 | 道法术用如何映射到 `world.toml` / `constraints.toml` / 路由引擎的代码层落地？ |
 | `rule-lifecycle` | 架构师、规则治理者 | 规则如何诞生、成长、衰老、重生？宇宙/世界分层如何指导规则的生命周期管理？ |
+| `layered-development-practice` | 开发者、AI Agent | 宇宙/世界/生长通道三层架构如何指导日常开发决策？接到任务时怎样用分层思维做判断？ |
 
 ## 边界
 

@@ -16,6 +16,11 @@
       "minLength": 1,
       "description": "Domain this role belongs to (e.g., engineering, governance, infrastructure)"
     },
+    "layer": {
+      "type": "string",
+      "enum": ["governance", "engineering"],
+      "description": "Role layer: governance (stable, requires review) or engineering (lightweight, evolves with tech stack)"
+    },
     "bindings": {
       "type": "object",
       "description": "Default context bindings loaded when an agent assumes this role",

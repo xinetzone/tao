@@ -269,6 +269,30 @@ def _extract_frontmatter(text: str) -> str | None:
     return None
 
 
+def _find_role_file(roles_dir: Path, role_id: str) -> Path | None:
+    """在 governance/ 和 engineering/ 子目录中查找角色文件。
+
+    搜索顺序：
+    1. ``roles_dir/governance/{role_id}.md``
+    2. ``roles_dir/engineering/{role_id}.md``
+    3. ``roles_dir/{role_id}.md`` （兼容扁平结构过渡期）
+
+    Args:
+        roles_dir: ``roles/`` 目录路径。
+        role_id: 角色 id（kebab-case）。
+
+    Returns:
+        找到的角色文件路径；不存在时返回 ``None``。
+    """
+    for subdir in ("governance", "engineering"):
+        candidate = roles_dir / subdir / f"{role_id}.md"
+        if candidate.exists():
+            return candidate
+    # 兼容：直接在 roles_dir 下查找
+    flat = roles_dir / f"{role_id}.md"
+    return flat if flat.exists() else None
+
+
 def resolve_role_bindings(roles_dir: Path, role_id: str) -> list[str]:
     """从 Role 文件的 TOML frontmatter 提取 always-on bindings。
 
@@ -283,8 +307,8 @@ def resolve_role_bindings(roles_dir: Path, role_id: str) -> list[str]:
         该角色默认绑定的资产路径列表。找不到角色文件或 frontmatter
         缺失时返回空列表。
     """
-    role_path = roles_dir / f"{role_id}.md"
-    if not role_path.exists():
+    role_path = _find_role_file(roles_dir, role_id)
+    if role_path is None:
         return []
 
     try:

@@ -18,6 +18,13 @@ github-app = [
   "PyJWT[crypto]>=2.10,<3",
   "PyGithub>=2.5,<3",
 ]
+harness = [
+    "langgraph>=1.2,<2",
+    "langgraph-checkpoint>=4.1,<5",
+    "metaflow>=2.14,<3",
+    "pydantic>=2.0,<3",
+    "redis>=5.0,<6",
+]
 
 [project.urls]
 Documentation = "https://taolib.readthedocs.io/"
@@ -64,6 +71,12 @@ test = [
     "fpdf2",
     "pdfplumber>=0.11",
     "pypdfium2",
+]
+
+harness-dev = [
+    "langgraph-cli",
+    "pytest-asyncio",
+    "hypothesis",
 ]
 
 [tool.pdm.version]

@@ -195,6 +195,10 @@ myst_enable_extensions = [
 ]
 myst_footnote_transition = False
 
+# 将 ```mermaid 围栏代码块作为指令处理，交由 sphinxcontrib.mermaid 渲染，
+# 避免 Sphinx Pygments 因没有 mermaid 词法器而报 misc.highlighting_failure。
+myst_fence_as_directive = ["mermaid"]
+
 # 抑制对 Sphinx 源码树外部的交叉引用警告（如 .agents/ 目录下的文件）
 # 这些链接是合法的相对路径引用，但 MyST 尝试将其解析为内部交叉引用会失败
 suppress_warnings = ["myst.xref_missing"]

@@ -209,11 +209,11 @@ class MyLLM(HelloAgentsLLM):
         if provider == "modelscope":
             print("正在使用自定义的 ModelScope Provider")
             self.provider = "modelscope"
-            
+
             # 解析 ModelScope 的凭证
             self.api_key = api_key or os.getenv("MODELSCOPE_API_KEY")
             self.base_url = base_url or "https://api-inference.modelscope.cn/v1/"
-            
+
             # 验证凭证是否存在
             if not self.api_key:
                 raise ValueError("ModelScope API key not found. Please set MODELSCOPE_API_KEY environment variable.")
@@ -223,7 +223,7 @@ class MyLLM(HelloAgentsLLM):
             self.temperature = kwargs.get('temperature', 0.7)
             self.max_tokens = kwargs.get('max_tokens')
             self.timeout = kwargs.get('timeout', 60)
-            
+
             # 使用获取的参数创建OpenAI客户端实例
             self._client = OpenAI(api_key=self.api_key, base_url=self.base_url, timeout=self.timeout)
 
@@ -257,7 +257,7 @@ from my_llm import MyLLM # 注意:这里导入我们自己的类
 load_dotenv()
 
 # 实例化我们重写的客户端，并指定provider
-llm = MyLLM(provider="modelscope") 
+llm = MyLLM(provider="modelscope")
 
 # 准备消息
 messages = [{"role": "user", "content": "你好，请介绍一下你自己。"}]
@@ -421,7 +421,7 @@ def _resolve_credentials(self, api_key: Optional[str], base_url: Optional[str]) 
         resolved_api_key = api_key or os.getenv("MODELSCOPE_API_KEY") or os.getenv("LLM_API_KEY")
         resolved_base_url = base_url or os.getenv("LLM_BASE_URL") or "https://api-inference.modelscope.cn/v1/"
         return resolved_api_key, resolved_base_url
-    
+
     # ... 其他服务商的逻辑
 ```
 
@@ -441,7 +441,7 @@ from hello_agents import HelloAgentsLLM
 load_dotenv()
 
 # 无需传入 provider，框架会自动检测
-llm = HelloAgentsLLM() 
+llm = HelloAgentsLLM()
 # 框架内部日志会显示检测到 provider 为 'ollama'
 
 # 后续调用方式完全不变
@@ -487,12 +487,12 @@ MessageRole = Literal["user", "assistant", "system", "tool"]
 
 class Message(BaseModel):
     """消息类"""
-    
+
     content: str
     role: MessageRole
     timestamp: datetime = None
     metadata: Optional[Dict[str, Any]] = None
-    
+
     def __init__(self, content: str, role: MessageRole, **kwargs):
         super().__init__(
             content=content,
@@ -500,14 +500,14 @@ class Message(BaseModel):
             timestamp=kwargs.get('timestamp', datetime.now()),
             metadata=kwargs.get('metadata', {})
         )
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """转换为字典格式（OpenAI API格式）"""
         return {
             "role": self.role,
             "content": self.content
         }
-    
+
     def __str__(self) -> str:
         return f"[{self.role}] {self.content}"
 ```
@@ -526,20 +526,20 @@ from pydantic import BaseModel
 
 class Config(BaseModel):
     """HelloAgents配置类"""
-    
+
     # LLM配置
     default_model: str = "gpt-3.5-turbo"
     default_provider: str = "openai"
     temperature: float = 0.7
     max_tokens: Optional[int] = None
-    
+
     # 系统配置
     debug: bool = False
     log_level: str = "INFO"
-    
+
     # 其他配置
     max_history_length: int = 100
-    
+
     @classmethod
     def from_env(cls) -> "Config":
         """从环境变量创建配置"""
@@ -549,7 +549,7 @@ class Config(BaseModel):
             temperature=float(os.getenv("TEMPERATURE", "0.7")),
             max_tokens=int(os.getenv("MAX_TOKENS")) if os.getenv("MAX_TOKENS") else None,
         )
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """转换为字典"""
         return self.dict()
@@ -571,7 +571,7 @@ from .config import Config
 
 class Agent(ABC):
     """Agent基类"""
-    
+
     def __init__(
         self,
         name: str,
@@ -584,24 +584,24 @@ class Agent(ABC):
         self.system_prompt = system_prompt
         self.config = config or Config()
         self._history: list[Message] = []
-    
+
     @abstractmethod
     def run(self, input_text: str, **kwargs) -> str:
         """运行Agent"""
         pass
-    
+
     def add_message(self, message: Message):
         """添加消息到历史记录"""
         self._history.append(message)
-    
+
     def clear_history(self):
         """清空历史记录"""
         self._history.clear()
-    
+
     def get_history(self) -> list[Message]:
         """获取历史记录"""
         return self._history.copy()
-    
+
     def __str__(self) -> str:
         return f"Agent(name={self.name}, provider={self.llm.provider})"
 ```
@@ -887,14 +887,14 @@ class MySimpleAgent(SimpleAgent):
     def has_tools(self) -> bool:
         """检查是否有可用工具"""
         return self.enable_tool_calling and self.tool_registry is not None
-    
+
     def remove_tool(self, tool_name: str) -> bool:
         """移除工具（便利方法）"""
         if self.tool_registry:
             self.tool_registry.unregister(tool_name)
             return True
         return False
-    
+
     def list_tools(self) -> list:
         """列出所有可用工具"""
         if self.tool_registry:
@@ -1426,7 +1426,7 @@ class ToolRegistry:
             print(f"⚠️ 警告:工具 '{tool.name}' 已存在，将被覆盖。")
         self._tools[tool.name] = tool
         print(f"✅ 工具 '{tool.name}' 已注册。")
-        
+
     def register_function(self, name: str, description: str, func: Callable[[str], str]):
         """
         直接注册函数作为工具（简便方式）
@@ -1574,7 +1574,8 @@ def _eval_node(node, operators, functions):
         func_name = node.func.id
         if func_name in functions:
             args = [_eval_node(arg, operators, functions) for arg in node.args]
-            return functions[func_name](*args)
+            function = functions[func_name]
+            return function(*args)
     elif isinstance(node, ast.Name):
         if node.id in functions:
             return functions[node.id]
@@ -2169,7 +2170,7 @@ async def test_parallel_execution():
 
 1. 本章构建了 `HelloAgents` 框架，并阐述了"为何需要自建Agent框架"。请分析：
 
-   - 在7.1.1节中提到了当前主流框架的四个主要局限性。结合你在[第六章习题](../chapter6/第六章%20框架开发实践.md#习题)或实际项目中使用过的某个框架的实际经验，说明这些问题是如何影响开发效率的。
+   - 在7.1.1节中提到了当前主流框架的四个主要局限性。结合你在[第六章习题](06-framework-development-practice.md#习题)或实际项目中使用过的某个框架的实际经验，说明这些问题是如何影响开发效率的。
    - `HelloAgents` 提出了"万物皆为工具"的设计理念，将 `Memory`、`RAG`、`MCP` 等模块都抽象为工具。这种设计有什么优势？是否存在局限性？请举例说明。
    - 对比第四章从零实现的智能体代码和本章的框架化实现，框架化带来了哪些具体的改进？如果让你设计一个框架，你会优先考虑哪些设计原则？
 
@@ -2206,4 +2207,3 @@ async def test_parallel_execution():
    - 首先为 `HelloAgents` 添加一个"流式输出"功能，使得 `Agent` 在生成响应时能够实时返回中间结果（类似 `ChatGPT` 用户界面的打字效果）。请设计这个功能的实现方案，说明需要修改哪些类和方法。
    - 然后为框架添加"多轮对话管理"功能，能够自动管理对话历史、支持对话分支和回溯，你会如何设计？需要新增哪些类？如何与现有的 `Message` 系统集成？
    - 最后请为 `HelloAgents` 设计一个"插件系统"，允许第三方开发者通过插件的方式扩展框架功能（如添加新的 `Agent` 类型、新的工具类型等），而无需修改框架核心代码。要求画出插件系统的架构图并说明关键接口。
-

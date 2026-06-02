@@ -281,7 +281,7 @@ MCP 协议采用 Host、Client、Servers 三层架构设计，让我们通过图
   <p>图 10.6 MCP 案例演示</p>
 </div>
 
-一个关键问题是：<strong>Claude（或其他 LLM）是如何决定使用哪些工具的？</strong> 
+一个关键问题是：<strong>Claude（或其他 LLM）是如何决定使用哪些工具的？</strong>
 
 当用户提出问题时，完整的工具选择流程如下：
 
@@ -976,14 +976,14 @@ try:
     # 步骤1：GitHub搜索
     print("\n【步骤3】Agent1 搜索GitHub...")
     search_task = "搜索关于'AI agent'的GitHub仓库，返回前5个最相关的结果"
-    
+
     search_results = github_searcher.run(search_task)
-    
+
     print("\n搜索结果:")
     print("-" * 70)
     print(search_results)
     print("-" * 70)
-    
+
     # 步骤2：生成报告
     print("\n【步骤4】Agent2 生成报告...")
     report_task = f"""
@@ -1020,11 +1020,11 @@ try:
         print(f"✅ 文件大小: {file_size} 字节")
     except Exception as e:
         print(f"❌ 保存失败: {e}")
-    
+
     print("\n" + "="*70)
     print("任务完成！")
     print("="*70)
-    
+
 except Exception as e:
     print(f"\n❌ 错误: {e}")
     import traceback
@@ -1070,7 +1070,7 @@ MCP 协议的一个巨大优势是<strong>丰富的社区生态</strong>。Anthr
 以下是一些特别有趣的案例 TODO 可供参考：
 
 1. <strong>自动化网页测试（Playwright）</strong>
-   
+
    ```python
    # Agent可以自动：
    # - 打开浏览器访问网站
@@ -1082,7 +1082,7 @@ MCP 协议的一个巨大优势是<strong>丰富的社区生态</strong>。Anthr
        server_command=["npx", "-y", "@playwright/mcp"]
    )
    ```
-   
+
 2. <strong>智能笔记助手（Obsidian + Perplexity）</strong>
    ```python
    # Agent可以：
@@ -1102,7 +1102,7 @@ MCP 协议的一个巨大优势是<strong>丰富的社区生态</strong>。Anthr
    ```
 
 5. <strong>内容创作工作流（YouTube + Notion + Spotify）</strong>
-   
+
    ```python
    # Agent可以：
    # - 获取YouTube视频字幕
@@ -1234,11 +1234,14 @@ if calc_agent:
 
     for query in test_queries:
         if "信息" in query:
-            result = calc_agent.skills["info"](query)
+            skill = calc_agent.skills["info"]
+            result = skill(query)
         elif "+" in query:
-            result = calc_agent.skills["add"](query)
+            skill = calc_agent.skills["add"]
+            result = skill(query)
         elif "*" in query or "×" in query:
-            result = calc_agent.skills["multiply"](query)
+            skill = calc_agent.skills["multiply"]
+            result = skill(query)
         else:
             result = "未知查询类型"
 
@@ -1294,11 +1297,13 @@ custom_agent = create_custom_agent()
 if custom_agent:
     # 测试技能
     print("测试问候技能:")
-    result1 = custom_agent.skills["greet"]("张三")
+    greet_skill = custom_agent.skills["greet"]
+    result1 = greet_skill("张三")
     print(result1)
 
     print("\n测试计算技能:")
-    result2 = custom_agent.skills["calculate"]("10 + 5 * 2")
+    calculate_skill = custom_agent.skills["calculate"]
+    result2 = calculate_skill("10 + 5 * 2")
     print(result2)
 ```
 
@@ -1329,7 +1334,7 @@ def handle_research(text: str) -> str:
     import re
     match = re.search(r'research\s+(.+)', text, re.IGNORECASE)
     topic = match.group(1).strip() if match else text
-    
+
     # 实际的研究逻辑（这里简化）
     result = {
         "topic": topic,
@@ -1345,9 +1350,9 @@ def start_server():
 if __name__ == "__main__":
     server_thread = threading.Thread(target=start_server, daemon=True)
     server_thread.start()
-    
+
     print("✅ 研究员Agent服务已启动在 http://localhost:5000")
-    
+
     # 保持程序运行
     try:
         while True:
@@ -1406,7 +1411,7 @@ def write_article(text: str) -> str:
     import re
     match = re.search(r'write\s+(.+)', text, re.IGNORECASE)
     content = match.group(1).strip() if match else text
-    
+
     # 尝试解析研究数据
     try:
         data = eval(content)
@@ -1415,7 +1420,7 @@ def write_article(text: str) -> str:
     except:
         topic = "未知主题"
         findings = content
-    
+
     return f"# {topic}\n\n基于研究：{findings}\n\n文章内容..."
 
 editor = A2AServer(
@@ -1428,7 +1433,7 @@ def edit_article(text: str) -> str:
     import re
     match = re.search(r'edit\s+(.+)', text, re.IGNORECASE)
     article = match.group(1).strip() if match else text
-    
+
     result = {
         "article": article + "\n\n[已编辑优化]",
         "feedback": "文章质量良好",
@@ -1452,11 +1457,11 @@ def create_content(topic):
     # 步骤1：研究
     research = researcher_client.execute_skill("research", f"research {topic}")
     research_data = research.get('result', '')
-    
+
     # 步骤2：撰写
     article = writer_client.execute_skill("write", f"write {research_data}")
     article_content = article.get('result', '')
-    
+
     # 步骤3：编辑
     final = editor_client.execute_skill("edit", f"edit {article_content}")
     return final.get('result', '')
@@ -1610,16 +1615,16 @@ agent1 = A2AServer(
 def handle_proposal(text: str) -> str:
     """处理协商提案"""
     import re
-    
+
     # 解析提案
     match = re.search(r'propose\s+(.+)', text, re.IGNORECASE)
     proposal_str = match.group(1).strip() if match else text
-    
+
     try:
         proposal = eval(proposal_str)
         task = proposal.get("task")
         deadline = proposal.get("deadline")
-        
+
         # 评估提案
         if deadline >= 7:  # 至少需要7天
             result = {"accepted": True, "message": "接受提案"}
@@ -1642,13 +1647,13 @@ agent2 = A2AServer(
 def negotiate_task(text: str) -> str:
     """发起协商"""
     import re
-    
+
     # 解析任务和截止日期
     match = re.search(r'negotiate\s+task:(.+?)\s+deadline:(\d+)', text, re.IGNORECASE)
     if match:
         task = match.group(1).strip()
         deadline = int(match.group(2))
-        
+
         # 向agent1发送提案
         proposal = {"task": task, "deadline": deadline}
         return str({"status": "negotiating", "proposal": proposal})
@@ -2446,4 +2451,3 @@ agent.add_tool(ANPTool(...))
 [2] The A2A Project. (2025). *A2A Protocol: An open protocol for agent-to-agent communication*. Retrieved October 7, 2025, from https://a2a-protocol.org/
 
 [3] Chang, G., Lin, E., Yuan, C., Cai, R., Chen, B., Xie, X., & Zhang, Y. (2025). *Agent Network Protocol technical white paper*. arXiv. https://doi.org/10.48550/arXiv.2508.00007
-

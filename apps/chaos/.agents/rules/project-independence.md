@@ -24,8 +24,8 @@
 | 引用场景 | 路径基准 | 示例 |
 |---|---|---|
 | Python 包内导入 | 使用相对导入 (`. ` / `..`) | `from ..core import config` |
-| 同目录文档链接 | 基于当前文件的相对路径 | `[规则](./rules/python.md)` |
-| 跨目录文档链接 | 基于当前文件的相对路径，使用 `../` 上溯 | `[Spec](../specs/agentforge-spec-v0.2.md)` |
+| 同目录文档链接 | 基于当前文件的相对路径 | `规则（./rules/python.md）` |
+| 跨目录文档链接 | 基于当前文件的相对路径，使用 `../` 上溯 | `Spec（../specs/agentforge-spec-v0.2.md）` |
 | 配置文件内部引用 | 基于配置文件所在目录 | `path = "./src/taolib"` |
 | CI/CD 路径 | 基于 `$GITHUB_WORKSPACE` | `working-directory: ./apps/chaos` |
 
@@ -55,7 +55,7 @@ apps/chaos/
 | 引用方向 | 规范 | 示例 |
 |---|---|---|
 | `tests/` → `src/taolib/` | 使用 `PYTHONPATH` 或 `uv run pytest`，不硬编码路径 | `uv run pytest tests/` |
-| `specs/` → `src/taolib/` | 文档中引用代码时使用仓库根相对路径 | `` [`world.py`](apps/chaos/src/taolib/world.py) `` |
+| `specs/` → `src/taolib/` | 文档中引用代码时使用仓库根相对路径 | `` `world.py`（apps/chaos/src/taolib/world.py） `` |
 | `src/taolib/` 内部模块间 | Python 相对导入 | `from .core import World` |
 
 ### 2.2 跨子项目引用（chaos ↔ rebirth）
@@ -65,7 +65,7 @@ chaos 与 rebirth 是 **独立工作区**，跨区引用遵循以下边界：
 | 引用方向 | 允许？ | 规范 |
 |---|---|---|
 | chaos 代码引用 rebirth 文件 | **禁止** | rebirth 是 git submodule，其内容可能随上游更新而变化 |
-| chaos 文档引用 rebirth 文件 | **允许**（仅文档链接） | 使用仓库根相对路径，如 `[rebirth/README.md](rebirth/README.md)` |
+| chaos 文档引用 rebirth 文件 | **允许**（仅文档链接） | 使用仓库根相对路径，如 `rebirth/README.md` |
 | rebirth 引用 chaos 文件 | **禁止** | rebirth 应能独立存在（clone `worldsprout/worldsprout` 后自包含） |
 | CI 脚本引用两区 | **允许** | 使用 `$GITHUB_WORKSPACE` 前缀的相对路径 |
 
@@ -109,10 +109,10 @@ rebirth/
 
 | 场景 | 正例 | 反例 |
 |---|---|---|
-| 引用同目录文档 | `[规则](rules/python.md)` | `[规则](C:/Users/xinzo/.agents/rules/python.md)` |
-| 引用上级目录 | `[Spec](../specs/agentforge-spec.md)` | `[Spec](/Users/xinzo/AgentForge/apps/chaos/specs/...)` |
-| 引用仓库根文件 | `[README](../../README.md)` | `[README](file:///D:/spaces/AgentForge/README.md)` |
-| 跨工作区引用 | `[脱胎规则](rebirth/README.md)`（从根 AGENTS.md） | `[脱胎规则](/d/spaces/AgentForge/rebirth/README.md)` |
+| 引用同目录文档 | `规则（rules/python.md）` | `规则（C:/Users/xinzo/.agents/rules/python.md）` |
+| 引用上级目录 | `Spec（../specs/agentforge-spec.md）` | `Spec（/Users/xinzo/AgentForge/apps/chaos/specs/...）` |
+| 引用仓库根文件 | `README（../../README.md）` | `README（file:///D:/spaces/AgentForge/README.md）` |
+| 跨工作区引用 | `脱胎规则（rebirth/README.md）`（从根 AGENTS.md） | `脱胎规则（/d/spaces/AgentForge/rebirth/README.md）` |
 
 ### 3.3 TOML / YAML 配置文件
 
@@ -162,7 +162,7 @@ rebirth/
 |---|---|
 | `git grep` 无绝对路径 | `git grep "/Users/\|/home/\|C:\\\\Users" -- "*.py" "*.md" "*.toml" "*.yml"` 无结果（排除白名单） |
 | 配置文件路径相对化 | `world.toml`、`pyproject.toml`、CI yml 中所有路径字段均为相对路径 |
-| 文档链接可解析 | 所有 `[text](path)` 中的 path 为相对路径且指向存在的文件 |
+| 文档链接可解析 | 所有 Markdown 链接中的 path 为相对路径且指向存在的文件 |
 | 无 `sys.path` 硬编码 | Python 代码中无通过绝对路径操作 `sys.path` 的语句 |
 | 新成员可克隆即运行 | `git clone && uv sync && uv run pytest` 在干净环境中通过 |
 
@@ -179,7 +179,7 @@ rebirth/
 | 违规类型 | 修复方式 |
 |---|---|
 | Python 文件绝对路径 | 改用 `pathlib.Path(__file__).parent / "..."` 或相对导入 |
-| 文档绝对链接 | 改为相对路径链接 `[text](../path/to/file.md)` |
+| 文档绝对链接 | 改为相对路径链接，例如 `../path/to/file.md` |
 | 配置绝对路径 | 改为相对路径，以配置文件所在目录为基准 |
 | CI 绝对路径 | 改用 `$GITHUB_WORKSPACE` 或 `working-directory` 相对路径 |
 | Shell 命令绝对路径 | 改用 `cd` 到项目相对路径后再操作 |

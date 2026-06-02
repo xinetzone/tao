@@ -7,6 +7,7 @@
 - `python/`：存放 Python 包官方文档摘录、抓取页面或初步整理材料。
 - `podman/`：存放 Podman 官方文档摘录、抓取页面或初步整理材料。
 - `mise/`：存放 mise 原始技术调研记录和整理前的工作底稿。
+- `hello-agents/`：存放 Hello-Agents 教程原始抓取结果和追溯入口，包含 README 抓取、前言、1-16 章原文归档与 `chapters-manifest.json` 章节清单。
 
 ## 使用原则
 

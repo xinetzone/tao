@@ -11,4 +11,5 @@ Trae/index
 iFlow/index
 zeromq/index
 chaos/index
+hello-agents/index
 ```

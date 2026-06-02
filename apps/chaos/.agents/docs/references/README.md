@@ -29,7 +29,7 @@
 
 | 目录 | 说明 |
 |---|---|
-| [projects/](./projects/) | 学习资源项目笔记本（maple-mono、matplotlib、iflow、zeromq、chaos、trae） |
+| [projects/](./projects/) | 学习资源项目笔记本（maple-mono、matplotlib、iflow、zeromq、chaos、trae、hello-agents） |
 | [articles/](./articles/) | 技术文章剪切板（正则表达式、命令行艺术、数据治理） |
 | [experiments/](./experiments/) | 实验性笔记本（anywidget 等） |
 | [python/](./python/) | Python 包、运行时特性与排障参考 |

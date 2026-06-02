@@ -1,0 +1,87 @@
+[
+  {
+    "file": "00-preface.md",
+    "source": "docs/前言.md",
+    "chars": 1564
+  },
+  {
+    "file": "01-introduction-to-agents.md",
+    "source": "docs/chapter1/第一章 初识智能体.md",
+    "chars": 26934
+  },
+  {
+    "file": "02-history-of-agents.md",
+    "source": "docs/chapter2/第二章 智能体发展史.md",
+    "chars": 27708
+  },
+  {
+    "file": "03-fundamentals-of-large-language-models.md",
+    "source": "docs/chapter3/第三章 大语言模型基础.md",
+    "chars": 42976
+  },
+  {
+    "file": "04-classic-agent-paradigms.md",
+    "source": "docs/chapter4/第四章 智能体经典范式构建.md",
+    "chars": 42131
+  },
+  {
+    "file": "05-low-code-agent-platforms.md",
+    "source": "docs/chapter5/第五章 基于低代码平台的智能体搭建.md",
+    "chars": 38626
+  },
+  {
+    "file": "06-framework-development-practice.md",
+    "source": "docs/chapter6/第六章 框架开发实践.md",
+    "chars": 44347
+  },
+  {
+    "file": "07-building-your-agent-framework.md",
+    "source": "docs/chapter7/第七章 构建你的Agent框架.md",
+    "chars": 63291
+  },
+  {
+    "file": "08-memory-and-retrieval.md",
+    "source": "docs/chapter8/第八章 记忆与检索.md",
+    "chars": 64394
+  },
+  {
+    "file": "09-context-engineering.md",
+    "source": "docs/chapter9/第九章 上下文工程.md",
+    "chars": 74268
+  },
+  {
+    "file": "10-agent-communication-protocols.md",
+    "source": "docs/chapter10/第十章 智能体通信协议.md",
+    "chars": 64168
+  },
+  {
+    "file": "11-agentic-rl.md",
+    "source": "docs/chapter11/第十一章 Agentic-RL.md",
+    "chars": 76547
+  },
+  {
+    "file": "12-agent-performance-evaluation.md",
+    "source": "docs/chapter12/第十二章 智能体性能评估.md",
+    "chars": 77977
+  },
+  {
+    "file": "13-intelligent-travel-assistant.md",
+    "source": "docs/chapter13/第十三章 智能旅行助手.md",
+    "chars": 45933
+  },
+  {
+    "file": "14-automated-deep-research-agent.md",
+    "source": "docs/chapter14/第十四章 自动化深度研究智能体.md",
+    "chars": 52099
+  },
+  {
+    "file": "15-building-cyber-town.md",
+    "source": "docs/chapter15/第十五章 构建赛博小镇.md",
+    "chars": 57850
+  },
+  {
+    "file": "16-graduation-project.md",
+    "source": "docs/chapter16/第十六章 毕业设计.md",
+    "chars": 18845
+  }
+]

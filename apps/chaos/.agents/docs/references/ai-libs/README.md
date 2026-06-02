@@ -11,6 +11,7 @@
 | [03-deepagents-core-analysis.md](./03-deepagents-core-analysis.md) | DeepAgents 核心架构分析：中间件系统、后端协议、子代理、技能系统、ACP 协议 |
 | [04-cross-comparison.md](./04-cross-comparison.md) | 三库横向对比与技术关联分析：八大维度对比、互操作性、场景选型指南 |
 | [05-reusable-patterns.md](./05-reusable-patterns.md) | 可复用技术组件与设计模式参考手册：8+ 核心模式的提炼与应用建议 |
+| [06-insights.md](./06-insights.md) | 萃取洞察：五项架构智慧——分层哲学、版本驱动、厚夹具策略、不变式+钩子内核、生态弱点 |
 
 ## 三库定位速览
 

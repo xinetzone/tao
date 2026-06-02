@@ -510,16 +510,16 @@ class PlanningService:
             llm=llm,
             tool_call_listener=self._on_tool_call
         )
-    
+
     def plan_todo_list(self, state: SummaryState) -> List[TodoItem]:
         prompt = todo_planner_instructions.format(
             current_date=get_current_date(),
             research_topic=state.research_topic,
         )
-        
+
         response = self._agent.run(prompt)
         tasks_payload = self._extract_tasks(response)
-        
+
         todo_items = []
         for idx, item in enumerate(tasks_payload, start=1):
             task = TodoItem(
@@ -529,9 +529,9 @@ class PlanningService:
                 query=item["query"],
             )
             todo_items.append(task)
-        
+
         return todo_items
-    
+
     def _extract_tasks(self, response: str) -> List[dict]:
         """从Agent响应中提取JSON"""
         # 使用正则表达式提取JSON部分
@@ -606,7 +606,7 @@ class SummarizationService:
             llm=llm,
             tool_call_listener=self._on_tool_call
         )
-    
+
     def summarize_task(
         self,
         task: TodoItem,
@@ -614,17 +614,17 @@ class SummarizationService:
     ) -> str:
         # 格式化搜索结果
         formatted_sources = self._format_sources(search_results)
-        
+
         prompt = task_summarizer_instructions.format(
             task_title=task.title,
             task_intent=task.intent,
             task_query=task.query,
             search_results=formatted_sources,
         )
-        
+
         summary = self._agent.run(prompt)
         return summary
-    
+
     def _format_sources(self, search_results: List[dict]) -> str:
         """格式化搜索结果"""
         formatted = []
@@ -711,7 +711,7 @@ class ReportingService:
             llm=llm,
             tool_call_listener=self._on_tool_call
         )
-    
+
     def generate_report(
         self,
         research_topic: str,
@@ -719,15 +719,15 @@ class ReportingService:
     ) -> str:
         # 格式化子任务总结
         formatted_summaries = self._format_summaries(task_summaries)
-        
+
         prompt = report_writer_instructions.format(
             research_topic=research_topic,
             task_summaries=formatted_summaries,
         )
-        
+
         report = self._agent.run(prompt)
         return report
-    
+
     def _format_summaries(
         self,
         task_summaries: List[Tuple[TodoItem, str]]
@@ -796,15 +796,15 @@ class ToolAwareSimpleAgent(SimpleAgent):
             tool_registry=tool_registry,
         )
         self._tool_call_listener = tool_call_listener
-    
+
     def _execute_tool_call(self, tool_name: str, parameters: str) -> str:
         """执行工具调用，并通知监听器"""
         # 解析参数
         parsed_parameters = self._parse_parameters(parameters)
-        
+
         # 调用工具
         result = super()._execute_tool_call(tool_name, parameters)
-        
+
         # 通知监听器
         if self._tool_call_listener:
             self._tool_call_listener({
@@ -813,7 +813,7 @@ class ToolAwareSimpleAgent(SimpleAgent):
                 "parsed_parameters": parsed_parameters,
                 "result": result,
             })
-        
+
         return result
 ```
 
@@ -824,7 +824,7 @@ class DeepResearchAgent:
     def __init__(self, config: Configuration):
         self.config = config
         self.llm = HelloAgentsLLM(...)
-        
+
         # 创建工具调用监听器
         def tool_listener(call_info):
             self._emit_event({
@@ -833,7 +833,7 @@ class DeepResearchAgent:
                 "tool": call_info["tool_name"],
                 "parameters": call_info["parsed_parameters"],
             })
-        
+
         # 创建三个Agent，都使用相同的监听器
         self.planner = PlanningService(self.llm, tool_listener)
         self.summarizer = SummarizationService(self.llm, tool_listener)
@@ -866,7 +866,7 @@ class DeepResearchAgent:
         self._emit_event({"type": "status", "message": "正在规划研究任务..."})
         todo_list = self.planner.plan_todo_list(research_topic)
         self._emit_event({"type": "tasks", "tasks": todo_list})
-        
+
         # 2. 执行阶段
         task_summaries = []
         for task in todo_list:
@@ -874,24 +874,24 @@ class DeepResearchAgent:
                 "type": "status",
                 "message": f"正在研究：{task.title}"
             })
-            
+
             # 搜索
             search_results = self.search_service.search(task.query)
-            
+
             # 总结
             summary = self.summarizer.summarize_task(task, search_results)
             task_summaries.append((task, summary))
-            
+
             self._emit_event({
                 "type": "task_completed",
                 "task_id": task.id
             })
-        
+
         # 3. 报告阶段
         self._emit_event({"type": "status", "message": "正在生成报告..."})
         report = self.reporter.generate_report(research_topic, task_summaries)
         self._emit_event({"type": "report", "content": report})
-        
+
         return report
 ```
 
@@ -951,12 +951,12 @@ def deduplicate_sources(sources: List[dict]) -> List[dict]:
     """去除重复的URL"""
     seen_urls = set()
     unique_sources = []
-    
+
     for source in sources:
         if source["url"] not in seen_urls:
             seen_urls.add(source["url"])
             unique_sources.append(source)
-    
+
     return unique_sources
 ```
 
@@ -966,13 +966,13 @@ def deduplicate_sources(sources: List[dict]) -> List[dict]:
 def limit_source_tokens(source: dict, max_tokens: int = 2000) -> dict:
     """限制来源的Token数量"""
     snippet = source["snippet"]
-    
+
     # 简单的Token估算：1个Token约等于4个字符
     max_chars = max_tokens * 4
-    
+
     if len(snippet) > max_chars:
         snippet = snippet[:max_chars] + "..."
-    
+
     return {
         **source,
         "snippet": snippet
@@ -1006,7 +1006,7 @@ workspace/
 class NotesService:
     def __init__(self, workspace: str):
         self.note_tool = NoteTool(workspace=workspace)
-    
+
     def save_task_summary(
         self,
         task: TodoItem,
@@ -1020,7 +1020,7 @@ class NotesService:
             search_results=search_results,
             summary=summary
         )
-        
+
         # 创建笔记
         self.note_tool.run({
             "action": "create",
@@ -1028,7 +1028,7 @@ class NotesService:
             "content": content,
             "tags": ["research", "summary"]
         })
-    
+
     def _format_note_content(
         self,
         task: TodoItem,
@@ -1040,15 +1040,15 @@ class NotesService:
         content += f"## 任务信息\n\n"
         content += f"- **意图**：{task.intent}\n"
         content += f"- **查询**：{task.query}\n\n"
-        
+
         content += f"## 搜索结果\n\n"
         for idx, result in enumerate(search_results, start=1):
             content += f"[{idx}] {result['title']}\n"
             content += f"URL: {result['url']}\n"
             content += f"摘要: {result['snippet']}\n\n"
-        
+
         content += f"## 总结\n\n{summary}\n"
-        
+
         return content
 ```
 
@@ -1719,28 +1719,28 @@ class SearchService:
           <svg><!-- 关闭图标 --></svg>
         </button>
       </div>
-      
+
       <!-- 进度区域 -->
       <div class="progress-section">
         <div class="progress-bar">
-          <div 
-            class="progress-fill" 
+          <div
+            class="progress-fill"
             :style="{ width: progressPercentage + '%' }"
           ></div>
         </div>
         <div class="progress-text">{{ progressText }}</div>
       </div>
-      
+
       <!-- 内容区域 -->
       <div class="content-section">
         <div v-if="isLoading" class="loading-spinner">
           <div class="spinner"></div>
           <p>研究中，请稍候...</p>
         </div>
-        
+
         <div v-else class="markdown-content" v-html="renderedMarkdown"></div>
       </div>
-      
+
       <!-- 底部栏 -->
       <div class="modal-footer">
         <span class="status-text">{{ statusText }}</span>
@@ -1823,7 +1823,7 @@ watch(() => props.isOpen, (isOpen) => {
     width: 95vw;
     height: 95vh;
   }
-  
+
   .modal-header,
   .progress-section,
   .content-section,
@@ -1839,7 +1839,7 @@ watch(() => props.isOpen, (isOpen) => {
     height: 100vh;
     border-radius: 0;
   }
-  
+
   .modal-header h2 {
     font-size: 18px;
   }
@@ -1880,50 +1880,50 @@ app = FastAPI()
 
 async def research_stream(topic: str) -> AsyncGenerator[str, None]:
     """研究流式生成器
-    
+
     生成SSE格式的数据：
     data: {"type": "progress", "data": {...}}
-    
+
     """
     try:
         # 1. 规划阶段
         yield f"data: {json.dumps({'type': 'progress', 'stage': 'planning', 'percentage': 10, 'text': '正在规划研究任务...'})}\n\n"
-        
+
         # 调用PlanningService
         todo_items = await planning_service.plan_todo_list(topic)
-        
+
         yield f"data: {json.dumps({'type': 'plan', 'data': [item.dict() for item in todo_items]})}\n\n"
-        
+
         # 2. 执行阶段
         task_summaries = []
         for idx, task in enumerate(todo_items, start=1):
             # 更新进度
             percentage = 10 + (idx / len(todo_items)) * 70
             yield f"data: {json.dumps({'type': 'progress', 'stage': 'executing', 'percentage': percentage, 'text': f'正在研究任务{idx}/{len(todo_items)}：{task.title}'})}\n\n"
-            
+
             # 搜索
             search_results = await search_service.search(task.query)
-            
+
             # 总结
             summary, source_urls = await summarization_service.summarize_task(task, search_results)
-            
+
             task_summaries.append((task, summary, source_urls))
-            
+
             # 推送任务总结
             yield f"data: {json.dumps({'type': 'task_summary', 'task_id': task.id, 'summary': summary})}\n\n"
-        
+
         # 3. 报告阶段
         yield f"data: {json.dumps({'type': 'progress', 'stage': 'reporting', 'percentage': 90, 'text': '正在生成最终报告...'})}\n\n"
-        
+
         # 生成报告
         report = await reporting_service.generate_report(topic, task_summaries)
-        
+
         # 推送最终报告
         yield f"data: {json.dumps({'type': 'report', 'data': report})}\n\n"
-        
+
         # 完成
         yield f"data: {json.dumps({'type': 'progress', 'stage': 'completed', 'percentage': 100, 'text': '研究完成！'})}\n\n"
-        
+
     except Exception as e:
         # 错误处理
         yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
@@ -1953,52 +1953,52 @@ export function useResearch() {
   const progressText = ref('')
   const markdownContent = ref('')
   const error = ref<string | null>(null)
-  
+
   const startResearch = (topic: string) => {
     isLoading.value = true
     error.value = null
-    
+
     // 创建EventSource
     const eventSource = new EventSource(`/api/research?topic=${encodeURIComponent(topic)}`)
-    
+
     // 监听消息
     eventSource.onmessage = (event) => {
       const data = JSON.parse(event.data)
-      
+
       switch (data.type) {
         case 'progress':
           progressPercentage.value = data.percentage
           progressText.value = data.text
           break
-          
+
         case 'plan':
           // 显示规划结果
           console.log('规划结果:', data.data)
           break
-          
+
         case 'task_summary':
           // 追加任务总结到Markdown
           markdownContent.value += `\n\n## 任务${data.task_id}\n\n${data.summary}`
           break
-          
+
         case 'report':
           // 显示最终报告
           markdownContent.value = data.data
           break
-          
+
         case 'error':
           error.value = data.message
           eventSource.close()
           isLoading.value = false
           break
-          
+
         case 'completed':
           eventSource.close()
           isLoading.value = false
           break
       }
     }
-    
+
     // 错误处理
     eventSource.onerror = (err) => {
       console.error('SSE错误:', err)
@@ -2007,7 +2007,7 @@ export function useResearch() {
       isLoading.value = false
     }
   }
-  
+
   return {
     isLoading,
     progressPercentage,
@@ -2025,13 +2025,13 @@ export function useResearch() {
 <script setup lang="ts">
 import { useResearch } from '@/composables/useResearch'
 
-const { 
-  isLoading, 
-  progressPercentage, 
-  progressText, 
-  markdownContent, 
+const {
+  isLoading,
+  progressPercentage,
+  progressText,
+  markdownContent,
   error,
-  startResearch 
+  startResearch
 } = useResearch()
 
 const handleStartResearch = (topic: string) => {
@@ -2155,7 +2155,3 @@ const renderedHtml = marked(markdownContent.value)
 这些知识不仅适用于深度研究助手，也可以应用到其他 AI 应用中。希望读者能够在本章的基础上，探索更多的可能性，构建出更强大的 AI 系统。
 
 在下一章中，我们将构建一个与游戏引擎结合的多 Agent 系统——赛博小镇，探索 Agent 之间的复杂交互和协作模式。敬请期待！
-
-
-
-

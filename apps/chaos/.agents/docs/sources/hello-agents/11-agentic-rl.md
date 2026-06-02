@@ -264,8 +264,8 @@ GSM8K(Grade School Math 8K)<sup>[4]</sup>是一个高质量的小学数学应用
 让我们看一个典型的 GSM8K 问题:
 
 ```
-问题: Natalia sold clips to 48 of her friends in April, and then she sold half 
-      as many clips in May. How many clips did Natalia sell altogether in April 
+问题: Natalia sold clips to 48 of her friends in April, and then she sold half
+      as many clips in May. How many clips did Natalia sell altogether in April
       and May?
 
 答案: Natalia sold 48/2 = <<48/2=24>>24 clips in May.
@@ -981,19 +981,19 @@ result = rl_tool.run({
     # 训练配置
     "action": "train",
     "algorithm": "sft",
-    
+
     # 模型配置
     "model_name": "Qwen/Qwen3-0.6B",
     "output_dir": "./models/sft_model",
-    
+
     # 数据配置
     "max_samples": 100,     # 使用100个样本快速测试
-    
+
     # 训练参数
     "num_epochs": 3,        # 训练3轮
     "batch_size": 4,        # 批次大小
     "learning_rate": 5e-5,  # 学习率
-    
+
     # LoRA配置
     "use_lora": True,       # 使用LoRA
     "lora_rank": 8,         # LoRA秩
@@ -1217,28 +1217,28 @@ result = rl_tool.run({
     # 训练配置
     "action": "train",
     "algorithm": "grpo",
-    
+
     # 模型配置
     "model_name": "./models/sft_full",  # 从SFT模型开始
     "output_dir": "./models/grpo_model",
-    
+
     # 数据配置
     "max_samples": 100,     # 使用100个样本快速测试
-    
+
     # 训练参数
     "num_epochs": 3,
     "batch_size": 4,
     "learning_rate": 1e-5,  # GRPO学习率通常比SFT小
-    
+
     # GRPO特定参数
     "num_generations": 4,   # 每个问题生成4个答案
     "kl_coef": 0.05,        # KL散度惩罚系数
-    
+
     # LoRA配置
     "use_lora": True,
     "lora_rank": 16,
     "lora_alpha": 32,
-    
+
     # 奖励函数配置
     "reward_type": "accuracy",  # 使用准确率奖励
 })
@@ -1286,28 +1286,28 @@ result = rl_tool.run({
     # 模型配置
     "model_name": "./models/sft_full",
     "output_dir": "./models/grpo_full",
-    
+
     # 数据配置
     "max_samples": None,    # 使用全部数据
-    
+
     # 训练参数
     "num_epochs": 3,
     "batch_size": 4,
     "learning_rate": 1e-5,
     "warmup_ratio": 0.1,
-    
+
     # GRPO特定参数
     "num_generations": 4,
     "max_new_tokens": 512,
     "temperature": 0.8,
     "kl_coef": 0.05,
     "clip_range": 0.2,
-    
+
     # LoRA配置
     "use_lora": True,
     "lora_rank": 16,
     "lora_alpha": 32,
-    
+
     # 奖励函数配置
     "reward_type": "combined",
     "reward_config": {
@@ -1317,7 +1317,7 @@ result = rl_tool.run({
             {"type": "step", "weight": 0.3, "step_bonus": 0.1}
         ]
     },
-    
+
     # 其他配置
     "save_steps": 500,
     "logging_steps": 100,
@@ -1596,7 +1596,7 @@ result = rl_tool.run({
     "model_path": "./models/grpo_full",
     "max_samples": 200,
     "use_lora": True,
-    
+
     # 评估配置
     "metrics": [
         "accuracy",           # 准确率
@@ -1685,7 +1685,7 @@ for error in errors:
     question = error['question']
     prediction = error['prediction']
     ground_truth = error['ground_truth']
-    
+
     # 简单的错误分类逻辑(实际应用中可能需要更复杂的分析)
     if "Final Answer:" not in prediction:
         error_types["格式错误"] += 1
@@ -1728,7 +1728,7 @@ step_groups = {
 for sample in result['details']:
     steps = sample['ground_truth_steps']  # 真实答案的步骤数
     correct = sample['correct']
-    
+
     if steps <= 2:
         step_groups["简单(1-2步)"].append(correct)
     elif steps <= 4:
@@ -1793,28 +1793,28 @@ from datetime import datetime
 
 class AgenticRLPipeline:
     """Agentic RL训练流水线"""
-    
+
     def __init__(self, config_path="config.json"):
         """
         初始化训练流水线
-        
+
         Args:
             config_path: 配置文件路径
         """
         self.rl_tool = RLTrainingTool()
         self.config = self.load_config(config_path)
         self.results = {}
-        
+
     def load_config(self, config_path):
         """加载配置文件"""
         with open(config_path, 'r') as f:
             return json.load(f)
-    
+
     def log(self, message):
         """记录日志"""
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         print(f"[{timestamp}] {message}")
-    
+
     def stage1_prepare_data(self):
         """阶段1: 数据准备"""
         self.log("=" * 50)
@@ -1839,7 +1839,7 @@ class AgenticRLPipeline:
         self.results["data"] = dataset_info
 
         return dataset_info
-    
+
     def stage2_sft_training(self):
         """阶段2: SFT训练"""
         self.log("\n" + "=" * 50)
@@ -1873,13 +1873,13 @@ class AgenticRLPipeline:
         self.results["sft_training"] = result_data
 
         return result_data["output_dir"]
-    
+
     def stage3_sft_evaluation(self, model_path):
         """阶段3: SFT评估"""
         self.log("\n" + "=" * 50)
         self.log("阶段3: SFT评估")
         self.log("=" * 50)
-        
+
         result = self.rl_tool.run({
             "action": "evaluate",
             "model_path": model_path,
@@ -1895,7 +1895,7 @@ class AgenticRLPipeline:
         self.results["sft_evaluation"] = eval_data
 
         return eval_data
-    
+
     def stage4_grpo_training(self, sft_model_path):
         """阶段4: GRPO训练"""
         self.log("\n" + "=" * 50)
@@ -1929,13 +1929,13 @@ class AgenticRLPipeline:
         self.results["grpo_training"] = result_data
 
         return result_data["output_dir"]
-    
+
     def stage5_grpo_evaluation(self, model_path):
         """阶段5: GRPO评估"""
         self.log("\n" + "=" * 50)
         self.log("阶段5: GRPO评估")
         self.log("=" * 50)
-        
+
         result = self.rl_tool.run({
             "action": "evaluate",
             "model_path": model_path,
@@ -1951,45 +1951,45 @@ class AgenticRLPipeline:
         self.results["grpo_evaluation"] = eval_data
 
         return eval_data
-    
+
     def stage6_save_results(self):
         """阶段6: 保存结果"""
         self.log("\n" + "=" * 50)
         self.log("阶段6: 保存结果")
         self.log("=" * 50)
-        
+
         # 保存训练结果
         results_path = "training_results.json"
         with open(results_path, 'w') as f:
             json.dump(self.results, f, indent=2)
-        
+
         self.log(f"✓ 结果已保存到: {results_path}")
-    
+
     def run(self):
         """运行完整流程"""
         try:
             # 阶段1: 数据准备
             self.stage1_prepare_data()
-            
+
             # 阶段2: SFT训练
             sft_model_path = self.stage2_sft_training()
-            
+
             # 阶段3: SFT评估
             self.stage3_sft_evaluation(sft_model_path)
-            
+
             # 阶段4: GRPO训练
             grpo_model_path = self.stage4_grpo_training(sft_model_path)
-            
+
             # 阶段5: GRPO评估
             self.stage5_grpo_evaluation(grpo_model_path)
-            
+
             # 阶段6: 保存结果
             self.stage6_save_results()
-            
+
             self.log("\n" + "=" * 50)
             self.log("✓ 训练流程完成!")
             self.log("=" * 50)
-            
+
         except Exception as e:
             self.log(f"\n✗ 训练失败: {str(e)}")
             raise
@@ -2024,11 +2024,11 @@ if __name__ == "__main__":
             "wandb_project": "agentic-rl-pipeline"  # Wandb项目名
         }
     }
-    
+
     # 保存配置
     with open("config.json", 'w') as f:
         json.dump(config, f, indent=2)
-    
+
     # 运行训练流程
     pipeline = AgenticRLPipeline("config.json")
     pipeline.run()
@@ -2692,5 +2692,3 @@ Agentic RL 旨在提升智能体的六大核心能力:
    - 在 11.1.3 节中提到，Agentic RL 适合优化"需要多步推理、工具使用、长期规划"的任务。请设计一个"工具学习"训练方案：给定一组工具（如搜索引擎、计算器、代码执行器），如何训练智能体学会在合适的时机选择合适的工具？奖励函数应该如何设计？
    - 工具使用往往涉及复杂的依赖关系（如"必须先调用工具 A 获取信息，才能调用工具 B"）。请设计一个"分层强化学习"方案：高层策略负责任务规划，低层策略负责工具调用。这种分层结构如何训练？如何协调高层和低层的优化目标？
    - 在实际应用中，工具的数量可能非常多（如 50+个 API），直接训练可能面临"探索效率低"的问题。请设计一个"课程学习"（curriculum learning）方案：从简单任务（使用少量工具）开始训练，逐步增加任务难度和工具数量。这个方案应该如何设计课程顺序？如何评估智能体是否准备好进入下一阶段？
-
-

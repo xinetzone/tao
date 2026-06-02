@@ -77,7 +77,7 @@ class HelloAgentsLLM:
         apiKey = apiKey or os.getenv("LLM_API_KEY")
         baseUrl = baseUrl or os.getenv("LLM_BASE_URL")
         timeout = timeout or int(os.getenv("LLM_TIMEOUT", 60))
-        
+
         if not all([self.model, apiKey, baseUrl]):
             raise ValueError("模型ID、API密钥和服务地址必须被提供或在.env文件中定义。")
 
@@ -95,7 +95,7 @@ class HelloAgentsLLM:
                 temperature=temperature,
                 stream=True,
             )
-            
+
             # 处理流式响应
             print("✅ 大语言模型响应成功:")
             collected_content = []
@@ -116,12 +116,12 @@ class HelloAgentsLLM:
 if __name__ == '__main__':
     try:
         llmClient = HelloAgentsLLM()
-        
+
         exampleMessages = [
             {"role": "system", "content": "You are a helpful assistant that writes Python code."},
             {"role": "user", "content": "写一个快速排序算法"}
         ]
-        
+
         print("--- 调用LLM ---")
         responseText = llmClient.think(exampleMessages)
         if responseText:
@@ -233,10 +233,10 @@ def search(query: str) -> str:
             "gl": "cn",  # 国家代码
             "hl": "zh-cn", # 语言代码
         }
-        
+
         client = SerpApiClient(params)
         results = client.get_dict()
-        
+
         # 智能解析:优先寻找最直接的答案
         if "answer_box_list" in results:
             return "\n".join(results["answer_box_list"])
@@ -251,7 +251,7 @@ def search(query: str) -> str:
                 for i, res in enumerate(results["organic_results"][:3])
             ]
             return "\n\n".join(snippets)
-        
+
         return f"对不起，没有找到关于 '{query}' 的信息。"
 
     except Exception as e:
@@ -294,7 +294,7 @@ class ToolExecutor:
         获取所有可用工具的格式化描述字符串。
         """
         return "\n".join([
-            f"- {name}: {info['description']}" 
+            f"- {name}: {info['description']}"
             for name, info in self.tools.items()
         ])
 
@@ -313,7 +313,7 @@ if __name__ == '__main__':
     # 2. 注册我们的实战搜索工具
     search_description = "一个网页搜索引擎。当你需要回答关于时事、事实以及在你的知识库中找不到的信息时，应使用此工具。"
     toolExecutor.registerTool("Search", search_description, search)
-    
+
     # 3. 打印可用的工具
     print("\n--- 可用的工具 ---")
     print(toolExecutor.getAvailableTools())
@@ -330,7 +330,7 @@ if __name__ == '__main__':
         print(observation)
     else:
         print(f"错误:未找到名为 '{tool_name}' 的工具。")
-        
+
 >>>
 工具 'Search' 已注册。
 
@@ -426,7 +426,7 @@ class ReActAgent:
             # 2. 调用LLM进行思考
             messages = [{"role": "user", "content": prompt}]
             response_text = self.llm_client.think(messages=messages)
-            
+
             if not response_text:
                 print("错误:LLM未能返回有效响应。")
                 break
@@ -472,7 +472,7 @@ LLM 返回的是纯文本，我们需要从中精确地提取出`Thought`和`Act
 # (这段逻辑在 run 方法的 while 循环内)
             # 3. 解析LLM的输出
             thought, action = self._parse_output(response_text)
-            
+
             if thought:
                 print(f"思考: {thought}")
 
@@ -486,14 +486,14 @@ LLM 返回的是纯文本，我们需要从中精确地提取出`Thought`和`Act
                 final_answer = re.match(r"Finish\[(.*)\]", action).group(1)
                 print(f"🎉 最终答案: {final_answer}")
                 return final_answer
-            
+
             tool_name, tool_input = self._parse_action(action)
             if not tool_name or not tool_input:
                 # ... 处理无效Action格式 ...
                 continue
 
             print(f"🎬 行动: {tool_name}[{tool_input}]")
-            
+
             tool_function = self.tool_executor.getTool(tool_name)
             if not tool_function:
                 observation = f"错误:未找到名为 '{tool_name}' 的工具。"
@@ -511,7 +511,7 @@ LLM 返回的是纯文本，我们需要从中精确地提取出`Thought`和`Act
 ```python
 # (这段逻辑紧随工具调用之后，在 while 循环的末尾)
             print(f"👀 观察: {observation}")
-            
+
             # 将本轮的Action和Observation添加到历史记录中
             self.history.append(f"Action: {action}")
             self.history.append(f"Observation: {observation}")
@@ -555,7 +555,7 @@ Action: Search[华为最新手机型号及主要卖点]
 Thought: 根据搜索结果，华为最新发布的旗舰机型包括Mate 70和Pura 80 Pro+。为了确定最新型号及其主要卖点，我将重点放在这些信息上。从提供的链接来看，Mate 70系列和Pura 80 Pro+都是近期发布的产品，但具体哪一个是“最新”还需要进一步确认。同时，我可以从这些信息中提取出它们的主要
 卖点。
 Action: Finish[根据最新信息，华为的最新手机可能是HUAWEI Pura 80 Pro+或HUAWEI Mate 70。其中，HUAWEI Mate 70的主要卖点包括顶级的拍照配置，全焦段覆盖，适合专业摄影，做工出色，并且具有良好的户外抗摔性能。而HUAWEI Pura 80 Pro+则强调了先锋影像技术。]
-🤔 思考: 根据搜索结果，华为最新发布的旗舰机型包括Mate 70和Pura 80 Pro+。为了确定最新型号及其主要卖点，我将重点放在这些信息上。从提供的链接来看，Mate 70系列和Pura 80 Pro+都是近期发布的产品，但具体哪一个是“最新”还需要进一步确认。同时，我可以从这些信息中提取出它们的主要 
+🤔 思考: 根据搜索结果，华为最新发布的旗舰机型包括Mate 70和Pura 80 Pro+。为了确定最新型号及其主要卖点，我将重点放在这些信息上。从提供的链接来看，Mate 70系列和Pura 80 Pro+都是近期发布的产品，但具体哪一个是“最新”还需要进一步确认。同时，我可以从这些信息中提取出它们的主要
 卖点。
 🎉 最终答案: 根据最新信息，华为的最新手机可能是HUAWEI Pura 80 Pro+或HUAWEI Mate 70。其中，HUAWEI Mate 70的主要卖点包括顶级的拍照配置，全焦段覆盖，适合专业摄影，做工出色，并且具有良好的户外抗摔性能。而HUAWEI Pura 80 Pro+则强调了先锋影像技术。
 ```
@@ -683,16 +683,16 @@ class Planner:
         根据用户问题生成一个行动计划。
         """
         prompt = PLANNER_PROMPT_TEMPLATE.format(question=question)
-        
+
         # 为了生成计划，我们构建一个简单的消息列表
         messages = [{"role": "user", "content": prompt}]
-        
+
         print("--- 正在生成计划 ---")
         # 使用流式输出来获取完整的计划
         response_text = self.llm_client.think(messages=messages) or ""
-        
+
         print(f"✅ 计划已生成:\n{response_text}")
-        
+
         # 解析LLM输出的列表字符串
         try:
             # 找到```python和```之间的内容
@@ -754,26 +754,26 @@ class Executor:
         根据计划，逐步执行并解决问题。
         """
         history = "" # 用于存储历史步骤和结果的字符串
-        
+
         print("\n--- 正在执行计划 ---")
-        
+
         for i, step in enumerate(plan):
             print(f"\n-> 正在执行步骤 {i+1}/{len(plan)}: {step}")
-            
+
             prompt = EXECUTOR_PROMPT_TEMPLATE.format(
                 question=question,
                 plan=plan,
                 history=history if history else "无", # 如果是第一步，则历史为空
                 current_step=step
             )
-            
+
             messages = [{"role": "user", "content": prompt}]
-            
+
             response_text = self.llm_client.think(messages=messages) or ""
-            
+
             # 更新历史记录，为下一步做准备
             history += f"步骤 {i+1}: {step}\n结果: {response_text}\n\n"
-            
+
             print(f"✅ 步骤 {i+1} 已完成，结果: {response_text}")
 
         # 循环结束后，最后一步的响应就是最终答案
@@ -798,10 +798,10 @@ class PlanAndSolveAgent:
         运行智能体的完整流程:先规划，后执行。
         """
         print(f"\n--- 开始处理问题 ---\n问题: {question}")
-        
+
         # 1. 调用规划器生成计划
         plan = self.planner.plan(question)
-        
+
         # 检查计划是否成功生成
         if not plan:
             print("\n--- 任务终止 --- \n无法生成有效的行动计划。")
@@ -809,7 +809,7 @@ class PlanAndSolveAgent:
 
         # 2. 调用执行器执行计划
         final_answer = self.executor.execute(question, plan)
-        
+
         print(f"\n--- 任务完成 ---\n最终答案: {final_answer}")
 ```
 
@@ -959,7 +959,7 @@ class Memory:
                 trajectory_parts.append(f"--- 上一轮尝试 (代码) ---\n{record['content']}")
             elif record['type'] == 'reflection':
                 trajectory_parts.append(f"--- 评审员反馈 ---\n{record['content']}")
-        
+
         return "\n\n".join(trajectory_parts)
 
     def get_last_execution(self) -> Optional[str]:
@@ -1096,7 +1096,7 @@ class ReflectionAgent:
             )
             refined_code = self._get_llm_response(refine_prompt)
             self.memory.add_record("execution", refined_code)
-        
+
         final_code = self.memory.get_last_execution()
         print(f"\n--- 任务完成 ---\n最终生成的代码:\n```python\n{final_code}\n```")
         return final_code
@@ -1125,7 +1125,7 @@ def find_primes(n):
     ...
     return primes
 ```
-📝 记忆已更新，新增一条 'execution' 记录。   
+📝 记忆已更新，新增一条 'execution' 记录。
 
 --- 第 1/2 轮迭代 ---
 
@@ -1317,4 +1317,3 @@ def find_primes(n):
 [2] Wang L, Xu W, Lan Y, et al. Plan-and-solve prompting: Improving zero-shot chain-of-thought reasoning by large language models[J]. arXiv preprint arXiv:2305.04091, 2023.
 
 [3] Shinn N, Cassano F, Gopinath A, et al. Reflexion: Language agents with verbal reinforcement learning[J]. Advances in Neural Information Processing Systems, 2023, 36: 8634-8652.
-

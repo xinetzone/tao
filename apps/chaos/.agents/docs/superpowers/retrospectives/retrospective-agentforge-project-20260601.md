@@ -1,8 +1,8 @@
 # AgentForge 项目阶段性增量复盘报告（2026-05-23 → 2026-06-01）
 
-> 报告类型：项目阶段性增量复盘  
-> 报告日期：2026-06-01  
-> 上次复盘：[`agentforge-project-retrospective-20260523.md`](./agentforge-project-retrospective-20260523.md)  
+> 报告类型：项目阶段性增量复盘
+> 报告日期：2026-06-01
+> 上次复盘：[`agentforge-project-retrospective-20260523.md`](./agentforge-project-retrospective-20260523.md)
 > 规范依据：[`../../retrospective-conventions.md`](../../retrospective-conventions.md)
 
 ---
@@ -298,7 +298,7 @@ graph TD
 
 ### 6.5 综合评分：**A−（8.2 / 10）**
 
-**强项**：多平台 CI 覆盖、严格门禁、分层测试、现代工具链。  
+**强项**：多平台 CI 覆盖、严格门禁、分层测试、现代工具链。
 **改进方向**：代码质量平台集成（codecov 已升级 v5）、结构化债务追踪、性能回归测试。
 
 ---
@@ -473,5 +473,5 @@ graph LR
 
 ---
 
-**报告完成于 2026-06-01**  
+**报告完成于 2026-06-01**
 **生成方式**：基于 Research #1（Git 历史）+ #2（任务梳理）+ #3（质量审计）+ #4（架构演进）四份研究报告综合撰写，所有数据均可追溯至原始来源。

@@ -287,7 +287,7 @@ team_chat = RoundRobinGroupChat(
 ```python
 async def run_software_development_team():
     # ... 初始化客户端和智能体 ...
-    
+
     # 定义任务描述
     task = """我们需要开发一个比特币价格显示应用，具体要求如下：
             核心功能：
@@ -301,7 +301,7 @@ async def run_software_development_team():
             - 添加适当的错误处理和加载状态
 
             请团队协作完成这个任务，从需求分析到最终实现。"""
-    
+
     # 异步执行团队协作，并流式输出对话过程
     result = await Console(team_chat.run_stream(task=task))
     return result
@@ -337,7 +337,7 @@ if __name__ == "__main__":
 ---------- TextMessage (CodeReviewer) ----------
 ### 代码审查
 ...
-代码审查完成，请用户代理测试。    
+代码审查完成，请用户代理测试。
 ---------- TextMessage (UserProxy) ----------
 已经完成需求
 ---------- TextMessage (ProductManager) ----------
@@ -466,12 +466,12 @@ class CustomAgent(AgentBase):
     def __init__(self, name: str, **kwargs):
         super().__init__(name=name, **kwargs)
         # 智能体初始化逻辑
-    
+
     def reply(self, x: Msg) -> Msg:
         # 智能体的核心响应逻辑
         response = self.model(x.content)
         return Msg(name=self.name, content=response, role="assistant")
-    
+
     def observe(self, x: Msg) -> None:
         # 智能体的观察逻辑（可选）
         self.memory.add(x)
@@ -514,7 +514,7 @@ async def werewolf_phase(self, round_num: int):
     """狼人阶段 - 展示消息驱动的协作模式"""
     if not self.werewolves:
         return None
-        
+
     # 通过消息中心建立狼人专属通信频道
     async with MsgHub(
         self.werewolves,
@@ -527,7 +527,7 @@ async def werewolf_phase(self, round_num: int):
         for _ in range(MAX_DISCUSSION_ROUND):
             for wolf in self.werewolves:
                 await wolf(structured_model=DiscussionModelCN)
-        
+
         # 投票阶段：收集并统计狼人的击杀决策
         werewolves_hub.set_auto_broadcast(False)
         kill_votes = await fanout_pipeline(
@@ -586,7 +586,7 @@ def get_role_prompt(role: str, character: str) -> str:
 
 角色特点：
 """
-    
+
     if role == "狼人":
         return base_prompt + f"""
 - 你是狼人阵营，目标是消灭所有好人
@@ -836,19 +836,19 @@ while n < chat_turn_limit:
     n += 1
     # step() 方法驱动一轮完整的对话，AI 用户和 AI 助理各发言一次
     assistant_response, user_response = role_play_session.step(input_msg)
-    
+
     # 检查是否有消息返回，防止对话提前终止
     if assistant_response.msg is None or user_response.msg is None:
         break
-    
+
     print_text_animated(Fore.BLUE + f"作家 (AI User):\n\n{user_response.msg.content}\n")
     print_text_animated(Fore.GREEN + f"心理学家 (AI Assistant):\n\n{assistant_response.msg.content}\n")
-    
+
     # 检查任务完成标志
     if "<CAMEL_TASK_DONE>" in user_response.msg.content or "<CAMEL_TASK_DONE>" in assistant_response.msg.content:
         print(Fore.MAGENTA + "✅ 电子书创作完成！")
         break
-    
+
     # 将助理的回复作为下一轮对话的输入
     input_msg = assistant_response.msg
 
@@ -978,7 +978,7 @@ def planner_node(state: AgentState) -> AgentState:
     current_task = state["current_task"]
     # ... 调用LLM生成计划 ...
     plan = f"为任务 '{current_task}' 生成的计划..."
-    
+
     # 将新消息追加到状态中
     state["messages"].append(plan)
     return state
@@ -989,7 +989,7 @@ def executor_node(state: AgentState) -> AgentState:
     latest_plan = state["messages"][-1]
     # ... 执行计划并获得结果 ...
     result = f"执行计划 '{latest_plan}' 的结果..."
-    
+
     state["messages"].append(result)
     return state
 ```
@@ -1114,7 +1114,7 @@ tavily_client = TavilyClient(api_key=os.getenv("TAVILY_API_KEY"))
 def understand_query_node(state: SearchState) -> dict:
     """步骤1：理解用户查询并生成搜索关键词"""
     user_message = state["messages"][-1].content
-    
+
     understand_prompt = f"""分析用户的查询："{user_message}"
 请完成两个任务：
 1. 简洁总结用户想要了解什么
@@ -1126,12 +1126,12 @@ def understand_query_node(state: SearchState) -> dict:
 
     response = llm.invoke([SystemMessage(content=understand_prompt)])
     response_text = response.content
-    
+
     # 解析LLM的输出，提取搜索关键词
     search_query = user_message # 默认使用原始查询
     if "搜索词：" in response_text:
         search_query = response_text.split("搜索词：")[1].strip()
-    
+
     return {
         "user_query": response_text,
         "search_query": search_query,
@@ -1157,7 +1157,7 @@ def tavily_search_node(state: SearchState) -> dict:
         )
         # ... (处理和格式化搜索结果) ...
         search_results = ... # 格式化后的结果字符串
-        
+
         return {
             "search_results": search_results,
             "step": "searched",
@@ -1192,7 +1192,7 @@ def generate_answer_node(state: SearchState) -> dict:
 搜索结果：\n{state['search_results']}
 请综合搜索结果，提供准确、有用的回答..."""
         response = llm.invoke([SystemMessage(content=answer_prompt)])
-    
+
     return {
         "final_answer": response.content,
         "step": "completed",
@@ -1212,25 +1212,25 @@ from langgraph.checkpoint.memory import InMemorySaver
 
 def create_search_assistant():
     workflow = StateGraph(SearchState)
-    
+
     # 添加节点
     workflow.add_node("understand", understand_query_node)
     workflow.add_node("search", tavily_search_node)
     workflow.add_node("answer", generate_answer_node)
-    
+
     # 设置线性流程
     workflow.add_edge(START, "understand")
     workflow.add_edge("understand", "search")
     workflow.add_edge("search", "answer")
     workflow.add_edge("answer", END)
-    
+
     # 编译图
     memory = InMemorySaver()
     app = workflow.compile(checkpointer=memory)
     return app
 ```
 
-（5）运行案例展示 
+（5）运行案例展示
 
 运行此脚本后，您可以提出一些需要实时信息的问题，例如我们第一章中的案例：`明天我要去北京，天气怎么样？有合适的景点吗`
 
@@ -1245,7 +1245,7 @@ def create_search_assistant():
 🤔 您想了解什么: 明天我要去北京，天气怎么样？有合适的景点吗
 
 ============================================================
-🧠 理解阶段: 我理解您的需求：理解：用户想了解明天北京的天气情况以及合适的景点推荐。  
+🧠 理解阶段: 我理解您的需求：理解：用户想了解明天北京的天气情况以及合适的景点推荐。
 搜索词：北京 明天 天气 景点推荐 Beijing weather tomorrow attractions
 🔍 正在搜索: 北京 明天 天气 景点推荐 Beijing weather tomorrow attractions
 🔍 搜索阶段: ✅ 搜索完成！找到了相关信息，正在为您整理答案...
@@ -1317,7 +1317,7 @@ def create_search_assistant():
 
    - 在6.1.2节的表6.1中，对比了这四个框架的多个维度。请选择其中两个你最熟悉的框架，从"协作模式"、"控制方式"、"适用场景"三个维度进一步深入对比。
    - 本章提到了"涌现式协作"与"显式控制"之间的权衡，如何理解这两种设计哲学的含义。
-   
+
 2. 在6.2节的 `AutoGen` 案例中，我们构建了一个"软件开发团队"。请基于此案例进行扩展思考：
 
    > <strong>提示</strong>：这是一道动手实践题，建议实际操作
@@ -1336,7 +1336,7 @@ def create_search_assistant():
 
    - 在案例中，协作会在检测到 `<CAMEL_TASK_DONE>` 标志时强制终止。但如果两个智能体意见分歧（一位认为可以终止，一位认为不应该终止），无法达成一致怎么办？请设计一个"冲突解决"的兼容机制。
    - `CAMEL` 最初设计用于双智能体协作，但现在已经扩展支持多智能体。请查阅 `CAMEL` 的最新文档，了解其多智能体协作模块 [`workforce`](https://docs.camel-ai.org/key_modules/workforce)，并结合架构图说明其与 `AutoGen` 的群聊模式有何不同。
-   
+
 5. 在6.5节的 `LangGraph` 案例中，我们构建了一个"三步问答助手"。请分析：
 
    - `LangGraph` 将智能体流程建模为状态机和有向图。请画出案例中"理解-搜索-回答"流程的图结构，标注节点、边和状态转换条件。
@@ -1363,4 +1363,3 @@ def create_search_assistant():
 [4] LangChain. LangGraph [EB/OL]. (2024). https://github.com/langchain-ai/langgraph.
 
 [5] Microsoft. AutoGen - UserProxyAgent [EB/OL]. (2024). https://microsoft.github.io/autogen/stable/reference/python/autogen_agentchat.agents.html#autogen_agentchat.agents.UserProxyAgent.
-

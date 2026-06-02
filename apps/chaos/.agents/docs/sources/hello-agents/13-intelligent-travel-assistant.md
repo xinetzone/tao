@@ -166,7 +166,7 @@ npm run dev
 
 ### 13.2.1 Web 应用中的数据流转
 
-在构建智能旅行助手时，我们需要解决一个核心问题：<strong>如何表示和传递旅行计划数据?</strong> 
+在构建智能旅行助手时，我们需要解决一个核心问题：<strong>如何表示和传递旅行计划数据?</strong>
 
 我们需要理解一个完整的 Web 应用中数据是如何流转的。想象一下，当用户在浏览器中点击"开始规划"按钮时，会发生什么？
 
@@ -256,7 +256,7 @@ from pydantic import field_validator
 
 class WeatherInfo(BaseModel):
     temperature: int
-    
+
     @field_validator('temperature',mode='before')
     def parse_temperature(cls,v):
         """解析温度字符串："16°C" -> 16"""
@@ -364,7 +364,7 @@ class WeatherInfo(BaseModel):
     night_temp: int = Field(...,description="夜间温度(摄氏度)")
     wind_direction: str = Field(...,description="风向")
     wind_power: str = Field(...,description="风力")
-    
+
     @field_validator('day_temp','night_temp',mode='before')
     def parse_temperature(cls,v):
         """解析温度字符串："16°C" -> 16"""
@@ -407,7 +407,7 @@ app = FastAPI()
 async def create_trip_plan(request: TripPlanRequest) -> TripPlan:
     """
     创建旅行计划
-    
+
     FastAPI自动：
     1. 验证请求数据(TripPlanRequest)
     2. 验证响应数据(TripPlan)
@@ -1111,7 +1111,7 @@ const formData = ref<TripPlanRequest>({
 const handleSubmit = async () => {
   loading.value = true
   loadingProgress.value = 0
-  
+
   // 模拟进度更新
   const progressInterval = setInterval(() => {
     if (loadingProgress.value < 90) {
@@ -1122,7 +1122,7 @@ const handleSubmit = async () => {
       else loadingStatus.value = '📋 正在生成行程计划...'
     }
   },500)
-  
+
   try {
     const response = await generateTripPlan(formData.value)
     clearInterval(progressInterval)
@@ -1150,21 +1150,21 @@ const handleSubmit = async () => {
       <h1 class="page-title">✈️ 智能旅行助手</h1>
       <p class="page-subtitle">基于AI的个性化旅行规划</p>
     </div>
-    
+
     <a-card class="form-card">
       <a-form :model="formData" @finish="handleSubmit">
         <a-form-item label="目的地城市" name="city" :rules="[{ required: true }]">
           <a-input v-model:value="formData.city" placeholder="如：北京" />
         </a-form-item>
-        
+
         <!-- 更多表单项... -->
-        
+
         <a-form-item>
           <a-button type="primary" html-type="submit" size="large" :loading="loading">
             开始规划
           </a-button>
         </a-form-item>
-        
+
         <!-- 加载进度条 -->
         <a-form-item v-if="loading">
           <a-progress :percent="loadingProgress" status="active" />
@@ -1192,12 +1192,12 @@ const initMap = async () => {
     key: 'your_amap_web_key',
     version: '2.0'
   })
-  
+
   map = new AMap.Map('amap-container',{
     zoom: 12,
     center: [116.397128,39.916527]
   })
-  
+
   // 添加景点标记
   tripPlan.value.days.forEach((day) => {
     day.attractions.forEach((attraction,index) => {
@@ -1385,9 +1385,9 @@ const toggleEditMode = () => {
 const moveAttraction = (dayIndex: number,attractionIndex: number,direction: 'up' | 'down') => {
   const attractions = tripPlan.value.days[dayIndex].attractions
   const newIndex = direction === 'up' ? attractionIndex - 1 : attractionIndex + 1
-  
+
   if (newIndex >= 0 && newIndex < attractions.length) {
-    [attractions[attractionIndex],attractions[newIndex]] = 
+    [attractions[attractionIndex],attractions[newIndex]] =
     [attractions[newIndex],attractions[attractionIndex]]
   }
 }
@@ -1456,13 +1456,13 @@ import html2canvas from 'html2canvas'
 const exportAsImage = async () => {
   const element = document.getElementById('trip-plan-content')
   if (!element) return
-  
+
   const canvas = await html2canvas(element,{
     backgroundColor: '#ffffff',
     scale: 2,
     useCORS: true
   })
-  
+
   const link = document.createElement('a')
   link.download = `${tripPlan.value.city}旅行计划.png`
   link.href = canvas.toDataURL('image/png')
@@ -1481,25 +1481,25 @@ import jsPDF from 'jspdf'
 const exportAsPDF = async () => {
   // 先截取地图
   await captureMapImage()
-  
+
   const element = document.getElementById('trip-plan-content')
   if (!element) return
-  
+
   const canvas = await html2canvas(element,{
     backgroundColor: '#ffffff',
     scale: 2,
     useCORS: true,
     allowTaint: true
   })
-  
+
   // 恢复地图
   restoreMap()
-  
+
   const pdf = new jsPDF('p','mm','a4')
   const imgData = canvas.toDataURL('image/png')
   const imgWidth = 210  // A4宽度
   const imgHeight = (canvas.height * imgWidth) / canvas.width
-  
+
   pdf.addImage(imgData,'PNG',0,0,imgWidth,imgHeight)
   pdf.save(`${tripPlan.value.city}旅行计划.pdf`)
   message.success('导出成功！')
@@ -1586,5 +1586,3 @@ const scrollToSection = ({ key }: { key: string }) => {
 最好的学习方式是实践。不要只是阅读代码，而是要动手修改、扩展、优化。每一次实践都会让你对多 Agent 系统有更深的理解。
 
 祝你在 AI 应用开发的道路上越走越远！
-
-

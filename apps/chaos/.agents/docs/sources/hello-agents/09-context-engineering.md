@@ -2824,5 +2824,3 @@ print(json.dumps(report, indent=2, ensure_ascii=False))
 [1] Anthropic. Effective Context Engineering for AI Agents. `https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents`
 
 [2] David Kim. Context-Engineering (GitHub). `https://github.com/davidkimai/Context-Engineering`
-
-

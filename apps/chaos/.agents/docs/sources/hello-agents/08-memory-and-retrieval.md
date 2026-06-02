@@ -58,7 +58,7 @@ agent = SimpleAgent(name="学习助手", llm=HelloAgentsLLM())
 # 第一次对话
 response1 = agent.run("我叫张三，正在学习Python，目前掌握了基础语法")
 print(response1)  # "很好！Python基础语法是编程的重要基础..."
- 
+
 # 第二次对话（新的会话）
 response2 = agent.run("你还记得我的学习进度吗？")
 print(response2)  # "抱歉，我不知道您的学习进度..."
@@ -276,14 +276,14 @@ INFO:hello_agents.memory.types.semantic:✅ 加载中文spaCy模型: zh_core_web
 INFO:hello_agents.memory.types.semantic:✅ 加载英文spaCy模型: en_core_web_sm
 INFO:hello_agents.memory.types.semantic:📚 可用语言模型: 中文, 英文
 INFO:hello_agents.memory.types.semantic:增强语义记忆初始化完成（使用Qdrant+Neo4j专业数据库）
-INFO:hello_agents.memory.manager:MemoryManager初始化完成，启用记忆类型: ['working', 'episodic', 'semantic']      
+INFO:hello_agents.memory.manager:MemoryManager初始化完成，启用记忆类型: ['working', 'episodic', 'semantic']
 ✅ 工具 'memory' 已注册。
 INFO:hello_agents.memory.storage.qdrant_store:✅ 成功连接到Qdrant云服务: https://0c517275-2ad0-4442-8309-11c36dc7eNFO:hello_agents.memory.storage.qdrant_store:✅ 使用现有Qdrant集合: rag_knowledge_base
 811.us-east-1-1.aws.cloud.qdrant.io:6333
 INFO:hello_agents.memory.storage.qdrant_store:✅ 使用现有Qdrant集合: rag_knowledge_base
 ✅ RAG工具初始化成功: namespace=default, collection=rag_knowledge_base
 ✅ 工具 'rag' 已注册。
-你好，张三！很高兴认识你。作为一名Python开发者，你一定对编程很有热情。如果你有任何技术问题或者需要讨论Python相关 
+你好，张三！很高兴认识你。作为一名Python开发者，你一定对编程很有热情。如果你有任何技术问题或者需要讨论Python相关
 的话题，随时可以找我。我会尽力帮助你。有什么我现在就能帮到你的吗？
 ```
 
@@ -341,7 +341,7 @@ memory_tool = MemoryTool(user_id="user123")
 tool_registry = ToolRegistry()
 tool_registry.register_tool(memory_tool)
 agent.tool_registry = tool_registry
- 
+
 # 体验记忆功能
 print("=== 添加多个记忆 ===")
 
@@ -520,7 +520,7 @@ def _search_memory(
         for i, memory in enumerate(results, 1):
             memory_type_label = {
                 "working": "工作记忆",
-                "episodic": "情景记忆", 
+                "episodic": "情景记忆",
                 "semantic": "语义记忆",
                 "perceptual": "感知记忆"
             }.get(memory.memory_type, memory.memory_type)
@@ -644,7 +644,7 @@ MemoryTool在初始化时会创建一个MemoryManager实例，并根据配置启
 ````python
 class MemoryTool(Tool):
     """记忆工具 - 为Agent提供记忆功能"""
-    
+
     def __init__(
         self,
         user_id: str = "default_user",
@@ -655,11 +655,11 @@ class MemoryTool(Tool):
             name="memory",
             description="记忆工具 - 可以存储和检索对话历史、知识和经验"
         )
-        
+
         # 初始化记忆管理器
         self.memory_config = memory_config or MemoryConfig()
         self.memory_types = memory_types or ["working", "episodic", "semantic"]
-        
+
         self.memory_manager = MemoryManager(
             config=self.memory_config,
             user_id=user_id,
@@ -725,44 +725,44 @@ class WorkingMemory:
     - 纯内存存储，访问速度极快
     - 混合检索：TF-IDF向量化 + 关键词匹配
     """
-    
+
     def __init__(self, config: MemoryConfig):
         self.max_capacity = config.working_memory_capacity or 50
         self.max_age_minutes = config.working_memory_ttl or 60
         self.memories = []
-    
+
     def add(self, memory_item: MemoryItem) -> str:
         """添加工作记忆"""
         self._expire_old_memories()  # 过期清理
-        
+
         if len(self.memories) >= self.max_capacity:
             self._remove_lowest_priority_memory()  # 容量管理
-        
+
         self.memories.append(memory_item)
         return memory_item.id
-    
+
     def retrieve(self, query: str, limit: int = 5, **kwargs) -> List[MemoryItem]:
         """混合检索：TF-IDF向量化 + 关键词匹配"""
         self._expire_old_memories()
-        
+
         # 尝试TF-IDF向量检索
         vector_scores = self._try_tfidf_search(query)
-        
+
         # 计算综合分数
         scored_memories = []
         for memory in self.memories:
             vector_score = vector_scores.get(memory.id, 0.0)
             keyword_score = self._calculate_keyword_score(query, memory.content)
-            
+
             # 混合评分
             base_relevance = vector_score * 0.7 + keyword_score * 0.3 if vector_score > 0 else keyword_score
             time_decay = self._calculate_time_decay(memory.timestamp)
             importance_weight = 0.8 + (memory.importance * 0.4)
-            
+
             final_score = base_relevance * time_decay * importance_weight
             if final_score > 0:
                 scored_memories.append((final_score, memory))
-        
+
         scored_memories.sort(key=lambda x: x[0], reverse=True)
         return [memory for _, memory in scored_memories[:limit]]
 ````
@@ -780,13 +780,13 @@ class EpisodicMemory:
     - 支持时间序列和会话级检索
     - 结构化过滤 + 语义向量检索
     """
-    
+
     def __init__(self, config: MemoryConfig):
         self.doc_store = SQLiteDocumentStore(config.database_path)
         self.vector_store = QdrantVectorStore(config.qdrant_url, config.qdrant_api_key)
         self.embedder = create_embedding_model_with_fallback()
         self.sessions = {}  # 会话索引
-    
+
     def add(self, memory_item: MemoryItem) -> str:
         """添加情景记忆"""
         # 创建情景对象
@@ -797,25 +797,25 @@ class EpisodicMemory:
             content=memory_item.content,
             context=memory_item.metadata
         )
-        
+
         # 更新会话索引
         session_id = episode.session_id
         if session_id not in self.sessions:
             self.sessions[session_id] = []
         self.sessions[session_id].append(episode.episode_id)
-        
+
         # 持久化存储（SQLite + Qdrant）
         self._persist_episode(episode)
         return memory_item.id
-    
+
     def retrieve(self, query: str, limit: int = 5, **kwargs) -> List[MemoryItem]:
         """混合检索：结构化过滤 + 语义向量检索"""
         # 1. 结构化预过滤（时间范围、重要性等）
         candidate_ids = self._structured_filter(**kwargs)
-        
+
         # 2. 向量语义检索
         hits = self._vector_search(query, limit * 5, kwargs.get("user_id"))
-        
+
         # 3. 综合评分与排序
         results = []
         for hit in hits:
@@ -823,20 +823,20 @@ class EpisodicMemory:
                 score = self._calculate_episode_score(hit)
                 memory_item = self._create_memory_item(hit)
                 results.append((score, memory_item))
-        
+
         results.sort(key=lambda x: x[0], reverse=True)
         return [item for _, item in results[:limit]]
-    
+
     def _calculate_episode_score(self, hit) -> float:
         """情景记忆评分算法"""
         vec_score = float(hit.get("score", 0.0))
         recency_score = self._calculate_recency(hit["metadata"]["timestamp"])
         importance = hit["metadata"].get("importance", 0.5)
-        
+
         # 评分公式：(向量相似度 × 0.8 + 时间近因性 × 0.2) × 重要性权重
         base_relevance = vec_score * 0.8 + recency_score * 0.2
         importance_weight = 0.8 + (importance * 0.4)
-        
+
         return base_relevance * importance_weight
 ````
 情景记忆的检索实现展现了复杂的多因素评分机制。它不仅考虑了语义相似度，还加入了时间近因性的考量，最终通过重要性权重进行调节。评分公式为：`(向量相似度 × 0.8 + 时间近因性 × 0.2) × (0.8 + 重要性 × 0.4)`，确保检索结果既语义相关又时间相关。
@@ -848,28 +848,28 @@ class EpisodicMemory:
 ````python
 class SemanticMemory(BaseMemory):
     """语义记忆实现
-    
+
     特点：
     - 使用HuggingFace中文预训练模型进行文本嵌入
     - 向量检索进行快速相似度匹配
     - 知识图谱存储实体和关系
     - 混合检索策略：向量+图+语义推理
     """
-    
+
     def __init__(self, config: MemoryConfig, storage_backend=None):
         super().__init__(config, storage_backend)
-        
+
         # 嵌入模型（统一提供）
         self.embedding_model = get_text_embedder()
-        
+
         # 专业数据库存储
         self.vector_store = QdrantConnectionManager.get_instance(**qdrant_config)
         self.graph_store = Neo4jGraphStore(**neo4j_config)
-        
+
         # 实体和关系缓存
         self.entities: Dict[str, Entity] = {}
         self.relations: List[Relation] = []
-        
+
         # NLP处理器（支持中英文）
         self.nlp = self._init_nlp()
 ````
@@ -880,18 +880,18 @@ def add(self, memory_item: MemoryItem) -> str:
     """添加语义记忆"""
     # 1. 生成文本嵌入
     embedding = self.embedding_model.encode(memory_item.content)
-    
+
     # 2. 提取实体和关系
     entities = self._extract_entities(memory_item.content)
     relations = self._extract_relations(memory_item.content, entities)
-    
+
     # 3. 存储到Neo4j图数据库
     for entity in entities:
         self._add_entity_to_graph(entity, memory_item)
-    
+
     for relation in relations:
         self._add_relation_to_graph(relation, memory_item)
-    
+
     # 4. 存储到Qdrant向量数据库
     metadata = {
         "memory_id": memory_item.id,
@@ -899,7 +899,7 @@ def add(self, memory_item: MemoryItem) -> str:
         "entity_count": len(entities),
         "relation_count": len(relations)
     }
-    
+
     self.vector_store.add_vectors(
         vectors=[embedding.tolist()],
         metadata=[metadata],
@@ -914,15 +914,15 @@ def retrieve(self, query: str, limit: int = 5, **kwargs) -> List[MemoryItem]:
     """检索语义记忆"""
     # 1. 向量检索
     vector_results = self._vector_search(query, limit * 2, user_id)
-    
+
     # 2. 图检索
     graph_results = self._graph_search(query, limit * 2, user_id)
-    
+
     # 3. 混合排序
     combined_results = self._combine_and_rank_results(
         vector_results, graph_results, query, limit
     )
-    
+
     return combined_results[:limit]
 ```
 
@@ -932,7 +932,7 @@ def retrieve(self, query: str, limit: int = 5, **kwargs) -> List[MemoryItem]:
 def _combine_and_rank_results(self, vector_results, graph_results, query, limit):
     """混合排序结果"""
     combined = {}
-    
+
     # 合并向量和图检索结果
     for result in vector_results:
         combined[result["memory_id"]] = {
@@ -940,7 +940,7 @@ def _combine_and_rank_results(self, vector_results, graph_results, query, limit)
             "vector_score": result.get("score", 0.0),
             "graph_score": 0.0
         }
-    
+
     for result in graph_results:
         memory_id = result["memory_id"]
         if memory_id in combined:
@@ -951,30 +951,30 @@ def _combine_and_rank_results(self, vector_results, graph_results, query, limit)
                 "vector_score": 0.0,
                 "graph_score": result.get("similarity", 0.0)
             }
-    
+
     # 计算混合分数
     for memory_id, result in combined.items():
         vector_score = result["vector_score"]
         graph_score = result["graph_score"]
         importance = result.get("importance", 0.5)
-        
+
         # 基础相似度得分
         base_relevance = vector_score * 0.7 + graph_score * 0.3
-        
+
         # 重要性权重 [0.8, 1.2]
         importance_weight = 0.8 + (importance * 0.4)
-        
+
         # 最终得分：相似度 * 重要性权重
         combined_score = base_relevance * importance_weight
         result["combined_score"] = combined_score
-    
+
     # 排序并返回
     sorted_results = sorted(
         combined.values(),
         key=lambda x: x["combined_score"],
         reverse=True
     )
-    
+
     return sorted_results[:limit]
 ```
 
@@ -991,22 +991,22 @@ def _combine_and_rank_results(self, vector_results, graph_results, query, limit)
 ````python
 class PerceptualMemory(BaseMemory):
     """感知记忆实现
-    
+
     特点：
     - 支持多模态数据（文本、图像、音频等）
     - 跨模态相似性搜索
     - 感知数据的语义理解
     - 支持内容生成和检索
     """
-    
+
     def __init__(self, config: MemoryConfig, storage_backend=None):
         super().__init__(config, storage_backend)
-        
+
         # 多模态编码器
         self.text_embedder = get_text_embedder()
         self._clip_model = self._init_clip_model()  # 图像编码
         self._clap_model = self._init_clap_model()  # 音频编码
-        
+
         # 按模态分离的向量存储
         self.vector_stores = {
             "text": QdrantConnectionManager.get_instance(
@@ -1014,7 +1014,7 @@ class PerceptualMemory(BaseMemory):
                 vector_size=self.vector_dim
             ),
             "image": QdrantConnectionManager.get_instance(
-                collection_name="perceptual_image", 
+                collection_name="perceptual_image",
                 vector_size=self._image_dim
             ),
             "audio": QdrantConnectionManager.get_instance(
@@ -1031,18 +1031,18 @@ def retrieve(self, query: str, limit: int = 5, **kwargs) -> List[MemoryItem]:
     user_id = kwargs.get("user_id")
     target_modality = kwargs.get("target_modality")
     query_modality = kwargs.get("query_modality", target_modality or "text")
-    
+
     # 同模态向量检索
     try:
         query_vector = self._encode_data(query, query_modality)
         store = self._get_vector_store_for_modality(target_modality or query_modality)
-        
+
         where = {"memory_type": "perceptual"}
         if user_id:
             where["user_id"] = user_id
         if target_modality:
             where["modality"] = target_modality
-        
+
         hits = store.search_similar(
             query_vector=query_vector,
             limit=max(limit * 5, 20),
@@ -1050,21 +1050,21 @@ def retrieve(self, query: str, limit: int = 5, **kwargs) -> List[MemoryItem]:
         )
     except Exception:
         hits = []
-    
+
     # 融合排序（向量相似度 + 时间近因性 + 重要性权重）
     results = []
     for hit in hits:
         vector_score = float(hit.get("score", 0.0))
         recency_score = self._calculate_recency_score(hit["metadata"]["timestamp"])
         importance = hit["metadata"].get("importance", 0.5)
-        
+
         # 评分算法
         base_relevance = vector_score * 0.8 + recency_score * 0.2
         importance_weight = 0.8 + (importance * 0.4)
         combined_score = base_relevance * importance_weight
-        
+
         results.append((combined_score, self._create_memory_item(hit)))
-    
+
     results.sort(key=lambda x: x[0], reverse=True)
     return [item for _, item in results[:limit]]
 ```
@@ -1078,11 +1078,11 @@ def _calculate_recency_score(self, timestamp: str) -> float:
         memory_time = datetime.fromisoformat(timestamp)
         current_time = datetime.now()
         age_hours = (current_time - memory_time).total_seconds() / 3600
-        
+
         # 指数衰减：24小时内保持高分，之后逐渐衰减
         decay_factor = 0.1  # 衰减系数
         recency_score = math.exp(-decay_factor * age_hours / 24)
-        
+
         return max(0.1, recency_score)  # 最低保持0.1的基础分数
     except Exception:
         return 0.5  # 默认中等分数
@@ -1154,12 +1154,12 @@ agent.tool_registry = tool_registry
 
 # 体验RAG功能
 # 添加第一个知识
-result1 = rag_tool.execute("add_text", 
+result1 = rag_tool.execute("add_text",
     text="Python是一种高级编程语言，由Guido van Rossum于1991年首次发布。Python的设计哲学强调代码的可读性和简洁的语法。",
     document_id="python_intro")
 print(f"知识1: {result1}")
 
-# 添加第二个知识  
+# 添加第二个知识
 result2 = rag_tool.execute("add_text",
     text="机器学习是人工智能的一个分支，通过算法让计算机从数据中学习模式。主要包括监督学习、无监督学习和强化学习三种类型。",
     document_id="ml_basics")
@@ -1195,7 +1195,7 @@ print(result)
 用户层：RAGTool统一接口
   ↓
 应用层：智能问答、搜索、管理
-  ↓  
+  ↓
 处理层：文档解析、分块、向量化
   ↓
 存储层：向量数据库、文档存储
@@ -1208,14 +1208,14 @@ print(result)
 ````python
 class RAGTool(Tool):
     """RAG工具
-    
+
     提供完整的 RAG 能力：
     - 添加多格式文档（PDF、Office、图片、音频等）
     - 智能检索与召回
     - LLM 增强问答
     - 知识库管理
     """
-    
+
     def __init__(
         self,
         knowledge_base_path: str = "./knowledge_base",
@@ -1227,7 +1227,7 @@ class RAGTool(Tool):
         # 初始化RAG管道
         self._pipelines: Dict[str, Dict[str, Any]] = {}
         self.llm = HelloAgentsLLM()
-        
+
         # 创建默认管道
         default_pipeline = create_rag_pipeline(
             qdrant_url=self.qdrant_url,
@@ -1251,7 +1251,7 @@ def _convert_to_markdown(path: str) -> str:
     """
     Universal document reader using MarkItDown with enhanced PDF processing.
     核心功能：将任意格式文档转换为Markdown文本
-    
+
     支持格式：
     - 文档：PDF、Word、Excel、PowerPoint
     - 图像：JPG、PNG、GIF（通过OCR）
@@ -1261,17 +1261,17 @@ def _convert_to_markdown(path: str) -> str:
     """
     if not os.path.exists(path):
         return ""
-    
+
     # 对PDF文件使用增强处理
     ext = (os.path.splitext(path)[1] or '').lower()
     if ext == '.pdf':
         return _enhanced_pdf_processing(path)
-    
+
     # 其他格式使用MarkItDown统一转换
     md_instance = _get_markitdown_instance()
     if md_instance is None:
         return _fallback_text_reader(path)
-    
+
     try:
         result = md_instance.convert(path)
         markdown_text = getattr(result, "text_content", None)
@@ -1307,7 +1307,7 @@ def _split_paragraphs_with_headings(text: str) -> List[Dict]:
     paragraphs: List[Dict] = []
     buf: List[str] = []
     char_pos = 0
-    
+
     def flush_buf(end_pos: int):
         if not buf:
             return
@@ -1320,7 +1320,7 @@ def _split_paragraphs_with_headings(text: str) -> List[Dict]:
             "start": max(0, end_pos - len(content)),
             "end": end_pos,
         })
-    
+
     for ln in lines:
         raw = ln
         if raw.strip().startswith("#"):
@@ -1328,16 +1328,16 @@ def _split_paragraphs_with_headings(text: str) -> List[Dict]:
             flush_buf(char_pos)
             level = len(raw) - len(raw.lstrip('#'))
             title = raw.lstrip('#').strip()
-            
+
             if level <= 0:
                 level = 1
             if level <= len(heading_stack):
                 heading_stack = heading_stack[:level-1]
             heading_stack.append(title)
-            
+
             char_pos += len(raw) + 1
             continue
-        
+
         # 段落内容累积
         if raw.strip() == "":
             flush_buf(char_pos)
@@ -1345,12 +1345,12 @@ def _split_paragraphs_with_headings(text: str) -> List[Dict]:
         else:
             buf.append(raw)
         char_pos += len(raw) + 1
-    
+
     flush_buf(char_pos)
-    
+
     if not paragraphs:
         paragraphs = [{"content": text, "heading_path": None, "start": 0, "end": len(text)}]
-    
+
     return paragraphs
 ```
 
@@ -1363,11 +1363,11 @@ def _chunk_paragraphs(paragraphs: List[Dict], chunk_tokens: int, overlap_tokens:
     cur: List[Dict] = []
     cur_tokens = 0
     i = 0
-    
+
     while i < len(paragraphs):
         p = paragraphs[i]
         p_tokens = _approx_token_len(p["content"]) or 1
-        
+
         if cur_tokens + p_tokens <= chunk_tokens or not cur:
             cur.append(p)
             cur_tokens += p_tokens
@@ -1378,14 +1378,14 @@ def _chunk_paragraphs(paragraphs: List[Dict], chunk_tokens: int, overlap_tokens:
             start = cur[0]["start"]
             end = cur[-1]["end"]
             heading_path = next((x["heading_path"] for x in reversed(cur) if x.get("heading_path")), None)
-            
+
             chunks.append({
                 "content": content,
                 "start": start,
                 "end": end,
                 "heading_path": heading_path,
             })
-            
+
             # 构建重叠部分
             if overlap_tokens > 0 and cur:
                 kept: List[Dict] = []
@@ -1401,21 +1401,21 @@ def _chunk_paragraphs(paragraphs: List[Dict], chunk_tokens: int, overlap_tokens:
             else:
                 cur = []
                 cur_tokens = 0
-    
+
     # 处理最后一个分块
     if cur:
         content = "\n\n".join(x["content"] for x in cur)
         start = cur[0]["start"]
         end = cur[-1]["end"]
         heading_path = next((x["heading_path"] for x in reversed(cur) if x.get("heading_path")), None)
-        
+
         chunks.append({
             "content": content,
             "start": start,
             "end": end,
             "heading_path": heading_path,
         })
-    
+
     return chunks
 ```
 
@@ -1450,9 +1450,9 @@ def _is_cjk(ch: str) -> bool:
 
 ```python
 def index_chunks(
-    store = None, 
-    chunks: List[Dict] = None, 
-    cache_db: Optional[str] = None, 
+    store = None,
+    chunks: List[Dict] = None,
+    cache_db: Optional[str] = None,
     batch_size: int = 64,
     rag_namespace: str = "default"
 ) -> None:
@@ -1463,25 +1463,25 @@ def index_chunks(
     if not chunks:
         print("[RAG] No chunks to index")
         return
-    
+
     # 使用统一嵌入模型
     embedder = get_text_embedder()
     dimension = get_dimension(384)
-    
+
     # 创建默认Qdrant存储
     if store is None:
         store = _create_default_vector_store(dimension)
         print(f"[RAG] Created default Qdrant store with dimension {dimension}")
-    
+
     # 预处理Markdown文本以获得更好的嵌入质量
     processed_texts = []
     for c in chunks:
         raw_content = c["content"]
         processed_content = _preprocess_markdown_for_embedding(raw_content)
         processed_texts.append(processed_content)
-    
+
     print(f"[RAG] Embedding start: total_texts={len(processed_texts)} batch_size={batch_size}")
-    
+
     # 批量编码
     vecs: List[List[float]] = []
     for i in range(0, len(processed_texts), batch_size):
@@ -1489,21 +1489,21 @@ def index_chunks(
         try:
             # 使用统一嵌入器（内部处理缓存）
             part_vecs = embedder.encode(part)
-            
+
             # 标准化为List[List[float]]格式
             if not isinstance(part_vecs, list):
                 if hasattr(part_vecs, "tolist"):
                     part_vecs = [part_vecs.tolist()]
                 else:
                     part_vecs = [list(part_vecs)]
-            
+
             # 处理向量格式和维度
             for v in part_vecs:
                 try:
                     if hasattr(v, "tolist"):
                         v = v.tolist()
                     v_norm = [float(x) for x in v]
-                    
+
                     # 维度检查和调整
                     if len(v_norm) != dimension:
                         print(f"[WARNING] 向量维度异常: 期望{dimension}, 实际{len(v_norm)}")
@@ -1511,17 +1511,17 @@ def index_chunks(
                             v_norm.extend([0.0] * (dimension - len(v_norm)))
                         else:
                             v_norm = v_norm[:dimension]
-                    
+
                     vecs.append(v_norm)
                 except Exception as e:
                     print(f"[WARNING] 向量转换失败: {e}, 使用零向量")
                     vecs.append([0.0] * dimension)
-                    
+
         except Exception as e:
             print(f"[WARNING] Batch {i} encoding failed: {e}")
             # 实现重试机制
             # ... 重试逻辑 ...
-        
+
         print(f"[RAG] Embedding progress: {min(i+batch_size, len(processed_texts))}/{len(processed_texts)}")
 ```
 
@@ -1598,14 +1598,14 @@ def search_vectors_expanded(
     """
     if not query:
         return []
-    
+
     # 创建默认存储
     if store is None:
         store = _create_default_vector_store()
-    
+
     # 查询扩展
     expansions: List[str] = [query]
-    
+
     if enable_mqe and mqe_expansions > 0:
         expansions.extend(_prompt_mqe(query, mqe_expansions))
     if enable_hyde:
@@ -1637,9 +1637,9 @@ def search_vectors_expanded(
     for q in expansions:
         qv = embed_query(q)
         hits = store.search_similar(
-            query_vector=qv, 
-            limit=per, 
-            score_threshold=score_threshold, 
+            query_vector=qv,
+            limit=per,
+            score_threshold=score_threshold,
             where=where
         )
         for h in hits:
@@ -1647,7 +1647,7 @@ def search_vectors_expanded(
             s = float(h.get("score", 0.0))
             if mid not in agg or s > float(agg[mid].get("score", 0.0)):
                 agg[mid] = h
-    
+
     # 按分数排序返回
     merged = list(agg.values())
     merged.sort(key=lambda x: float(x.get("score", 0.0)), reverse=True)
@@ -2084,4 +2084,3 @@ def generate_report(self, save_to_file: bool = True) -> Dict[str, Any]:
 ## 参考文献
 
 [1] Atkinson, R. C., & Shiffrin, R. M. (1968). Human memory: A proposed system and its control processes. In *Psychology of learning and motivation* (Vol. 2, pp. 89-195). Academic press.
-

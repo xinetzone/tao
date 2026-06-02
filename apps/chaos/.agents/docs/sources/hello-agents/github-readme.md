@@ -101,7 +101,7 @@ purpose: Hello-Agents 教程原始抓取归档，用于追溯结构化萃取页
 
    ***本 Hello-Agents PDF 教程完全开源免费。为防止各类营销号加水印后贩卖给多智能体系统初学者，我们特地在 PDF 文件中预先添加了不影响阅读的 Datawhale 开源标志水印，敬请谅解～***
 
-> *Hello-Agents PDF: [https://github.com/datawhalechina/hello-agents/releases/latest/](https://github.com/datawhalechina/hello-agents/releases/latest/)*  
+> *Hello-Agents PDF: [https://github.com/datawhalechina/hello-agents/releases/latest/](https://github.com/datawhalechina/hello-agents/releases/latest/)*
 > *Hello-Agents PDF 国内下载地址: [https://www.datawhale.cn/learn/summary/239](https://www.datawhale.cn/learn/summary/239)*
 
 ## 💡 如何学习

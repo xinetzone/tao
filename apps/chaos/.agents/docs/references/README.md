@@ -39,4 +39,5 @@
 | [podman/](./podman/) | Podman 命令、容器场景与常见故障参考 |
 | [mise/](./mise/) | mise 多语言版本管理、配置与任务运行器参考 |
 | [deepagents/](./deepagents/overview.md) | LangChain Deep Agents overview 结构化中文教程 |
+| [ai-libs/](./ai-libs/) | LangChain/LangGraph/DeepAgents 三库源码级横向对比分析与设计模式萃取 |
 | [agents-design-system/](./agents-design-system/) | AGENTS.md 与 .agents/ 设计体系完整讨论（29 篇） |

@@ -1,6 +1,7 @@
 +++
 id = "governance-auditor"
 domain = "governance"
+layer = "governance"
 
 [bindings]
 rules = ["rules/documentation.md"]

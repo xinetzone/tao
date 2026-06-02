@@ -1,6 +1,7 @@
 +++
 id = "execution-orchestrator"
 domain = "execution"
+layer = "governance"
 
 [bindings]
 rules = ["rules/context-economy.md"]

@@ -1,6 +1,7 @@
 +++
 id = "organization-steward"
 domain = "organization"
+layer = "governance"
 
 [bindings]
 rules = ["rules/documentation.md", "rules/skills.md"]

@@ -1,6 +1,7 @@
 +++
 id = "collaboration-architect"
 domain = "governance+knowledge"
+layer = "governance"
 
 [bindings]
 rules = ["rules/documentation.md", "rules/context-economy.md"]

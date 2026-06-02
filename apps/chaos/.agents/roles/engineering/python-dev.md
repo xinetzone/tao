@@ -1,6 +1,7 @@
 +++
 id = "python-dev"
 domain = "engineering"
+layer = "engineering"
 
 [bindings]
 rules = ["rules/python.md", "rules/data-flow-ordering.md"]

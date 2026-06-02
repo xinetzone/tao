@@ -1,6 +1,7 @@
 +++
 id = "full-stack"
 domain = "engineering"
+layer = "engineering"
 
 [bindings]
 rules = ["rules/python.md", "rules/frontend.md", "rules/backend.md"]

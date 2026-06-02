@@ -1,6 +1,7 @@
 +++
 id = "devops"
 domain = "infrastructure"
+layer = "engineering"
 
 [bindings]
 rules = ["rules/containerization.md"]

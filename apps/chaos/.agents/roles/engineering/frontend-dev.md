@@ -1,6 +1,7 @@
 +++
 id = "frontend-dev"
 domain = "engineering"
+layer = "engineering"
 
 [bindings]
 rules = ["rules/frontend.md"]

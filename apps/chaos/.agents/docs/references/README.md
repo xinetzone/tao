@@ -18,6 +18,9 @@
 | [dao-scenario-catalog.md](./dao-scenario-catalog.md) | 道家场景目录 |
 | [agent-collaboration-metamodel.md](./agent-collaboration-metamodel.md) | 多智能体协作元模型 |
 | [agent-memory-dream-protocol.md](./agent-memory-dream-protocol.md) | 智能体记忆梦境协议 |
+| [agent-triggerable-knowledge-assets.md](./agent-triggerable-knowledge-assets.md) | 可被 Agent 触发的知识资产：Search Keywords、Trigger Phrases 与召回结构 |
+| [agent-runtime-closed-loop.md](./agent-runtime-closed-loop.md) | Agent 系统运行时闭环：任务执行、评估反馈、记忆回流与演化优化 |
+| [external-knowledge-ingestion-pipeline.md](./external-knowledge-ingestion-pipeline.md) | 外部知识入库流水线：从外部 URL 到 sources / references / manifest / 校验闭环 |
 | [knowledge-driven-exploration-protocol.md](./knowledge-driven-exploration-protocol.md) | 知识驱动探索协议 |
 | [design-meta-insights.md](./design-meta-insights.md) | 设计元层级洞察（6 条跨场景判断规则） |
 | [standardization-strategy.md](./standardization-strategy.md) | 标准化战略分析：行业格局、核心挑战、三层分离方案与路线图 |

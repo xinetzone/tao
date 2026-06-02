@@ -43,6 +43,33 @@
       },
       "additionalProperties": false
     },
+    "constraints": {
+      "type": "object",
+      "description": "Governance-oriented constraints enforced for this role",
+      "properties": {
+        "rules_must_exist": {
+          "type": "boolean",
+          "description": "Whether bound rule paths must be present and resolvable"
+        },
+        "non_goals_enforced": {
+          "type": "boolean",
+          "description": "Whether declared non-goals are treated as hard constraints"
+        }
+      },
+      "additionalProperties": false
+    },
+    "non_goals": {
+      "type": "object",
+      "description": "Machine-readable non-goals for governance-grade roles",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Non-goal statements kept in sync with the Markdown body"
+        }
+      },
+      "additionalProperties": false
+    },
     "permissions": {
       "type": "object",
       "description": "File access permissions for agents assuming this role",

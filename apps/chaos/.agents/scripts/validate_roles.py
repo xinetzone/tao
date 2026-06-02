@@ -6,9 +6,11 @@
     3. ``domain`` 必须存在且为非空字符串。
     4. ``bindings.rules``/``bindings.references`` 中每个路径在 ``.agents/`` 下
        必须存在。
-    5. frontmatter 顶层字段仅允许 ``id``/``domain``/``bindings``/``permissions``，
-       出现未知字段视为 ERROR。
+    5. frontmatter 顶层字段仅允许 ``id``/``domain``/``layer``/``bindings``/
+       ``constraints``/``non_goals``/``permissions``，出现未知字段视为 ERROR。
     6. ``bindings`` 仅允许 ``rules``/``references``/``skills`` 子键；
+       ``constraints`` 仅允许 ``rules_must_exist``/``non_goals_enforced``；
+       ``non_goals`` 仅允许 ``items``；
        ``permissions`` 仅允许 ``can_modify``/``cannot_modify`` 子键。
 
 输出格式:
@@ -37,11 +39,27 @@ _ID_PATTERN = re.compile(r"^[a-z][a-z0-9]*(-[a-z0-9]+)*$")
 
 # 顶层允许的字段集合，对照 role.schema.json 的 properties。
 _ALLOWED_TOP_LEVEL: frozenset[str] = frozenset(
-    {"id", "domain", "bindings", "permissions"}
+    {
+        "id",
+        "domain",
+        "layer",
+        "bindings",
+        "constraints",
+        "non_goals",
+        "permissions",
+    }
 )
 
 # bindings 子键白名单。
 _ALLOWED_BINDINGS_KEYS: frozenset[str] = frozenset({"rules", "references", "skills"})
+
+# constraints 子键白名单。
+_ALLOWED_CONSTRAINTS_KEYS: frozenset[str] = frozenset(
+    {"rules_must_exist", "non_goals_enforced"}
+)
+
+# non_goals 子键白名单。
+_ALLOWED_NON_GOALS_KEYS: frozenset[str] = frozenset({"items"})
 
 # permissions 子键白名单。
 _ALLOWED_PERMISSIONS_KEYS: frozenset[str] = frozenset({"can_modify", "cannot_modify"})
@@ -89,6 +107,42 @@ def _extract_frontmatter(text: str) -> tuple[str | None, str | None]:
         return None, "missing closing '+++' delimiter"
 
     return "\n".join(lines[start:end]), None
+
+
+def _extract_body_non_goals(text: str) -> list[str] | None:
+    """从 Markdown 正文提取 ``## Non-Goals`` 节的列表项。
+
+    提取时去掉行内反引号和首尾空白。返回 ``None`` 表示未找到该节。
+    """
+
+    lines = text.splitlines()
+    end = None
+    for i, line in enumerate(lines):
+        if line.strip() == _FRONTMATTER_DELIM and i > 0:
+            end = i + 1
+            break
+    if end is None:
+        return None
+
+    section_start = None
+    for i in range(end, len(lines)):
+        if lines[i].strip().lower() == "## non-goals":
+            section_start = i + 1
+            break
+    if section_start is None:
+        return None
+
+    items: list[str] = []
+    for line in lines[section_start:]:
+        stripped = line.lstrip()
+        if stripped.startswith("## "):
+            break
+        if stripped.startswith("- ") or stripped.startswith("* "):
+            content = stripped[2:].strip()
+            content = content.replace("`", "").strip()
+            if content:
+                items.append(content)
+    return items
 
 
 def _check_path_list(
@@ -194,6 +248,27 @@ def _validate_role_file(
             f"ERROR: role '{role_id}' missing required non-empty string 'domain'"
         )
 
+    # layer 校验。
+    if "layer" in data:
+        layer = data["layer"]
+        if not isinstance(layer, str):
+            errors.append(
+                f"ERROR: role '{role_id}' layer must be a string, got "
+                f"{type(layer).__name__}"
+            )
+        elif layer not in {"governance", "engineering"}:
+            errors.append(
+                f"ERROR: role '{role_id}' layer must be one of "
+                "['governance', 'engineering']"
+            )
+        else:
+            parent_layer = md_path.parent.name
+            if parent_layer in {"governance", "engineering"} and layer != parent_layer:
+                errors.append(
+                    f"ERROR: role '{role_id}' layer '{layer}' does not match "
+                    f"parent directory '{parent_layer}'"
+                )
+
     # bindings 校验。
     if "bindings" in data:
         bindings = data["bindings"]
@@ -229,6 +304,117 @@ def _validate_role_file(
                     f"got {type(bindings['skills']).__name__}"
                 )
 
+    # constraints 校验。
+    if "constraints" in data:
+        constraints = data["constraints"]
+        if not isinstance(constraints, dict):
+            errors.append(
+                f"ERROR: role '{role_id}' constraints must be a table, got "
+                f"{type(constraints).__name__}"
+            )
+        else:
+            unknown_c = sorted(set(constraints.keys()) - _ALLOWED_CONSTRAINTS_KEYS)
+            if unknown_c:
+                errors.append(
+                    f"ERROR: role '{role_id}' constraints has unknown key(s): "
+                    f"{unknown_c}"
+                )
+            for field in _ALLOWED_CONSTRAINTS_KEYS:
+                if field in constraints and not isinstance(constraints[field], bool):
+                    errors.append(
+                        f"ERROR: role '{role_id}' constraints.{field} must "
+                        f"be a bool, got {type(constraints[field]).__name__}"
+                    )
+
+    # governance 层角色必须显式开启 non_goals_enforced 硬约束。
+    constraints_table = data.get("constraints") if isinstance(data, dict) else None
+    if md_path.parent.name == "governance":
+        if not isinstance(constraints_table, dict):
+            errors.append(
+                f"ERROR: role '{role_id}' in governance/ must declare a "
+                "[constraints] table with non_goals_enforced = true"
+            )
+        elif constraints_table.get("non_goals_enforced") is not True:
+            errors.append(
+                f"ERROR: role '{role_id}' in governance/ must set "
+                "constraints.non_goals_enforced = true"
+            )
+
+    # 开启 non_goals_enforced 时，non_goals.items 必须存在且非空。
+    if (
+        isinstance(constraints_table, dict)
+        and constraints_table.get("non_goals_enforced") is True
+    ):
+        non_goals_table = data.get("non_goals") if isinstance(data, dict) else None
+        items = (
+            non_goals_table.get("items")
+            if isinstance(non_goals_table, dict)
+            else None
+        )
+        if not isinstance(items, list) or not items:
+            errors.append(
+                f"ERROR: role '{role_id}' enables non_goals_enforced, so "
+                "non_goals.items must be a non-empty list"
+            )
+        else:
+            # 进一步校验 Markdown 正文 ## Non-Goals 与 non_goals.items 一致。
+            body_items = _extract_body_non_goals(text)
+            if body_items is None:
+                errors.append(
+                    f"ERROR: role '{role_id}' enables non_goals_enforced, so "
+                    "Markdown body must contain a '## Non-Goals' section"
+                )
+            else:
+                expected = [str(item).strip() for item in items]
+                actual = [item.strip() for item in body_items]
+                if expected != actual:
+                    missing = [item for item in expected if item not in actual]
+                    extra = [item for item in actual if item not in expected]
+                    detail_parts: list[str] = []
+                    if missing:
+                        detail_parts.append(
+                            "missing in body: " + "; ".join(missing)
+                        )
+                    if extra:
+                        detail_parts.append(
+                            "extra in body: " + "; ".join(extra)
+                        )
+                    errors.append(
+                        f"ERROR: role '{role_id}' ## Non-Goals body must "
+                        "match non_goals.items exactly "
+                        f"({'; '.join(detail_parts)})"
+                    )
+    
+    # non_goals 校验。
+    if "non_goals" in data:
+        non_goals = data["non_goals"]
+        if not isinstance(non_goals, dict):
+            errors.append(
+                f"ERROR: role '{role_id}' non_goals must be a table, got "
+                f"{type(non_goals).__name__}"
+            )
+        else:
+            unknown_ng = sorted(set(non_goals.keys()) - _ALLOWED_NON_GOALS_KEYS)
+            if unknown_ng:
+                errors.append(
+                    f"ERROR: role '{role_id}' non_goals has unknown key(s): "
+                    f"{unknown_ng}"
+                )
+            if "items" in non_goals:
+                items = non_goals["items"]
+                if not isinstance(items, list):
+                    errors.append(
+                        f"ERROR: role '{role_id}' non_goals.items must be "
+                        f"a list, got {type(items).__name__}"
+                    )
+                else:
+                    for item in items:
+                        if not isinstance(item, str):
+                            errors.append(
+                                f"ERROR: role '{role_id}' non_goals.items "
+                                f"contains non-string: {item!r}"
+                            )
+
     # permissions 校验（仅做结构层面的简版校验）。
     if "permissions" in data:
         permissions = data["permissions"]
@@ -262,7 +448,7 @@ def validate(agents_root: Path) -> tuple[list[str], list[str], list[str]]:
         return ([f"ERROR: roles directory not found at {roles_dir}"], [], [])
 
     md_files = sorted(
-        p for p in roles_dir.glob("*.md") if p.is_file() and p.name != "README.md"
+        p for p in roles_dir.rglob("*.md") if p.is_file() and p.name != "README.md"
     )
 
     errors: list[str] = []

@@ -18,11 +18,12 @@ flowchart TB
     G --> G4["organization-steward.md"]
 
     E --> E1["python-dev.md"]
-    E --> E2["full-stack.md"]
-    E --> E3["frontend-dev.md"]
-    E --> E4["backend-dev.md"]
-    E --> E5["devops.md"]
-    E --> E6["reviewer.md"]
+    E --> E2["python-manager.md"]
+    E --> E3["full-stack.md"]
+    E --> E4["frontend-dev.md"]
+    E --> E5["backend-dev.md"]
+    E --> E6["devops.md"]
+    E --> E7["reviewer.md"]
 ```
 
 | 层 | 目录 | 定位 | 演化速率 | 准入流程 |
@@ -44,7 +45,7 @@ flowchart TB
 
 - **变更门槛低**：随技术栈自由增删，仅受 `role.schema.json` 校验
 - **schema 字段** `layer = "engineering"`
-- **职责示例**：python-dev、frontend-dev、backend-dev、full-stack、devops、reviewer
+- **职责示例**：python-dev、python-manager、frontend-dev、backend-dev、full-stack、devops、reviewer
 - **不承担**协作元模型的语义稳定性责任——这一点由 governance/ 层负责
 
 ## 目录边界
@@ -68,6 +69,9 @@ flowchart TB
 | `bindings.rules` | array | 否 | 默认绑定的规则路径列表（相对 `.agents/`） |
 | `bindings.references` | array | 否 | 默认绑定的参考文档路径列表 |
 | `bindings.skills` | array | 否 | 默认绑定的技能 id 列表 |
+| `constraints.rules_must_exist` | boolean | 否 | 治理型角色是否要求绑定规则路径必须存在 |
+| `constraints.non_goals_enforced` | boolean | 否 | 治理型角色是否将声明的非目标视为硬约束 |
+| `non_goals.items` | array | 否 | 治理型角色的机器可解析非目标列表 |
 | `permissions.can_modify` | array | 否 | 可修改的文件 glob 列表 |
 | `permissions.cannot_modify` | array | 否 | 禁止修改的文件 glob 列表 |
 
@@ -75,7 +79,7 @@ Markdown body 保留三个节：Description、Responsibilities、Non-Goals。
 
 ### Frontmatter 与 body 的职责分界
 
-- **frontmatter** = 机器可解析的声明（`id`、`domain`、`layer`、`bindings`、`permissions`），供运行时路由和校验工具消费
+- **frontmatter** = 机器可解析的声明（`id`、`domain`、`layer`、`bindings`、`constraints`、`non_goals`、`permissions`），供运行时路由和校验工具消费
 - **Markdown body** = 人类可读的描述（Description、Responsibilities、Non-Goals），供评审和文档使用
 - JSON Schema 校验定义见 `.agents/schemas/role.schema.json`
 
@@ -95,6 +99,7 @@ Markdown body 保留三个节：Description、Responsibilities、Non-Goals。
 | 文件 | 角色 | 领域 | 状态 |
 |---|---|---|---|
 | `engineering/python-dev.md` | Python Dev | engineering | 占位 |
+| `engineering/python-manager.md` | Python Manager | engineering | 占位 |
 | `engineering/full-stack.md` | Full Stack | engineering | 占位 |
 | `engineering/frontend-dev.md` | Frontend Dev | engineering | 占位 |
 | `engineering/backend-dev.md` | Backend Dev | engineering | 占位 |

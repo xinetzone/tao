@@ -101,7 +101,7 @@ class ContainsMatch:
 
 
 class LatencyMetric:
-    """延迟测量指标 - 直接读取 ``kwargs['latency']``（秒）。"""
+    """延迟测量指标 - 直接读取 ``kwargs['latency']``\\ （秒）。"""
 
     name = "latency"
 
@@ -195,7 +195,7 @@ class MetricRegistry:
         return self._items.pop(name, None)
 
     def get(self, name: str) -> Metric:
-        """按名称获取指标，不存在则抛出 ``KeyError``。"""
+        """按名称获取指标，不存在则抛出 ``KeyError``\\ 。"""
         try:
             return self._items[name]
         except KeyError as exc:

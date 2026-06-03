@@ -365,12 +365,12 @@ class EvalFlow(HarnessFlow):
 
     每步遵守明确的数据协议：
 
-    * ``start``：初始化运行上下文，写入 ``run_id``、``started_at``；
-    * ``prepare_data``：产出 ``dataset``（评估样本列表）；
-    * ``run_agent``：在 ``dataset`` 上运行被评 Agent，产出 ``predictions``；
-    * ``collect_metrics``：汇总 ``predictions`` → ``metrics`` 字典；
-    * ``report``：基于 ``metrics`` 产出最终 ``report``；
-    * ``end``：标记完成并落盘汇总产物。
+    * ``start``\\ ：初始化运行上下文，写入 ``run_id``\\ 、``started_at``\\ ；
+    * ``prepare_data``\\ ：产出 ``dataset``\\ （评估样本列表）；
+    * ``run_agent``\\ ：在 ``dataset`` 上运行被评 Agent，产出 ``predictions``\\ ；
+    * ``collect_metrics``\\ ：汇总 ``predictions`` → ``metrics`` 字典；
+    * ``report``\\ ：基于 ``metrics`` 产出最终 ``report``\\ ；
+    * ``end``\\ ：标记完成并落盘汇总产物。
 
     子类通常重写 :meth:`prepare_data` / :meth:`run_agent` / :meth:`collect_metrics`
     三个方法即可定制完整评估链路。

@@ -1,0 +1,55 @@
+# Build with: podman build --format docker -t miniconda3:ubuntu26.04 -f Containerfile .
+# Note: --format docker is required to support the SHELL instruction below.
+
+FROM ubuntu:26.04
+
+LABEL maintainer="AgentForge" \
+      description="Ubuntu 26.04 + Miniconda3 base image"
+
+# Avoid interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        wget \
+        curl \
+        ca-certificates \
+        bzip2 \
+        libglib2.0-0 \
+        libsm6 \
+        libxext6 \
+        libxrender1 \
+        git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set Miniconda installation path
+ENV CONDA_DIR=/opt/conda
+ENV PATH="${CONDA_DIR}/bin:${PATH}"
+
+# Download and install Miniconda3 (latest, x86_64 Linux)
+# conda version is pinned for reproducibility; update the version number as needed
+RUN wget -q https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh \
+    && bash /tmp/miniconda.sh -b -p ${CONDA_DIR} \
+    && rm /tmp/miniconda.sh \
+    && conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main \
+    && conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r \
+    && conda install -n base -c defaults conda=26.3.2 -y \
+    && conda clean -afy \
+    && find ${CONDA_DIR} -follow -type f -name '*.a' -delete \
+    && find ${CONDA_DIR} -follow -type f -name '*.pyc' -delete
+
+# Initialize conda for bash
+RUN conda init bash
+
+# Set SHELL to bash so that `conda activate` works properly
+SHELL ["/bin/bash", "--login", "-c"]
+
+# Verify installation
+RUN conda --version && python --version
+
+# Clean up apt cache
+RUN apt-get clean && rm -rf /tmp/* /var/tmp/*
+
+WORKDIR /workspace
+
+CMD ["/bin/bash", "--login"]

@@ -111,4 +111,6 @@ podman-reference/
 11-docker-migration
 12-troubleshooting
 13-configuration
+podman-knowledge-base-extraction
+podman-task-retrospective
 ```

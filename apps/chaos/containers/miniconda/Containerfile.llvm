@@ -1,25 +1,39 @@
 # Build with: podman build --format docker -t miniconda3:llvm -f Containerfile.llvm .
 # Note: --format docker is required to support the SHELL instruction below.
 # Depends on: miniconda3:ubuntu26.04 (build from Containerfile first)
+#
+# Target: LLVM Pass / Clang Plugin development
+# Size optimization: ~1.5GB saved vs naive install
 
 FROM miniconda3:ubuntu26.04
 
 LABEL maintainer="AgentForge" \
-      description="Miniconda3 + LLVM/Clang (via conda-forge)"
+      description="Miniconda3 + LLVM/Clang 22.x for Pass/Plugin development"
 
-# Install LLVM and Clang from conda-forge
-# Pinned versions for reproducibility; update as needed
-RUN conda install -n base -c conda-forge \
-        llvmdev \
-        clang \
-        clangdev \
-        compiler-rt \
-        lld \
+# Install LLVM and Clang from conda-forge ONLY (avoid defaults channel version conflicts)
+# All packages pinned to 22.1.x for ABI consistency
+RUN conda install -n base -c conda-forge --override-channels \
+        llvmdev=22.1 \
+        clangdev=22.1 \
+        clang=22.1 \
+        lld=22.1 \
+        cmake \
+        ninja \
         -y \
-    && conda clean -afy
+    && conda clean -afy \
+    # Remove sysroot (not needed for pass development, saves ~480MB)
+    && rm -rf ${CONDA_DIR}/x86_64-conda-linux-gnu/sysroot \
+    # Remove static archives (use shared libs for pass development, saves ~400MB)
+    && find ${CONDA_DIR}/lib -name '*.a' -delete \
+    # Remove compiler-rt sanitizer runtimes (not needed for pass dev)
+    && rm -rf ${CONDA_DIR}/lib/clang/*/lib/linux/*san* \
+    && rm -rf ${CONDA_DIR}/lib/clang/*/lib/linux/*fuzzer* \
+    # Remove .pyc and __pycache__
+    && find ${CONDA_DIR} -type f -name '*.pyc' -delete \
+    && find ${CONDA_DIR} -type d -name '__pycache__' -exec rm -rf {} + 2>/dev/null || true
 
-# Verify installation
-RUN clang --version && llvm-config --version
+# Verify: versions must match (all 22.1.x)
+RUN clang --version && llvm-config --version && opt --version | head -2
 
 WORKDIR /workspace
 

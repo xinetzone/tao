@@ -16,6 +16,7 @@ code-architecture-insights
 rule-lifecycle
 layered-development-practice
 weakness-as-strength-api-design
+container-build-insights
 ```
 
 ## 内容概览
@@ -30,6 +31,7 @@ weakness-as-strength-api-design
 | `rule-lifecycle` | 架构师、规则治理者 | 规则如何诞生、成长、衰老、重生？宇宙/世界分层如何指导规则的生命周期管理？ |
 | `layered-development-practice` | 开发者、AI Agent | 宇宙/世界/生长通道三层架构如何指导日常开发决策？接到任务时怎样用分层思维做判断？ |
 | `weakness-as-strength-api-design` | 架构师、API 设计者 | 「弱者道之用」如何映射为 API 设计的柔性哲学？最少假设如何成就最强适应力？ |
+| `container-build-insights` | 开发者、DevOps 工程师 | 容器构建实践中的生态趋势、格式兼容性与调试模式洞察 |
 
 ## 边界
 

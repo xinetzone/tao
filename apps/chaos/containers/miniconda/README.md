@@ -1,9 +1,25 @@
 # Miniconda 容器镜像构建与使用指南
 
+## 镜像标签
+
+| 标签 | Containerfile | 描述 |
+|------|---------------|------|
+| `miniconda3:ubuntu26.04` | `Containerfile` | 基础镜像：Ubuntu 26.04 + Miniconda3 |
+| `miniconda3:llvm` | `Containerfile.llvm` | 扩展镜像：基础镜像 + LLVM/Clang (conda-forge) |
+
 ## 构建镜像
+
+### 基础镜像
 
 ```bash
 podman build --format docker -t miniconda3:ubuntu26.04 -f Containerfile .
+```
+
+### LLVM/Clang 镜像
+
+```bash
+# 需先构建基础镜像
+podman build --format docker -t miniconda3:llvm -f Containerfile.llvm .
 ```
 
 > `--format docker` 用于支持 `SHELL` 指令，避免 OCI 格式兼容警告。

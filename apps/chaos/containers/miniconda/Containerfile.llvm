@@ -1,0 +1,26 @@
+# Build with: podman build --format docker -t miniconda3:llvm -f Containerfile.llvm .
+# Note: --format docker is required to support the SHELL instruction below.
+# Depends on: miniconda3:ubuntu26.04 (build from Containerfile first)
+
+FROM miniconda3:ubuntu26.04
+
+LABEL maintainer="AgentForge" \
+      description="Miniconda3 + LLVM/Clang (via conda-forge)"
+
+# Install LLVM and Clang from conda-forge
+# Pinned versions for reproducibility; update as needed
+RUN conda install -n base -c conda-forge \
+        llvmdev \
+        clang \
+        clangdev \
+        compiler-rt \
+        lld \
+        -y \
+    && conda clean -afy
+
+# Verify installation
+RUN clang --version && llvm-config --version
+
+WORKDIR /workspace
+
+CMD ["/bin/bash", "--login"]

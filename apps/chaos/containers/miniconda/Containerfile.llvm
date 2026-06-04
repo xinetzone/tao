@@ -12,7 +12,10 @@ LABEL maintainer="AgentForge" \
 
 # Install LLVM and Clang from conda-forge ONLY (avoid defaults channel version conflicts)
 # All packages pinned to 22.1.x for ABI consistency
-RUN conda install -n base -c conda-forge --override-channels \
+# Increase network timeout for large package downloads (libllvm22 ~42MB)
+RUN conda config --set remote_read_timeout_secs 120 \
+    && conda config --set remote_connect_timeout_secs 30 \
+    && conda install -n base -c conda-forge --override-channels \
         llvmdev=22.1 \
         clangdev=22.1 \
         clang=22.1 \
@@ -21,16 +24,21 @@ RUN conda install -n base -c conda-forge --override-channels \
         ninja \
         -y \
     && conda clean -afy \
-    # Remove sysroot (not needed for pass development, saves ~480MB)
-    && rm -rf ${CONDA_DIR}/x86_64-conda-linux-gnu/sysroot \
-    # Remove static archives (use shared libs for pass development, saves ~400MB)
-    && find ${CONDA_DIR}/lib -name '*.a' -delete \
+    # Trim sysroot: keep crt objects and essential libs, remove docs/locales/man (~300MB saved)
+    && rm -rf ${CONDA_DIR}/x86_64-conda-linux-gnu/sysroot/usr/share \
+    && rm -rf ${CONDA_DIR}/x86_64-conda-linux-gnu/sysroot/usr/lib/locale \
+    # Remove non-LLVM static archives; keep LLVM/Clang .a (needed for CMake find_package)
+    && find ${CONDA_DIR}/lib -name '*.a' \
+        ! -name 'libLLVM*.a' ! -name 'libclang*.a' ! -name 'liblld*.a' \
+        ! -name 'libm.a' ! -name 'libc.a' ! -name 'libgcc.a' \
+        ! -name 'libpthread.a' ! -name 'libdl.a' ! -name 'librt.a' \
+        -delete \
     # Remove compiler-rt sanitizer runtimes (not needed for pass dev)
     && rm -rf ${CONDA_DIR}/lib/clang/*/lib/linux/*san* \
     && rm -rf ${CONDA_DIR}/lib/clang/*/lib/linux/*fuzzer* \
     # Remove .pyc and __pycache__
     && find ${CONDA_DIR} -type f -name '*.pyc' -delete \
-    && find ${CONDA_DIR} -type d -name '__pycache__' -exec rm -rf {} + 2>/dev/null || true
+    && (find ${CONDA_DIR} -type d -name '__pycache__' -exec rm -rf {} + 2>/dev/null || true)
 
 # Verify: versions must match (all 22.1.x)
 RUN clang --version && llvm-config --version && opt --version | head -2

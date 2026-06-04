@@ -1,0 +1,4 @@
+# Exclude examples from build context (not needed in image)
+examples/
+README.md
+.containerignore

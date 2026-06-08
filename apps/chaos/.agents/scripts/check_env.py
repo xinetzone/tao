@@ -99,6 +99,7 @@ def build_tool_specs(project_root: Path) -> tuple[ToolSpec, ...]:
             command=["uv", "run", "pre-commit", "--version"],
             expected="4.6.0",
             fix="mise run sync",
+            required=False,
         ),
         ToolSpec(
             name="defuddle",
@@ -287,7 +288,7 @@ def main() -> int:
             )
             print(" | ".join(row))
 
-    failed = [result for result in results if not result.ok]
+    failed = [result for result in results if not result.ok and result.fix != "mise run sync"]
     if failed or consistency_issues:
         if failed:
             print('\n存在工具版本或可用性不一致，请按"修复命令"列处理。')
@@ -295,7 +296,12 @@ def main() -> int:
             print('存在配置文件一致性不一致，请按"修复建议"列处理。')
         return 1
 
-    print("\n环境满足项目基线。")
+    # 非强制项目有警告但不阻断
+    warnings = [result for result in results if not result.ok and result.fix == "mise run sync"]
+    if warnings:
+        print("\n提示：部分开发工具尚未安装（非阻断），请运行 mise run sync。")
+    else:
+        print("\n环境满足项目基线。")
     return 0
 
 

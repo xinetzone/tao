@@ -29,6 +29,11 @@ harness = [
     "redis>=5.0,<6",
 ]
 
+flowkit = [
+    "nuitka>=0.19,<1",
+    "podman>=5.8.0",
+]
+
 [project.urls]
 Documentation = "https://taolib.readthedocs.io/"
 Repository = "https://github.com/xinetzone/tao"

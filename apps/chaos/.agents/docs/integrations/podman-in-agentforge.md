@@ -2,18 +2,68 @@
 
 ## Goal
 
-说明 Podman 相关知识在 AgentForge 中的当前和潜在落点，帮助 agent 判断何时需要参考容器文档。
+说明 Podman 相关知识在 AgentForge 中的当前落点，帮助 agent 判断何时需要参考容器文档。
 
-## Current Assessment
+## Current Integration
 
-- 当前仓库中尚未形成明显的 Podman 专用脚本或完整容器工作流。
-- Podman 相关知识目前更适合作为通用运行环境与排障能力储备。
+### FlowKit 模块 (`src/taolib/flowkit/`)
 
-## Suggested Future Mapping
+Podman 容器管理能力已集成到 `taolib.flowkit` 包中，包含以下核心模块：
 
-- 若后续引入本地容器开发脚本，优先记录到 `scripts/`
-- 若后续引入 CI 容器构建流程，优先记录到 `.github/workflows/`
-- 若后续引入开发文档，再同步到面向人类的 `docs/`
+| 模块 | 路径 | 功能 |
+|------|------|------|
+| `ContainerRun` | `flowkit/podman_context.py` | 同步/异步上下文管理器，支持容器生命周期管理、多命令串行/并行执行 |
+| `PodmanSSHClient` | `flowkit/podman_win.py` | Windows SSH 隧道适配器，自动建立 TCP 隧道连接 Podman VM |
+| CLI 容器管理 | `flowkit/container.py` | 基于 `subprocess` 的 CLI 风格容器构建与运行 |
+
+#### 关键 API
+
+```python
+from taolib.flowkit import ContainerRun, ContainerRunError, ExecResult
+from pathlib import Path
+
+# 同步上下文管理器
+with ContainerRun(
+    host_path=Path.cwd(),
+    name="my-container",
+    target="/workspace",
+    working_dir="/workspace",
+    image="python:3.14-slim",
+) as cr:
+    # 主命令默认为 sleep infinity 保活
+    # 通过 exec() 在容器内执行命令
+    result: ExecResult = cr.exec(["python", "--version"])
+
+    # exec_many() 并行执行多个子命令
+    results: list[ExecResult] = cr.exec_many([
+        ["pip", "list"],
+        ["python", "-c", "print(42)"],
+    ])
+
+    exit_code = cr.wait()  # 等待主命令结束
+
+# 异步上下文管理器
+async def main():
+    async with ContainerRun(
+        host_path=Path.cwd(),
+        name="async-container",
+        target="/workspace",
+        working_dir="/workspace",
+        image="python:3.14-slim",
+    ) as cr:
+        await cr.async_exec(["pip", "list"])
+        await cr.async_exec_many([["cmd1"], ["cmd2"]])
+        await cr.async_wait()
+```
+
+### 依赖配置
+
+`pyproject.toml` 中 `flowkit` 可选依赖组包含：
+
+- `nuitka>=0.19,<1` — Nuitka 编译配置
+- `podman>=5.8.0` — Podman Python SDK
+
+安装方式：`pip install taolib[flowkit]`
 
 ## Related References
 

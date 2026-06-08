@@ -1,0 +1,38 @@
+# Build with: podman build --format docker -t miniconda3:llvm-gcc -f Containerfile.llvm.gcc .
+# Note: --format docker is required to support the SHELL instruction below.
+# Depends on: miniconda3:llvm (build from Containerfile.llvm first)
+#
+# Target: LLVM Pass / Clang Plugin development + GCC/G++ toolchain
+#
+FROM miniconda3:llvm
+
+LABEL maintainer="AgentForge" \
+      description="Miniconda3 + LLVM/Clang 22.x + GCC/G++ for Pass/Plugin development"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        gcc \
+        g++ \
+        build-essential \
+        libc6-dev \
+        libstdc++-16-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV CC=/usr/bin/gcc
+ENV CXX=/usr/bin/g++
+
+RUN clang --version \
+    && llvm-config --version \
+    && opt --version | head -2 \
+    && gcc -v \
+    && g++ -v \
+    && printf '#include <stdio.h>\nint main(){puts("c-ok");return 0;}\n' > /tmp/test.c \
+    && gcc /tmp/test.c -o /tmp/test_c \
+    && /tmp/test_c \
+    && printf '#include <iostream>\nint main(){std::cout<<"cpp-ok"<<std::endl;return 0;}\n' > /tmp/test.cpp \
+    && g++ /tmp/test.cpp -o /tmp/test_cpp \
+    && /tmp/test_cpp \
+    && rm -f /tmp/test.c /tmp/test.cpp /tmp/test_c /tmp/test_cpp
+
+WORKDIR /workspace
+
+CMD ["/bin/bash", "--login"]

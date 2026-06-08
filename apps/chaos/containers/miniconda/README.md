@@ -6,6 +6,7 @@
 |------|---------------|------|
 | `miniconda3:ubuntu26.04` | `Containerfile` | 基础镜像：Ubuntu 26.04 + Miniconda3 |
 | `miniconda3:llvm` | `Containerfile.llvm` | 扩展镜像：基础镜像 + LLVM/Clang (conda-forge) |
+| `miniconda3:llvm-gcc` | `Containerfile.llvm.gcc` | 扩展镜像：`miniconda3:llvm` + GCC/G++ (apt) |
 
 ## 构建镜像
 
@@ -20,6 +21,13 @@ podman build --format docker -t miniconda3:ubuntu26.04 -f Containerfile .
 ```bash
 # 需先构建基础镜像
 podman build --format docker -t miniconda3:llvm -f Containerfile.llvm .
+```
+
+### LLVM/Clang + GCC/G++ 镜像
+
+```bash
+# 需先构建 LLVM/Clang 镜像
+podman build --format docker -t miniconda3:llvm-gcc -f Containerfile.llvm.gcc .
 ```
 
 > `--format docker` 用于支持 `SHELL` 指令，避免 OCI 格式兼容警告。

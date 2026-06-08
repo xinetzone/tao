@@ -700,7 +700,7 @@ def _is_lease_expired(lock: LockInfo) -> bool:
         lease_dt = _parse_iso(lock.lease_until)
         now_dt = datetime.now(UTC).astimezone()
         return now_dt >= lease_dt
-    except ValueError, TypeError:
+    except (ValueError, TypeError):
         # 无法解析时视为过期
         return True
 

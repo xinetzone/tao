@@ -317,7 +317,7 @@ def resolve_role_bindings(roles_dir: Path, role_id: str) -> list[str]:
         if frontmatter is None:
             return []
         data = tomllib.loads(frontmatter)
-    except OSError, UnicodeDecodeError, tomllib.TOMLDecodeError:
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError):
         return []
 
     bindings = data.get("bindings", {})

@@ -112,7 +112,7 @@ def _clone_index(url: str, dest: Path) -> bool:
                 pass
             return False
         return True
-    except FileNotFoundError, subprocess.TimeoutExpired, OSError:
+    except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
         return False
 
 

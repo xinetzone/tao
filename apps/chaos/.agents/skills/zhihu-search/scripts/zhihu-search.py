@@ -65,7 +65,7 @@ def parse_count(payload: dict[str, Any]) -> int:
     raw = payload.get("count", payload.get("Count", 10))
     try:
         count = int(raw)
-    except TypeError, ValueError:
+    except (TypeError, ValueError):
         count = 10
     return max(1, min(10, count))
 

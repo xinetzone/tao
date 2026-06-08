@@ -133,6 +133,7 @@ select = [
 ".agents/skills/**" = ["ANN"]
 "docs/**" = ["ANN"]
 "tasks.py" = ["ANN"]
+"src/flowkit/**" = ["E501"]
 
 [tool.pytest.ini_options]
 addopts = "-v --tb=short"

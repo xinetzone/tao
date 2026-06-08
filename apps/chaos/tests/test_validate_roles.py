@@ -1,8 +1,8 @@
 """验证 .agents/scripts/validate_roles.py 的角色扫描与字段兼容行为。"""
 
+import tomllib
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
-import tomllib
 
 
 def _load_validate_roles_module():

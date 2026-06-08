@@ -384,7 +384,7 @@ def _validate_role_file(
                         "match non_goals.items exactly "
                         f"({'; '.join(detail_parts)})"
                     )
-    
+
     # non_goals 校验。
     if "non_goals" in data:
         non_goals = data["non_goals"]

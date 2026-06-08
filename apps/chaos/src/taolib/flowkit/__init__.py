@@ -19,7 +19,7 @@
 
 快速开始:
     ```python
-    from flowkit import Container, ContainerConfig, NuitkaConfig
+    from taolib.flowkit import Container, ContainerConfig, NuitkaConfig
     
     # 配置容器
     config = ContainerConfig(

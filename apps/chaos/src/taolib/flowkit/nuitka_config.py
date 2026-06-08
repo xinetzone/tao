@@ -16,7 +16,7 @@
 运行环境要求: Python 3.10+
 
 Example:
-    >>> from flowkit.nuitka_config import NuitkaConfig
+    >>> from taolib.flowkit.nuitka_config import NuitkaConfig
     >>> config = NuitkaConfig(
     ...     mode="standalone",
     ...     compiler="clang",

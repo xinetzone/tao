@@ -93,6 +93,9 @@ else:
     PodmanSSHClient = None  # type: ignore
     quick_client = None  # type: ignore
 
+# Podman SDK 上下文工具（跨平台，Python SDK 风格容器操作）
+from .podman_context import ContainerRun, ContainerRunError, ExecResult, PodmanContext
+
 # Nuitka 编译器
 from .nuitka_config import (
     COMMON_PLUGINS,
@@ -170,4 +173,10 @@ __all__ = [
 
     # Podman Windows SDK 适配（仅 Windows）
     *(["PodmanSSHClient", "quick_client"] if sys.platform == "win32" else []),
+
+    # Podman SDK 上下文工具
+    "PodmanContext",
+    "ContainerRun",
+    "ContainerRunError",
+    "ExecResult",
 ]

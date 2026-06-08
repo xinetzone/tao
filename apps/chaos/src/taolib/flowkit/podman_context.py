@@ -1,0 +1,359 @@
+"""Podman Python SDK 上下文工具.
+
+提供基于 Podman Python SDK 的高级容器运行抽象，自动处理跨平台路径转换和客户端创建。
+与 container.py 不同，本模块使用 Podman Python SDK（而非 CLI）进行容器操作，
+适用于需要细粒度容器控制和实时日志流的场景。
+
+ContainerRun 支持同步和异步上下文管理器，每个实例管理独立的 Podman 连接和容器生命周期。
+主命令可留空（默认 sleep infinity），通过 exec/exec_many 在容器内串行或并行执行多个子命令。
+多容器之间天然支持多线程/asyncio 并行。
+
+运行环境要求: Python 3.10+, Windows 需配合 podman_win 模块
+"""
+import asyncio
+import os
+import sys
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Self
+
+
+class ContainerRunError(Exception):
+    """容器运行错误，不退出进程，由调用方决定如何处理."""
+    pass
+
+
+@dataclass
+class ExecResult:
+    """容器内命令执行结果.
+
+    Attributes:
+        exit_code: 退出码（0 表示成功）。
+        output: 标准输出内容。
+    """
+    exit_code: int
+    output: str
+
+
+@dataclass
+class PodmanContext:
+    """Podman 客户端上下文，包含连接客户端和转换后的宿主机路径。
+
+    Attributes:
+        host_path_str: 转换后的宿主机路径，Unix 格式。
+        ctx: Podman 客户端实例（PodmanClient 或 PodmanSSHClient）。
+    """
+    host_path_str: str
+    ctx: Any
+
+
+@dataclass
+class ContainerRun:
+    """容器运行任务（上下文管理器）。
+
+    自动根据平台创建客户端、转换路径。自动清理同名旧容器。
+    每个实例管理独立的 Podman 连接，支持并行执行多个容器。
+
+    Attributes:
+        host_path: 宿主机目录路径。
+        name: 容器名称。
+        target: 容器内挂载目标路径。
+        working_dir: 容器内工作目录。
+        image: 容器镜像名称。
+        command: 容器主命令列表，默认为 ["sleep", "infinity"] 以保持容器存活。
+
+    Example:
+        # 单命令模式
+        >>> with ContainerRun(
+        ...     host_path=Path("/some/path"),
+        ...     name="my_container",
+        ...     target="/mnt",
+        ...     working_dir="/mnt",
+        ...     image="python:3.13",
+        ...     command=["python", "-c", "print(42)"],
+        ... ) as cr:
+        ...     if cr.wait() != 0:
+        ...         raise ContainerRunError("容器异常退出")
+
+        # 多命令模式（主命令留空 + exec）
+        >>> with ContainerRun(
+        ...     host_path=Path("."), name="worker", target="/mnt",
+        ...     working_dir="/mnt", image="python:3.13",
+        ... ) as cr:
+        ...     r1 = cr.exec(["python", "task1.py"])
+        ...     r2 = cr.exec(["python", "task2.py"])
+
+        # 容器内并行执行多个子命令
+        >>> with ContainerRun(
+        ...     host_path=Path("."), name="worker", target="/mnt",
+        ...     working_dir="/mnt", image="python:3.13",
+        ... ) as cr:
+        ...     results = cr.exec_many([
+        ...         ["python", "task1.py"],
+        ...         ["python", "task2.py"],
+        ...     ])
+        ...     for r in results:
+        ...         if r.exit_code != 0:
+        ...             raise ContainerRunError(r.output)
+
+        # 线程池并行执行多个容器
+        >>> from concurrent.futures import ThreadPoolExecutor, as_completed
+        >>> def task(cr):
+        ...     with cr:
+        ...         return cr.wait()
+        >>> runs = [ContainerRun(...), ContainerRun(...)]
+        >>> with ThreadPoolExecutor() as ex:
+        ...     for f in as_completed([ex.submit(task, cr) for cr in runs]):
+        ...         print(f.result())
+
+        # asyncio 并行执行多个容器
+        >>> async def main():
+        ...     async def task(cr):
+        ...         async with cr:
+        ...             return await cr.async_wait()
+        ...     runs = [ContainerRun(...), ContainerRun(...)]
+        ...     results = await asyncio.gather(*(task(cr) for cr in runs))
+        >>> asyncio.run(main())
+    """
+
+    host_path: Path
+    name: str
+    target: str
+    working_dir: str
+    image: str
+    command: list[str] = field(default_factory=list)
+
+    # 内部状态
+    _pctx: PodmanContext | None = field(default=None, init=False)
+    _client: Any = field(default=None, init=False)
+    _container: Any = field(default=None, init=False)
+    _exit_code: int | None = field(default=None, init=False)
+
+    # ── 上下文管理器协议 ──────────────────────────────────────────
+
+    def __enter__(self) -> Self:
+        self._start()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
+        self._cleanup()
+        return False
+
+    async def __aenter__(self) -> Self:
+        await asyncio.to_thread(self._start)
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> bool:
+        await asyncio.to_thread(self._cleanup)
+        return False
+
+    # ── 公共方法 ──────────────────────────────────────────────────
+
+    def wait(self, *, stream_logs: bool = True) -> int:
+        """等待容器结束，返回退出码。
+
+        Args:
+            stream_logs: 是否实时输出容器日志到 stdout，默认 True。
+
+        Returns:
+            容器退出码（0 表示成功）。
+
+        Raises:
+            RuntimeError: 容器尚未启动（未进入上下文）。
+        """
+        if not self._container:
+            raise RuntimeError("容器未启动，请先通过 with 语句进入上下文")
+
+        if stream_logs:
+            for chunk in self._container.logs(stream=True, follow=True):
+                print(chunk.decode(errors="replace"), end="")
+
+        result = self._container.wait()
+        self._exit_code = result["StatusCode"] if isinstance(result, dict) else result
+        return self._exit_code
+
+    async def async_wait(self, *, stream_logs: bool = True) -> int:
+        """异步等待容器结束，返回退出码。
+
+        通过 asyncio.to_thread 将阻塞的日志流和等待操作移出事件循环。
+        """
+        return await asyncio.to_thread(self.wait, stream_logs=stream_logs)
+
+    def exec(self, cmd: list[str], *, workdir: str | None = None) -> ExecResult:
+        """在运行中的容器内执行命令，返回退出码和输出。
+
+        主命令和额外命令可以并行执行（容器以 detach 模式运行）。
+
+        Args:
+            cmd: 要执行的命令列表。
+            workdir: 容器内工作目录，默认使用容器默认工作目录。
+
+        Returns:
+            ExecResult，包含 exit_code 和 output。
+
+        Raises:
+            RuntimeError: 容器尚未启动。
+
+        Example:
+            >>> with cr:
+            ...     r1 = cr.exec(["python", "task1.py"])
+            ...     r2 = cr.exec(["python", "task2.py"])
+            ...     if r1.exit_code != 0:
+            ...         raise ContainerRunError(f"task1 失败: {r1.output}")
+        """
+        if not self._container:
+            raise RuntimeError("容器未启动，请先通过 with 语句进入上下文")
+
+        exit_code, output = self._container.exec_run(
+            cmd,
+            workdir=workdir or self.working_dir,
+            tty=True,
+        )
+        text = output.decode(errors="replace") if isinstance(output, bytes) else str(output)
+        print(text, end="")
+        return ExecResult(exit_code=exit_code, output=text)
+
+    async def async_exec(self, cmd: list[str], *, workdir: str | None = None) -> ExecResult:
+        """异步在运行中的容器内执行命令。
+
+        通过 asyncio.to_thread 将阻塞操作移出事件循环。
+        """
+        return await asyncio.to_thread(self.exec, cmd, workdir=workdir)
+
+    def exec_many(
+        self, commands: list[list[str]], *, workdir: str | None = None,
+    ) -> list[ExecResult]:
+        """并行执行多个命令，返回结果列表。
+
+        通过 ThreadPoolExecutor 在容器内并行执行，适合与 with 同步上下文配合。
+
+        Args:
+            commands: 命令列表（每个元素为命令参数列表）。
+            workdir: 容器内工作目录。
+
+        Returns:
+            ExecResult 列表，顺序与 commands 对应。
+        """
+        from concurrent.futures import ThreadPoolExecutor
+
+        with ThreadPoolExecutor() as ex:
+            futures = [ex.submit(self.exec, cmd, workdir=workdir) for cmd in commands]
+            return [f.result() for f in futures]
+
+    async def async_exec_many(
+        self, commands: list[list[str]], *, workdir: str | None = None,
+    ) -> list[ExecResult]:
+        """异步并行执行多个命令。
+
+        通过 asyncio.gather + async_exec 并发执行，适合与 async with 上下文配合。
+        """
+        return await asyncio.gather(
+            *(self.async_exec(cmd, workdir=workdir) for cmd in commands),
+        )
+
+    @property
+    def exit_code(self) -> int | None:
+        """容器退出码，wait() 调用前为 None。"""
+        return self._exit_code
+
+    # ── 内部方法 ──────────────────────────────────────────────────
+
+    def _start(self) -> None:
+        """创建 Podman 连接、挂载卷、清理同名旧容器、启动后台容器。
+
+        Raises:
+            ContainerRunError: 容器启动失败。
+        """
+        try:
+            self._pctx = _get_podman_context(self.host_path)
+            self._client = (
+                self._pctx.ctx.client()
+                if sys.platform == "win32"
+                else self._pctx.ctx
+            )
+
+            mounts = [
+                {"type": "bind", "source": self._pctx.host_path_str, "target": self.target}
+            ]
+
+            # 清理上次可能遗留的同名容器
+            try:
+                old = self._client.containers.get(self.name)
+                old.remove(force=True)
+            except Exception:
+                pass
+
+            self._container = self._client.containers.run(
+                image=self.image,
+                command=self.command or ["sleep", "infinity"],
+                name=self.name,
+                mounts=mounts,
+                working_dir=self.working_dir,
+                tty=True,
+                stdin_open=True,
+                detach=True,
+            )
+        except Exception as exc:
+            self._cleanup()
+            raise ContainerRunError(f"容器启动失败: {exc}") from exc
+
+    def _cleanup(self) -> None:
+        """清理资源：容器 → 客户端 → SSH 隧道。"""
+        for obj, action in [
+            (self._container, lambda o: o.remove(force=True)),
+            (self._client, lambda o: o.close()),
+        ]:
+            if obj is not None:
+                try:
+                    action(obj)
+                except Exception:
+                    pass
+
+        if sys.platform == "win32" and self._pctx is not None:
+            try:
+                self._pctx.ctx._tunnel.stop()
+            except Exception:
+                pass
+
+        self._container = None
+        self._client = None
+
+
+def _win_to_unix(path: str) -> str:
+    """将 Windows 路径转为 Unix 路径，供 Linux Podman 主机使用。
+
+    Args:
+        path: Windows 风格路径字符串。
+
+    Returns:
+        Unix 风格路径字符串，盘符映射到 PODMAN_WIN_MNT_PREFIX 下。
+    """
+    prefix = os.environ.get("PODMAN_WIN_MNT_PREFIX", "/mnt")
+    path = path.replace("\\", "/")
+    if len(path) >= 2 and path[1] == ":":
+        drive = path[0].lower()
+        path = f"{prefix}/{drive}{path[2:]}"
+    return path
+
+
+def _get_podman_context(host_path: Path) -> PodmanContext:
+    """根据平台获取 Podman 客户端和宿主机路径字符串。
+
+    Windows 下通过 SSH 隧道使用 PodmanClient；
+    Linux/macOS 下直接使用 Unix socket。
+
+    Args:
+        host_path: 宿主机目录路径。
+
+    Returns:
+        PodmanContext 实例，包含路径字符串和客户端。
+    """
+    if sys.platform == "win32":
+        host_path_str = _win_to_unix(str(host_path))
+        from .podman_win import PodmanSSHClient
+        ctx = PodmanSSHClient()
+    else:
+        host_path_str = str(host_path)
+        from podman import PodmanClient
+        ctx = PodmanClient()
+    return PodmanContext(host_path_str=host_path_str, ctx=ctx)

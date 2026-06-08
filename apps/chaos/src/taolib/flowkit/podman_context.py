@@ -122,6 +122,7 @@ class ContainerRun:
     working_dir: str
     image: str
     command: list[str] = field(default_factory=list)
+    volumes: dict[str, str] = field(default_factory=dict)
 
     # 内部状态
     _pctx: PodmanContext | None = field(default=None, init=False)
@@ -273,8 +274,10 @@ class ContainerRun:
             )
 
             mounts = [
-                {"type": "bind", "source": self._pctx.host_path_str, "target": self.target}
+                {"type": "bind", "source": self._pctx.host_path_str, "target": self.target},
             ]
+            for vol_src, vol_target in self.volumes.items():
+                mounts.append({"type": "volume", "source": vol_src, "target": vol_target})
 
             # 清理上次可能遗留的同名容器
             try:

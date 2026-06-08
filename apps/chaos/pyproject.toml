@@ -30,7 +30,7 @@ harness = [
 ]
 
 flowkit = [
-    "nuitka>=0.19,<1",
+    "nuitka>=1,<2",
     "podman>=5.8.0",
 ]
 

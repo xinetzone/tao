@@ -9,6 +9,7 @@
 - Rootless、挂载、网络和排障要点
 - Windows 环境配置
 - Python SDK 编程参考
+- 深层洞察与跨平台方法论
 
 ## 当前页面
 
@@ -18,3 +19,4 @@
 - [Podman Rootless](./rootless.md)
 - [Podman Python SDK 参考](./podman-py-sdk.md)
 - [Podman Windows 配置指南](./windows-setup.md)
+- [Windows SDK 适配洞察](./insights.md)

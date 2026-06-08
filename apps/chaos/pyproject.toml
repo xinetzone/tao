@@ -11,6 +11,9 @@ maintainers = [{ name = "xinetzone", email = "735613050@qq.com" }]
 name = "taolib"
 readme = "README.md"
 requires-python = ">=3.13"
+dependencies = [
+    "podman>=5.8.0",
+]
 
 [project.optional-dependencies]
 github-app = [

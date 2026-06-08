@@ -85,6 +85,14 @@ from .models import (
     compute_sha256,
 )
 
+# Podman Windows SDK 适配（仅 Windows 可用，Linux/macOS 用 Unix socket 直连即可）
+import sys
+if sys.platform == "win32":
+    from .podman_win import PodmanSSHClient, quick_client  # noqa: F401
+else:
+    PodmanSSHClient = None  # type: ignore
+    quick_client = None  # type: ignore
+
 # Nuitka 编译器
 from .nuitka_config import (
     COMMON_PLUGINS,
@@ -159,4 +167,7 @@ __all__ = [
     "ArtifactManifest",
     "generate_checksum_file",
     "verify_checksum_file",
+
+    # Podman Windows SDK 适配（仅 Windows）
+    *(["PodmanSSHClient", "quick_client"] if sys.platform == "win32" else []),
 ]

@@ -19,3 +19,6 @@
 
 - `../issue-patterns/podman-errors.md`
 - `../references/podman/command-cheatsheet.md`
+- `../references/podman/windows-setup.md`
+- `../references/podman/podman-py-sdk.md`
+- `../rules/containerization.md`

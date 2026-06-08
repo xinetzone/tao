@@ -7,6 +7,8 @@
 - 常用命令速查
 - 与 Docker 的差异点
 - Rootless、挂载、网络和排障要点
+- Windows 环境配置
+- Python SDK 编程参考
 
 ## 当前页面
 
@@ -14,3 +16,5 @@
 - [Podman Architecture And Workflows](./architecture-and-workflows.md)
 - [Command Cheatsheet](./command-cheatsheet.md)
 - [Podman Rootless](./rootless.md)
+- [Podman Python SDK 参考](./podman-py-sdk.md)
+- [Podman Windows 配置指南](./windows-setup.md)

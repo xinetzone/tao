@@ -2,7 +2,7 @@
 # 注意: detectron2 需从源码编译，构建时间较长且需要网络访问 GitHub
 # 使用方式: podman build -t eval-mineru -f containers/eval/Containerfile.mineru .
 # 运行方式: podman run --rm -it -m 24g -v ./data:/eval/data eval-mineru
-FROM python:3.14-slim
+FROM python:3.13-slim
 
 # 系统依赖（包含 build-essential 用于编译）
 RUN apt-get update && apt-get install -y --no-install-recommends \

@@ -83,16 +83,16 @@ def test_config_consistency_accepts_ruff_supported_target_floor(tmp_path):
     (tmp_path / "mise.toml").write_text(
         """
 [tools]
-python = "3.14.5"
+python = "3.13.5"
 """.strip(),
         encoding="utf-8",
     )
     (tmp_path / "pyproject.toml").write_text(
         """
-requires-python = ">=3.14"
+requires-python = ">=3.13"
 
 [tool.ruff]
-target-version = "py314"
+target-version = "py313"
 """.strip(),
         encoding="utf-8",
     )

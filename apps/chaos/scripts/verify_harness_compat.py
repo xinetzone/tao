@@ -1,7 +1,7 @@
 """Harness 智能体系统兼容性验证脚本。
 
 验证项:
-1. Python 版本检查 (>= 3.14)
+1. Python 版本检查 (>= 3.13)
 2. LangGraph 导入与最小图执行
 3. Metaflow 导入与最小 FlowSpec 构造
 4. functools 模块兼容性验证
@@ -32,7 +32,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
-MIN_PYTHON: tuple[int, int] = (3, 14)
+MIN_PYTHON: tuple[int, int] = (3, 13)
 
 
 # ---------------------------------------------------------------------------
@@ -151,7 +151,7 @@ def _run_one(name: str, fn: CheckFn) -> CheckResult:
 
 @register("python-version")
 def _check_python_version() -> dict[str, Any]:
-    """验证 Python 解释器版本满足 ``>= 3.14``。"""
+    """验证 Python 解释器版本满足 ``>= 3.13``。"""
     current = sys.version_info[:2]
     ok = current >= MIN_PYTHON
     return {
@@ -241,7 +241,7 @@ def _check_asyncio() -> dict[str, Any]:
         return value
 
     async def main() -> list[int]:
-        # Python 3.11+ TaskGroup，3.14 下应继续可用
+        # Python 3.11+ TaskGroup，3.13 下应继续可用
         results: list[int] = []
         async with asyncio.TaskGroup() as tg:
             tasks = [tg.create_task(echo(i)) for i in range(5)]
@@ -433,7 +433,7 @@ def run_all() -> CompatReport:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Harness 兼容性验证：Python 3.14 + LangGraph + Metaflow",
+        description="Harness 兼容性验证：Python 3.13 + LangGraph + Metaflow",
     )
     parser.add_argument(
         "--json",

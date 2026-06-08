@@ -132,7 +132,7 @@ def init(ctx):
         "修复后重新运行: mise run init",
     )
     _run_step(
-        "安装 mise 工具链 (Python 3.14.5 / uv 0.11.16 / Node 22.22.3 等)",
+        "安装 mise 工具链 (Python 3.13 / uv 0.11.16 / Node 22.22.3 等)",
         ["mise", "install"],
         "可手动运行: mise install",
         "工具链安装失败，常见原因包括网络不可用、mise 配置未信任或本机缺少系统依赖。",

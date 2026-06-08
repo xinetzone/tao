@@ -1,7 +1,7 @@
 # marker-pdf 评估环境
 # 使用方式: podman build -t eval-marker -f containers/eval/Containerfile.marker .
 # 运行方式: podman run --rm -it -v ./data:/eval/data eval-marker
-FROM python:3.14-slim
+FROM python:3.13-slim
 
 # 系统依赖
 RUN apt-get update && apt-get install -y --no-install-recommends \

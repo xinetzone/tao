@@ -6,7 +6,7 @@
 
 | 模板 | 用途 | 工具 |
 |------|------|------|
-| `Containerfile.base` | 通用评估基础镜像 | Python 3.14 + uv + 基础系统依赖 |
+| `Containerfile.base` | 通用评估基础镜像 | Python 3.13 + uv + 基础系统依赖 |
 | `Containerfile.marker` | marker-pdf 评估环境 | marker-pdf |
 | `Containerfile.docling` | Docling 评估环境 | docling |
 | `Containerfile.mineru` | MinerU 评估环境 | magic-pdf (MinerU) |
@@ -39,7 +39,7 @@ podman run --rm -it -m 24g -v ./data:/eval/data eval-mineru
 
 ## 评估基线
 
-- **基础镜像**: `python:3.14-slim`
+- **基础镜像**: `python:3.13-slim`
 - **包管理**: `uv`
 - **资源建议**: CPU 推理模式，建议 24GB+ 内存
 

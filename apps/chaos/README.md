@@ -107,7 +107,7 @@ flowchart LR
 本项目推荐使用 `mise` 统一管理运行时与开发工具，再由 `uv` 负责 Python 包依赖同步。
 
 - **操作系统**：跨平台支持（Windows / macOS / Linux），推荐在 Windows 环境下使用 `PowerShell 7+`。
-- **Python 版本基线**：由根目录 `mise.toml` 统一锁定为 `3.14.5`。
+- **Python 版本基线**：由根目录 `mise.toml` 统一锁定为 `3.13`。
 - **工具层管理**：优先使用 [mise](https://mise.jdx.dev/) 安装并切换 Python、`uv`、Node.js、`ruff`、`pre-commit` 与 `defuddle`。
 - **Python 依赖层管理**：统一使用 [uv](https://github.com/astral-sh/uv)（禁止直接使用 `pip` 或 `conda` 安装项目依赖）。
 - **文档构建**：依赖 Sphinx、MyST Parser、Jupyter Book 等工具，建议在 `mise` 激活后的环境中执行。

@@ -1,6 +1,6 @@
 # 评估选品测试基础镜像
 # 使用方式: podman build -t eval-base -f containers/eval/Containerfile.base .
-FROM python:3.14-slim
+FROM python:3.13-slim
 
 # 系统依赖
 RUN apt-get update && apt-get install -y --no-install-recommends \

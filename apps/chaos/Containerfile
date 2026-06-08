@@ -1,6 +1,6 @@
 # 本地开发容器 - 包含所有开发、测试、文档构建依赖
 # 使用方式：podman build -t taolib-dev . && podman run -it --rm -v .:/workspace taolib-dev
-FROM python:3.14-slim
+FROM python:3.13-slim
 
 # 系统依赖
 RUN apt-get update && apt-get install -y --no-install-recommends \

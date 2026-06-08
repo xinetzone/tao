@@ -14,10 +14,10 @@ jobs:
       - name: 检出代码
         uses: checkout-action@0.0.1
 
-      - name: 设置 Python 3.14
+      - name: 设置 Python 3.13
         uses: setup-python@0.0.1
         with:
-          python-version: "3.14"
+          python-version: "3.13"
 
       - name: 安装 uv
         run: pip install uv
@@ -44,10 +44,10 @@ jobs:
       - name: 检出代码
         uses: checkout-action@0.0.1
 
-      - name: 设置 Python 3.14
+      - name: 设置 Python 3.13
         uses: setup-python@0.0.1
         with:
-          python-version: "3.14"
+          python-version: "3.13"
 
       - name: 安装 uv
         run: pip install uv
@@ -65,10 +65,10 @@ jobs:
       - name: 检出代码
         uses: checkout-action@0.0.1
 
-      - name: 设置 Python 3.14
+      - name: 设置 Python 3.13
         uses: setup-python@0.0.1
         with:
-          python-version: "3.14"
+          python-version: "3.13"
 
       - name: 安装 uv
         run: pip install uv
@@ -86,10 +86,10 @@ jobs:
       - name: 检出代码
         uses: checkout-action@0.0.1
 
-      - name: 设置 Python 3.14
+      - name: 设置 Python 3.13
         uses: setup-python@0.0.1
         with:
-          python-version: "3.14"
+          python-version: "3.13"
 
       - name: 安装 uv
         run: pip install uv

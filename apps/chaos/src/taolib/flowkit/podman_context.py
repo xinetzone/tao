@@ -381,7 +381,9 @@ def _get_active_podman_machine() -> str:
     try:
         r = _sp.run(
             ["podman", "machine", "list", "--format", "{{.Name}} {{.LastUp}}"],
-            capture_output=True, text=True, timeout=10,
+            capture_output=True,
+            text=True,
+            timeout=10,
         )
         for line in r.stdout.strip().splitlines():
             parts = line.split(maxsplit=1)

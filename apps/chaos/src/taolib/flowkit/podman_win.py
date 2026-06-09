@@ -46,7 +46,9 @@ def _get_machine_config(name: str = "podman-machine-default") -> dict:
 
     # fallback: 直接从 json 文件读取（解决 podman CLI 在特定环境下的 glob bug）
     config_dir = _os.path.expandvars(
-        _os.path.join("%USERPROFILE%", ".config", "containers", "podman", "machine", "wsl")
+        _os.path.join(
+            "%USERPROFILE%", ".config", "containers", "podman", "machine", "wsl"
+        )
     )
     json_path = _os.path.join(config_dir, f"{name}.json")
     if not _os.path.isfile(json_path):
@@ -54,7 +56,7 @@ def _get_machine_config(name: str = "podman-machine-default") -> dict:
             f"podman machine inspect 失败且未找到配置文件: {json_path}\n"
             f"stderr: {result.stderr}"
         )
-    with open(json_path, "r", encoding="utf-8") as f:
+    with open(json_path, encoding="utf-8") as f:
         return json.load(f)
 
 

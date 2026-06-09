@@ -249,4 +249,4 @@ podman machine start
 
 - [Podman 官方安装文档](https://podman.io/docs/installation)
 - [Podman Windows 教程](https://github.com/containers/podman/blob/main/docs/tutorials/windows_tutorial.md)
-- 本项目：[容器化规则](../../rules/containerization.md)、[Podman SDK 参考](./podman-py-sdk.md)
+- 本项目：[容器化规则](../../../rules/containerization.md)、[Podman SDK 参考](./podman-py-sdk.md)

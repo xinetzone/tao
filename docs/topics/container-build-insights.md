@@ -47,5 +47,5 @@ Ubuntu 26.04 的镜像在 Docker Hub 上已经可用，代号 **Resolute**，且
 
 ## 相关产物
 
-- [Containerfile.miniconda](../../.temp/Containerfile.miniconda)
-- [build-miniconda-image.md](../../.temp/build-miniconda-image.md)
+- `Containerfile.miniconda`（临时产物：`.temp/Containerfile.miniconda`）
+- `build-miniconda-image.md`（临时产物：`.temp/build-miniconda-image.md`）

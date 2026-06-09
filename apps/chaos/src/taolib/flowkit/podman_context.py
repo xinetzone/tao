@@ -225,12 +225,13 @@ class ContainerRun:
             workdir=workdir or self.working_dir,
             tty=True,
         )
-        text = (
-            output.decode(errors="replace")
-            if isinstance(output, bytes)
-            else str(output)
-        )
-        print(text, end="")
+        if isinstance(output, bytes):
+            sys.stdout.buffer.write(output)
+            sys.stdout.buffer.flush()
+            text = output.decode(errors="replace")
+        else:
+            text = str(output)
+            sys.stdout.write(text)
         return ExecResult(exit_code=exit_code, output=text)
 
     async def async_exec(

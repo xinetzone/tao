@@ -371,6 +371,27 @@ def _win_to_unix(path: str) -> str:
     return path
 
 
+def _get_active_podman_machine() -> str:
+    """获取当前正在运行的 podman machine 名称。
+
+    未找到运行中的 machine 时，fallback 到默认名称。
+    """
+    import subprocess as _sp
+
+    try:
+        r = _sp.run(
+            ["podman", "machine", "list", "--format", "{{.Name}} {{.LastUp}}"],
+            capture_output=True, text=True, timeout=10,
+        )
+        for line in r.stdout.strip().splitlines():
+            parts = line.split(maxsplit=1)
+            if len(parts) == 2 and parts[1].strip() not in ("", "Never"):
+                return parts[0].rstrip("*")
+    except Exception:
+        pass
+    return "podman-machine-default"
+
+
 def _get_podman_context(host_path: Path) -> PodmanContext:
     """根据平台获取 Podman 客户端和宿主机路径字符串。
 
@@ -387,7 +408,8 @@ def _get_podman_context(host_path: Path) -> PodmanContext:
         host_path_str = _win_to_unix(str(host_path))
         from .podman_win import PodmanSSHClient
 
-        ctx = PodmanSSHClient()
+        machine = _get_active_podman_machine()
+        ctx = PodmanSSHClient(machine_name=machine)
     else:
         host_path_str = str(host_path)
         from podman import PodmanClient

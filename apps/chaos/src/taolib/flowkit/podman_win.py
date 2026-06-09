@@ -31,17 +31,31 @@ from typing import Any, ClassVar
 
 
 def _get_machine_config(name: str = "podman-machine-default") -> dict:
+    import os as _os
+
+    # 尝试通过 podman CLI 获取配置
     result = subprocess.run(
         ["podman", "machine", "inspect", name],
         capture_output=True,
         text=True,
     )
-    if result.returncode != 0:
-        raise RuntimeError(f"podman machine inspect 失败: {result.stderr}")
-    machines = json.loads(result.stdout)
-    if not machines:
-        raise RuntimeError(f"未找到 podman machine: {name}")
-    return machines[0]
+    if result.returncode == 0:
+        machines = json.loads(result.stdout)
+        if machines:
+            return machines[0]
+
+    # fallback: 直接从 json 文件读取（解决 podman CLI 在特定环境下的 glob bug）
+    config_dir = _os.path.expandvars(
+        _os.path.join("%USERPROFILE%", ".config", "containers", "podman", "machine", "wsl")
+    )
+    json_path = _os.path.join(config_dir, f"{name}.json")
+    if not _os.path.isfile(json_path):
+        raise RuntimeError(
+            f"podman machine inspect 失败且未找到配置文件: {json_path}\n"
+            f"stderr: {result.stderr}"
+        )
+    with open(json_path, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
 # ── SSH TCP 隧道 ─────────────────────────────────────────────────────

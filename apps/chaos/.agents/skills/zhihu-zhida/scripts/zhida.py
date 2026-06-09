@@ -110,7 +110,7 @@ def post_json(body: dict[str, Any]) -> tuple[int, dict[str, str], Any]:
     except HTTPError as err:
         body_text = err.read().decode("utf-8", errors="replace")
         die(f"HTTP {err.code}", body=parse_http_error_body(body_text))
-    except URLError, TimeoutError:
+    except (URLError, TimeoutError):
         die("HTTP request failed (timeout or network error)")
 
 

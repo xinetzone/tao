@@ -127,7 +127,7 @@ def request_zhihu(query: str, count: int) -> dict[str, Any]:
     except HTTPError as err:
         body_text = err.read().decode("utf-8", errors="replace")
         die(f"HTTP {err.code}", body=body_text)
-    except URLError, TimeoutError:
+    except (URLError, TimeoutError):
         die("HTTP request failed (timeout or network error)")
 
     try:

@@ -136,7 +136,7 @@ def _fetch_index(cache_path: Path) -> bool:
         if url_result.returncode != 0:
             return False
         original_url = url_result.stdout.strip()
-    except FileNotFoundError, subprocess.TimeoutExpired, OSError:
+    except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
         return False
 
     authed_url = inject_token(original_url)
@@ -151,7 +151,7 @@ def _fetch_index(cache_path: Path) -> bool:
         )
         if result.returncode != 0:
             return False
-    except FileNotFoundError, subprocess.TimeoutExpired, OSError:
+    except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
         return False
 
     reset_cmd = ["git", "-C", str(cache_path), "reset", "--hard", "FETCH_HEAD"]
@@ -164,7 +164,7 @@ def _fetch_index(cache_path: Path) -> bool:
             check=False,
         )
         return result.returncode == 0
-    except FileNotFoundError, subprocess.TimeoutExpired, OSError:
+    except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
         return False
 
 

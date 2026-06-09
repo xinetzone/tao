@@ -323,7 +323,7 @@ def main(argv: list[str] | None = None) -> int:
         if callable(reconfigure):
             try:
                 reconfigure(encoding="utf-8")
-            except OSError, ValueError:
+            except (OSError, ValueError):
                 # 在某些终端上 reconfigure 不可用时静默回退即可。
                 pass
 

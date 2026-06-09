@@ -310,7 +310,7 @@ def activate_role(agents_dir: Path, role_id: str) -> ContextBundle:
         full_path = agents_dir / rule_path
         try:
             loaded_rules[rule_path] = full_path.read_text(encoding="utf-8")
-        except OSError, UnicodeDecodeError:
+        except (OSError, UnicodeDecodeError):
             loaded_rules[rule_path] = ""
 
     # 加载 references
@@ -319,7 +319,7 @@ def activate_role(agents_dir: Path, role_id: str) -> ContextBundle:
         full_path = agents_dir / ref_path
         try:
             loaded_references[ref_path] = full_path.read_text(encoding="utf-8")
-        except OSError, UnicodeDecodeError:
+        except (OSError, UnicodeDecodeError):
             loaded_references[ref_path] = ""
 
     # 验证 skills

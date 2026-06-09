@@ -102,7 +102,7 @@ def is_text_file(path: Path) -> bool:
             return False
         sample.decode("utf-8")
         return True
-    except OSError, UnicodeDecodeError:
+    except (OSError, UnicodeDecodeError):
         return False
 
 

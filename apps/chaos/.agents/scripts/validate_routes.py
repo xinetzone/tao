@@ -33,7 +33,7 @@ def _ensure_utf8_stdout() -> None:
         if callable(reconfigure):
             try:
                 reconfigure(encoding="utf-8")
-            except OSError, ValueError:
+            except (OSError, ValueError):
                 pass
 
 
@@ -49,7 +49,7 @@ def _parse_frontmatter(filepath: Path) -> dict[str, Any] | None:
 
     try:
         text = filepath.read_text(encoding="utf-8")
-    except OSError, UnicodeDecodeError:
+    except (OSError, UnicodeDecodeError):
         return None
     if not text.startswith("+++"):
         return None

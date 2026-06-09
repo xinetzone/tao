@@ -62,13 +62,13 @@ def main() -> int:
 
     try:
         data = json.loads(json_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError, ValueError:
+    except (json.JSONDecodeError, ValueError):
         print(f"[ERROR] Invalid JSON: {json_path}")
         return 2
 
     try:
         schema = json.loads(schema_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError, ValueError:
+    except (json.JSONDecodeError, OSError):
         print(f"[ERROR] Invalid JSON: {schema_path}")
         return 2
 

@@ -203,7 +203,7 @@ def scan_file(file_path: Path, target_version: str) -> list[dict]:
     try:
         source = file_path.read_text(encoding="utf-8")
         tree = ast.parse(source, filename=str(file_path))
-    except OSError, SyntaxError:
+    except (OSError, SyntaxError):
         return []
 
     visitor = DeprecationVisitor(

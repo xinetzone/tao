@@ -55,7 +55,7 @@ def scan_file(file_path: Path, target_version: str) -> list[dict]:
 
     try:
         content = file_path.read_text(encoding="utf-8")
-    except OSError, ValueError:
+    except (OSError, ValueError):
         return results
 
     lines = content.split("\n")

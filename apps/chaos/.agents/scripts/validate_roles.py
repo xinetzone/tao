@@ -76,7 +76,7 @@ def _ensure_utf8_stdout() -> None:
         if callable(reconfigure):
             try:
                 reconfigure(encoding="utf-8")
-            except OSError, ValueError:
+            except (OSError, ValueError):
                 pass
 
 

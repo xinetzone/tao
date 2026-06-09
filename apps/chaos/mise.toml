@@ -12,6 +12,10 @@ ruff = "0.15.14"
 description = "校验本地工具链版本"
 run = "python .agents/scripts/check_env.py"
 
+[tasks.py-syntax-check]
+description = "预编译检查所有 Python 文件语法"
+run = "python .agents/scripts/check_py_syntax.py"
+
 [tasks.sync]
 description = "同步开发、测试、文档依赖与全部 extras（github-app/task）"
 run = "uv sync --all-extras --group dev --group test --group docs"
@@ -93,7 +97,7 @@ depends = ["check-env"]
 description = "严格模式构建文档：警告即失败（CI 与 GitHub Pages 部署入口）"
 env = { SPHINXOPTS = "-W --keep-going" }
 run = "uv run invoke --search-root ../../docs build --target html --sourcedir ../../docs --builddir ../../docs/_build"
-depends = ["check-env", "docs-structure-check"]
+depends = ["check-env", "py-syntax-check", "docs-structure-check"]
 
 [tasks.init]
 description = "一键环境初始化（跨平台，支持 Windows/Linux/macOS）"

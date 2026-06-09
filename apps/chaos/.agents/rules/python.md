@@ -76,7 +76,20 @@ except (FileNotFoundError, OSError):
 - 返回当前实例类型时优先使用 `typing.Self`。
 - 仅在类型无法稳定表达、外部库类型不可用，或为避免运行时前向引用求值问题时使用 `Any`；使用范围应尽量收敛到内部实现细节。
 
-## 6. 标准验证命令
+## 6. Diagnostics / lint 修复流程
+
+处理 Python diagnostics、Ruff lint、格式化或 IDE 问题列表时，必须先把问题来源与项目约束显性化，再进行精确修复。
+
+执行顺序：
+
+1. 读取 diagnostics 来源、报错行、工具名称和触发命令。
+2. 读取项目规则、`pyproject.toml`、`mise.toml` 或等价工具配置，确认 Python 版本、Ruff 规则和验证命令。
+3. 先运行最小充分检查复现问题；若全量检查被历史问题或环境阻塞影响，应记录原因并降级 targeted check。
+4. 只修改 diagnostics、用户明确反馈和直接验证所需文件，不主动格式化或重构无关文件。
+5. 涉及“全部移除”“不再存在”“全项目统一”类约束时，最终必须用全局搜索收口，并记录搜索模式、范围和结果。
+6. 输出结果时区分本次已修复问题、历史遗留问题、验证降级原因和仍需跟踪的风险。
+
+## 7. 标准验证命令
 
 Python 相关修改完成后，优先使用以下命令进行验证：
 
@@ -88,7 +101,7 @@ uv run --no-sync pytest tests/flowkit/test_flowkit.py
 
 如全量检查被历史遗留问题阻塞，应说明阻塞原因，并对本次变更涉及的文件或目录执行 targeted check。
 
-### 6.1 Targeted check 分层指引
+### 7.1 Targeted check 分层指引
 
 针对大型项目或存在历史遗留问题的工作区，应按影响范围选择最小充分验证命令：
 

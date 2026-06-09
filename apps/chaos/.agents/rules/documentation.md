@@ -37,14 +37,27 @@ flowchart LR
 
 **浏览器代理截图**：调度浏览器代理时，截图输出路径必须显式指定为 `.temp/{task}-{序号}.png`（如 `.temp/zhihu-dev-01.png`）。禁止依赖代理默认路径，否则截图将落到根目录污染项目结构。详见 `.agents/rules/browser-agent.md`。
 
-## 4. 路径与引用
+## 4. 复盘闭环
+
+复盘报告不应只记录执行结果，还应驱动可复用资产沉淀。
+
+复盘任务完成时，应检查是否至少产出以下一种可复用资产：
+
+- 高频执行规则：写入 `.agents/rules/`。
+- 流程化任务指南：写入 `.agents/workflows/`。
+- 可复用命令、检查清单或风险清单：写入对应规则、工作流或复盘报告。
+- 长期案例材料：归档到 `.agents/docs/superpowers/retrospectives/`。
+
+若复盘建议已被执行，应同步更新复盘报告状态，区分“建议”“已完成”“仍需跟踪”。`.temp/` 中的复盘或交付物若需要长期保留，必须迁移到正式文档目录后再作为引用目标。
+
+## 5. 路径与引用
 
 - 项目内引用必须使用相对路径。
 - 持久化文档中禁止写入本地绝对路径或包含个人用户名的路径。
 - 外部资料优先引用官方永久链接。
 - 临时抓取文件、临时日志和中间产物不得作为长期引用来源。
 
-## 5. 双向同步
+## 6. 双向同步
 
 当 `AGENTS.md`、`.agents/README.md` 或 `.agents/` 目录结构发生结构性变化时，应评估是否需要同步更新面向人类的 `README.md` 或 `docs/`。
 
@@ -57,7 +70,7 @@ flowchart LR
 
 仅 AI 内部规则微调通常不需要更新人类文档；若变更影响项目公共说明，则应同步更新。
 
-## 6. 真实源与镜像页
+## 7. 真实源与镜像页
 
 部分文档同时存在于"真实数据源"与"Sphinx 镜像页"两类位置，应明确区分：
 
@@ -67,13 +80,13 @@ flowchart LR
 | **Sphinx 镜像页** | `docs/tech/changelogs/<topic>.md` | 通过 `{include}` 引用真实源进行文档站渲染 | ❌ 禁止直接编辑内容；仅维护 include 路径与标题 |
 | **导航索引页** | 根 `CHANGELOG.md`、`docs/tech/changelog.md` | 指向真实源或镜像页的入口表格 | ⚠️ 修改时遵循「指向规则」 |
 
-### 6.1 指向规则
+### 7.1 指向规则
 
 - **根目录索引**（`CHANGELOG.md`、`README.md`）→ 必须指向**真实源**，确保 GitHub 浏览体验直达数据。
 - **Sphinx 站内索引**（`docs/tech/changelog.md`）→ 指向同站镜像页（相对路径），借助 Sphinx 渲染管线。
 - **同一字段不要同时挂两条链接**，避免维护双份引用。
 
-### 6.2 新增镜像页流程
+### 7.2 新增镜像页流程
 
 为新模块新增变更日志时：
 
@@ -83,13 +96,13 @@ flowchart LR
 4. 在根 `CHANGELOG.md` 索引表追加**真实源**绝对/相对路径。
 5. 在 `docs/tech/changelog.md` 顶部 `toctree` 中登记镜像页。
 
-### 6.3 禁止事项
+### 7.3 禁止事项
 
 - ❌ 不得在根 `CHANGELOG.md`、`README.md` 中将链接指向 `docs/tech/changelogs/` 镜像页。
 - ❌ 不得在 `docs/tech/changelogs/<topic>.md` 镜像页中直接添加变更内容（应改写真实源）。
 - ❌ 不得删除真实源而仅保留镜像页，会导致 Sphinx 构建失败。
 
-## 7. `docs/` 双轨分类
+## 8. `docs/` 双轨分类
 
 `docs/` 下采用「项目技术文档」与「通用知识」双轨分类，两类内容物理隔离、互不混入：
 
@@ -98,26 +111,26 @@ flowchart LR
 | `docs/tech/` | 项目源码相关：API 参考、集成指南、部署、构建约定、变更日志等 | 与本项目源码/工程化直接相关 |
 | `docs/general/` | 通用知识：传统文化（如《道德经》映射）、数学、跨学科常识等 | 与项目无直接耦合，但对协作或开发哲学有滋养 |
 
-### 7.1 入口结构
+### 8.1 入口结构
 
 - `docs/index.md` 是父入口，仅引用两个子入口（嵌套 toctree）。
 - `docs/tech/index.md` 与 `docs/general/index.md` 是子入口，各自展开自己的 toctree。
 - 子入口 **不得带 `orphan: true`**，必须进入主导航。
 
-### 7.2 新增文档流程
+### 8.2 新增文档流程
 
 1. 判定归属类目（技术 / 通用）。
 2. 放入对应子目录（必要时按领域再建子目录，如 `philosophy/`、`math/`）。
 3. 在所在目录的 `index.md` 的 `toctree` 中追加文档名（**不带子目录前缀**，因为 toctree 项相对当前 `index.md` 解析）。
 4. 不得直接在 `docs/index.md` 父级 toctree 中添加业务文档。
 
-### 7.3 边界隔离原则
+### 8.3 边界隔离原则
 
 - 技术资产（源码、配置、API、构建与发布）严禁进入 `docs/general/`。
 - 通用知识（哲学、数学、传统文化）严禁进入 `docs/tech/`。
 - 跨轨互链使用相对路径（如 `../tech/index.md` ↔ `../general/index.md`）。
 
-### 7.4 `general/` 子目录命名约定
+### 8.4 `general/` 子目录命名约定
 
 为防止 `docs/general/` 发散后出现命名分歧，统一采用「单数英文小写 · 学科/领域名 · 不缩写」三原则：
 
@@ -134,7 +147,7 @@ flowchart LR
 - 禁止使用中文目录名（`哲学/`）以避免跨平台路径问题。
 - 超出上述领域表的新领域需在本节补充后再使用。
 
-## 8. MyST 跨目录引用三段式校验
+## 9. MyST 跨目录引用三段式校验
 
 在 `docs/` 内进行文档迁移、重命名或跨目录互链时，必须分别校验三类引用——它们的解析规则不同：
 
@@ -144,13 +157,13 @@ flowchart LR
 | `{include}` 指令 | 文件系统相对路径 | ✅ 允许 | 上移/下移目录后 `../` 层级需调整 |
 | Markdown hyperlink | 必须指向 docs 源树内的 `.md` 文档 | ❌ 触发 `myst.xref_missing` | `.agents/`、`src/` 等树外文件不能用 hyperlink |
 
-### 8.1 跨 docs 树外文件的引用约定
+### 9.1 跨 docs 树外文件的引用约定
 
 - ❌ 禁止：`[规则](.agents/rules/context-economy.md)` —— 触发 `myst.xref_missing`。
 - ✅ 推荐：内联代码 `` `.agents/rules/context-economy.md` ``。
 - ✅ 推荐：纯路径文本（不加链接）。
 
-### 8.2 迁移后需同步调整的引用点
+### 9.2 迁移后需同步调整的引用点
 
 | 场景 | 校验动作 |
 |---|---|
@@ -159,13 +172,13 @@ flowchart LR
 | 跨目录互链 `.md` | 确认目标仍在 docs 树内；否则改为内联代码 |
 | `{doc}` 引用 | 首选相对当前目录的 docname（如 `<api/taolib/index>`而非 `<tech/api/...>`）|
 
-### 8.3 已知工具链兼容性
+### 9.3 已知工具链兼容性
 
 - `{contents}` 指令在 mystx 5.1 + Sphinx 9.1 下触发 `KeyError: 'anchorname'`，应直接移除，由章节标题自然导航替代。
 - mermaid 代码栅栏应使用 `` ```{mermaid} `` 指令式写法，避免 Pygments lexer 缺失警告。
 - 跨目录迁移后必须运行 `mise run docs-strict` 即时验证，不让警告积累。
 
-### 8.4 中文标题锚点规则
+### 9.4 中文标题锚点规则
 
 - **强制**：所有中文标题必须使用显式 MyST 锚点 `(锚点名)=`，不可依赖自动 slug。
 - **原因**：中文标题自动 slug 化行为不可预测，跨文档 `{ref}` 引用会因 slug 不匹配而失败。
@@ -184,15 +197,15 @@ flowchart LR
 
 - **命名约定**：锚点名使用英文小写 + 连字符（kebab-case），语义应与标题含义对应。
 
-## 9. AutoAPI 输出路径与 嵌套 toctree 口径
+## 10. AutoAPI 输出路径与嵌套 toctree 口径
 
-### 9.1 AutoAPI 输出路径
+### 10.1 AutoAPI 输出路径
 
 - `docs/conf.py` 中 `autoapi_root` 决定 sphinx-autoapi 的输出位置，应与技术文档子目录路径对齐：`autoapi_root = "tech/api"`。
 - API 生成产物位于 `docs/tech/api/`，必须在 `.gitignore` 中排除，不得提交进仓。
 - 调整 `autoapi_root` 后无需手工迁移生成产物，下次构建会自动重生成。
 
-### 9.2 嵌套 toctree docname 口径
+### 10.2 嵌套 toctree docname 口径
 
 | 位置 | toctree 项写法 | 例 |
 |---|---|---|
@@ -200,7 +213,7 @@ flowchart LR
 | `docs/tech/index.md`（子入口） | 相对当前目录（**不加 `tech/` 前缀**） | `intro`、`api/taolib/index` |
 | `docs/general/index.md`（子入口） | 相对当前目录（**不加 `general/` 前缀**） | `philosophy/tao-minimalist-principles` |
 
-### 9.3 README → index 升级时机
+### 10.3 README → index 升级时机
 
 - 占位 README（`orphan: true`）适用于骨架预设阶段。
 - 一旦目录有正式内容并需要进入主导航，应升级为 `index.md`：重命名同时移除 `orphan: true` 并加入子 `toctree`。

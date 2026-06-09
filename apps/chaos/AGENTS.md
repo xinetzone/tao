@@ -79,6 +79,7 @@ flowchart TD
 | Python 开发、依赖管理、导入规则、版本适配 | [`.agents/rules/python.md`](.agents/rules/python.md) |
 | 数据流水线设计、脚本读取/变换/写入时序审查 | [`.agents/rules/data-flow-ordering.md`](.agents/rules/data-flow-ordering.md) |
 | Python 版本升级或弃用 API 检查 | [`.agents/docs/version-tracking.md`](.agents/docs/version-tracking.md)、[`.agents/rules/citations.md`](.agents/rules/citations.md) |
+| IDE diagnostics、lint、format 或 CI 问题修复 | [`.agents/workflows/diagnostics-fix.md`](.agents/workflows/diagnostics-fix.md)、[`.agents/rules/python.md`](.agents/rules/python.md) |
 | 技能开发或技能规范调整 | [`.agents/rules/skills.md`](.agents/rules/skills.md) |
 | 协作元模型、角色定义、Team 治理、多智能体规范 | [`.agents/docs/references/agent-collaboration-metamodel.md`](.agents/docs/references/agent-collaboration-metamodel.md)、[`.agents/roles/`](.agents/roles/)、[`.agents/teams/`](.agents/teams/) |
 | 代码审查或 PR Review | [`.agents/workflows/pr-review.md`](.agents/workflows/pr-review.md) |

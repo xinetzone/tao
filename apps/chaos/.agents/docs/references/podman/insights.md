@@ -106,6 +106,6 @@ Linux-only 库在 Windows 上不能直接用
 
 ---
 
-*洞察日期：2026-06-08*  
-*来源任务：Podman Python SDK 在 Windows 上通过 SSH 隧道连接 podman machine*  
+*洞察日期：2026-06-08*
+*来源任务：Podman Python SDK 在 Windows 上通过 SSH 隧道连接 podman machine*
 *关联文档：[podman-py-sdk.md](./podman-py-sdk.md) · [windows-setup.md](./windows-setup.md)*

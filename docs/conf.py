@@ -224,7 +224,11 @@ if _has("autoapi.extension"):
         "show-inheritance",
         "show-module-summary",
     ]
-    autoapi_ignore = ["*/__pycache__/*", "*/tests/*"]
+    autoapi_ignore = [
+        "*/__pycache__/*",
+        "*/tests/*",
+        "*/flowkit/*",
+    ]
 
 # ================================= Napoleon 配置 =================================
 # 将 ``Attributes:`` 等节渲染为 ``:ivar:`` 字段语法，避免与 autoapi 自动生成的

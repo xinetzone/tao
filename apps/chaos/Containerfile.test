@@ -10,6 +10,11 @@ WORKDIR /app
 COPY pyproject.toml uv.lock LICENSE README.md ./
 COPY .agents/scripts/sync-test-deps.sh ./
 RUN mkdir -p src/taolib && echo "" > src/taolib/__init__.py
+
+# 容器内无 .git 目录，setuptools_scm 无法通过 git 获取版本号。
+# 设置 PRETEND_VERSION 直接注入版本，避免 vcs_versioning 尝试写入 _version.py 时报 FileNotFoundError。
+ENV SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0
+
 RUN bash sync-test-deps.sh
 COPY . .
 

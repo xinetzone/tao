@@ -16,8 +16,8 @@ last_updated: 2026-06-03
 | **Rootless** | 原生支持非 root 用户运行容器，无需特权提升 |
 | **Kubernetes 原生** | 内置 Pod 概念，可直接生成/消费 K8s YAML |
 
-项目仓库：`github.com/containers/podman`  
-许可证：Apache-2.0  
+项目仓库：`github.com/containers/podman`
+许可证：Apache-2.0
 主要语言：Go
 
 ---

@@ -28,31 +28,30 @@ Example:
     >>> print(args)
     ['--mode=standalone', '--clang', '--include-package=mypackage', ...]
 """
-from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Literal
+from typing import Literal, Self
 
 # 编译模式常量
 NuitkaMode = Literal[
-    "module",       # 编译为扩展模块
-    "package",      # 编译整个包为扩展模块
-    "standalone",   # 独立可执行文件 (含依赖文件夹)
-    "onefile",      # 单文件自解压可执行文件
+    "module",  # 编译为扩展模块
+    "package",  # 编译整个包为扩展模块
+    "standalone",  # 独立可执行文件 (含依赖文件夹)
+    "onefile",  # 单文件自解压可执行文件
     "accelerated",  # 加速模式 (依赖系统 Python)
-    "app",          # 应用 (onefile 或 macOS 应用包)
-    "app-dist",     # 应用分发 (standalone 或 macOS 应用包)
-    "dll",          # DLL 模式 (实验性)
+    "app",  # 应用 (onefile 或 macOS 应用包)
+    "app-dist",  # 应用分发 (standalone 或 macOS 应用包)
+    "dll",  # DLL 模式 (实验性)
 ]
 
 # 编译器常量
 NuitkaCompiler = Literal[
-    "clang",    # LLVM Clang
-    "gcc",      # GNU GCC (默认非 Windows)
-    "msvc",     # Microsoft Visual C++ (Windows)
+    "clang",  # LLVM Clang
+    "gcc",  # GNU GCC (默认非 Windows)
+    "msvc",  # Microsoft Visual C++ (Windows)
     "mingw64",  # MinGW-w64 (Windows)
-    "zig",      # Zig 编译器
-    "auto",     # 自动选择
+    "zig",  # Zig 编译器
+    "auto",  # 自动选择
 ]
 
 # 插件名称类型
@@ -62,7 +61,7 @@ PluginName = str
 @dataclass(frozen=True)
 class OutputConfig:
     """输出配置.
-    
+
     Attributes:
         output_dir: 输出目录 (--output-dir)
         output_filename: 输出文件名 (--output-filename, -o)
@@ -70,11 +69,12 @@ class OutputConfig:
         remove_build: 编译后删除构建目录 (--remove-output)
         pyi_file: 生成 .pyi 文件 (默认 False, --no-pyi-file 禁用)
         pyi_stubs: 使用 stubgen 生成 .pyi (默认 True, --no-pyi-stubs 禁用)
-    
+
     Note:
         默认情况下不输出任何标志，通过 extra_flags 控制。
         如需显式控制，设置 remove_build=True 或 pyi_file=False。
     """
+
     output_dir: str | None = None
     output_filename: str | None = None
     output_folder_name: str | None = None
@@ -86,7 +86,7 @@ class OutputConfig:
 @dataclass(frozen=True)
 class DataConfig:
     """数据文件配置.
-    
+
     Attributes:
         package_data: 包含的包数据 (--include-package-data)
             格式: "package_name" 或 "package_name:pattern"
@@ -97,6 +97,7 @@ class DataConfig:
         noinclude_data_files: 排除的数据文件模式 (--noinclude-data-files)
         raw_dirs: 包含的原始目录 (--include-raw-dir)
     """
+
     package_data: list[str] = field(default_factory=list)
     data_files: list[str] = field(default_factory=list)
     data_dirs: list[str] = field(default_factory=list)
@@ -107,7 +108,7 @@ class DataConfig:
 @dataclass(frozen=True)
 class CompilerConfig:
     """编译器高级配置.
-    
+
     Attributes:
         jobs: 并行编译任务数 (--jobs, -j)
             None=自动, 正数=指定数, 负数=CPU数减去该值
@@ -123,6 +124,7 @@ class CompilerConfig:
         msvc_version: MSVC 版本 (--msvc, Windows only)
             如 "14.3", "latest", "list"
     """
+
     jobs: int | None = None
     lto: Literal["auto", "yes", "no"] = "auto"
     static_libpython: Literal["auto", "yes", "no"] = "auto"
@@ -135,12 +137,13 @@ class CompilerConfig:
 @dataclass(frozen=True)
 class CacheConfig:
     """缓存配置.
-    
+
     Attributes:
         disabled_caches: 禁用的缓存列表 (--disable-cache)
             可选值: "all", "ccache", "bytecode", "compression", "dll-dependencies"
         clean_caches: 编译前清理的缓存列表 (--clean-cache)
     """
+
     disabled_caches: list[str] = field(default_factory=list)
     clean_caches: list[str] = field(default_factory=list)
 
@@ -148,7 +151,7 @@ class CacheConfig:
 @dataclass(frozen=True)
 class WindowsConfig:
     """Windows 特定配置.
-    
+
     Attributes:
         icon_path: 图标路径列表 (--windows-icon-from-ico)
         icon_exe_path: 从 EXE 复制图标 (--windows-icon-from-exe)
@@ -159,6 +162,7 @@ class WindowsConfig:
         force_stdout_spec: 强制标准输出位置 (--force-stdout-spec)
         force_stderr_spec: 强制标准错误位置 (--force-stderr-spec)
     """
+
     icon_path: list[str] = field(default_factory=list)
     icon_exe_path: str | None = None
     console_mode: Literal["force", "disable", "attach", "hide"] | None = None
@@ -171,7 +175,7 @@ class WindowsConfig:
 @dataclass(frozen=True)
 class MacOSConfig:
     """macOS 特定配置.
-    
+
     Attributes:
         create_bundle: 创建应用包 (--macos-create-app-bundle)
         app_name: 应用名称 (--macos-app-name)
@@ -185,6 +189,7 @@ class MacOSConfig:
         signed_app_name: 签名应用名 (--macos-signed-app-name)
         sign_identity: 签名身份 (--macos-sign-identity)
     """
+
     create_bundle: bool = False
     app_name: str | None = None
     app_version: str | None = None
@@ -199,7 +204,7 @@ class MacOSConfig:
 @dataclass(frozen=True)
 class VersionInfo:
     """二进制版本信息.
-    
+
     Attributes:
         company_name: 公司名称 (--company-name)
         product_name: 产品名称 (--product-name)
@@ -209,6 +214,7 @@ class VersionInfo:
         copyright_text: 版权信息 (--copyright)
         trademarks: 商标信息 (--trademarks)
     """
+
     company_name: str | None = None
     product_name: str | None = None
     file_version: str | None = None
@@ -221,20 +227,20 @@ class VersionInfo:
 @dataclass(frozen=True)
 class NuitkaConfig:
     """Nuitka 编译配置.
-    
+
     封装 Nuitka 编译器的所有参数，提供 to_args() 方法生成命令行参数。
-    
+
     Attributes:
         mode: 编译模式 (默认 "module")
         compiler: C 编译器 (默认 "clang")
-        
+
         # 插件管理
         enabled_plugins: 启用的插件列表 (--enable-plugins)
             标准插件: dill-compat, numpy, torch, tensorflow, pyqt5, pyside2,
                      matplotlib, kivy, tkinter, gevent, eventlet, trio 等
         disabled_plugins: 禁用的插件列表 (--disable-plugins)
         user_plugins: 用户插件路径列表 (--user-plugin)
-        
+
         # 导入控制
         follow_imports: 跟踪导入的包 (--follow-import-to)
         nofollow_imports: 不跟踪导入的包 (--nofollow-import-to)
@@ -242,33 +248,33 @@ class NuitkaConfig:
         follow_all: 跟踪所有导入 (--follow-imports / --nofollow-imports)
             None=默认 (standalone 时为 True), True=强制, False=禁用
         follow_stdlib: 跟踪标准库 (--follow-stdlib)
-        
+
         # 包/模块包含
         include_packages: 包含的包 (--include-package)
             自动包含包数据 (--include-package-data)
         include_modules: 包含的模块 (--include-module)
         include_plugin_dirs: 额外插件目录 (--include-plugin-directory)
         include_plugin_files: 插件文件模式 (--include-plugin-files)
-        
+
         # 数据文件 (通过 DataConfig)
         data: 数据文件配置
-        
+
         # 输出控制 (通过 OutputConfig)
         output: 输出配置
-        
+
         # 编译器高级配置 (通过 CompilerConfig)
         compiler_config: 编译器配置
-        
+
         # 缓存配置 (通过 CacheConfig)
         cache: 缓存配置
-        
+
         # 平台特定配置
         windows: Windows 配置
         macos: macOS 配置
-        
+
         # 版本信息
         version_info: 版本信息配置
-        
+
         # 其他选项
         python_flags: Python 标志列表 (--python-flag)
             可选: "no_site", "static_hashes", "no_warnings", "no_asserts",
@@ -280,7 +286,7 @@ class NuitkaConfig:
         show_scons: 显示 Scons 输出 (--show-scons)
         report_filename: 编译报告文件 (--report)
         extra_flags: 额外编译标志 (直接追加到命令行)
-        
+
     Example:
         >>> config = NuitkaConfig(
         ...     mode="standalone",
@@ -333,11 +339,13 @@ class NuitkaConfig:
     verbose: bool = False
     show_scons: bool = False
     report_filename: str | None = None
-    extra_flags: list[str] = field(default_factory=lambda: ["--remove-output", "--no-pyi-file"])
+    extra_flags: list[str] = field(
+        default_factory=lambda: ["--remove-output", "--no-pyi-file"]
+    )
 
     def to_args(self) -> list[str]:
         """生成 Nuitka 命令行参数列表.
-        
+
         Returns:
             命令行参数列表，可直接传递给 subprocess.run()
         """
@@ -525,12 +533,12 @@ class NuitkaConfig:
         """向后兼容: 返回启用的插件列表."""
         return list(self.enabled_plugins)
 
-    def with_output(self, output_dir: str) -> NuitkaConfig:
+    def with_output(self, output_dir: str) -> Self:
         """创建带输出目录配置的新实例.
-        
+
         Args:
             output_dir: 输出目录路径
-            
+
         Returns:
             新的 NuitkaConfig 实例
         """
@@ -573,12 +581,12 @@ class NuitkaConfig:
             extra_flags=self.extra_flags,
         )
 
-    def with_jobs(self, jobs: int) -> NuitkaConfig:
+    def with_jobs(self, jobs: int) -> Self:
         """创建带并行任务数的新实例.
-        
+
         Args:
             jobs: 并行编译任务数
-            
+
         Returns:
             新的 NuitkaConfig 实例
         """
@@ -678,41 +686,41 @@ NUITKA_APP = NuitkaConfig(
 
 #: Nuitka 标准插件列表
 STANDARD_PLUGINS = [
-    "anti-bloat",           # 减少包体积
-    "consider-pylint",      # 考虑 pylint 注解
-    "data-files",           # 数据文件处理
-    "delvewheel",           # Delvewheel 支持
-    "dill-compat",          # dill 序列化兼容
-    "dll-files",            # DLL 文件处理
-    "enum",                 # Enum 优化
-    "eventlet",             # Eventlet 支持
-    "gevent",               # Gevent 支持
-    "gi",                   # GObject Introspection
-    "glfw",                 # GLFW 支持
-    "implicit-imports",     # 隐式导入检测
-    "kivy",                 # Kivy 支持
-    "matplotlib",           # Matplotlib 支持
-    "multiprocessing",      # Multiprocessing 支持
-    "numpy",                # NumPy 支持
-    "options-nanny",        # 选项检查
-    "pbr",                  # PBR 支持
-    "pkg-resources",        # pkg_resources 支持
-    "playwright",           # Playwright 支持
-    "pmw",                  # Pmw 支持
-    "pyqt5",                # PyQt5 支持
-    "pyside2",              # PySide2 支持
-    "pyside6",              # PySide6 支持
-    "pywebview",            # PyWebView 支持
-    "source-inclusion",     # 源码包含
-    "spacy",                # spaCy 支持
-    "tensorflow",           # TensorFlow 支持
-    "tkinter",              # Tkinter 支持
-    "torch",                # PyTorch 支持
-    "torch-hub",            # Torch Hub 支持
-    "torch-jit",            # Torch JIT 支持
-    "transformers",         # Transformers 支持
-    "trio",                 # Trio 支持
-    "upx",                  # UPX 压缩
+    "anti-bloat",  # 减少包体积
+    "consider-pylint",  # 考虑 pylint 注解
+    "data-files",  # 数据文件处理
+    "delvewheel",  # Delvewheel 支持
+    "dill-compat",  # dill 序列化兼容
+    "dll-files",  # DLL 文件处理
+    "enum",  # Enum 优化
+    "eventlet",  # Eventlet 支持
+    "gevent",  # Gevent 支持
+    "gi",  # GObject Introspection
+    "glfw",  # GLFW 支持
+    "implicit-imports",  # 隐式导入检测
+    "kivy",  # Kivy 支持
+    "matplotlib",  # Matplotlib 支持
+    "multiprocessing",  # Multiprocessing 支持
+    "numpy",  # NumPy 支持
+    "options-nanny",  # 选项检查
+    "pbr",  # PBR 支持
+    "pkg-resources",  # pkg_resources 支持
+    "playwright",  # Playwright 支持
+    "pmw",  # Pmw 支持
+    "pyqt5",  # PyQt5 支持
+    "pyside2",  # PySide2 支持
+    "pyside6",  # PySide6 支持
+    "pywebview",  # PyWebView 支持
+    "source-inclusion",  # 源码包含
+    "spacy",  # spaCy 支持
+    "tensorflow",  # TensorFlow 支持
+    "tkinter",  # Tkinter 支持
+    "torch",  # PyTorch 支持
+    "torch-hub",  # Torch Hub 支持
+    "torch-jit",  # Torch JIT 支持
+    "transformers",  # Transformers 支持
+    "trio",  # Trio 支持
+    "upx",  # UPX 压缩
 ]
 
 #: 常用插件子集
@@ -727,6 +735,7 @@ COMMON_PLUGINS = [
 # 辅助函数
 # ---------------------------------------------------------------------------
 
+
 def build_nuitka_command(
     config: NuitkaConfig,
     main_module: str,
@@ -734,15 +743,15 @@ def build_nuitka_command(
     dry_run: bool = False,
 ) -> list[str]:
     """构建完整的 Nuitka 命令行命令.
-    
+
     Args:
         config: Nuitka 编译配置
         main_module: 主模块路径 (如 "mypackage" 或 "main.py")
         dry_run: 如果为 True，添加 --generate-c-only 标志
-        
+
     Returns:
         完整的命令行参数列表，格式: ["python", "-m", "nuitka", ...args, main_module]
-        
+
     Example:
         >>> config = NuitkaConfig(mode="standalone", include_packages=["tvm"])
         >>> cmd = build_nuitka_command(config, "tvm")
@@ -759,14 +768,15 @@ def build_nuitka_command(
 
 def parse_nuitka_version(version_output: str) -> tuple[int, int, int]:
     """解析 Nuitka 版本号.
-    
+
     Args:
         version_output: nuitka --version 的输出
-        
+
     Returns:
         (major, minor, patch) 版本元组
     """
     import re
+
     match = re.search(r"Nuitka.*?(\d+)\.(\d+)\.(\d+)", version_output)
     if match:
         return int(match.group(1)), int(match.group(2)), int(match.group(3))

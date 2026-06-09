@@ -9,6 +9,7 @@
 运行方式:
     python examples/build_workflow.py
 """
+
 from datetime import datetime
 from pathlib import Path
 
@@ -25,7 +26,7 @@ from taolib.flowkit import (
 )
 
 
-def example_build_workflow():
+def example_build_workflow() -> bool:
     """完整构建工作流示例."""
     print("=" * 60)
     print("FlowKit 构建工作流示例")
@@ -76,23 +77,27 @@ def example_build_workflow():
 
     # 模拟编译步骤
     print("   执行编译步骤...")
-    report.steps.append(StepResult(
-        name="compile_mypackage",
-        success=True,
-        duration_seconds=45.3,
-        output="Nuitka compilation successful",
-        artifacts=["mypackage.cpython-313-x86_64-linux-gnu.so"],
-    ))
+    report.steps.append(
+        StepResult(
+            name="compile_mypackage",
+            success=True,
+            duration_seconds=45.3,
+            output="Nuitka compilation successful",
+            artifacts=["mypackage.cpython-313-x86_64-linux-gnu.so"],
+        )
+    )
 
     # 模拟打包步骤
     print("   执行打包步骤...")
-    report.steps.append(StepResult(
-        name="package_wheel",
-        success=True,
-        duration_seconds=12.7,
-        output="Wheel package created",
-        artifacts=["mypackage-1.0.0-py3-none-any.whl"],
-    ))
+    report.steps.append(
+        StepResult(
+            name="package_wheel",
+            success=True,
+            duration_seconds=12.7,
+            output="Wheel package created",
+            artifacts=["mypackage-1.0.0-py3-none-any.whl"],
+        )
+    )
 
     # 4. 创建模拟产物
     print("\n4️⃣  创建构建产物...")
@@ -161,7 +166,7 @@ def example_build_workflow():
     return report.success
 
 
-def example_container_config():
+def example_container_config() -> None:
     """容器配置示例."""
     print("\n" + "=" * 60)
     print("容器配置示例")
@@ -201,7 +206,7 @@ def example_container_config():
     print("=" * 60)
 
 
-def example_nuitka_configs():
+def example_nuitka_configs() -> None:
     """Nuitka 配置示例."""
     print("\n" + "=" * 60)
     print("Nuitka 配置示例")

@@ -17,24 +17,24 @@ Unix socket 转发为本地 TCP 端口，然后使用 tcp:// scheme 连接。
     containers = client.containers.list(all=True)
     client.close()
 
-运行环境: Windows + Python 3.10+ + podman>=5.8.0 + OpenSSH
+运行环境: Windows + Python 3.13+ + podman>=5.8.0 + OpenSSH
 """
-from __future__ import annotations
 
 import atexit
 import json
 import socket
 import subprocess
 import time
-from typing import Optional
-
+from typing import Any, ClassVar
 
 # ── 读取 podman machine 配置 ──────────────────────────────────────────
+
 
 def _get_machine_config(name: str = "podman-machine-default") -> dict:
     result = subprocess.run(
         ["podman", "machine", "inspect", name],
-        capture_output=True, text=True,
+        capture_output=True,
+        text=True,
     )
     if result.returncode != 0:
         raise RuntimeError(f"podman machine inspect 失败: {result.stderr}")
@@ -46,13 +46,14 @@ def _get_machine_config(name: str = "podman-machine-default") -> dict:
 
 # ── SSH TCP 隧道 ─────────────────────────────────────────────────────
 
+
 class SSHTunnel:
     """通过 SSH 建立 TCP → podman socket 的隧道."""
 
-    _instances: list[SSHTunnel] = []
+    _instances: ClassVar[list[Any]] = []
 
     @classmethod
-    def _cleanup_all(cls):
+    def _cleanup_all(cls) -> None:
         for t in cls._instances:
             t.stop()
 
@@ -63,13 +64,13 @@ class SSHTunnel:
         ssh_identity: str = "",
         remote_socket: str = "/run/user/1000/podman/podman.sock",
         local_port: int = 0,  # 0 = 自动分配
-    ):
+    ) -> None:
         self._ssh_port = ssh_port
         self._ssh_user = ssh_user
         self._ssh_identity = ssh_identity
         self._remote_socket = remote_socket
         self._local_port = local_port
-        self._proc: Optional[subprocess.Popen] = None
+        self._proc: subprocess.Popen[bytes] | None = None
         self._instances.append(self)
 
     def start(self) -> int:
@@ -82,12 +83,18 @@ class SSHTunnel:
             self._local_port = self._find_free_port()
 
         cmd = [
-            "ssh", "-N",
-            "-o", "StrictHostKeyChecking=no",
-            "-o", "ExitOnForwardFailure=yes",
-            "-L", f"{self._local_port}:{self._remote_socket}",
-            "-p", str(self._ssh_port),
-            "-i", self._ssh_identity,
+            "ssh",
+            "-N",
+            "-o",
+            "StrictHostKeyChecking=no",
+            "-o",
+            "ExitOnForwardFailure=yes",
+            "-L",
+            f"{self._local_port}:{self._remote_socket}",
+            "-p",
+            str(self._ssh_port),
+            "-i",
+            self._ssh_identity,
             f"{self._ssh_user}@localhost",
         ]
 
@@ -137,9 +144,12 @@ class SSHTunnel:
         )
         cmd = [
             "ssh",
-            "-o", "StrictHostKeyChecking=no",
-            "-p", str(self._ssh_port),
-            "-i", self._ssh_identity,
+            "-o",
+            "StrictHostKeyChecking=no",
+            "-p",
+            str(self._ssh_port),
+            "-i",
+            self._ssh_identity,
             f"{self._ssh_user}@localhost",
             remote_cmd,
         ]
@@ -147,11 +157,16 @@ class SSHTunnel:
 
         # 建立 TCP 转发
         forward_cmd = [
-            "ssh", "-N",
-            "-o", "StrictHostKeyChecking=no",
-            "-L", f"{self._local_port}:localhost:{self._local_port}",
-            "-p", str(self._ssh_port),
-            "-i", self._ssh_identity,
+            "ssh",
+            "-N",
+            "-o",
+            "StrictHostKeyChecking=no",
+            "-L",
+            f"{self._local_port}:localhost:{self._local_port}",
+            "-p",
+            str(self._ssh_port),
+            "-i",
+            self._ssh_identity,
             f"{self._ssh_user}@localhost",
         ]
         self._proc = subprocess.Popen(
@@ -167,9 +182,7 @@ class SSHTunnel:
             if self._proc.poll() is not None:
                 raise RuntimeError("SSH 隧道进程意外退出")
             try:
-                s = socket.create_connection(
-                    ("localhost", self._local_port), timeout=1
-                )
+                s = socket.create_connection(("localhost", self._local_port), timeout=1)
                 s.close()
                 return self._local_port
             except (OSError, ConnectionRefusedError):
@@ -177,7 +190,7 @@ class SSHTunnel:
 
         raise RuntimeError("SSH 隧道启动超时")
 
-    def stop(self):
+    def stop(self) -> None:
         if self._proc:
             self._proc.terminate()
             try:
@@ -202,6 +215,7 @@ atexit.register(SSHTunnel._cleanup_all)
 
 # ── 便捷客户端 ────────────────────────────────────────────────────────
 
+
 class PodmanSSHClient:
     """自动管理 SSH 隧道 + PodmanClient 的便捷包装.
 
@@ -218,8 +232,8 @@ class PodmanSSHClient:
         self,
         machine_name: str = "podman-machine-default",
         local_port: int = 0,
-        **kwargs,
-    ):
+        **kwargs: Any,
+    ) -> None:
         cfg = _get_machine_config(machine_name)
         ssh = cfg["SSHConfig"]
 
@@ -235,26 +249,29 @@ class PodmanSSHClient:
 
         self._client = None
 
-    def __enter__(self):
+    def __enter__(self) -> Any:
         from podman import PodmanClient
+
         self._client = PodmanClient(base_url=self._base_url, **self._kwargs)
         return self._client
 
-    def __exit__(self, *args):
+    def __exit__(self, *args: object) -> None:
         if self._client:
             self._client.close()
         self._tunnel.stop()
 
-    def client(self):
+    def client(self) -> Any:
         """返回 PodmanClient 实例（需手动 close）."""
         from podman import PodmanClient
+
         self._client = PodmanClient(base_url=self._base_url, **self._kwargs)
         return self._client
 
 
 # ── 快速入口 ──────────────────────────────────────────────────────────
 
-def quick_client(machine_name: str = "podman-machine-default", **kwargs):
+
+def quick_client(machine_name: str = "podman-machine-default", **kwargs: Any) -> Any:
     """快速创建带 SSH 隧道的 PodmanClient.
 
     Args:

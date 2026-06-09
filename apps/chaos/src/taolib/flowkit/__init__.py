@@ -20,20 +20,20 @@
 快速开始:
     ```python
     from taolib.flowkit import Container, ContainerConfig, NuitkaConfig
-    
+
     # 配置容器
     config = ContainerConfig(
         image="python:3.13",
         name_prefix="my_build",
     )
-    
+
     # 启动容器并执行命令
     container = Container(config)
     container.start()
     result = container.exec("python -c 'print(42)'")
     print(result.output)
     container.stop()
-    
+
     # 配置 Nuitka 编译
     nuitka_config = NuitkaConfig(
         mode="module",
@@ -56,6 +56,9 @@ __author__ = "AI Notebook Team"
 
 # 核心数据模型
 # 产物管理
+# Podman Windows SDK 适配（仅 Windows 可用，Linux/macOS 用 Unix socket 直连即可）
+import sys
+
 from .artifacts import (
     ArtifactEntry,
     ArtifactManifest,
@@ -85,17 +88,13 @@ from .models import (
     compute_sha256,
 )
 
-# Podman Windows SDK 适配（仅 Windows 可用，Linux/macOS 用 Unix socket 直连即可）
-import sys
 if sys.platform == "win32":
-    from .podman_win import PodmanSSHClient, quick_client  # noqa: F401
+    from .podman_win import PodmanSSHClient, quick_client
 else:
     PodmanSSHClient = None  # type: ignore
     quick_client = None  # type: ignore
 
 # Podman SDK 上下文工具（跨平台，Python SDK 风格容器操作）
-from .podman_context import ContainerRun, ContainerRunError, ExecResult, PodmanContext
-
 # Nuitka 编译器
 from .nuitka_config import (
     COMMON_PLUGINS,
@@ -121,11 +120,11 @@ from .nuitka_config import (
     build_nuitka_command,
     parse_nuitka_version,
 )
+from .podman_context import ContainerRun, ContainerRunError, ExecResult, PodmanContext
 
 __all__ = [
     # 版本信息
     "__version__",
-
     # 数据模型
     "BuildPaths",
     "BuildReport",
@@ -134,7 +133,6 @@ __all__ = [
     "StepResult",
     "VolumeMount",
     "compute_sha256",
-
     # 容器管理
     "Container",
     "ContainerRuntimeError",
@@ -145,7 +143,6 @@ __all__ = [
     "load_image",
     "load_image_tar",
     "save_image",
-
     # Nuitka 编译器
     "NuitkaConfig",
     "OutputConfig",
@@ -164,16 +161,13 @@ __all__ = [
     "COMMON_PLUGINS",
     "build_nuitka_command",
     "parse_nuitka_version",
-
     # 产物管理
     "ArtifactEntry",
     "ArtifactManifest",
     "generate_checksum_file",
     "verify_checksum_file",
-
     # Podman Windows SDK 适配（仅 Windows）
     *(["PodmanSSHClient", "quick_client"] if sys.platform == "win32" else []),
-
     # Podman SDK 上下文工具
     "PodmanContext",
     "ContainerRun",

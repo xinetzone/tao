@@ -4,6 +4,7 @@
     python -m pytest tests/
     或直接运行: python tests/test_flowkit.py
 """
+
 import json
 from datetime import datetime
 from pathlib import Path
@@ -42,7 +43,10 @@ class TestModels:
 
         hash_value = compute_sha256(test_file)
         assert len(hash_value) == 64
-        assert hash_value == "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+        assert (
+            hash_value
+            == "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+        )
 
     def test_volume_mount(self):
         """测试卷挂载配置."""
@@ -89,16 +93,20 @@ class TestModels:
     def test_build_report(self, tmp_path):
         """测试构建报告."""
         report = BuildReport(run_id="test_123")
-        report.steps.append(StepResult(
-            name="step1",
-            success=True,
-            duration_seconds=5.0,
-        ))
-        report.steps.append(StepResult(
-            name="step2",
-            success=True,
-            duration_seconds=10.0,
-        ))
+        report.steps.append(
+            StepResult(
+                name="step1",
+                success=True,
+                duration_seconds=5.0,
+            )
+        )
+        report.steps.append(
+            StepResult(
+                name="step2",
+                success=True,
+                duration_seconds=10.0,
+            )
+        )
 
         assert report.success is True
         assert report.total_duration == 15.0
@@ -323,12 +331,12 @@ class TestArtifacts:
         assert checksum_path.suffix == ".sha256"
 
         # 验证校验文件
-        success, message = verify_checksum_file(checksum_path)
+        success, _message = verify_checksum_file(checksum_path)
         assert success is True
 
         # 修改文件后验证失败
         test_file.write_bytes(b"modified data")
-        success, message = verify_checksum_file(checksum_path)
+        success, _message = verify_checksum_file(checksum_path)
         assert success is False
 
 
@@ -357,12 +365,14 @@ class TestIntegration:
         report = BuildReport(run_id="integration_test")
 
         # 4. 模拟编译步骤
-        report.steps.append(StepResult(
-            name="compile",
-            success=True,
-            duration_seconds=120.0,
-            output="Compilation successful",
-        ))
+        report.steps.append(
+            StepResult(
+                name="compile",
+                success=True,
+                duration_seconds=120.0,
+                output="Compilation successful",
+            )
+        )
 
         # 5. 创建产物
         wheel_file = paths.wheels_dir / "mypackage-1.0.0-py3-none-any.whl"
@@ -384,7 +394,7 @@ class TestIntegration:
         report.to_json(paths.reports_dir / "report.json")
 
         # 8. 验证产物
-        success, errors = ArtifactManifest.verify(manifest_path)
+        success, _errors = ArtifactManifest.verify(manifest_path)
         assert success is True
 
         # 9. 验证报告

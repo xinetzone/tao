@@ -7,6 +7,7 @@
 
 运行环境要求: Python 3.10+, 需要安装 podman 或 docker CLI
 """
+
 from __future__ import annotations
 
 import datetime
@@ -27,20 +28,22 @@ from .models import (
 
 class ContainerRuntimeError(Exception):
     """容器运行时错误."""
+
     pass
 
 
 class ContainerNotFoundError(Exception):
     """容器或镜像不存在."""
+
     pass
 
 
 def _detect_container_engine() -> str:
     """自动检测可用的容器引擎.
-    
+
     Returns:
         "podman" 或 "docker"
-        
+
     Raises:
         ContainerRuntimeError: 未找到可用引擎
     """
@@ -56,13 +59,13 @@ def _detect_container_engine() -> str:
 @dataclass
 class Container:
     """管理容器生命周期.
-    
+
     自动检测并使用 podman 或 docker,提供统一的容器操作接口.
-    
+
     Attributes:
         config: 容器运行配置
         engine: 容器引擎 ("podman" 或 "docker"), None 表示自动检测
-        
+
     Example:
         >>> config = ContainerConfig(image="python:3.13", name_prefix="test")
         >>> container = Container(config)
@@ -81,7 +84,9 @@ class Container:
         if self.engine is None:
             self.engine = _detect_container_engine()
         elif self.engine not in ("podman", "docker"):
-            raise ValueError(f"不支持的容器引擎: {self.engine}, 请使用 'podman' 或 'docker'")
+            raise ValueError(
+                f"不支持的容器引擎: {self.engine}, 请使用 'podman' 或 'docker'"
+            )
 
     def _run(
         self,
@@ -91,23 +96,23 @@ class Container:
         check: bool = False,
     ) -> subprocess.CompletedProcess:
         """执行容器引擎命令.
-        
+
         Args:
             args: 命令参数列表 (不含引擎名称)
             timeout: 超时时间 (秒)
             check: 是否检查返回码
-            
+
         Returns:
             subprocess.CompletedProcess 实例
         """
-        cmd = [self.engine] + args
+        cmd = [self.engine, *args]
         return subprocess.run(
             cmd,
             capture_output=True,
             text=True,
             timeout=timeout,
-            encoding='utf-8',
-            errors='replace',
+            encoding="utf-8",
+            errors="replace",
             check=check,
         )
 
@@ -128,21 +133,26 @@ class Container:
 
     def start(self) -> str:
         """启动后台容器, 返回 container_id.
-        
+
         Returns:
             容器 ID 字符串
-            
+
         Raises:
             ContainerRuntimeError: 容器启动失败
         """
         name = f"{self.config.name_prefix}_{uuid.uuid4().hex[:8]}"
         args = [
-            "run", "-d",
-            "--name", name,
-            "-w", self.config.workdir,
-        ] + self._volume_args() + self._env_args() + [
+            "run",
+            "-d",
+            "--name",
+            name,
+            "-w",
+            self.config.workdir,
+            *self._volume_args(),
+            *self._env_args(),
             self.config.image,
-            "sleep", "infinity",
+            "sleep",
+            "infinity",
         ]
         proc = self._run(args)
         if proc.returncode != 0:
@@ -159,13 +169,13 @@ class Container:
         timeout: int = 1800,
     ) -> StepResult:
         """在容器内执行命令.
-        
+
         Args:
             cmd: 要执行的 shell 命令
             workdir: 容器内工作目录 (可选)
             env: 额外环境变量 (可选)
             timeout: 超时时间 (秒)
-            
+
         Returns:
             StepResult 实例, 包含执行结果和耗时
         """
@@ -194,7 +204,7 @@ class Container:
 
     def stop(self, remove: bool = True) -> None:
         """停止并可选删除容器.
-        
+
         Args:
             remove: 是否同时删除容器, 默认 True
         """
@@ -206,10 +216,10 @@ class Container:
 
     def logs(self, tail: int = 50) -> str:
         """获取容器日志.
-        
+
         Args:
             tail: 返回最近 N 行日志
-            
+
         Returns:
             日志内容字符串
         """
@@ -221,11 +231,11 @@ class Container:
 
 def image_exists(name: str, engine: str | None = None) -> bool:
     """判断本地是否已存在指定镜像.
-    
+
     Args:
         name: 镜像名称或 tag
         engine: 容器引擎 ("podman"/"docker"), None 表示自动检测
-        
+
     Returns:
         镜像是否存在
     """
@@ -240,14 +250,14 @@ def image_exists(name: str, engine: str | None = None) -> bool:
 
 def load_image_tar(tar_path: Path, engine: str | None = None) -> bool:
     """从 tar 加载镜像.
-    
+
     Args:
         tar_path: tar 文件路径
         engine: 容器引擎, None 表示自动检测
-        
+
     Returns:
         是否成功
-        
+
     Raises:
         ContainerRuntimeError: 加载失败
         FileNotFoundError: tar 文件不存在
@@ -263,8 +273,8 @@ def load_image_tar(tar_path: Path, engine: str | None = None) -> bool:
         capture_output=True,
         text=True,
         timeout=600,
-        encoding='utf-8',
-        errors='replace',
+        encoding="utf-8",
+        errors="replace",
     )
     if proc.returncode != 0:
         raise ContainerRuntimeError(f"镜像加载失败: {proc.stderr}")
@@ -273,11 +283,11 @@ def load_image_tar(tar_path: Path, engine: str | None = None) -> bool:
 
 def load_image(config: ImageConfig, engine: str | None = None) -> bool:
     """加载基础镜像 tar (若已存在则跳过).
-    
+
     Args:
         config: 镜像配置
         engine: 容器引擎, None 表示自动检测
-        
+
     Returns:
         是否成功
     """
@@ -293,18 +303,18 @@ def build_image(
     engine: str | None = None,
 ) -> bool:
     """构建中间镜像.
-    
+
     使用容器引擎的 build 命令,从 Containerfile/Dockerfile 构建镜像.
-    
+
     Args:
         config: 镜像配置
         context: 构建上下文目录 (包含 Containerfile)
         build_args: 构建参数 (如 {"PYTHON_VERSION": "3.13"})
         engine: 容器引擎, None 表示自动检测
-        
+
     Returns:
         是否成功
-        
+
     Raises:
         ContainerRuntimeError: 构建失败
     """
@@ -313,9 +323,12 @@ def build_image(
 
     containerfile_path = str(context / config.containerfile)
     cmd = [
-        engine, "build",
-        "-t", config.build_name,
-        "-f", containerfile_path,
+        engine,
+        "build",
+        "-t",
+        config.build_name,
+        "-f",
+        containerfile_path,
     ]
     for k, v in (build_args or {}).items():
         cmd.extend(["--build-arg", f"{k}={v}"])
@@ -326,8 +339,8 @@ def build_image(
         capture_output=True,
         text=True,
         timeout=1800,
-        encoding='utf-8',
-        errors='replace',
+        encoding="utf-8",
+        errors="replace",
     )
     if proc.returncode != 0:
         raise ContainerRuntimeError(f"镜像构建失败: {proc.stderr}")
@@ -341,16 +354,16 @@ def save_image(
     generate_checksum: bool = True,
 ) -> bool:
     """将本地镜像导出为 tar.
-    
+
     Args:
         name: 镜像名称或 tag
         tar_path: 输出 tar 文件路径
         engine: 容器引擎, None 表示自动检测
         generate_checksum: 是否生成 SHA256 校验文件
-        
+
     Returns:
         是否成功
-        
+
     Raises:
         ContainerRuntimeError: 导出失败
     """
@@ -363,8 +376,8 @@ def save_image(
         capture_output=True,
         text=True,
         timeout=600,
-        encoding='utf-8',
-        errors='replace',
+        encoding="utf-8",
+        errors="replace",
     )
     if proc.returncode != 0:
         raise ContainerRuntimeError(f"镜像导出失败: {proc.stderr}")
@@ -383,12 +396,12 @@ def cleanup_orphan_containers(
     engine: str | None = None,
 ) -> int:
     """清理名称匹配 name_prefix 且运行超过 max_age_hours 的孤儿容器.
-    
+
     Args:
         name_prefix: 容器名称前缀
         max_age_hours: 最大存活时间 (小时)
         engine: 容器引擎, None 表示自动检测
-        
+
     Returns:
         被清理的容器数量
     """
@@ -397,18 +410,24 @@ def cleanup_orphan_containers(
 
     # 列出所有匹配前缀的容器 (running + exited)
     proc = subprocess.run(
-        [engine, "ps", "-a", "--filter", f"name={name_prefix}",
-         "--format", "{{.ID}} {{.CreatedAt}}"],
+        [
+            engine,
+            "ps",
+            "-a",
+            "--filter",
+            f"name={name_prefix}",
+            "--format",
+            "{{.ID}} {{.CreatedAt}}",
+        ],
         capture_output=True,
         text=True,
         timeout=30,
-        encoding='utf-8',
-        errors='replace',
+        encoding="utf-8",
+        errors="replace",
     )
     if proc.returncode != 0 or not proc.stdout.strip():
         return 0
 
-    now = time.time()
     cleaned = 0
     for line in proc.stdout.strip().splitlines():
         parts = line.split(" ", 1)
@@ -422,8 +441,8 @@ def cleanup_orphan_containers(
             capture_output=True,
             text=True,
             timeout=10,
-            encoding='utf-8',
-            errors='replace',
+            encoding="utf-8",
+            errors="replace",
         )
         if inspect.returncode != 0:
             continue
@@ -441,11 +460,7 @@ def cleanup_orphan_containers(
             continue
 
         if age_hours > max_age_hours:
-            subprocess.run(
-                [engine, "rm", "-f", cid],
-                capture_output=True,
-                timeout=30
-            )
+            subprocess.run([engine, "rm", "-f", cid], capture_output=True, timeout=30)
             cleaned += 1
 
     return cleaned

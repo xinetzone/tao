@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Any
+from typing import Any, Self
 
 import scripts.generate_report as generate_report
 import scripts.run_eval as run_eval
@@ -18,7 +18,7 @@ class _FakeExecutor:
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.futures: list[_FakeFuture] = []
 
-    def __enter__(self) -> _FakeExecutor:
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> bool:

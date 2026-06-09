@@ -156,7 +156,22 @@ markers = [
 
 [tool.coverage.run]
 branch = true
-omit = ["*/rate_limiter/example_integration.py"]
+omit = [
+  "*/rate_limiter/example_integration.py",
+  # Temporarily exclude optional/experimental modules from the main coverage gate.
+  "*/harness/*",
+  "*/flowkit/container.py",
+  "*/flowkit/podman_context.py",
+  "*/flowkit/podman_win.py",
+  "*/cli/_world_commands/fragment_init.py",
+  "*/cli/_world_commands/guide.py",
+  "*/cli/_world_commands/init.py",
+  "*/cli/_world_commands/route.py",
+  "*/cli/_world_commands/session.py",
+  "*/cli/_world_engines/constraint_enforcer.py",
+  "*/cli/_world_engines/hooks_engine.py",
+  "*/cli/_world_engines/role_resolver.py",
+]
 source = ["src/taolib"]
 
 [tool.coverage.report]

@@ -88,7 +88,9 @@ def test_all_repository_role_files_declare_layer():
 
     roles_dir = Path(__file__).resolve().parent.parent / ".agents" / "roles"
     role_files = sorted(
-        path for path in roles_dir.rglob("*.md") if path.is_file() and path.name != "README.md"
+        path
+        for path in roles_dir.rglob("*.md")
+        if path.is_file() and path.name != "README.md"
     )
 
     missing_layer = []
@@ -193,9 +195,9 @@ skills = []
 
     assert warnings == []
     assert role_ids == ["loose-governor"]
-    assert any(
-        "non_goals_enforced" in msg and "governance" in msg for msg in errors
-    ), errors
+    assert any("non_goals_enforced" in msg and "governance" in msg for msg in errors), (
+        errors
+    )
 
 
 def test_all_repository_governance_roles_have_non_goals_enforced_true():
@@ -232,8 +234,7 @@ def test_all_repository_governance_roles_have_non_goals_enforced_true():
             offenders.append(role_file.name)
 
     assert offenders == [], (
-        "以下 governance 角色未开启 non_goals_enforced 硬约束："
-        + ", ".join(offenders)
+        "以下 governance 角色未开启 non_goals_enforced 硬约束：" + ", ".join(offenders)
     )
 
 
@@ -341,9 +342,9 @@ frontmatter 与正文 Non-Goals 不一致示例。
 
     assert warnings == []
     assert role_ids == ["drifted-governor"]
-    assert any(
-        "drifted-governor" in msg and "Non-Goals" in msg for msg in errors
-    ), errors
+    assert any("drifted-governor" in msg and "Non-Goals" in msg for msg in errors), (
+        errors
+    )
 
 
 def test_all_repository_governance_role_bodies_match_non_goals_items():
@@ -366,8 +367,7 @@ def test_all_repository_governance_role_bodies_match_non_goals_items():
     errors, _, _ = module.validate(repo_root / ".agents")
 
     body_drift = [
-        msg for msg in errors
-        if "Non-Goals" in msg and msg.startswith("ERROR:")
+        msg for msg in errors if "Non-Goals" in msg and msg.startswith("ERROR:")
     ]
     assert body_drift == [], (
         "以下 governance 角色 body 与 non_goals.items 不一致：\n"

@@ -288,7 +288,9 @@ def main() -> int:
             )
             print(" | ".join(row))
 
-    failed = [result for result in results if not result.ok and result.fix != "mise run sync"]
+    failed = [
+        result for result in results if not result.ok and result.fix != "mise run sync"
+    ]
     if failed or consistency_issues:
         if failed:
             print('\n存在工具版本或可用性不一致，请按"修复命令"列处理。')
@@ -297,7 +299,9 @@ def main() -> int:
         return 1
 
     # 非强制项目有警告但不阻断
-    warnings = [result for result in results if not result.ok and result.fix == "mise run sync"]
+    warnings = [
+        result for result in results if not result.ok and result.fix == "mise run sync"
+    ]
     if warnings:
         print("\n提示：部分开发工具尚未安装（非阻断），请运行 mise run sync。")
     else:

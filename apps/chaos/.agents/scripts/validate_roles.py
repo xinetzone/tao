@@ -347,9 +347,7 @@ def _validate_role_file(
     ):
         non_goals_table = data.get("non_goals") if isinstance(data, dict) else None
         items = (
-            non_goals_table.get("items")
-            if isinstance(non_goals_table, dict)
-            else None
+            non_goals_table.get("items") if isinstance(non_goals_table, dict) else None
         )
         if not isinstance(items, list) or not items:
             errors.append(
@@ -372,13 +370,9 @@ def _validate_role_file(
                     extra = [item for item in actual if item not in expected]
                     detail_parts: list[str] = []
                     if missing:
-                        detail_parts.append(
-                            "missing in body: " + "; ".join(missing)
-                        )
+                        detail_parts.append("missing in body: " + "; ".join(missing))
                     if extra:
-                        detail_parts.append(
-                            "extra in body: " + "; ".join(extra)
-                        )
+                        detail_parts.append("extra in body: " + "; ".join(extra))
                     errors.append(
                         f"ERROR: role '{role_id}' ## Non-Goals body must "
                         "match non_goals.items exactly "

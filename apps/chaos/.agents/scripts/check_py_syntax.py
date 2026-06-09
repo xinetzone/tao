@@ -18,9 +18,23 @@ from pathlib import Path
 
 # 跳过的目录（虚拟环境、构建产物、缓存、临时文件）
 _SKIP_DIRS: frozenset[str] = frozenset(
-    {".venv", "venv", ".tox", "__pycache__", ".temp", "node_modules",
-     ".git", ".mypy_cache", ".pytest_cache", ".ruff_cache",
-     "_build", "htmlcov", "dist", "build", "*.egg-info"}
+    {
+        ".venv",
+        "venv",
+        ".tox",
+        "__pycache__",
+        ".temp",
+        "node_modules",
+        ".git",
+        ".mypy_cache",
+        ".pytest_cache",
+        ".ruff_cache",
+        "_build",
+        "htmlcov",
+        "dist",
+        "build",
+        "*.egg-info",
+    }
 )
 
 # 跳过的目录前缀（如 old/ 归档代码）

@@ -67,3 +67,46 @@ except (FileNotFoundError, OSError):
 
 - 使用 ruff 的 `UP024` / `B904` 规则自动检测并修复。
 - 全库扫描命令：`rg "except \w+," --type py` 可快速定位问题行。
+
+### 5.1 Python 3.13+ 注解策略
+
+- 项目代码不使用 `from __future__ import annotations`。
+- 默认不使用字符串形式的类型注解；如 Ruff 可提供自动修复，应遵循 Ruff 的注解现代化建议。
+- 类体内避免直接使用尚未完成定义的类名进行自引用注解。
+- 返回当前实例类型时优先使用 `typing.Self`。
+- 仅在类型无法稳定表达、外部库类型不可用，或为避免运行时前向引用求值问题时使用 `Any`；使用范围应尽量收敛到内部实现细节。
+
+## 6. 标准验证命令
+
+Python 相关修改完成后，优先使用以下命令进行验证：
+
+```powershell
+uv run --no-sync ruff check .
+uv run --no-sync ruff format --check .
+uv run --no-sync pytest tests/flowkit/test_flowkit.py
+```
+
+如全量检查被历史遗留问题阻塞，应说明阻塞原因，并对本次变更涉及的文件或目录执行 targeted check。
+
+### 6.1 Targeted check 分层指引
+
+针对大型项目或存在历史遗留问题的工作区，应按影响范围选择最小充分验证命令：
+
+```powershell
+# 全量检查
+uv run --no-sync ruff check .
+uv run --no-sync ruff format --check .
+
+# 单包 / 单目录检查
+uv run --no-sync ruff check src/taolib/flowkit tests/flowkit
+uv run --no-sync ruff format --check src/taolib/flowkit tests/flowkit
+
+# 单文件检查
+uv run --no-sync ruff check src/taolib/flowkit/podman_win.py
+uv run --no-sync ruff format --check src/taolib/flowkit/podman_win.py
+
+# 跳过同步 / 构建的快速测试
+uv run --no-sync pytest tests/flowkit/test_flowkit.py
+```
+
+优先选择全量检查；当全量检查受本地文件锁、构建缓存或无关历史问题阻塞时，降级到单包、单目录或单文件检查，并在结果中明确说明降级原因。

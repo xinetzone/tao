@@ -1,6 +1,6 @@
 [build-system]
-build-backend = "pdm.backend"
-requires = ["pdm-backend"]
+build-backend = "scikit_build_core.build"
+requires = ["scikit-build-core[pyproject]>=0.12", "setuptools-scm>=8"]
 
 [project]
 authors = [{ name = "xinetzone", email = "735613050@qq.com" }]
@@ -12,7 +12,7 @@ name = "taolib"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "podman>=5.8.0",
+    "packaging>=24,<26",
 ]
 
 [project.optional-dependencies]
@@ -87,15 +87,19 @@ harness-dev = [
     "hypothesis",
 ]
 
-[tool.pdm.version]
-source = "scm"
-fallback_version = "0.0.0"
-write_to = "taolib/_version.py"
-write_template = "__version__ = '{}'\n"
+[tool.scikit-build]
+minimum-version = "build-system.requires"
+metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
+sdist.include = ["README.md", "LICENSE", "pyproject.toml", "src/taolib"]
+sdist.exclude = ["src/taolib/**/__pycache__/**", "src/taolib/**/*.pyc", "src/taolib/**/*.pyo"]
+sdist.cmake = false
+wheel.packages = ["src/taolib"]
+wheel.cmake = false
 
-[tool.pdm.build]
-includes = ["src/taolib"]
-package-dir = "src"
+[tool.setuptools_scm]
+fallback_version = "0.0.0"
+version_file = "src/taolib/_version.py"
+version_file_template = "__version__ = '{version}'\n"
 
 [tool.ruff]
 exclude = [".git", ".venv", "doc/_build", ".pytest_cache", "__pycache__", ".agents/docs/references/projects/maple-mono/examples.ipynb"]

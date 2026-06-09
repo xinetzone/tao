@@ -4,25 +4,27 @@
 
 ## 构建后端
 
-本项目采用 **PDM** 作为构建后端，配置位于 `pyproject.toml`：
+本项目采用 **scikit-build-core** 作为构建后端，配置位于 `pyproject.toml`：
 
 ```toml
 [build-system]
-build-backend = "pdm.backend"
-requires = ["pdm-backend"]
+build-backend = "scikit_build_core.build"
+requires = ["scikit-build-core[pyproject]>=0.12", "setuptools-scm>=8"]
 ```
 
-`pdm-backend` 原生支持 PEP 621 元数据与 `src/` 布局，无需额外配置即可正确识别包结构。
+`scikit-build-core` 负责 PEP 517 构建流程与 PEP 621 元数据读取，当前项目仍是纯 Python 包，不依赖主包 C/C++ 扩展。
 
-- **包目录映射**：源代码位于 `src/taolib/`，通过 `tool.pdm.build` 显式声明：
+- **包目录映射**：源代码位于 `src/taolib/`，通过 `tool.scikit-build` 显式声明：
 
 ```toml
-[tool.pdm.build]
-includes = ["src/taolib"]
-package-dir = "src"
+[tool.scikit-build]
+wheel.packages = ["src/taolib"]
+sdist.include = ["README.md", "LICENSE", "pyproject.toml", "src/taolib"]
+wheel.cmake = false
+sdist.cmake = false
 ```
 
-这种 `src/` 布局可避免开发时误导入未安装的源码，确保测试与 CI 均基于真实安装态运行。
+这种 `src/` 布局可避免开发时误导入未安装的源码，确保测试与 CI 均基于真实安装态运行。`wheel.cmake = false` 与 `sdist.cmake = false` 表示当前纯 Python wheel / sdist 不强制执行 CMake；后续若引入原生扩展，再按需启用 CMake 构建。
 
 ## 依赖分组策略
 
@@ -117,20 +119,23 @@ PYTHONUTF8 = "1"
 
 ## 版本管理
 
-项目采用 **动态版本** 策略，由 `pdm-backend` 的 SCM 源从 git tag 自动派生：
+项目采用 **动态版本** 策略，由 setuptools-scm 从 git tag 自动派生，并通过 scikit-build-core 动态元数据提供给构建后端：
 
 ```toml
 [project]
 dynamic = ["version"]
 
-[tool.pdm.version]
-source = "scm"
-write_to = "taolib/_version.py"
-write_template = "__version__ = '{}'\n"
+[tool.scikit-build]
+metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
+
+[tool.setuptools_scm]
+fallback_version = "0.0.0"
+version_file = "src/taolib/_version.py"
+version_file_template = "__version__ = '{version}'\n"
 ```
 
-`write_to` 路径相对于 `package-dir = "src"`，因此实际写入 `src/taolib/_version.py`。
-版本号不硬编码于 `pyproject.toml`，而是由构建后端在打包时从 git tag 自动派生。这种方式确保：
+`version_file` 使用相对于项目根目录的路径，构建时实际写入 `src/taolib/_version.py`。
+版本号不硬编码于 `pyproject.toml`，而是由 setuptools-scm 在打包时从 git tag 自动派生。这种方式确保：
 
 - 源码中无需手动维护版本字符串
 - 发布流程与 Git 标签天然对齐
@@ -140,16 +145,17 @@ write_template = "__version__ = '{}'\n"
 
 ### 配置要点
 
-> ⚠️ **`dynamic` 与 `[tool.pdm.version]` 必须并存**：
+> ⚠️ **`dynamic`、`metadata.version.provider` 与 `[tool.setuptools_scm]` 必须配套**：
 >
-> - 仅声明 `dynamic = ["version"]` 而缺失 `[tool.pdm.version]` 段时，pdm-backend 会兜底为 `0.0.0`，导致 wheel 文件名与 git tag 完全脱节。
-> - 仅有 `[tool.pdm.version]` 而 `[project]` 没声明 `dynamic`，则版本源配置不会生效。
+> - `[project] dynamic = ["version"]` 声明版本由构建阶段动态提供。
+> - `[tool.scikit-build] metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"` 将版本元数据交给 setuptools-scm 解析。
+> - `[tool.setuptools_scm] version_file = "src/taolib/_version.py"` 负责把构建版本写入运行时代码可导入的位置。
 
 运行时入口 `src/taolib/__init__.py` 通过 `from ._version import __version__` 暴露版本号，并在源码树直接运行（未构建安装）时回退到 `importlib.metadata.version("taolib")`，再降级到 `0.0.0+unknown`。
 
-### PDM SCM 版本派生规则（PEP 440）
+### setuptools-scm 版本派生规则（PEP 440）
 
-`pdm-backend` 的 SCM 源遵循 PEP 440 + setuptools-scm 风格规则，**版本号会诚实反映工作树状态**：
+setuptools-scm 遵循 PEP 440 规则，**版本号会诚实反映工作树状态**：
 
 | git 状态 | 派生版本号示例 | 适用场景 |
 |---|---|---|
@@ -176,7 +182,7 @@ flowchart LR
 
 - **第 1 道**：`.github/workflows/release.yml` 在打 tag 前执行 `git status --porcelain` 校验
 - **第 2 道**：`.github/workflows/python-publish.yml` 在 `mise run package-build` 之前再次校验
-- **第 3 道**：`pyproject.toml` 中 `[tool.pdm.version]` 派生规则本身
+- **第 3 道**：`pyproject.toml` 中 setuptools-scm 动态版本派生规则本身
 
 ### 本地构建发布产物的正确姿势
 

@@ -221,14 +221,14 @@ mise run docs-linkcheck
 
 | 配置文件 | 作用 |
 |----------|------|
-| `pyproject.toml` | Python 包元数据、PDM 构建后端、依赖分组、Ruff、pytest 与 coverage 配置。 |
+| `pyproject.toml` | Python 包元数据、scikit-build-core 构建后端、依赖分组、Ruff、pytest 与 coverage 配置。 |
 | `mise.toml` | 统一锁定 Python、uv、Node.js、defuddle 等工具版本，并声明跨平台任务入口。 |
 | `uv.lock` | 锁定依赖解析结果，保障开发、测试与 CI 环境可复现。 |
 | `.pre-commit-config.yaml` | 管理提交前质量检查 hooks。 |
 | `docs/conf.py` | Sphinx 文档构建主配置。 |
 | `docs/_config.toml` | 文档站主题与展示选项配置。 |
 
-项目采用 `src/` 布局，运行时代码位于 `src/taolib/`；构建后端为 PDM，版本号通过 SCM 动态派生，发布产物会随 Git 标签与工作树状态自动反映版本信息。
+项目采用 `src/` 布局，运行时代码位于 `src/taolib/`；构建后端为 scikit-build-core，版本号由 setuptools-scm 通过 scikit-build-core 动态元数据派生并写入 `src/taolib/_version.py`。当前发布产物为纯 Python wheel，不强制执行 CMake。
 
 ### 7. 升级与排障
 

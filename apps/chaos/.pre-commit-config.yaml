@@ -15,6 +15,7 @@ repos:
     rev: v0.15.14
     hooks:
       - id: ruff
+        # 保持仅拦截，不开启 --unsafe-fixes，避免在本地或 CI 中引入额外自动改写。
         args: [--fix]
       - id: ruff-format
 

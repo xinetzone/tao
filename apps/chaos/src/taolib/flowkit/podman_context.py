@@ -60,12 +60,15 @@ class ContainerRun:
     每个实例管理独立的 Podman 连接，支持并行执行多个容器。
 
     Attributes:
-        host_path: 宿主机目录路径。
-        name: 容器名称。
-        target: 容器内挂载目标路径。
-        working_dir: 容器内工作目录。
         image: 容器镜像名称。
+        host_path: 宿主机目录路径，为 None 时不挂载 bind 卷。
+        target: 容器内挂载目标路径，为 None 时不挂载 bind 卷。
+        working_dir: 容器内工作目录，为 None 时使用镜像默认值。
+        name: 容器名称，为 None 时由 Podman 自动生成。
         command: 容器主命令列表，默认为 ["sleep", "infinity"] 以保持容器存活。
+        run_kwargs: 透传给 containers.run() 的额外关键字参数。
+        network_mode: 容器网络模式（如 "bridge"、"host"、"none"），为 None 时使用 Podman 默认值。
+        start_container: 是否启动容器，默认 True。置为 False 时只建立客户端连接。
 
     Example:
         # 单命令模式
@@ -121,13 +124,17 @@ class ContainerRun:
         >>> asyncio.run(main())
     """
 
-    host_path: Path
-    name: str
-    target: str
-    working_dir: str
     image: str
+    host_path: Path | None = None
+    target: str | None = None
+    working_dir: str | None = None
+    name: str | None = None
     command: list[str] = field(default_factory=list)
     volumes: dict[str, str] = field(default_factory=dict)
+    client_kwargs: dict[str, Any] = field(default_factory=dict)
+    run_kwargs: dict[str, Any] = field(default_factory=dict)
+    network_mode: str | None = None
+    start_container: bool = True
 
     # 内部状态
     _pctx: PodmanContext | None = field(default=None, init=False)
@@ -180,10 +187,12 @@ class ContainerRun:
         if not self._container:
             raise RuntimeError("容器未启动，请先通过 with 语句进入上下文")
 
+        # 流式输出容器日志：逐块读取并实时打印到标准输出
         if stream_logs:
             for chunk in self._container.logs(stream=True, follow=True):
                 print(chunk.decode(errors="replace"), end="")
 
+        # wait() 在不同 SDK 版本中返回值不同：dict 或 int，兼容处理
         result = self._container.wait()
         self._exit_code = result["StatusCode"] if isinstance(result, dict) else result
         return self._exit_code
@@ -222,9 +231,11 @@ class ContainerRun:
 
         exit_code, output = self._container.exec_run(
             cmd,
+            # workdir or self.working_dir 为 None 时，exec_run 使用容器默认工作目录
             workdir=workdir or self.working_dir,
             tty=True,
         )
+        # exec_run 的 output 在不同模式下返回 bytes 或 str，统一处理
         if isinstance(output, bytes):
             sys.stdout.buffer.write(output)
             sys.stdout.buffer.flush()
@@ -290,50 +301,100 @@ class ContainerRun:
     def _start(self) -> None:
         """创建 Podman 连接、挂载卷、清理同名旧容器、启动后台容器。
 
+        执行流程：
+        1. 根据 host_path 是否为空，选择不同的客户端创建策略
+        2. 构建挂载列表（bind 挂载 + 命名卷）
+        3. 若指定了容器名，清理可能的同名旧容器
+        4. 若 start_container 为 True，启动后台容器
+
         Raises:
             ContainerRunError: 容器启动失败。
         """
         try:
-            self._pctx = _get_podman_context(self.host_path)
-            self._client = (
-                self._pctx.ctx.client() if sys.platform == "win32" else self._pctx.ctx
-            )
+            # ── 1. 创建 Podman 客户端 ──
+            if self.host_path is not None:
+                # 有宿主机路径：走跨平台路径转换流程
+                # Windows 下 PodmanSSHClient 返回的是包装对象，需调用 .client()
+                # Linux/macOS 下 _get_podman_context 直接返回 PodmanClient
+                self._pctx = _get_podman_context(
+                    self.host_path, **self.client_kwargs
+                )
+                self._client = (
+                    self._pctx.ctx.client()
+                    if sys.platform == "win32"
+                    else self._pctx.ctx
+                )
+            else:
+                # 无宿主机路径：直接创建 PodmanClient，不做路径转换
+                from podman import PodmanClient
 
-            mounts = [
-                {
-                    "type": "bind",
-                    "source": self._pctx.host_path_str,
-                    "target": self.target,
-                },
-            ]
+                self._client = PodmanClient(**self.client_kwargs)
+
+            # ── 2. 构建挂载列表 ──
+            mounts: list[dict[str, Any]] = []
+            # bind 挂载：将宿主机目录映射到容器内
+            if self.host_path is not None and self.target is not None:
+                mounts.append(
+                    {
+                        "type": "bind",
+                        "source": self._pctx.host_path_str,
+                        "target": self.target,
+                    },
+                )
+            # 命名卷挂载：Podman 管理的持久化存储卷
             for vol_src, vol_target in self.volumes.items():
                 mounts.append(
                     {"type": "volume", "source": vol_src, "target": vol_target}
                 )
 
-            # 清理上次可能遗留的同名容器
-            try:
-                old = self._client.containers.get(self.name)
-                old.remove(force=True)
-            except Exception:
-                pass
+            # ── 3. 清理同名旧容器 ──
+            # 仅在显式指定容器名时才清理，避免误删自动命名的容器
+            if self.name is not None:
+                try:
+                    old = self._client.containers.get(self.name)
+                    old.remove(force=True)
+                except Exception:
+                    pass
 
-            self._container = self._client.containers.run(
-                image=self.image,
-                command=self.command or ["sleep", "infinity"],
-                name=self.name,
-                mounts=mounts,
-                working_dir=self.working_dir,
-                tty=True,
-                stdin_open=True,
-                detach=True,
-            )
+            # ── 4. 仅建连接模式 ──
+            # start_container=False 时跳过容器创建，仅管理客户端生命周期
+            if not self.start_container:
+                return
+
+            # ── 5. 构建容器运行参数并启动 ──
+            # 固定参数：所有容器都必须的配置
+            run_params: dict[str, Any] = {
+                "image": self.image,
+                "command": self.command or ["sleep", "infinity"],
+                "tty": True,
+                "stdin_open": True,
+                "detach": True,
+            }
+            # 条件参数：仅在显式设置时才传入，避免覆盖 SDK 默认行为
+            if self.name is not None:
+                run_params["name"] = self.name
+            if mounts:
+                run_params["mounts"] = mounts
+            if self.working_dir is not None:
+                run_params["working_dir"] = self.working_dir
+            if self.network_mode is not None:
+                run_params["network_mode"] = self.network_mode
+            # 用户自定义参数最后合并，允许覆盖以上所有参数
+            run_params.update(self.run_kwargs)
+
+            self._container = self._client.containers.run(**run_params)
         except Exception as exc:
             self._cleanup()
             raise ContainerRunError(f"容器启动失败: {exc}") from exc
 
     def _cleanup(self) -> None:
-        """清理资源：容器 → 客户端 → SSH 隧道。"""
+        """清理资源：容器 → 客户端 → SSH 隧道。
+
+        按顺序释放：先强制删除容器，再关闭客户端连接，
+        Windows 下还需关闭 SSH 隧道进程。
+        所有清理操作均忽略异常，确保不会因清理失败而中断退出流程。
+        """
+        # 强制删除容器 + 关闭客户端连接
         for obj, action in [
             (self._container, lambda o: o.remove(force=True)),
             (self._client, lambda o: o.close()),
@@ -344,7 +405,12 @@ class ContainerRun:
                 except Exception:
                     pass
 
-        if sys.platform == "win32" and self._pctx is not None:
+        # Windows 下 SSH 客户端通过子进程隧道连接，需额外关闭隧道进程
+        if (
+            sys.platform == "win32"
+            and self._pctx is not None
+            and hasattr(self._pctx.ctx, "_tunnel")
+        ):
             try:
                 self._pctx.ctx._tunnel.stop()
             except Exception:
@@ -357,14 +423,19 @@ class ContainerRun:
 def _win_to_unix(path: str) -> str:
     """将 Windows 路径转为 Unix 路径，供 Linux Podman 主机使用。
 
+    Windows Podman 通过虚拟机运行，容器内的 Linux 需要 Unix 风格路径。
+    盘符（如 C:）会被映射到 $PODMAN_WIN_MNT_PREFIX（默认 /mnt）下。
+
     Args:
-        path: Windows 风格路径字符串。
+        path: Windows 风格路径字符串，如 "C:\\Users\\foo\\bar"。
 
     Returns:
-        Unix 风格路径字符串，盘符映射到 PODMAN_WIN_MNT_PREFIX 下。
+        Unix 风格路径字符串，如 "/mnt/c/Users/foo/bar"。
     """
     prefix = os.environ.get("PODMAN_WIN_MNT_PREFIX", "/mnt")
+    # 统一反斜杠为正斜杠
     path = path.replace("\\", "/")
+    # 检测盘符（如 "C:"），映射为 /mnt/c 格式
     if len(path) >= 2 and path[1] == ":":
         drive = path[0].lower()
         path = f"{prefix}/{drive}{path[2:]}"
@@ -374,11 +445,17 @@ def _win_to_unix(path: str) -> str:
 def _get_active_podman_machine() -> str:
     """获取当前正在运行的 podman machine 名称。
 
-    未找到运行中的 machine 时，fallback 到默认名称。
+    通过 `podman machine list` 解析输出，找到 LastUp 不为空
+    和 "Never" 的机器。未找到运行中的 machine 时，fallback 到默认名称
+    "podman-machine-default"。
+
+    Returns:
+        运行中的 podman machine 名称。
     """
     import subprocess as _sp
 
     try:
+        # --format 输出格式为 "机器名 最后启动时间"
         r = _sp.run(
             ["podman", "machine", "list", "--format", "{{.Name}} {{.LastUp}}"],
             capture_output=True,
@@ -387,34 +464,40 @@ def _get_active_podman_machine() -> str:
         )
         for line in r.stdout.strip().splitlines():
             parts = line.split(maxsplit=1)
+            # 第二列为空或 "Never" 表示从未启动，跳过
             if len(parts) == 2 and parts[1].strip() not in ("", "Never"):
+                # 去除当前活跃标记（* 后缀）
                 return parts[0].rstrip("*")
     except Exception:
         pass
     return "podman-machine-default"
 
 
-def _get_podman_context(host_path: Path) -> PodmanContext:
+def _get_podman_context(host_path: Path, **kwargs: Any) -> PodmanContext:
     """根据平台获取 Podman 客户端和宿主机路径字符串。
 
-    Windows 下通过 SSH 隧道使用 PodmanClient；
-    Linux/macOS 下直接使用 Unix socket。
+    Windows 下 Podman 运行在虚拟机中，需要通过 SSH 连接，并且宿主机
+    路径需要转换为 Unix 格式。Linux/macOS 下 Podman 直接运行在宿主机上，
+    通过 Unix socket 连接。
 
     Args:
         host_path: 宿主机目录路径。
+        **kwargs: 透传给 PodmanClient 或 PodmanSSHClient 的额外参数。
 
     Returns:
         PodmanContext 实例，包含路径字符串和客户端。
     """
     if sys.platform == "win32":
+        # Windows：路径转 Unix + SSH 连接
         host_path_str = _win_to_unix(str(host_path))
         from .podman_win import PodmanSSHClient
 
         machine = _get_active_podman_machine()
-        ctx = PodmanSSHClient(machine_name=machine)
+        ctx = PodmanSSHClient(machine_name=machine, **kwargs)
     else:
+        # Linux/macOS：路径原样 + Unix socket 连接
         host_path_str = str(host_path)
         from podman import PodmanClient
 
-        ctx = PodmanClient()
+        ctx = PodmanClient(**kwargs)
     return PodmanContext(host_path_str=host_path_str, ctx=ctx)

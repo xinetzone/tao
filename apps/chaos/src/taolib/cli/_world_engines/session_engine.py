@@ -250,19 +250,55 @@ def ensure_state_dir(agents_dir: Path) -> Path:
 # ---------------------------------------------------------------------------
 
 
+def _toml_basic_string(value: str) -> str:
+    """将任意字符串编码为 TOML basic string，转义所有特殊字符。
+
+    处理双引号、反斜杠、换行、回车、制表符，确保写入后仍可被
+    ``tomllib`` 正确回读。
+
+    Args:
+        value: 原始字符串。
+
+    Returns:
+        带双引号包裹的转义后字符串，可直接嵌入 TOML 模板。
+    """
+    escaped = (
+        str(value)
+        .replace("\\", "\\\\")
+        .replace("\n", "\\n")
+        .replace("\r", "\\r")
+        .replace("\t", "\\t")
+        .replace('"', '\\"')
+    )
+    return f'"{escaped}"'
+
+
+def _toml_string_array(values: list[str]) -> str:
+    """将字符串列表编码为 TOML 内联数组，每个元素复用 ``_toml_basic_string``。
+
+    Args:
+        values: 字符串列表。
+
+    Returns:
+        TOML 内联数组文本，如 ``["a", "b c"]``。
+    """
+    return "[" + ", ".join(_toml_basic_string(v) for v in values) + "]"
+
+
 def _format_manifest_toml(manifest: SessionManifest) -> str:
     """将 SessionManifest 序列化为 manifest.toml 文本。"""
-    runtimes = ", ".join(f'"{r}"' for r in manifest.allowed_runtimes)
     # TOML 无 null 字面量；task_id 缺省时写空字符串，加载时再转为 None
     task_id_line = (
-        f'task_id = "{manifest.task_id}"' if manifest.task_id else 'task_id = ""'
+        f"task_id = {_toml_basic_string(manifest.task_id)}"
+        if manifest.task_id
+        else 'task_id = ""'
     )
     return (
         "[session]\n"
-        f'id = "{manifest.id}"\n'
-        f'title = "{manifest.title}"\n'
-        f'created_by = "{manifest.created_by}"\n'
-        f'created_at = "{manifest.created_at}"\n'
+        f"id = {_toml_basic_string(manifest.id)}\n"
+        f"title = {_toml_basic_string(manifest.title)}\n"
+        f"created_by = {_toml_basic_string(manifest.created_by)}\n"
+        f"created_at = {_toml_basic_string(manifest.created_at)}\n"
         'schema_version = "world-session-v1"\n'
         "\n"
         "[session.task]\n"
@@ -270,12 +306,12 @@ def _format_manifest_toml(manifest: SessionManifest) -> str:
         'parent_session = ""\n'
         "\n"
         "[session.allowed_runtimes]\n"
-        f"runtimes = [{runtimes}]\n"
+        f"runtimes = {_toml_string_array(manifest.allowed_runtimes)}\n"
         "\n"
         "[session.status]\n"
-        f'state = "{manifest.state}"\n'
+        f"state = {_toml_basic_string(manifest.state)}\n"
         f"last_event_seq = {manifest.last_event_seq}\n"
-        f'last_writer = "{manifest.last_writer}"\n'
+        f"last_writer = {_toml_basic_string(manifest.last_writer)}\n"
     )
 
 
@@ -283,13 +319,13 @@ def _format_lock_toml(lock: LockInfo) -> str:
     """将 LockInfo 序列化为 lock.toml 文本。"""
     return (
         "[holder]\n"
-        f'surface = "{lock.surface}"\n'
-        f'instance_id = "{lock.instance_id}"\n'
-        f'actor = "{lock.actor}"\n'
+        f"surface = {_toml_basic_string(lock.surface)}\n"
+        f"instance_id = {_toml_basic_string(lock.instance_id)}\n"
+        f"actor = {_toml_basic_string(lock.actor)}\n"
         "\n"
         "[lease]\n"
-        f'acquired_at = "{lock.acquired_at}"\n'
-        f'lease_until = "{lock.lease_until}"\n'
+        f"acquired_at = {_toml_basic_string(lock.acquired_at)}\n"
+        f"lease_until = {_toml_basic_string(lock.lease_until)}\n"
         f"renew_count = {lock.renew_count}\n"
     )
 
@@ -303,10 +339,10 @@ def _format_event_block(event: SessionEvent) -> str:
         "",
         "[[event]]",
         f"seq = {event.seq}",
-        f'ts = "{event.ts}"',
-        f'surface = "{event.surface}"',
-        f'actor = "{event.actor}"',
-        f'type = "{event.type}"',
+        f"ts = {_toml_basic_string(event.ts)}",
+        f"surface = {_toml_basic_string(event.surface)}",
+        f"actor = {_toml_basic_string(event.actor)}",
+        f"type = {_toml_basic_string(event.type)}",
         "",
         "[event.payload]",
     ]
@@ -318,12 +354,13 @@ def _format_event_block(event: SessionEvent) -> str:
         elif isinstance(v, int | float):
             lines.append(f"{k} = {v}")
         elif isinstance(v, list):
-            items = ", ".join(f'"{i}"' if isinstance(i, str) else str(i) for i in v)
-            lines.append(f"{k} = [{items}]")
+            if all(isinstance(i, str) for i in v):
+                lines.append(f"{k} = {_toml_string_array(v)}")
+            else:
+                items = ", ".join(str(i) for i in v)
+                lines.append(f"{k} = [{items}]")
         else:
-            # 字符串：转义双引号和反斜杠
-            escaped = str(v).replace("\\", "\\\\").replace('"', '\\"')
-            lines.append(f'{k} = "{escaped}"')
+            lines.append(f"{k} = {_toml_basic_string(str(v))}")
     lines.append("")
     return "\n".join(lines)
 
@@ -558,10 +595,10 @@ def update_index(state_dir: Path, manifest: SessionManifest) -> None:
     lines: list[str] = []
     for entry in entries:
         lines.append("[[session]]")
-        lines.append(f'id = "{entry["id"]}"')
-        lines.append(f'title = "{entry["title"]}"')
-        lines.append(f'state = "{entry["state"]}"')
-        lines.append(f'created_at = "{entry["created_at"]}"')
+        lines.append(f"id = {_toml_basic_string(entry['id'])}")
+        lines.append(f"title = {_toml_basic_string(entry['title'])}")
+        lines.append(f"state = {_toml_basic_string(entry['state'])}")
+        lines.append(f"created_at = {_toml_basic_string(entry['created_at'])}")
         lines.append("")
 
     index_path = state_dir / _INDEX_FILENAME

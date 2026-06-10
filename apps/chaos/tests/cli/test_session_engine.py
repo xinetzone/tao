@@ -185,6 +185,88 @@ def test_load_manifest_not_found(tmp_path: Path) -> None:
 
 
 # ---------------------------------------------------------------------------
+# 3a. manifest / index 特殊字符 round-trip
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "title",
+    [
+        'a"b',              # 双引号
+        "a\\b",             # 反斜杠
+        "a\nb",             # 换行
+        'a"b\\c\nd',        # 混合
+        '{"key": "val"}',   # JSON 风格
+        "为帛书《老子》做注疏",  # CJK + 书名号
+        "a\tb",             # 制表符
+        "line1\r\nline2",   # CRLF
+    ],
+)
+def test_create_session_special_title_roundtrip(
+    state_dir: Path, title: str
+) -> None:
+    """特殊字符标题：创建后 load_manifest 可正确读回。"""
+    manifest = create_session(state_dir, title)
+    session_dir = state_dir / "sessions" / manifest.id
+    loaded = load_manifest(session_dir)
+    assert loaded.title == title
+    assert loaded.id == manifest.id
+
+
+@pytest.mark.parametrize(
+    "task_id",
+    [
+        'task-"abc"',
+        "task\\xyz",
+        "task\nwith\nnewlines",
+        'task"\\mixed',
+        None,
+        "",
+    ],
+)
+def test_create_session_special_task_id(
+    state_dir: Path, task_id: str | None
+) -> None:
+    """特殊 task_id：创建后 load_manifest 可正确读回。
+
+    task_id 为空字符串时 manifest 写空串，但 load 时 ``or None`` 会转为 None，
+    属于设计行为（TOML 无 null 字面量）。
+    """
+    manifest = create_session(state_dir, "Normal Title", task_id=task_id)
+    session_dir = state_dir / "sessions" / manifest.id
+    loaded = load_manifest(session_dir)
+    if task_id:
+        assert loaded.task_id == task_id
+    else:
+        # None 和 "" 经 round-trip 后统一为 None
+        assert loaded.task_id is None
+
+
+def test_create_session_special_title_index_roundtrip(
+    state_dir: Path,
+) -> None:
+    """特殊标题 Session 创建后，load_index 可正确读回。"""
+    title = 'a"b\\c\nd\te\t"mixed"'
+    manifest = create_session(state_dir, title)
+    entries = load_index(state_dir)
+    assert len(entries) == 1
+    assert entries[0]["id"] == manifest.id
+    assert entries[0]["title"] == title
+    assert entries[0]["state"] == "active"
+
+
+def test_index_multiple_special_titles(state_dir: Path) -> None:
+    """多个特殊标题 Session 共存时，index.toml 全部可解析。"""
+    titles = ['a"b', "c\\d", "e\nf", "normal"]
+    manifests = [create_session(state_dir, t) for t in titles]
+    entries = load_index(state_dir)
+    assert len(entries) == 4
+    by_id = {e["id"]: e for e in entries}
+    for m in manifests:
+        assert by_id[m.id]["title"] == m.title
+
+
+# ---------------------------------------------------------------------------
 # 4. append_event
 # ---------------------------------------------------------------------------
 

@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 from fnmatch import fnmatch
 from pathlib import Path
 
-from taolib.cli._world_engines.routing_engine import _extract_frontmatter
+from taolib.cli._world_engines.routing_engine import _extract_frontmatter, _find_role_file
 
 __all__ = [
     "RoleBindings",
@@ -109,36 +109,6 @@ class ContextBundle:
 # ---------------------------------------------------------------------------
 
 _LAYER_DIRS = ("governance", "engineering")
-
-
-def _find_role_file(roles_dir: Path, role_id: str) -> Path | None:
-    """在 roles 目录中查找角色文件。
-
-    查找顺序：
-    1. ``roles_dir/governance/{role_id}.md``
-    2. ``roles_dir/engineering/{role_id}.md``
-    3. ``roles_dir/{role_id}.md``（过渡期兼容）
-
-    Args:
-        roles_dir: ``roles/`` 目录路径。
-        role_id: 角色标识符。
-
-    Returns:
-        角色文件路径；未找到时返回 ``None``。
-    """
-    filename = f"{role_id}.md"
-
-    for sub in _LAYER_DIRS:
-        candidate = roles_dir / sub / filename
-        if candidate.exists():
-            return candidate
-
-    # 过渡期：直接放在 roles/ 下
-    fallback = roles_dir / filename
-    if fallback.exists():
-        return fallback
-
-    return None
 
 
 def _determine_layer(role_path: Path) -> str:

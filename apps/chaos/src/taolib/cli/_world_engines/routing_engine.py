@@ -24,6 +24,7 @@ __all__ = [
     "resolve_routes",
     "collect_targets",
     "resolve_role_bindings",
+    "_find_role_file",
 ]
 
 

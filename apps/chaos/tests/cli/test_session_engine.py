@@ -192,19 +192,17 @@ def test_load_manifest_not_found(tmp_path: Path) -> None:
 @pytest.mark.parametrize(
     "title",
     [
-        'a"b',              # 双引号
-        "a\\b",             # 反斜杠
-        "a\nb",             # 换行
-        'a"b\\c\nd',        # 混合
-        '{"key": "val"}',   # JSON 风格
+        'a"b',  # 双引号
+        "a\\b",  # 反斜杠
+        "a\nb",  # 换行
+        'a"b\\c\nd',  # 混合
+        '{"key": "val"}',  # JSON 风格
         "为帛书《老子》做注疏",  # CJK + 书名号
-        "a\tb",             # 制表符
-        "line1\r\nline2",   # CRLF
+        "a\tb",  # 制表符
+        "line1\r\nline2",  # CRLF
     ],
 )
-def test_create_session_special_title_roundtrip(
-    state_dir: Path, title: str
-) -> None:
+def test_create_session_special_title_roundtrip(state_dir: Path, title: str) -> None:
     """特殊字符标题：创建后 load_manifest 可正确读回。"""
     manifest = create_session(state_dir, title)
     session_dir = state_dir / "sessions" / manifest.id
@@ -224,9 +222,7 @@ def test_create_session_special_title_roundtrip(
         "",
     ],
 )
-def test_create_session_special_task_id(
-    state_dir: Path, task_id: str | None
-) -> None:
+def test_create_session_special_task_id(state_dir: Path, task_id: str | None) -> None:
     """特殊 task_id：创建后 load_manifest 可正确读回。
 
     task_id 为空字符串时 manifest 写空串，但 load 时 ``or None`` 会转为 None，

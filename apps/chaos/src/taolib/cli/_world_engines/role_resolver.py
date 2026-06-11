@@ -14,7 +14,7 @@ from dataclasses import dataclass, field
 from fnmatch import fnmatch
 from pathlib import Path
 
-from taolib.cli._world_engines.routing_engine import _extract_frontmatter, _find_role_file
+from taolib.cli._world_engines.role_file_utils import extract_frontmatter, find_role_file
 
 __all__ = [
     "RoleBindings",
@@ -199,7 +199,7 @@ def resolve_role(agents_dir: Path, role_id: str) -> RoleContext:
         RoleParseError: frontmatter 解析失败。
     """
     roles_dir = agents_dir / "roles"
-    role_path = _find_role_file(roles_dir, role_id)
+    role_path = find_role_file(roles_dir, role_id)
 
     if role_path is None:
         raise RoleNotFoundError(f"Role '{role_id}' not found in {roles_dir}")
@@ -210,7 +210,7 @@ def resolve_role(agents_dir: Path, role_id: str) -> RoleContext:
         raise RoleNotFoundError(f"Cannot read role file '{role_path}': {exc}") from exc
 
     # 解析 TOML frontmatter
-    frontmatter_text = _extract_frontmatter(text)
+    frontmatter_text = extract_frontmatter(text)
     if frontmatter_text is None:
         raise RoleParseError(
             f"Role '{role_id}' has no valid TOML frontmatter (+++...+++)"

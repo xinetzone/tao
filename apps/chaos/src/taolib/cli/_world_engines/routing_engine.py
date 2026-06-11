@@ -15,6 +15,8 @@ from dataclasses import dataclass, field
 from fnmatch import fnmatch
 from pathlib import Path
 
+from taolib.cli._world_engines.role_file_utils import extract_frontmatter, find_role_file
+
 __all__ = [
     "RouteTriggers",
     "RouteRule",
@@ -24,7 +26,6 @@ __all__ = [
     "resolve_routes",
     "collect_targets",
     "resolve_role_bindings",
-    "_find_role_file",
 ]
 
 
@@ -252,48 +253,6 @@ def collect_targets(
     raise ValueError(f"Unsupported conflict resolution strategy: {strategy!r}")
 
 
-def _extract_frontmatter(text: str) -> str | None:
-    """提取 ``+++`` 包围的 TOML frontmatter 文本。
-
-    Args:
-        text: 完整 Markdown 文件内容。
-
-    Returns:
-        frontmatter 主体（不含分隔符）；缺失时返回 ``None``。
-    """
-    lines = text.splitlines()
-    if not lines or lines[0].strip() != "+++":
-        return None
-    for idx in range(1, len(lines)):
-        if lines[idx].strip() == "+++":
-            return "\n".join(lines[1:idx])
-    return None
-
-
-def _find_role_file(roles_dir: Path, role_id: str) -> Path | None:
-    """在 governance/ 和 engineering/ 子目录中查找角色文件。
-
-    搜索顺序：
-    1. ``roles_dir/governance/{role_id}.md``
-    2. ``roles_dir/engineering/{role_id}.md``
-    3. ``roles_dir/{role_id}.md`` （兼容扁平结构过渡期）
-
-    Args:
-        roles_dir: ``roles/`` 目录路径。
-        role_id: 角色 id（kebab-case）。
-
-    Returns:
-        找到的角色文件路径；不存在时返回 ``None``。
-    """
-    for subdir in ("governance", "engineering"):
-        candidate = roles_dir / subdir / f"{role_id}.md"
-        if candidate.exists():
-            return candidate
-    # 兼容：直接在 roles_dir 下查找
-    flat = roles_dir / f"{role_id}.md"
-    return flat if flat.exists() else None
-
-
 def resolve_role_bindings(roles_dir: Path, role_id: str) -> list[str]:
     """从 Role 文件的 TOML frontmatter 提取 always-on bindings。
 
@@ -308,13 +267,13 @@ def resolve_role_bindings(roles_dir: Path, role_id: str) -> list[str]:
         该角色默认绑定的资产路径列表。找不到角色文件或 frontmatter
         缺失时返回空列表。
     """
-    role_path = _find_role_file(roles_dir, role_id)
+    role_path = find_role_file(roles_dir, role_id)
     if role_path is None:
         return []
 
     try:
         text = role_path.read_text(encoding="utf-8")
-        frontmatter = _extract_frontmatter(text)
+        frontmatter = extract_frontmatter(text)
         if frontmatter is None:
             return []
         data = tomllib.loads(frontmatter)

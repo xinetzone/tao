@@ -40,6 +40,7 @@
 - 来源位置：`.agents/docs/superpowers/retrospectives/task-summary-hello-agents-knowledge-extraction-20260602.md`
 - 相关提交：`4b8fc31 docs(agents): extract hello-agents tutorial knowledge`、`7514d2a docs(retrospective): summarize hello-agents extraction task`
 - 形成日期：2026-06-02
+- 关联记忆：[`2026-06-02-knowledge-ingestion-task-boundary-principle.md`](./2026-06-02-knowledge-ingestion-task-boundary-principle.md) — 定义知识入库的**过程边界**（原子提交拆分、复盘≠记忆、lint 范围管理、LLM 配置误判）；本记忆定义**产出架构**与质量标准（sources/references/index 三层、真实源识别、轻清洗规则）。两者互补：一个管过程，一个管产出。
 
 ## Expiration Conditions
 

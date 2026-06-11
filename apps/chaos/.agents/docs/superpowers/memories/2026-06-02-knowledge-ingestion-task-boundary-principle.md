@@ -40,6 +40,7 @@
 - 相关任务：DeepAgents overview 教程萃取、复盘归档、用户追加要求“此次任务有何洞察，并归档洞察”
 - 相关提交：`e7613ce docs(deepagents): extract overview tutorial knowledge`、`6ec7539 fix(docs): repair internal linkcheck failures`、`ddbdda3 style(docs): normalize markdown formatting`、`ea5a60f docs(memory): capture external knowledge ingestion principle`
 - 形成日期：2026-06-02
+- 关联记忆：[`2026-06-02-external-knowledge-ingestion-principle.md`](./2026-06-02-external-knowledge-ingestion-principle.md) — 定义知识入库的**产出架构**与质量标准（sources/references/index 三层、真实源识别、轻清洗规则）；本记忆定义**过程边界**（原子提交、复盘≠记忆、lint 范围管理）。两者互补：一个管过程，一个管产出。
 
 ## Expiration Conditions
 

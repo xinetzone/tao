@@ -30,6 +30,7 @@
 |------|---------|------|
 | `task-summary-` | 单次 Spec 执行总结 | `task-summary-mise-dev-environment-20260522.md` |
 | `retrospective-` | 项目级 / 多任务综合复盘 | `agentforge-project-retrospective-20260523.md` |
+| `insights-` | 从任务中提炼的设计反思 / 原则洞察 | `insights-containerrun-refactor-20260610.md` |
 | （无前缀） | 专项审查 / 审计 / 适配报告 | `python315-adaptation-20260521.md` |
 
 ### 2.3 命名反例

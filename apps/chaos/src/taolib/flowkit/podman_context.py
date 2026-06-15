@@ -310,12 +310,11 @@ class ContainerRun:
         Raises:
             ContainerRunError: 容器启动失败。
         """
+
         def _create_client() -> None:
             """创建 Podman 客户端的内部辅助函数。"""
             if self.host_path is not None:
-                self._pctx = _get_podman_context(
-                    self.host_path, **self.client_kwargs
-                )
+                self._pctx = _get_podman_context(self.host_path, **self.client_kwargs)
                 self._client = (
                     self._pctx.ctx.client()
                     if sys.platform == "win32"
@@ -323,6 +322,7 @@ class ContainerRun:
                 )
             else:
                 from podman import PodmanClient
+
                 self._client = PodmanClient(**self.client_kwargs)
 
         def _build_mounts() -> list[dict[str, Any]]:
@@ -389,7 +389,7 @@ class ContainerRun:
                     return True
 
                 run_params = _build_run_params(mounts)
-                
+
                 if use_host_network and "network_mode" not in run_params:
                     run_params["network_mode"] = "host"
 

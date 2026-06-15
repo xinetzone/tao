@@ -115,7 +115,7 @@ self._pctx.ctx._tunnel.stop()  # _pctx 现在是 None → AttributeError
 ```mermaid
 flowchart LR
     A["_pctx 创建<br/>（无条件）"] --> B["_cleanup()<br/>使用 _pctx.ctx（安全）"]
-    
+
     subgraph 重构后
         C["_pctx 创建<br/>（host_path 分支内）"] --> D["_cleanup()<br/>使用 _pctx.ctx（崩溃！）"]
     end

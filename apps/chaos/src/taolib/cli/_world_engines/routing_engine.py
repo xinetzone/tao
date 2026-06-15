@@ -15,7 +15,10 @@ from dataclasses import dataclass, field
 from fnmatch import fnmatch
 from pathlib import Path
 
-from taolib.cli._world_engines.role_file_utils import extract_frontmatter, find_role_file
+from taolib.cli._world_engines.role_file_utils import (
+    extract_frontmatter,
+    find_role_file,
+)
 
 __all__ = [
     "RouteTriggers",

@@ -310,12 +310,9 @@ class ContainerRun:
         Raises:
             ContainerRunError: 容器启动失败。
         """
-        try:
-            # ── 1. 创建 Podman 客户端 ──
+        def _create_client() -> None:
+            """创建 Podman 客户端的内部辅助函数。"""
             if self.host_path is not None:
-                # 有宿主机路径：走跨平台路径转换流程
-                # Windows 下 PodmanSSHClient 返回的是包装对象，需调用 .client()
-                # Linux/macOS 下 _get_podman_context 直接返回 PodmanClient
                 self._pctx = _get_podman_context(
                     self.host_path, **self.client_kwargs
                 )
@@ -325,14 +322,12 @@ class ContainerRun:
                     else self._pctx.ctx
                 )
             else:
-                # 无宿主机路径：直接创建 PodmanClient，不做路径转换
                 from podman import PodmanClient
-
                 self._client = PodmanClient(**self.client_kwargs)
 
-            # ── 2. 构建挂载列表 ──
+        def _build_mounts() -> list[dict[str, Any]]:
+            """构建挂载列表的内部辅助函数。"""
             mounts: list[dict[str, Any]] = []
-            # bind 挂载：将宿主机目录映射到容器内
             if self.host_path is not None and self.target is not None:
                 mounts.append(
                     {
@@ -341,14 +336,14 @@ class ContainerRun:
                         "target": self.target,
                     },
                 )
-            # 命名卷挂载：Podman 管理的持久化存储卷
             for vol_src, vol_target in self.volumes.items():
                 mounts.append(
                     {"type": "volume", "source": vol_src, "target": vol_target}
                 )
+            return mounts
 
-            # ── 3. 清理同名旧容器 ──
-            # 仅在显式指定容器名时才清理，避免误删自动命名的容器
+        def _cleanup_old_container() -> None:
+            """清理同名旧容器的内部辅助函数。"""
             if self.name is not None:
                 try:
                     old = self._client.containers.get(self.name)
@@ -356,13 +351,8 @@ class ContainerRun:
                 except Exception:
                     pass
 
-            # ── 4. 仅建连接模式 ──
-            # start_container=False 时跳过容器创建，仅管理客户端生命周期
-            if not self.start_container:
-                return
-
-            # ── 5. 构建容器运行参数并启动 ──
-            # 固定参数：所有容器都必须的配置
+        def _build_run_params(mounts: list[dict[str, Any]]) -> dict[str, Any]:
+            """构建容器运行参数的内部辅助函数。"""
             run_params: dict[str, Any] = {
                 "image": self.image,
                 "command": self.command or ["sleep", "infinity"],
@@ -370,7 +360,6 @@ class ContainerRun:
                 "stdin_open": True,
                 "detach": True,
             }
-            # 条件参数：仅在显式设置时才传入，避免覆盖 SDK 默认行为
             if self.name is not None:
                 run_params["name"] = self.name
             if mounts:
@@ -379,13 +368,46 @@ class ContainerRun:
                 run_params["working_dir"] = self.working_dir
             if self.network_mode is not None:
                 run_params["network_mode"] = self.network_mode
-            # 用户自定义参数最后合并，允许覆盖以上所有参数
             run_params.update(self.run_kwargs)
+            return run_params
 
-            self._container = self._client.containers.run(**run_params)
-        except Exception as exc:
-            self._cleanup()
-            raise ContainerRunError(f"容器启动失败: {exc}") from exc
+        def _try_start_container(use_host_network: bool = False) -> bool:
+            """尝试启动容器，返回是否成功。
+
+            Args:
+                use_host_network: 是否使用 host 网络模式（用于 pasta 错误时重试）
+
+            Returns:
+                True 表示启动成功，False 表示遇到 pasta 相关错误需要重试
+            """
+            try:
+                _create_client()
+                mounts = _build_mounts()
+                _cleanup_old_container()
+
+                if not self.start_container:
+                    return True
+
+                run_params = _build_run_params(mounts)
+                
+                if use_host_network and "network_mode" not in run_params:
+                    run_params["network_mode"] = "host"
+
+                self._container = self._client.containers.run(**run_params)
+                return True
+            except Exception as exc:
+                self._cleanup()
+                exc_str = str(exc)
+                if "pasta" in exc_str.lower() and not use_host_network:
+                    return False
+                raise ContainerRunError(f"容器启动失败: {exc}") from exc
+
+        # 首次尝试启动
+        if _try_start_container():
+            return
+
+        # 遇到 pasta 错误，重试使用 host 网络模式
+        _try_start_container(use_host_network=True)
 
     def _cleanup(self) -> None:
         """清理资源：容器 → 客户端 → SSH 隧道。

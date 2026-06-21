@@ -3,7 +3,8 @@
 > **基于**：[agentforge-competitive-analysis-2026.md](agentforge-competitive-analysis-2026.md) 竞品分析结论  
 > **适用对象**：技术负责人、架构师、工程经理  
 > **预期周期**：4 周达到 Level 2，12 周达到 Level 4  
-> **核心理念**：渐进式采用——今天下午就能跑通 Level 0，不阻塞任何现有工作流
+> **核心理念**：渐进式采用——今天下午就能跑通 Level 0，不阻塞任何现有工作流  
+> **口径基准**：许可证 / 商业化 / 自托管 / 锁定风险的统一引用口径见 [agentforge-standard-reference-matrix.md](agentforge-standard-reference-matrix.md)
 
 ---
 
@@ -618,7 +619,7 @@ AGENTS.md 和 AgentForge 协议层**完全免费（Apache 2.0）**，不产生�
 
 > **注意**：CrewAI 专业版 $25/月含 2 席位，Dify 专业版 $59/月含 3 成员。5 人团队均超出基础计划容量，实际需升级或叠加席位。上表为基于官网定价的估算，Enterprise 定制定价请联系厂商。
 
-> **许可证口径说明**：AgentForge 仓库协议为 Apache 2.0。Dify 虽以 Apache 2.0 为基础，但存在针对商业化分发 / 白标化的附加限制条款；因此其“可自托管”不等于“零商业限制”。
+> **许可证口径说明**：AgentForge 仓库协议为 Apache 2.0。Dify 虽以 Apache 2.0 为基础，但存在针对商业化分发 / 白标化的附加限制条款；因此其“可自托管”不等于“零商业限制”。统一引用基准见 [agentforge-standard-reference-matrix.md](agentforge-standard-reference-matrix.md)。
 
 > **注意**：AGENTS.md 与上述方案**不是替代关系，是补位关系**。一个团队可以同时采用 AGENTS.md（治理层）+ LangChain（运行时层），两者不冲突。
 

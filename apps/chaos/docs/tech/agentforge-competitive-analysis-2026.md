@@ -2,7 +2,8 @@
 
 > **分析日期**：2026-06-21  
 > **基于**：[session-meta-recap.md](session-meta-recap.md) 全会话知识资产 + 实时市场数据  
-> **分析方法**：五维框架（参照 [research-methodology-template](research-methodology-template.md) §2）
+> **分析方法**：五维框架（参照 [research-methodology-template](research-methodology-template.md) §2）  
+> **口径基准**：许可证 / 商业化 / 自托管 / 锁定风险的统一引用口径见 [agentforge-standard-reference-matrix.md](agentforge-standard-reference-matrix.md)
 
 ---
 
@@ -254,6 +255,8 @@ AgentForge 占据的是 AGENTS.md 标准的"结构化扩展"生态位——在 A
 > 注：此处“开源协议”按仓库实际授权口径校准。AutoGen 采用代码与文档分离授权；Dify 虽以 Apache 2.0 为基础，但存在针对商业化分发/白标化的附加限制；OpenAI Agents SDK 当前仓库授权为 MIT。
 
 **AgentForge 的定价优势**：作为纯协议标准，AgentForge 没有任何运行时成本，也不需要云服务。它天然适合成为所有 AI 项目的"宪法层"——零成本、零依赖、零锁定。
+
+> 注：此处涉及许可证、商业化限制、自托管与锁定风险的判断，统一以 [agentforge-standard-reference-matrix.md](agentforge-standard-reference-matrix.md) 为引用基准。
 
 ---
 

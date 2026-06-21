@@ -148,4 +148,14 @@ Q2：意图匹配 → 推荐具体赛道
 
 ---
 
-*萃取完毕 | 2026-06-21*
+## 6. 工具摩擦规避模式
+
+> **本文档聚焦赛事运营模式**。PowerShell/Windows 环境的工具摩擦问题详见：
+>
+> [.agents/docs/issue-patterns/powershell-friction.md](file:///d:/spaces/AgentForge/apps/chaos/.agents/docs/issue-patterns/powershell-friction.md)
+>
+> 其中 **§六 Command Substitution + Heredoc 组合失败**（`git commit -m "$(cat <<'EOF'...)"` 报 ParserError）是本会话（2026-06-22）新增的排查经验，对应规则：**Windows 环境下超过 3 行的 commit message 一律走 Write 工具 → `git commit -F` 路线**。
+
+---
+
+*萃取完毕 | 2026-06-22*

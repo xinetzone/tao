@@ -160,18 +160,75 @@ with open("file.txt", "r", encoding="utf-8") as f:
 
 ---
 
+## 六、Command Substitution + Heredoc 组合失败
+
+### 现象
+
+在 PowerShell 中执行以下命令报错：
+
+```powershell
+git add file.txt && git commit -m "$(cat <<'EOF'
+docs: 这是一条提交信息
+包含多行内容
+EOF
+)"
+```
+
+报错：
+
+```
+ParserError:
+Line |
+  1 |  ... && git commit -m "$(cat <<'EOF'
+     |                                              ~
+  Missing file specification after redirection operator.
+```
+
+### 原因
+
+PowerShell 不支持 `<<` heredoc 语法，即使被包在 `$()` command substitution 里也会失败。`cat <<'EOF'` 在 PowerShell 中直接触发解析错误。
+
+### 解决方案
+
+**Write 工具 + `git commit -F`**（推荐）
+
+```powershell
+# 1. Write 工具写 commit message 到临时文件
+Write("commit-msg.txt", "docs: 这是一条提交信息\n包含多行内容")
+
+# 2. git commit -F 读取文件
+git add file.txt && git commit -F commit-msg.txt
+```
+
+**本会话实际工作流**
+
+```
+Write 工具 → .temp/commit-msg-N.txt
+    ↓
+git add <files> && git commit -F .temp/commit-msg-N.txt
+    ↓
+提交成功后删除 .temp/commit-msg-N.txt
+```
+
+### 何时用
+
+当 commit message 超过 3 行，或包含特殊字符（引号、换行等）时，必须使用此方案。
+
+---
+
 ## 最佳实践总结
 
 | 场景 | 推荐方案 |
 |------|----------|
 | 多行字符串 | Write 工具 > 独立 .py 脚本 > Python -c |
 | Git commit | `git commit -F <file>` > `-m` 参数 |
+| Commit + 多行 message | Write → `git commit -F`（本节新增） |
 | 文件路径 | 原始字符串 `r"..."` 或正斜杠 |
 | 文件读写 | 始终指定 `encoding='utf-8'` |
 | 编码问题 | 写入后立即回读验证 |
 
 ---
 
-**来源**：`tech-debt-governance-checklist.md` §7 PowerShell 环境摩擦治理。本会话中多次遇到 PowerShell 相关问题，收敛为上述解决方案。
+**来源**：`tech-debt-governance-checklist.md` §7 PowerShell 环境摩擦治理。§六 为本会话（2026-06-22）新增，源于 `git commit -m "$(cat <<'EOF'...)"` 组合失败的实际排查经验。
 
-*文档版本 v1.0 | 2026-06-21*
+*文档版本 v1.1 | 2026-06-22*

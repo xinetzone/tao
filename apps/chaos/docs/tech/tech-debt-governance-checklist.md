@@ -13,10 +13,10 @@
 
 - [x] **P0** 会话结束时 `.temp/` 文件数必须 ≤ 3
 - [x] **P0** 新增规则：`.agents/rules/` 中明确「会话结束 = `.temp/` 清零」
-- [ ] **P1** 考虑 Git pre-commit hook 检查 `.temp/` 中非 `.gitkeep` 文件数
+- [x] **P1** 考虑 Git pre-commit hook 检查 `.temp/` 中非 `.gitkeep` 文件数
 - [ ] **P2** 对超过 7 天的 `.temp/` 文件自动告警
 
-**参考**：本会话结束时 `.temp/` 从 30+ 清零，可作为基线。**本次状态**：✅ 已完成，`.temp/` 已清空并归档至 `.archive/`
+**参考**：本会话结束时 `.temp/` 从 30+ 清零，可作为基线。**本次状态**：✅ 已完成，pre-commit hook 已创建 `.git/hooks/pre-commit`
 
 ---
 
@@ -27,10 +27,10 @@
 **治理动作**：
 
 - [x] **P0** 删除正式目录文件前，必须 `grep` 搜索所有 `.md` 中的引用路径并同步更新
-- [ ] **P1** 建立「文件别名」机制：当 A 被 B 替代时，在 B 头部标注 `> 替代原 {旧文件名}`
+- [x] **P1** 建立「文件别名」机制：当 A 被 B 替代时，在 B 头部标注 `> 替代原 {旧文件名}`
 - [ ] **P2** 定期运行 `check_doc_links.py` 扫描死链
 
-**参考**：`research-methodology-template.md` 现已在附录中指向所有相关文件。**本次状态**：✅ 已完成，知识资产地图、速查表、toctree 引用已同步更新
+**参考**：`research-methodology-template.md` 现已在附录中指向所有相关文件。**本次状态**：✅ 已完成，别名机制已写入 `.agents/rules/documentation.md` §2.2
 
 ---
 
@@ -41,10 +41,10 @@
 **治理动作**：
 
 - [x] **P0** 所有文本文件写入时显式指定 UTF-8 编码（Python `encoding='utf-8'`，Write 工具默认 UTF-8）
-- [ ] **P1** 抓取脚本中增加编码校验步骤：写入后立即回读前 50 字符，确认可读
+- [x] **P1** 抓取脚本中增加编码校验步骤：写入后立即回读前 50 字符，确认可读
 - [ ] **P2** 建立 `.temp/` 文件编码自动检测脚本
 
-**参考**：`trae-body-utf8.txt` 是唯一正确编码的 innerText 原始文件。**本次状态**：✅ 已完成，本次提交所有文件均为 UTF-8 编码
+**参考**：`trae-body-utf8.txt` 是唯一正确编码的 innerText 原始文件。**本次状态**：✅ 已完成，编码校验脚本已创建 `.agents/scripts/check_encoding.py`
 
 ---
 
@@ -83,10 +83,10 @@
 **治理动作**：
 
 - [x] **P0** 每次新增目录约定时必须同步检查 `.gitignore` 覆盖
-- [ ] **P1** 月度巡检：检查 `.gitignore` 是否覆盖所有运行时生成目录（`.temp/`、`.archive/`、`docs/_build/` 等）
+- [x] **P1** 月度巡检：检查 `.gitignore` 是否覆盖所有运行时生成目录（`.temp/`、`.archive/`、`docs/_build/` 等）
 - [ ] **P2** CI 中增加 `git ls-files --others --exclude-standard` 检查
 
-**本次状态**：✅ 已完成，`.archive/` 和 `.temp/` 均已加入根 `.gitignore`
+**本次状态**：✅ 已完成，巡检脚本已创建 `.agents/scripts/check_gitignore.py`，并补充了 Python/IDE/OS 相关规则
 
 ---
 
@@ -119,4 +119,4 @@
 
 ---
 
-*技术债治理清单 v1.2 | 2026-06-21 | 基于 TRAE 大赛研究项目会话复盘*
+*技术债治理清单 v1.3 | 2026-06-21 | 基于 TRAE 大赛研究项目会话复盘*

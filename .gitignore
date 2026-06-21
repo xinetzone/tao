@@ -4,3 +4,20 @@ __pycache__/
 .git-rewrite/
 docs/_build/
 .archive/
+
+# Python
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo

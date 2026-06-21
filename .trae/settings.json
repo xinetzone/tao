@@ -1,0 +1,16 @@
+{
+  "skills": {
+    "enabled": [
+      "retrospective-workflow",
+      "spa-content-extractor",
+      "defuddle",
+      "agent-browser"
+    ],
+    "default_skills": [
+      "retrospective-workflow",
+      "spa-content-extractor",
+      "defuddle",
+      "agent-browser"
+    ]
+  }
+}

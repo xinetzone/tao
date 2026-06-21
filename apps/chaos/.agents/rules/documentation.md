@@ -148,14 +148,38 @@ flowchart LR
 
 若复盘建议已被执行，应同步更新复盘报告状态，区分“建议”“已完成”“仍需跟踪”。`.temp/` 中的复盘或交付物若需要长期保留，必须迁移到正式文档目录后再作为引用目标。
 
-## 5. 路径与引用
+## 5. 定期维护任务
+
+以下维护任务应按周期执行，确保项目健康度：
+
+| 周期 | 任务 | 脚本 | 说明 |
+|------|------|------|------|
+| 每周 | `.gitignore` 覆盖检查 | `.agents/scripts/check_gitignore.py` | 确保运行时目录被正确忽略 |
+| 每周 | `.temp/` 编码扫描 | `.agents/scripts/scan_temp_encoding.py` | 检测非 UTF-8 文件 |
+| 每月 | 文档死链扫描 | `.agents/scripts/check_doc_links.py` | 校验相对路径引用有效性 |
+| 每月 | 技术债治理清单审计 | `docs/tech/tech-debt-governance-checklist.md` | 勾选完成项，升级未完成 P1 为 P0 |
+
+**执行方式**：
+
+```bash
+# 每周维护
+python .agents/scripts/check_gitignore.py
+python .agents/scripts/scan_temp_encoding.py
+
+# 每月维护
+python .agents/scripts/check_doc_links.py
+```
+
+**来源**：`tech-debt-governance-checklist.md` 执行节奏建议。将定期任务显式化，避免遗忘。
+
+## 6. 路径与引用
 
 - 项目内引用必须使用相对路径。
 - 持久化文档中禁止写入本地绝对路径或包含个人用户名的路径。
 - 外部资料优先引用官方永久链接。
 - 临时抓取文件、临时日志和中间产物不得作为长期引用来源。
 
-## 6. 双向同步
+## 7. 双向同步
 
 当 `AGENTS.md`、`.agents/README.md` 或 `.agents/` 目录结构发生结构性变化时，应评估是否需要同步更新面向人类的 `README.md` 或 `docs/`。
 
@@ -168,7 +192,7 @@ flowchart LR
 
 仅 AI 内部规则微调通常不需要更新人类文档；若变更影响项目公共说明，则应同步更新。
 
-## 7. 真实源与镜像页
+## 8. 真实源与镜像页
 
 部分文档同时存在于"真实数据源"与"Sphinx 镜像页"两类位置，应明确区分：
 
@@ -200,7 +224,7 @@ flowchart LR
 - ❌ 不得在 `docs/tech/changelogs/<topic>.md` 镜像页中直接添加变更内容（应改写真实源）。
 - ❌ 不得删除真实源而仅保留镜像页，会导致 Sphinx 构建失败。
 
-## 8. `docs/` 双轨分类
+## 9. `docs/` 双轨分类
 
 `docs/` 下采用「项目技术文档」与「通用知识」双轨分类，两类内容物理隔离、互不混入：
 
@@ -245,7 +269,7 @@ flowchart LR
 - 禁止使用中文目录名（`哲学/`）以避免跨平台路径问题。
 - 超出上述领域表的新领域需在本节补充后再使用。
 
-## 9. MyST 跨目录引用三段式校验
+## 10. MyST 跨目录引用三段式校验
 
 在 `docs/` 内进行文档迁移、重命名或跨目录互链时，必须分别校验三类引用——它们的解析规则不同：
 
@@ -295,15 +319,15 @@ flowchart LR
 
 - **命名约定**：锚点名使用英文小写 + 连字符（kebab-case），语义应与标题含义对应。
 
-## 10. AutoAPI 输出路径与嵌套 toctree 口径
+## 11. AutoAPI 输出路径与嵌套 toctree 口径
 
-### 10.1 AutoAPI 输出路径
+### 11.1 AutoAPI 输出路径
 
 - `docs/conf.py` 中 `autoapi_root` 决定 sphinx-autoapi 的输出位置，应与技术文档子目录路径对齐：`autoapi_root = "tech/api"`。
 - API 生成产物位于 `docs/tech/api/`，必须在 `.gitignore` 中排除，不得提交进仓。
 - 调整 `autoapi_root` 后无需手工迁移生成产物，下次构建会自动重生成。
 
-### 10.2 嵌套 toctree docname 口径
+### 11.2 嵌套 toctree docname 口径
 
 | 位置 | toctree 项写法 | 例 |
 |---|---|---|
@@ -311,7 +335,7 @@ flowchart LR
 | `docs/tech/index.md`（子入口） | 相对当前目录（**不加 `tech/` 前缀**） | `intro`、`api/taolib/index` |
 | `docs/general/index.md`（子入口） | 相对当前目录（**不加 `general/` 前缀**） | `philosophy/tao-minimalist-principles` |
 
-### 10.3 README → index 升级时机
+### 11.3 README → index 升级时机
 
 - 占位 README（`orphan: true`）适用于骨架预设阶段。
 - 一旦目录有正式内容并需要进入主导航，应升级为 `index.md`：重命名同时移除 `orphan: true` 并加入子 `toctree`。

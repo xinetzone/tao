@@ -1,11 +1,12 @@
 # Issue Patterns
 
-该目录存放按“现象 -> 原因 -> 排查 -> 定位文件/命令”组织的故障模式文档。
+该目录存放按"现象 -> 原因 -> 排查 -> 定位文件/命令"组织的故障模式文档。
 
 ## 目录职责
 
 - `python-errors.md`：记录 Python 依赖、测试、类型、版本适配等问题的排查模式。
 - `podman-errors.md`：记录 Podman 构建、运行、挂载、网络、权限等问题的排查模式。
+- `powershell-friction.md`：记录 Windows/PowerShell 环境下的命令执行摩擦及解决方案。
 
 ## 使用原则
 

@@ -193,7 +193,41 @@ $env:CONTAINER_HOST = "npipe:////./pipe/podman-machine-default"
 
 ## 7. 故障排查
 
-### VM 启动失败
+### 7.1 Cannot connect to Podman socket：默认连接错位
+
+典型报错：
+
+```text
+Cannot connect to Podman
+unable to connect to Podman socket
+failed to connect: dial tcp 127.0.0.1:<port>
+```
+
+排查顺序：
+
+```powershell
+podman --version
+podman machine list
+podman system connection list
+podman info
+```
+
+若 `podman machine list` 显示某个 machine 正在运行，但 `podman info` 仍连接到另一个不可达端口，说明默认 connection 指向了错误或已停止的 machine。切换默认连接：
+
+```powershell
+podman system connection default podman-machine-default
+podman info
+```
+
+判断要点：
+
+| 现象 | 含义 | 动作 |
+|---|---|---|
+| `podman machine init` 返回 `VM already exists` | VM 已存在 | 不要重建，继续检查连接 |
+| `podman machine start` 返回 `already running` | 某个 VM 已运行 | 检查默认 connection 是否指向它 |
+| `system connection list` 中 `Default=true` 指向非运行 machine | CLI 指向错误后端 | 使用 `podman system connection default <running-machine>` |
+
+### 7.2 VM 启动失败
 
 ```powershell
 # 检查 WSL2 是否正常运行
@@ -208,7 +242,7 @@ podman machine init --provider wsl
 podman machine start
 ```
 
-### 挂载路径容器内不可见
+### 7.3 挂载路径容器内不可见
 
 ```powershell
 # 进入 VM 确认路径存在
@@ -228,7 +262,7 @@ podman machine list
 # 记下显示的 IP 地址，直接访问该 IP
 ```
 
-### 镜像拉取慢
+### 7.5 镜像拉取慢
 
 ```powershell
 # 设置国内镜像源

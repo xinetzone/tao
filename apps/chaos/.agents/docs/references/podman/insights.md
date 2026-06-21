@@ -86,6 +86,29 @@ podman machine 在 Windows 上暴露的是 `\\.\pipe\podman-machine-default` 命
 
 ---
 
+## 7. Windows Podman 不是单 VM 问题，而是“入口—实例—指向”问题
+
+2026-06-15 的一次构建排障暴露了另一个常见误区：`podman machine` 已经 running，并不代表 `podman build` 一定能连接成功。Podman CLI 还依赖 `system connection` 的默认指向。
+
+本次现象：
+
+| 层级 | 结果 | 说明 |
+|---|---|---|
+| 命令入口 | `podman --version` 成功 | CLI 可用 |
+| 运行实例 | `podman-machine-default` running | 后端存在且运行 |
+| 默认指向 | default connection 指向 `podman-machine-big` | CLI 指向不可达端口 |
+| 修复动作 | `podman system connection default podman-machine-default` | 重新绑定默认后端 |
+
+**结论**：环境排障不能停在“工具是否安装”或“服务是否运行”，还要检查“当前命令默认指向谁”。这适用于 Podman，也适用于 Docker context、Kubernetes context、Conda env、Node version manager 等所有多后端工具。
+
+通用排查链：
+
+```text
+命令入口 → 运行实例 → 默认指向 → 实际任务
+```
+
+---
+
 ## 总结：跨平台 API 集成决策树
 
 ```

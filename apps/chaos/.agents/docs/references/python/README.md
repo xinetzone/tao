@@ -11,3 +11,4 @@
 ## 当前页面
 
 - [Package Index](./package-index.md)
+- [Conda 环境迁移决策指南](./conda-environment-migration.md)

@@ -45,6 +45,10 @@
 | `*.readthedocs.io/...` | `fetch_content` | 静态文档 |
 | Cloudflare 弱挑战页 | Browser Agent | 任何 5xx + cf-ray header |
 | 未知域名 | **并行试探**（见 §3） | — |
+| `trae.cn/*` | **并行试探**（defuddle + Browser Agent） | 字节 SPA；innerText 优于 snapshot |
+| `cursor.com/*` | Browser Agent | Next.js SPA；定价页 + 主页并行抓 |
+| `bolt.new/*` | **`defuddle parse` 优先** | 静态即成功；浏览器反复 timeout |
+| `replit.com/*` | **必失败兜底公开资料** | Cloudflare 强拦截；Browser Agent 也会被拦 |
 
 > **维护原则**：每次发现新模式立即追加，**不删除**——沉淀粒度决定复利。
 
@@ -159,7 +163,85 @@ defuddle parse <反爬 URL> --md  ❌ 同样会被拒
 - [`routing-protocol.md`](./routing-protocol.md) — 上下文路由协议
 - [`../superpowers/retrospectives/task-summary-zhihu-integration-20260526.md`](../superpowers/retrospectives/task-summary-zhihu-integration-20260526.md) — 知乎抓取经验
 - [`../superpowers/retrospectives/task-summary-world-multi-surface-exploration-20260527.md`](../superpowers/retrospectives/task-summary-world-multi-surface-exploration-20260527.md) — 微信公众号抓取（本文档触发场景）
+- [`../superpowers/retrospectives/task-summary-spa-content-extraction-20260621.md`](../superpowers/retrospectives/task-summary-spa-content-extraction-20260621.md) — SPA 三阶段抓取法（TRAE / Cursor / Bolt / Replit 四案例）
 
 ---
 
-*版本：v1.0 · 2026-05-27 沉淀 · 后续遇到新 URL 模式增量追加 §2 表*
+## 10. SPA 三阶段抓取法（2026-06-21 增量）
+
+> **缘起**：本项目自建 skill `spa-content-extractor` 的实战沉淀。该 skill 已配置在 `.trae/settings.json` 的 `default_skills` 中。
+
+### 10.1 抓取三阶段
+
+```mermaid
+flowchart LR
+    A["Stage 1<br/>defuddle parse"] -->|空/超时| B["Stage 2<br/>agent-browser open"]
+    B -->|渲染完整| D["eval innerText"]
+    B -->|超时/拦截| C["Stage 2.5<br/>public fallback"]
+    D -->|内容不完整| E["Stage 3<br/>滚动 + 重复"]
+    E --> F["产出"]
+    C --> F
+```
+
+| 阶段 | 工具 | 何时跳过 |
+|------|------|----------|
+| Stage 1 静态尝试 | `defuddle parse <url> --md` | 内容 > 500 字节且有效 |
+| Stage 2 浏览器 | `agent-browser open + eval 'document.body.innerText'` | 静态已成功 / Cloudflare 拦截 |
+| Stage 3 懒加载 | `eval scrollTo + wait + eval` | Stage 2 已完整 |
+
+### 10.2 关键工程经验
+
+| 经验 | 教训 |
+|------|------|
+| `snapshot -i` 不适合内容提取 | 轮播/虚拟列表会导致同一节点重复 5+ 次 |
+| **优先 `eval 'document.body.innerText'`** | 浏览器去重后的人类可读文本 |
+| 浏览器路径对 SSR 良好的网站反而 timeout | `bolt.new` 就是反例——`defuddle` 一次成功 |
+| PowerShell 中文编码问题 | 用 `eval > file` 重定向，不要 `print` 到终端 |
+| Cloudflare 强拦截 = 必失败 | `replit.com` 是典型，提前打 fallback |
+
+### 10.3 4 个真实案例速查
+
+| 案例 | URL | 静态 | 浏览器 | 结果 |
+|------|-----|------|--------|------|
+| TRAE 创造力大赛 | `trae.cn/ai-creativity` | ❌ 空 | ✅ 完整 | ✅ 7 个板块全部抓取 |
+| Cursor 官网 | `cursor.com` | ❌ 空 | ✅ 完整 | ✅ KOL 证言 + 功能 |
+| Bolt.new | `bolt.new` | ✅ 完整 | ⏱ timeout | ✅ 静态足够 |
+| Replit Agent | `replit.com/ai` | ❌ Cloudflare | ❌ 拦截 | ❌ 改用公开资料 |
+
+### 10.4 工具选择决策树
+
+```
+看到 URL
+  │
+  ├─ 命中映射表 (§2) → 按表执行
+  │
+  └─ 未命中
+       │
+       ├─ 是技术文档/GitHub/raw? → fetch_content
+       │
+       ├─ 是反爬已知模式? → Browser Agent 直接上
+       │
+       └─ 都不确定
+            │
+            ├─ defuddle 试 5 秒 ──┐
+            │                     │
+            └─ Browser Agent 试 ──┴──→ 谁先成用谁
+```
+
+### 10.5 反模式清单
+
+- ❌ 看到 SPA 默认用 `snapshot -i` —— 节点爆炸
+- ❌ 串行回退：defuddle → fetch → browser —— 浪费 2 轮
+- ❌ 看到 Cloudflare 验证页还硬试 —— 直接换工具或 fallback
+- ❌ 把 agent-browser 结果直接 print —— Windows 中文乱码
+- ❌ 抓完不 `agent-browser close` —— 进程泄漏
+
+---
+
+## 11. 复盘 → 沉淀工作流
+
+> 七步骨架（单点研究 → 横向对比 → 洞察 → 封装 → 配置 → 校验 → 归档）见 [`../../../docs/topics/retrospective-to-asset-workflow.md`](../../../docs/topics/retrospective-to-asset-workflow.md)。本文档是该工作流在"网页抓取"主题下的具象化。
+
+---
+
+*版本：v1.2 · 2026-05-27 初版 · 2026-06-21 增量：TRAE/Cursor/Bolt/Replit 四案例 + SPA 三阶段法 + 工作流骨架*

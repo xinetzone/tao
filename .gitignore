@@ -4,6 +4,7 @@ __pycache__/
 .git-rewrite/
 docs/_build/
 .archive/
+apps/chaos/compliance-report.json
 
 # Python
 *.pyc

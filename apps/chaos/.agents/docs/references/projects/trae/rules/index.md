@@ -4,4 +4,5 @@
 
 ```{toctree}
 intro
+event-endorsement-rules
 ```

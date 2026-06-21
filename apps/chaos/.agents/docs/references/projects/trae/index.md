@@ -7,4 +7,5 @@ rules/index
 tips/index
 cross-project-insights
 research-methodology
+../../../../docs/tech/tech-debt-governance-checklist
 ```

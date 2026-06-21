@@ -171,6 +171,7 @@
 | 项目收尾做归档 | §6 | 文档生命周期四阶段 |
 | 写了好几版总结 | §7 | 信息递减管理原则 |
 | 评估项目 ROI | §8 | 投入产出比分析 |
+| 项目收尾技术债清理 | [tech-debt-governance-checklist](../../../../docs/tech/tech-debt-governance-checklist) | 7 类技术债治理行动清单 |
 
 ---
 

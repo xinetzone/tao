@@ -36,6 +36,8 @@
 | snapshot 节点膨胀 | 150+ 重复 generic 节点 | 改用 `document.body.innerText` |
 | Shell 跨平台报错 | `export PATH=...` 在 PowerShell 报错 | 区分阻断性与非阻断性错误，后者忽略 |
 
+> **完整可执行模板**：上述步骤已封装为即用 Prompt 模板，包含 4 种场景（完整 SPA / 多页并行 / 静态优先 / Cloudflare 反爬），见 [spa-extraction-prompt-template.md](file:///d:/spaces/AgentForge/apps/chaos/.agents/docs/references/projects/trae/tips/spa-extraction-prompt-template.md)
+
 ---
 
 ## 第二阶段：洞察分析
@@ -245,7 +247,7 @@
 
 ---
 
-## 附录：工具链速查
+## 附录 A：工具链速查
 
 | 场景 | 推荐工具 | 替代方案 | 注意事项 |
 |------|----------|----------|----------|
@@ -255,6 +257,64 @@
 | 评分逻辑验证 | Python 单行脚本 | 手算 | 结果可复现 |
 | 批量文件操作 | Python shutil | 手动复制 | 降低错误率 |
 | 任务追踪 | TodoWrite | 无 | ≥ 3 步任务必须用 |
+
+---
+
+## 附录 B：团队同步摘要模板
+
+**用途**：研究计划确定后，生成 1 页摘要用于团队同步/站会/邮件。
+
+**模板**：
+
+```
+# 研究计划同步摘要：{项目名}
+
+> 基于 [{完整计划文件}] 精简 | {日期}
+
+---
+
+## 一句话
+{一句话说清：研究什么、输出什么}
+
+## 对象范围
+| 对象 | 侧重点 |
+|------|--------|
+| {名称} | {一句话定位} |
+
+## 阶段计划
+| 阶段 | 做什么 | 产出 |
+|------|--------|------|
+| ① 数据采集 | {采集维度和来源} | {产出格式} |
+| ② 洞察分析 | {横向对比目标} | {≥ N 条洞察} |
+| ③ 框架构建 | {框架规模和维度} | {评估清单} |
+| ④ 优化评估 | {基于评分的改进} | {P0-P2 方案} |
+
+## 核心问题（3-5 个）
+1. {差异化问题 1}
+2. {差异化问题 2}
+3. {差距问题}
+
+## 预期输出
+- {可复用产出 1}
+- {可复用产出 2}
+- {P0 改进方向}
+
+## 需要对齐
+- {待讨论的范围/权重/分工问题}
+
+---
+
+*1 页摘要 | 团队同步用 | 完整计划见 `{链接}`*
+```
+
+**使用要点**：
+- 控制在 1 页内（50 行左右），超出则说明计划本身太复杂
+- 「需要对齐」段是摘要的核心价值——不是汇报已完成的工作，而是抛出待决策的问题
+- 每条对齐项应该是选择题（A or B），而非开放式讨论
+
+> 完整计划示例：[research-plan-agentforge-competitor-analysis.md](research-plan-agentforge-competitor-analysis.md)  
+> 同步摘要示例：[sync-summary-agentforge-competitor-analysis.md](sync-summary-agentforge-competitor-analysis.md)  
+> 团队同步文档示例：[team-sync-agentforge-competitor-analysis.md](team-sync-agentforge-competitor-analysis.md)
 
 ---
 

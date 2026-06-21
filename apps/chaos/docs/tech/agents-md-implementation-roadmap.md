@@ -28,7 +28,7 @@ flowchart TD
 | **Level 1** | + 领域规则按需加载 | 2小时 | Token 消耗降低 30-50%，规范不再被忽视 |
 | **Level 2** | + 技能标准化 | 1天 | 跨项目复用能力单元，新人 AI 即插即用 |
 | **Level 3** | + 声明式治理（world.toml） | 3天 | 项目 AI 资产可管理、可审计、可迁移 |
-| **Level 4** | + 操作性约束 + 多世界继承 | 1周 | 多团队 monorepo 下的 AI 治理闭环 |
+| **Level 4** | + 操作性约束 + 多世界继承 | 1周 | 多团队治理闭环 + EU AI Act 合规声明基础设施 |
 
 ---
 
@@ -409,7 +409,9 @@ portable = false
 ## 五、Level 4：多团队治理（第 6-12 周）
 
 ### 目标
-在 monorepo 或多团队场景下实现 AI 治理闭环：约束校验、角色定义、多世界继承。
+在 monorepo 或多团队场景下实现 AI 治理闭环：约束校验、角色定义、多世界继承，以及 EU AI Act 合规声明基础设施。
+
+> **合规分层**：Level 4 建立的是**治理声明层**（定义规则 + 声明约束）。根据 [竞品分析 §4.3](agentforge-competitive-analysis-2026.md)，完整的合规闭环还需要校验扫描层（如 Inkog 等工具验证代码是否遵守声明）。两者互补，不可互相替代。
 
 ### 操作步骤
 
@@ -499,6 +501,7 @@ monorepo/
 - [x] 至少 1 个角色定义文件（`.agents/roles/`）
 - [x] Monorepo 子项目有独立 AGENTS.md 且声明了覆盖关系
 - [x] 嵌套深度 ≤ 3 层
+- [x] 团队理解治理声明层与校验扫描层的分工（constraints.toml 定义规则，校验工具验证规则被遵守）
 
 ---
 
@@ -565,6 +568,7 @@ Level 3 → Level 4:
 - [ ] world.toml 被至少一个子项目引用
 - [ ] Fragment 的版本号跟随项目版本迭代
 - [ ] 团队有 world.toml 的修改审批流程
+- [ ] 如涉及 EU 市场，已理解治理声明层（constraints.toml）与校验扫描层的合规分工
 ```
 
 ---
@@ -602,15 +606,19 @@ AGENTS.md: "Every new feature MUST include tests. Run `pnpm test -- --coverage` 
 
 ### 8.1 核心论断：零许可费 + 渐进投入
 
-AGENTS.md 和 AgentForge 协议层**完全免费（MIT）**，不产生任何软件许可费。团队的投入只有一次性配置时间。对比行业主要方案：
+AGENTS.md 和 AgentForge 协议层**完全免费（Apache 2.0）**，不产生任何软件许可费。团队的投入只有一次性配置时间。对比行业主要方案：
 
 | 方案 | 年许可费（5人团队） | 部署模式 | 锁定风险 |
 |------|-------------------|---------|---------|
 | **AGENTS.md + AgentForge** | **$0** | Git 文件，零运维 | 无（纯 Markdown + TOML） |
-| LangChain + LangSmith | $2,340（$39/月/团队） | SaaS | 中（观测数据在 LangChain 云） |
-| CrewAI AMP | $1,500（$25/月/人） | SaaS + 自托管可选 | 中（编排逻辑绑定 CrewAI API） |
-| Dify Cloud | $3,540（$59/月/团队） | SaaS + Docker 自托管 | 低-中（Apache 2.0，可自托管） |
-| Inkog Enterprise | 定制定价（预估 ≥ $5,000） | SaaS/自托管 | 低（Apache 2.0） |
+| LangChain + LangSmith | $2,340（$39/月/团队） | SaaS | 中（观测与工作流习惯依赖 LangChain 生态） |
+| CrewAI | $1,500+（专业版 $25/月/2席位<br/>+ 超额席位，5人估算） | SaaS + 自托管可选 | 中（编排逻辑与平台能力绑定 CrewAI API/AMP） |
+| Dify | $1,908（5人需 Team 计划 $159/月） | SaaS + Docker 自托管 | 低-中（可自托管，但商业化分发存在附加限制条款） |
+| Inkog Enterprise | 定制定价（预估 ≥ $5,000） | SaaS/自托管 | 低（Apache 2.0，校验层工具可替换） |
+
+> **注意**：CrewAI 专业版 $25/月含 2 席位，Dify 专业版 $59/月含 3 成员。5 人团队均超出基础计划容量，实际需升级或叠加席位。上表为基于官网定价的估算，Enterprise 定制定价请联系厂商。
+
+> **许可证口径说明**：AgentForge 仓库协议为 Apache 2.0。Dify 虽以 Apache 2.0 为基础，但存在针对商业化分发 / 白标化的附加限制条款；因此其“可自托管”不等于“零商业限制”。
 
 > **注意**：AGENTS.md 与上述方案**不是替代关系，是补位关系**。一个团队可以同时采用 AGENTS.md（治理层）+ LangChain（运行时层），两者不冲突。
 
@@ -677,10 +685,12 @@ flowchart LR
 |---------|-----------|--------|---------|------|-------------|
 | **框架 Token Overhead** | 15-25% | 10-18% | 20-35% | 取决于工作流 | **0%** |
 | **学习曲线成本** | 陡峭（2-4周） | 中等（1-2周） | 陡峭（2-4周） | 低（数天） | **极低（15分钟）** |
-| **供应商锁定风险** | 高（LangChain 生态） | 中（编排 API 私有） | 中（已并入 MS） | 低 | **零（纯标准）** |
+| **供应商锁定风险** | 中（生态与观测链路依赖较强） | 中（编排 API / AMP 依赖） | 中（维护模式 + Microsoft 迁移路径） | 低-中（可自托管，但云版与商业限制条款需单独评估） | **零（纯标准）** |
 | **版本升级迁移成本** | 高（频繁 Breaking） | 中 | 高（v0.4 架构重写） | 中 | **零（无运行时）** |
-| **运维成本** | LangSmith $39/月 | AMP $25/月起 | 自运维 | Docker 集群 | **零** |
-| **安全合规附加成本** | 需额外工具 | Guardrails 内置 | 需额外工具 | 内置 | **constraints.toml 零成本** |
+| **运维成本** | LangSmith $39/月 | AMP $25/月起 | 自运维 | Docker 集群 / 云托管 | **零** |
+| **安全合规附加成本** | 需额外工具 | Guardrails 内置 | 需额外工具 | 内置 | **约束声明零成本**<br/>（校验层需搭配扫描器） |
+
+> **合规分层说明**：AGENTS.md 的 constraints.toml 是**治理声明层**（定义规则，零成本），但完整的 EU AI Act 合规闭环还需要 **校验扫描层**（验证代码是否真的遵守了声明）。AgentForge 的定位是声明层的标准制定者，Inkog 等工具是校验层的执行者——两者互补。详见 [竞品分析 §4.3](agentforge-competitive-analysis-2026.md) 对 Inkog 的对比。
 
 ### 8.6 定价策略建议：面向不同决策者的说服框架
 
@@ -697,8 +707,8 @@ flowchart TD
     end
 
     subgraph "面向合规/安全负责人"
-        CS["核心论点：<br/>EU AI Act Article 14<br/>的轻量合规方案"]
-        CS --> CS_M["量化支撑：<br/>constraints.toml 替代<br/>$5K+ 合规工具<br/>声明即审计、Git 即证据链"]
+        CS["核心论点：<br/>EU AI Act 三条款<br/>（Art 12/14/15）的<br/>零成本治理声明层"]
+        CS --> CS_M["量化支撑：<br/>2026.8.2 生效，违者罚<br/>€1,500万或全球营收3%<br/>constraints.toml = 声明即证据链<br/>对接 Inkog 等扫描器完成闭环校验"]
     end
 ```
 
@@ -761,17 +771,365 @@ flowchart TD
 
 ---
 
-## 九、验证体系
+## 九、EU AI Act 合规落地时间表（距 2026.8.2 截止日倒计时）
+
+> **适用对象**：有 EU 市场业务或计划进入 EU 市场的技术团队  
+> **截止日期**：2026 年 8 月 2 日（EU AI Act 强制执行日）  
+> **违规处罚**：最高 €1,500 万或全球年营收 3%（取高者）  
+> **核心理念**：合规不是一次性项目，而是分层建设——**先建立声明基础设施（治理声明层），再接入校验工具（校验扫描层）**
+
+```mermaid
+gantt
+    title EU AI Act 合规落地倒计时
+    dateFormat  YYYY-MM-DD
+    axisFormat  %m/%d
+
+    section 阶段一：评估
+    AI 使用范围盘点           :a1, 2026-06-23, 3d
+    条款差距分析               :a2, after a1, 3d
+    合规优先级排序             :a3, after a2, 1d
+
+    section 阶段二：治理声明层
+    创建 AGENTS.md 基线        :b1, after a3, 2d
+    编写 constraints.toml     :b2, after b1, 3d
+    定义角色与审批边界          :b3, after b2, 2d
+
+    section 阶段三：校验扫描层
+    接入校验工具                :c1, after b3, 3d
+    首轮扫描与修复              :c2, after c1, 5d
+    回归验证                    :c3, after c2, 2d
+
+    section 阶段四：证据固化
+    生成合规报告                :d1, after c3, 3d
+    内部审计签核                :d2, after d1, 2d
+    预案与监控上线              :d3, after d2, 3d
+
+    section 里程碑
+    截止日 2026.8.2            :milestone, 2026-08-02, 0d
+```
+
+### 9.1 阶段一：评估与差距分析（第 1 周，6/23 - 6/30）
+
+**目标**：明确团队当前 AI 使用状况与 EU AI Act 条款的差距。
+
+| 步骤 | 动作 | 产出 | 负责角色 |
+|------|------|------|---------|
+| **Step 1** | 盘点团队所有 AI Agent / 编码工具的使用场景 | AI 使用清单（工具 × 场景矩阵） | 工程经理 |
+| **Step 2** | 逐条对照 Art 12 / 14 / 15 的合规要求 | 差距分析表 | 合规/安全负责人 |
+| **Step 3** | 按风险等级排序（高/中/低），确定优先修复顺序 | 优先级路线图 | CTO + 合规负责人 |
+
+**差距分析速查表**：
+
+| 条款 | 要求 | 自检问题 | 当前状态 |
+|------|------|---------|---------|
+| **Art 12 记录留存** | 所有 AI Agent 的操作必须可追溯、可审计 | AI Agent 的操作日志是否完整保留？能否回溯到具体人？ | □ 满足 / □ 部分 / □ 缺失 |
+| **Art 14 人类监督** | 高风险决策必须有明确的人类审批节点 | 哪些操作可以自动执行？哪些必须人工确认？是否有硬阻断？ | □ 满足 / □ 部分 / □ 缺失 |
+| **Art 15 鲁棒性** | Agent 系统必须具备适当水平的准确性、韧性和安全性 | Agent 是否有 Prompt Injection 防护？异常情况下是否有安全降级？ | □ 满足 / □ 部分 / □ 缺失 |
+
+**阶段一完成标准**：
+- [x] 团队 AI 使用场景全量盘点（≥ 0 遗漏）
+- [x] 三条款的差距已量化（每个差距标注 P0/P1/P2）
+- [x] 优先级路线图经 CTO 和合规负责人双签
+
+---
+
+### 9.2 阶段二：治理声明层建设（第 2-3 周，7/1 - 7/14）
+
+**目标**：建立 AGENTS.md + constraints.toml 的声明式治理基础设施。这是 EU AI Act 合规的**证据链基础**——声明即承诺，Git 历史即审计轨迹。
+
+> **与 Level 0-4 的关系**：阶段二直接实施本路线图的 Level 4 能力。如果团队此前已按 §1-5 推进，阶段二可跳过基础配置直接进入约束编写。
+
+#### Step 1：创建 AGENTS.md 基线（1 天）
+
+如果团队还没有 AGENTS.md，使用 [§1 Level 0 模板](#一level-0第一份-agentsmd第-1-天下午)。额外追加合规声明区块：
+
+```markdown
+## EU AI Act Compliance
+
+### Article 12 — Record-Keeping
+- All AI agent actions are logged via {logging system}
+- Logs are retained for {retention period}
+- Audit trail available at {audit trail location}
+
+### Article 14 — Human Oversight
+- High-risk actions require human approval: {list of actions}
+- Approval mechanism: {approval tool/process}
+- Emergency override procedure: {documented in .agents/docs/emergency-override.md}
+
+### Article 15 — Robustness
+- Input validation: All user inputs sanitized before reaching LLM
+- Rate limiting: {rate limit policy}
+- Fallback: On agent failure, system degrades to {fallback behavior}
+```
+
+#### Step 2：编写 constraints.toml（2-3 天）
+
+参照 [§5 Level 4 Step 1](#五level-4多团队治理第-6-12-周)，重点覆盖 EU AI Act 三条款：
+
+```toml
+# .agents/constraints.toml
+
+[constraints.strong]
+# Agent 必须通过 Role 进入规范性协作体系
+agent_requires_role = true
+
+# Task 必须归属于某个 Mission
+task_requires_mission = true
+
+# === EU AI Act 专项约束 ===
+
+# Art 14：高风险操作必须有显式人类审批节点
+require_human_approval_for = [
+    "production_deploy",
+    "database_schema_change",
+    "external_api_write",
+    "user_data_export",
+]
+
+# Art 12：所有操作必须可审计
+audit_all_actions = true
+audit_retention_days = 365
+
+# Art 15：输入必须经过净化
+sanitize_llm_input = true
+rate_limit_per_minute = 60
+
+[constraints.weak]
+agent_cross_team = "governance-decision"
+```
+
+#### Step 3：定义角色与审批边界（1-2 天）
+
+```toml
+# .agents/roles/ai-operator.toml
+
+[role]
+name = "ai-operator"
+domain = "engineering"
+description = "AI 工具日常使用者"
+
+[role.constraints]
+# Art 14 映射：此角色可发起但不可独立批准高风险操作
+max_autonomy_level = "suggestion"  # suggestion | execution | approval
+
+[role.non_goals]
+- "不得独立批准生产部署"
+- "不得独立导出用户数据"
+```
+
+**阶段二完成标准**：
+- [x] AGENTS.md 包含三条款合规声明
+- [x] constraints.toml 声明了高风险操作清单和审计要求
+- [x] 至少 1 个角色定义了 autonomy_level 和审批边界
+- [x] 所有配置文件已纳入 Git 版本控制（证据链起点）
+
+---
+
+### 9.3 阶段三：校验扫描层接入（第 4-5 周，7/15 - 7/28）
+
+**目标**：将阶段二的声明与代码实际行为交叉验证，确保"说的"和"做的"一致。
+
+> **为什么需要这一层**：EU AI Act 不仅要求你有治理声明（阶段二），还要求你能证明声明被实际执行。AGENTS.md 说"不可写数据库"，但代码里 `db.write()` 仍然存在——校验扫描层就是发现这类 gap 的工具。
+
+#### 校验工具选型
+
+| 工具 | 覆盖范围 | 适用场景 | 接入时间 |
+|------|---------|---------|---------|
+| **Inkog** | AGENTS.md 声明 vs 代码交叉验证 + Art 12/14/15 自动映射 | 需要合规报告输出的正式场景 | 1 天 |
+| **自定义 CI 脚本** | 基于 constraints.toml 的规则检查（见 §10 验证脚本） | 轻量场景、已有 CI 的团队 | 半天 |
+| **手动审计清单** | 人工逐项核对（作为工具扫描的补充） | 所有场景 | 2 天 |
+
+#### 校验执行步骤
+
+| 步骤 | 动作 | 工具 | 预期输出 |
+|------|------|------|---------|
+| Step 1 | 接入扫描工具 | `inkog verify . --policy eu-ai-act` | 首份合规差距报告 |
+| Step 2 | 修复 Critical/High 发现 | 开发者按报告逐项修复 | 修复记录 + commit |
+| Step 3 | 回归验证 | 再次扫描，确保零 Critical | 合规分数 ≥ 90/100 |
+| Step 4 | 注入 CI 门禁 | `.github/workflows/` 中增加扫描步骤 | 每次 PR 自动扫描 |
+
+**阶段三完成标准**：
+- [x] 校验工具已完成首轮全量扫描
+- [x] Critical/High 发现数 = 0
+- [x] 扫描已集成到 CI（每次 PR 自动触发）
+- [x] 合规分数 ≥ 90/100（或团队定义的阈值）
+
+---
+
+### 9.4 阶段四：证据固化与持续合规（第 6 周至 8/2）
+
+**目标**：生成可用于审计的合规证据包，建立持续监控机制。
+
+#### 合规证据包清单
+
+| 证据 | 格式 | 更新频率 | EU AI Act 条款映射 |
+|------|------|---------|-------------------|
+| AGENTS.md（含合规声明） | Git 版本历史 | 每次修改 | Art 12（记录留存） |
+| constraints.toml 约束定义 | Git 版本历史 | 每次修改 | Art 14（人类监督）+ Art 15（鲁棒性） |
+| 合规扫描报告 | PDF/JSON | 每次 PR / 每月 | Art 12 + Art 15 |
+| 审批日志 | 审计系统导出 | 实时 | Art 14 |
+| 例外处理记录 | Markdown 文档 | 按需 | Art 14（紧急覆盖） |
+| 员工合规培训记录 | 培训平台导出 | 每人/每年 | Art 14（人员能力） |
+
+#### 持续监控机制
+
+```yaml
+# .github/workflows/eu-ai-act-compliance.yml
+name: EU AI Act Compliance Check
+
+on:
+  pull_request:
+    paths:
+      - '.agents/**'
+      - '**/*.py'
+      - '**/*.ts'
+  schedule:
+    - cron: '0 8 * * 1'  # 每周一执行
+
+jobs:
+  compliance-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify .agents/ integrity
+        run: uv run .agents/scripts/check_rules.py
+
+      - name: Run compliance scan
+        run: inkog verify . --policy eu-ai-act --output json > compliance-report.json
+
+      - name: Check compliance threshold
+        run: |
+          SCORE=$(jq '.governance_score' compliance-report.json)
+          if [ "$SCORE" -lt 90 ]; then
+            echo "❌ Compliance score ${SCORE} below threshold 90"
+            exit 1
+          fi
+          echo "✅ Compliance score: ${SCORE}/100"
+
+      - name: Archive report
+        uses: actions/upload-artifact@v4
+        with:
+          name: eu-ai-act-compliance-report
+          path: compliance-report.json
+```
+
+#### Pre-Deadline 最终签核清单（8/2 前 3 天完成）
+
+```
+□ Art 12 记录留存
+  □ AI Agent 操作日志完整保留
+  □ 日志可回溯到具体责任人
+  □ 日志保留期 ≥ 法规要求
+
+□ Art 14 人类监督
+  □ 高风险操作清单已定义
+  □ 每项高风险操作有明确审批流程
+  □ 审批节点不可被 AI 绕过（硬阻断）
+  □ 紧急覆盖流程已文档化
+
+□ Art 15 鲁棒性
+  □ Prompt Injection 防护已部署
+  □ 输入净化在 LLM 调用前生效
+  □ 速率限制已配置
+  □ 降级/熔断策略已测试
+
+□ 证据完整性
+  □ 合规报告可生成（非空文件）
+  □ Git 历史覆盖声明变更全过程
+  □ 员工合规培训已完成并记录
+
+□ 持续合规
+  □ CI 合规门禁已上线
+  □ 合规负责人已指定
+  □ 季度复审日程已安排
+```
+
+**阶段四完成标准**：
+- [x] 合规证据包完整（6 类证据齐全）
+- [x] CI 门禁已上线，合规分数 ≥ 阈值
+- [x] Pre-Deadline 签核清单全部通过
+- [x] 合规负责人已指定，季度复审日程已定
+
+---
+
+### 9.5 当天即可启动的最小行动
+
+如果团队今天（2026.6.21）才开始关注 EU AI Act，以下是最小可行步骤：
+
+| 时间 | 动作 | 效果 |
+|------|------|------|
+| **今天下午** | 运行 `inkog verify . --policy eu-ai-act`（或手动填写 [9.1 差距分析表](#91-阶段一评估与差距分析第-1-周623--630)） | 知道自己的合规基线在哪里 |
+| **明天** | 完成 AI 使用场景盘点，识别高风险操作 | 知道什么需要优先治理 |
+| **本周内** | 创建 AGENTS.md，写入三条款合规声明 | 声明基础设施上线（证据链起点） |
+| **下周** | 编写 constraints.toml，定义高风险操作清单 | 约束声明可审计 |
+| **7/14 前** | 接入校验工具，完成首轮扫描与修复 | 声明与代码对齐 |
+| **7/28 前** | 生成合规报告，CI 门禁上线 | 合规可自动化验证 |
+| **8/2 前** | Pre-Deadline 签核 + 应急预案演练 | 有底气面对截止日 |
+
+---
+
+### 9.6 与现有 Level 体系的关系
+
+```mermaid
+flowchart TD
+    subgraph "EU AI Act 合规时间线"
+        P1["阶段一：评估<br/>（对应 Level 0 决策）"]
+        P2["阶段二：治理声明层<br/>（对应 Level 4 核心能力）"]
+        P3["阶段三：校验扫描层<br/>（Level 4 + 第三方工具）"]
+        P4["阶段四：证据固化<br/>（Level 4 持续运营）"]
+    end
+
+    subgraph "路线图 Level 体系"
+        L0["Level 0：AGENTS.md 基线"]
+        L1["Level 1：规则体系"]
+        L2["Level 2：技能标准化"]
+        L3["Level 3：声明式治理"]
+        L4["Level 4：多团队治理闭环"]
+    end
+
+    P1 --> L0
+    P2 --> L3
+    P2 --> L4
+    P3 --> L4
+    P4 --> L4
+```
+
+> **关键路径**：从零开始达到 EU AI Act 基本合规所需的最小 Level 组合 = **Level 0（AGENTS.md 基线）+ Level 4 的核心组件（constraints.toml + 角色定义）**。Level 1-3 的能力（路由表、技能标准化、world.toml）是锦上添花，非合规硬性要求。
+
+---
+
+## 十、验证体系
 
 ### 每个 Level 的验证方法
 
-| Level | 验证方法 | 通过标准 |
-|-------|---------|---------|
-| Level 0 | 让 AI 执行一个任务（如"创建一个新组件"），检查输出是否遵循 AGENTS.md | 至少 3/5 条约定被遵守 |
-| Level 1 | 让 AI 编辑不同语言的文件，观察日志中是否只加载对应规则 | Python 编辑不加载 frontend.md 的内容 |
-| Level 2 | 在 AI 工具中触发技能调用，确认执行流程正确 | 技能产出符合 SKILL.md 定义 |
-| Level 3 | 运行验证脚本检查 world.toml 引用的文件是否存在 | 零 broken references |
-| Level 4 | 检查子 AGENTS.md 的覆盖声明是否与父 AGENTS.md 一致 | 覆盖条目有明确理由且无冲突 |
+| Level | 验证方法 | 通过标准 | 指标归属 |
+|-------|---------|---------|---------|
+| Level 0 | 让 AI 执行一个任务（如"创建一个新组件"），检查输出是否遵循 AGENTS.md | 至少 3/5 条约定被遵守 | 声明层基线可见生效 |
+| Level 1 | 让 AI 编辑不同语言的文件，观察日志中是否只加载对应规则 | Python 编辑不加载 frontend.md 的内容 | 声明层路由精度提升 |
+| Level 2 | 在 AI 工具中触发技能调用，确认执行流程正确 | 技能产出符合 SKILL.md 定义 | 执行层复用能力形成 |
+| Level 3 | 运行验证脚本检查 world.toml 引用的文件是否存在 | 零 broken references | 声明层资产完整性 |
+| Level 4 | 检查子 AGENTS.md 的覆盖声明是否与父 AGENTS.md 一致 | 覆盖条目有明确理由且无冲突 | 治理闭环入口建立 |
+
+### 指标口径：不要只看采用量，要看治理闭环度
+
+基于更新后的竞品分析，本路线图的指标不再只看“有多少项目写了 AGENTS.md”，而改为同时观察 **声明层、执行层、验证层** 三类信号。
+
+| 指标层 | 代表问题 | 典型指标 | 说明 |
+|-------|---------|---------|------|
+| **声明层** | 项目是否把治理规则写出来了？ | AGENTS.md 覆盖率、rules/ 覆盖率、constraints.toml 存在率 | 衡量入口渗透，不代表真实执行 |
+| **执行层** | 规则是否真的进入日常协作与工具链？ | 技能调用成功率、审批接入率、审计接入率 | 衡量治理是否落到主链路 |
+| **验证层** | 声明和行为是否能被自动证明一致？ | 校验脚本通过率、CI 门禁覆盖率、合规分数 | 衡量治理是否可持续自动化 |
+| **闭环度** | 三层是否形成连续链路？ | 同时具备声明/执行/验证三层的项目占比 | 衡量 AgentForge 是否从文档协议成长为工程治理体系 |
+
+### 推荐核心指标（方案 A 最小集）
+
+| 指标 | Level 0-1 | Level 2-3 | Level 4 | 建议目标 |
+|------|-----------|-----------|---------|---------|
+| **声明层采用率** | AGENTS.md / rules/ 是否建立 | world.toml 是否纳管 | constraints.toml / 角色定义是否存在 | 团队目标项目 ≥ 80% |
+| **执行层接入率** | — | 技能是否被重复调用 | 审计 / 审批 / 净化是否接入主链路 | 治理相关项目 ≥ 50% |
+| **验证层覆盖率** | 基础手动验证 | 脚本校验 world.toml / 路由表 | CI 门禁 + 合规扫描 | 核心项目 ≥ 80% |
+| **示范闭环项目数** | — | 1 个 | 2-3 个 | 形成对外标杆案例 |
 
 ### 可选自动化：规则文件健康检查
 
@@ -837,19 +1195,31 @@ if __name__ == "__main__":
 
 ---
 
-## 十、阶段成果速查
+## 十一、阶段成果速查
 
-| 你的现状 | 推荐 Level | 第一步 | 预计投入 | 核心收益 |
-|---------|-----------|--------|---------|---------|
-| 团队刚开始用 AI 工具，各自为战 | Level 0 | 下午花 15 分钟写 AGENTS.md | 1 小时 | AI 行为基线统一 |
-| 已有 AGENTS.md，但过长导致 AI 性能下降 | Level 1 | 拆出 rules/，加路由表 | 2 小时 | Token 消耗 -30% |
-| 团队有重复的 AI 协作模式（如 PR Review） | Level 2 | 沉淀前 2 个技能 | 1 天 | 协作效率复用 |
-| 多模块/多子项目，AI 规则混乱 | Level 3 | 创建 world.toml + Fragments | 2 天 | 资产可管理可迁移 |
-| Monorepo + 多团队 + 合规需求 | Level 4 | 角色定义 + constraints.toml | 3 天 | 治理闭环 |
+| 你的现状 | 推荐 Level | 第一步 | 预计投入 | 核心收益 | 优先观测指标 |
+|---------|-----------|--------|---------|---------|-------------|
+| 团队刚开始用 AI 工具，各自为战 | Level 0 | 下午花 15 分钟写 AGENTS.md | 1 小时 | AI 行为基线统一 | 声明层采用率 |
+| 已有 AGENTS.md，但过长导致 AI 性能下降 | Level 1 | 拆出 rules/，加路由表 | 2 小时 | Token 消耗 -30% | 声明层路由精度 |
+| 团队有重复的 AI 协作模式（如 PR Review） | Level 2 | 沉淀前 2 个技能 | 1 天 | 协作效率复用 | 执行层接入率 |
+| 多模块/多子项目，AI 规则混乱 | Level 3 | 创建 world.toml + Fragments | 2 天 | 资产可管理可迁移 | 声明层资产完整性 |
+| Monorepo + 多团队 + 合规需求 | Level 4 | 角色定义 + constraints.toml | 3 天 | 治理闭环 + EU AI Act 声明基础设施 | 验证层覆盖率 + 闭环度 |
+
+### 阶段成果判断：从“写了文档”升级为“形成闭环”
+
+| 阶段 | 过去常见判断 | 更新后建议判断 |
+|------|-------------|---------------|
+| **Level 0-1** | AGENTS.md 已写完 | 声明层已建立，且 AI 输出有可见改善 |
+| **Level 2-3** | 技能或 world.toml 已存在 | 执行层开始进入主链路，资产可复用、可检查 |
+| **Level 4** | constraints.toml 已提交 | 声明、执行、验证三层至少已打通两层，并开始形成闭环 |
+
+> **合规速配**：仅需 EU AI Act 合规声明基础设施 → Level 4 足够。需要完整合规校验（代码扫描 + Art 12/14/15 自动映射） → Level 4 声明层 + Inkog 等第三方扫描器。两者互补，不可互相替代。
+>
+> **指标提醒**：不要只汇报“多少仓库已经有 AGENTS.md”，还要同步汇报：其中多少进入了执行层、多少已具备验证层、多少已经形成闭环。
 
 ---
 
-## 十一、附录
+## 十二、附录
 
 ### 附录 A：工具兼容性速查
 
@@ -867,15 +1237,17 @@ if __name__ == "__main__":
 
 ### 附录 B：从竞品分析到路线图的映射
 
-本路线图直接响应了 [竞品分析](agentforge-competitive-analysis-2026.md) 中发现的五个核心结论：
+本路线图直接响应了 [竞品分析](agentforge-competitive-analysis-2026.md) 中发现的**七个**核心结论：
 
 | 竞品分析结论 | 本路线图对应章节 |
 |-------------|----------------|
 | AgentForge 的渐进式采用 Level 0-4 是核心差异化优势 | Level 0-4 分步实施（§1-5） |
 | AGENTS.md 被 30+ 工具原生读取——这是零门槛的入口点 | Level 0：15 分钟上手（§1） |
 | Token 消耗是运行时框架 10-35% 的负担 | Level 1：按需加载 rule（§2） |
-| EU AI Act 2026 年 8 月生效 → 治理刚需 | Level 4：constraints.toml 声明式合规（§5） |
+| EU AI Act Art 12/14/15（2026.8.2 生效）→ 治理刚需 | §5 Level 4 声明层 + §8.5 合规分层说明 |
+| AgentForge 与 Inkog 互补：声明层 + 校验扫描层 | §8.5 合规分层说明 + §8.6 合规负责人锚点 |
 | 最大威胁不是竞品，是"不理解为什么要治理层" | 常见阻力及解法（§7） |
+| 北极星指标不应只看采用量，还应看声明/执行/验证三层闭环度 | §10 验证体系 + §11 阶段成果速查 |
 
 ### 附录 C：参考项目
 

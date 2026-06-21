@@ -5,4 +5,6 @@
 ```{toctree}
 rules/index
 tips/index
+cross-project-insights
+research-methodology
 ```

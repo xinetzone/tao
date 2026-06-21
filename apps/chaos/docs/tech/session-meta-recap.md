@@ -2,7 +2,7 @@
 
 > **会话周期**：2026-06-19 ~ 2026-06-21  
 > **任务类型**：技术研究 → 框架构建 → 方法论萃取 → 模板化沉淀 → 文档体系建设  
-> **Git 提交**：4 次（aa22596d 方法论资产 + 20cfbc1 技术栈更新 + 待提交）
+> **Git 提交**：5 次（aa22596d 方法论资产 + 20cfbc1 技术栈更新 + 8f7f372 完整归档）
 
 ---
 
@@ -202,7 +202,7 @@ research-methodology-template.md (模板)
 | 新建正式文件 | 19 |
 | 删除文件（temp + archive） | 20+ |
 | 萃取洞察条数 | 40 |
-| Git 提交 | 4（含待提交） |
+| Git 提交 | 5（已完成） |
 | 最大单文件 | gtm-strategy-playbook.md（168 行） |
 | 最频繁操作 | SearchReplace（向已有文档注入内容） |
 | 核心收敛点 | cross-project-insights.md（10 条洞察的最终容器） |
@@ -214,33 +214,27 @@ research-methodology-template.md (模板)
 
 | # | 项目 | 状态 |
 |---|------|------|
-| 1 | `.temp/` 残留文件 | ✅ 已完成（目录已清空） |
-| 2 | Git 未提交变更 | 待提交（14 个文件，含 tech-debt-governance-checklist.md） |
+| 1 | `.temp/` 残留文件 | ✅ 已完成（目录已清空，归档至 `.archive/`） |
+| 2 | Git 未提交变更 | ✅ 已完成（8f7f372 原子提交，17 文件，1469 行） |
 | 3 | AgentForge 竞品分析 | 计划已完备，待执行 |
 
 ---
 
-## 六、附：待提交的文件清单
+## 六、附：归档记录
 
-```
-M  apps/chaos/.agents/docs/references/projects/trae/index.md
-M  apps/chaos/.agents/docs/references/projects/trae/rules/index.md
-M  apps/chaos/.agents/docs/references/projects/trae/tips/index.md
-M  apps/chaos/.agents/docs/references/projects/trae/cross-project-insights.md
-A  apps/chaos/.agents/docs/references/projects/trae/rules/event-endorsement-rules.md
-A  apps/chaos/.agents/docs/references/projects/trae/tips/spa-extraction-prompt-template.md
-M  apps/chaos/docs/tech/index.md
-M  apps/chaos/docs/tech/research-methodology-template.md
-M  apps/chaos/docs/tech/optimization-patterns.md
-A  apps/chaos/docs/tech/gtm-strategy-playbook.md
-A  apps/chaos/docs/tech/landing-page-zero-barrier-signup.md
-A  apps/chaos/docs/tech/docker-ci-troubleshooting-patterns.md
-A  apps/chaos/docs/tech/sync-summary-agentforge-competitor-analysis.md
-A  apps/chaos/docs/tech/team-sync-agentforge-competitor-analysis.md
-A  apps/chaos/docs/tech/session-meta-recap.md
-A  apps/chaos/docs/tech/tech-debt-governance-checklist.md
-```
+| 原位置 | 归档位置 | 内容摘要 |
+|--------|----------|----------|
+| `.temp/llvm-pass-test` | `.archive/llvm-pass-test-20260621/` | LLVM Pass 测试项目 |
+| `.temp/pocketflow-lab` | `.archive/pocketflow-lab-20260621/` | PocketFlow 实验项目 |
+| `.temp/topics` | `.archive/topics-20260621/` | 主题文档 |
+
+## 七、附：提交记录
+
+`8f7f372 docs(trae-research): 完整归档 TRAE 大赛研究项目成果`
+
+- 17 个文件变更，1469 行新增，4 行修改
+- 包含：跨项目洞察、方法论沉淀、技术债治理清单、GTM 策略、优化模式库、CI 故障排查、落地页文案、示例文档、规则文档、Tips 模板、知识资产地图
 
 ---
 
-*会话全局复盘 v1.1 | 2026-06-21*
+*会话全局复盘 v1.2 | 2026-06-21*

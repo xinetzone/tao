@@ -65,6 +65,38 @@ flowchart LR
 
 **来源**：`task-summary-rename-and-rule-evolution-20260611.md` 延伸。在 python315-adaptation 双文件合并中，因仅做关键词匹配（`grep "核心语言特性"` 命中背景描述行）就判定"已覆盖"，忽略了 §4「关键发现」的章节级差异（PEP 价值评估表、标准库影响分析、CVE 清单），导致合并遗漏，后经用户指出才补全。
 
+### 2.3 复盘报告统一命名规范
+
+复盘报告的命名必须遵循以下规则，避免模糊后缀导致的维护混乱：
+
+**标准格式**：`{project}-summary-{date}.md`
+
+| 组成部分 | 说明 | 示例 |
+|---|---|---|
+| `{project}` | 项目/任务主题，英文 kebab-case | `trae-competition-research`、`docker-ci-build-fix` |
+| `-summary-` | 固定连接词，标识为复盘总结 | — |
+| `{date}` | 日期，格式 `YYYYMMDD` | `20260621` |
+
+**禁止事项**：
+
+- ❌ 禁止使用模糊后缀：`最终版`、`完整版`、`v2`、`final`、`complete`、`revised`
+- ❌ 禁止使用中文日期：`2026年6月21日`
+- ❌ 禁止使用空格或特殊字符：`task summary.md`、`task/summary.md`
+
+**示例**：
+
+| 正确 | 错误 |
+|---|---|
+| `trae-competition-research-summary-20260621.md` | `trae-competition-research-最终版.md` |
+| `docker-ci-build-fix-summary-20260609.md` | `docker-ci-build-fix-v2-20260609.md` |
+| `agentforge-competitor-analysis-summary-20260620.md` | `agentforge竞品分析总结.md` |
+
+**自检锚点**：在创建复盘报告时，必须自问并显式自答：
+1. 文件名是否符合 `{project}-summary-{date}.md` 格式？
+2. 是否包含"最终版""完整版"等模糊后缀？
+
+**来源**：`tech-debt-governance-checklist.md` §4 重复文档治理。本会话中发现多份复盘报告（`task-execution-summary.md`、`task-summary-trae-competition-research-20260621.md`）命名不一致，内容重叠度高，占用维护心智。统一命名规范可降低检索成本和维护复杂度。
+
 ## 3. 临时产物
 
 任务执行过程中产生的中间文件、调试输出、缓存数据、截图、测试草稿和一次性脚本应放入 `.temp/`。

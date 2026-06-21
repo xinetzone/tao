@@ -1,0 +1,41 @@
+# AI Operator 角色定义
+# 文件位置: .agents/roles/ai-operator.toml
+# EU AI Act 映射: Art 14 (人工监督)
+
+[role]
+name = "ai-operator"
+domain = "engineering"
+description = "AI 工具日常使用者，负责代码生成、文档撰写等常规任务"
+
+[role.constraints]
+# Art 14 映射: 此角色可发起但不可独立批准高风险操作
+max_autonomy_level = "suggestion"  # suggestion | execution | approval
+
+# 允许的操作类型
+allowed_operations = [
+    "code_generation",
+    "code_review_suggestion",
+    "documentation",
+    "test_generation"
+]
+
+# 禁止的操作类型
+forbidden_operations = [
+    "production_deploy",
+    "data_export",
+    "security_config_change"
+]
+
+[role.non_goals]
+- "不得独立批准生产部署"
+- "不得独立导出用户数据"
+- "不得修改安全配置"
+- "不得绕过代码审查流程"
+
+[role.approval_requirements]
+# 代码合并需人工批准
+code_merge = { requires = "human_approval", approver = "reviewer" }
+# 测试运行可自主执行
+test_run = { requires = "none" }
+# 依赖更新需技术负责人批准
+dependency_update = { requires = "human_approval", approver = "tech-lead" }

@@ -1,0 +1,101 @@
+# EU AI Act 合规约束定义
+# 文件位置: .agents/constraints.toml
+# 最后更新: YYYY-MM-DD
+
+# ============================================================
+# 强约束 (strong) - 不可违反，违反将阻断执行
+# ============================================================
+
+[constraints.strong]
+# Art 14 映射: Agent 必须通过 Role 进入规范性协作体系
+agent_requires_role = true
+
+# Art 14 映射: 高风险操作必须人工批准
+high_risk_requires_approval = true
+
+# Art 15 映射: 敏感数据不得明文存储
+no_plaintext_sensitive_data = true
+
+# Art 14 映射: 生产部署必须经过审核
+production_requires_review = true
+
+# Art 12 映射: 所有 AI 配置变更必须记录
+config_change_requires_logging = true
+
+# ============================================================
+# 弱约束 (weak) - 可根据情况调整，违反仅警告
+# ============================================================
+
+[constraints.weak]
+# Agent 跨 Team 协作需报备
+agent_cross_team = "notify"
+
+# 外部 API 调用需记录日志
+external_api_logging = true
+
+# AI 生成代码人工复核率
+ai_code_review_rate = "100%"
+
+# ============================================================
+# 高风险操作定义 (Art 14)
+# ============================================================
+
+[high_risk_operations]
+# 生产环境部署
+production_deploy = { risk_level = "high", approval_count = 2, approvers = ["tech-lead", "security"] }
+
+# 数据库 Schema 变更
+schema_change = { risk_level = "high", approval_count = 1, approvers = ["architect"] }
+
+# 用户数据导出
+data_export = { risk_level = "high", approval_count = 1, approvers = ["security"] }
+
+# 第三方 API 集成
+api_integration = { risk_level = "medium", approval_count = 1, approvers = ["tech-lead"] }
+
+# 安全配置变更
+security_config = { risk_level = "high", approval_count = 2, approvers = ["security", "tech-lead"] }
+
+# ============================================================
+# 审计配置 (Art 12/14)
+# ============================================================
+
+[audit]
+# 审计日志保留天数
+log_retention_days = 365
+
+# 审计日志存储位置
+log_path = ".agents/logs/audit/"
+
+# 关键决策必须记录
+log_critical_decisions = true
+
+# ============================================================
+# 质量门禁 (Art 15)
+# ============================================================
+
+[quality_gates]
+# 测试覆盖率阈值
+test_coverage_threshold = 80
+
+# Lint 错误阈值
+lint_errors_threshold = 0
+
+# 安全漏洞阈值 (Critical/High)
+security_vulnerabilities_threshold = 0
+
+# AI 合规分数阈值
+compliance_score_threshold = 90
+
+# ============================================================
+# 角色自主级别定义 (Art 14)
+# ============================================================
+
+[autonomy_levels]
+# suggestion: 仅建议，需人工确认
+# execution: 可执行，但需记录
+# approval: 可批准，具有决策权
+
+level_suggestion = { description = "仅建议，需人工确认", requires_human = true }
+level_execution = { description = "可执行，但需记录", requires_logging = true }
+level_approval = { description = "可批准，具有决策权", requires_audit = true }

@@ -134,9 +134,9 @@ AgentForge/
 
 | 组件 | 技术 |
 |------|------|
-| 语言 | Python 3.14+ |
+| 语言 | Python 3.13+ |
 | 包管理 | uv |
-| 构建 | pdm-backend + SCM 动态版本 |
+| 构建 | scikit-build-core + setuptools-scm 动态版本 |
 | Lint | ruff |
 | 文档 | Sphinx |
 | CI/CD | GitHub Actions + GitCode |

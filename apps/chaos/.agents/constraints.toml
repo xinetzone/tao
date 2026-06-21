@@ -15,6 +15,30 @@ permission_scoped_to_role_or_agent = true
 # Handoff 必须是显式对象，至少包含来源、目标、交接内容和状态
 handoff_explicit = true
 
+# === EU AI Act 专项约束 ===
+# Article 12: 记录留存（Record-Keeping）
+# 所有 AI Agent 操作必须可审计，日志保留 365 天以上
+audit_all_actions = true
+audit_retention_days = 365
+
+# Article 14: 人类监督（Human Oversight）
+# 高风险操作必须有显式人类审批节点
+require_human_approval_for = [
+    "production_deploy",        # 生产环境部署
+    "database_schema_change",   # 数据库结构变更
+    "external_api_write",       # 外部 API 写操作
+    "user_data_export",         # 用户数据导出
+    "security_config_change",   # 安全配置变更
+    "permission_grant",         # 权限授予
+    "cost_threshold_exceed",    # 成本超阈值
+]
+
+# Article 15: 鲁棒性（Robustness）
+# 所有用户输入必须在到达 LLM 前净化（防止 Prompt Injection）
+sanitize_llm_input = true
+# 速率限制：每分钟最多 60 次请求
+rate_limit_per_minute = 60
+
 [constraints.weak]
 # Team 是否必须拥有多个 Role——由具体项目裁剪
 team_requires_multiple_roles = "project-decision"

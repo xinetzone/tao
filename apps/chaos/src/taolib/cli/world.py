@@ -23,6 +23,7 @@
 from __future__ import annotations
 
 import argparse
+import logging
 import sys
 
 from taolib.cli._world_commands.fragment_init import register_fragment_init_parser
@@ -46,6 +47,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="world",
         description="World CLI - 世界分发管理工具",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="count",
+        default=0,
+        help="增加日志详细度：-v 输出 INFO，-vv 输出 DEBUG（默认仅 WARNING 以上）",
     )
     subparsers = parser.add_subparsers(dest="command")
 
@@ -88,6 +96,14 @@ def main(argv: list[str] | None = None) -> int:
     """
     parser = build_parser()
     args = parser.parse_args(argv)
+
+    # 日志配置：-v → INFO，-vv → DEBUG，默认 WARNING
+    log_levels = {0: logging.WARNING, 1: logging.INFO, 2: logging.DEBUG}
+    logging.basicConfig(
+        level=log_levels.get(args.verbose, logging.DEBUG),
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        datefmt="%H:%M:%S",
+    )
 
     if not args.command:
         parser.print_help()

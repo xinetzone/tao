@@ -18,20 +18,10 @@
     --warning: #fbbf24;
   }
 
-  @font-face {
-    font-family: 'NotoSans';
-    src: url('./_shared/fonts/NotoSansSC-Regular.ttf') format('truetype');
-    font-weight: 400;
-  }
-  @font-face {
-    font-family: 'NotoSans';
-    src: url('./_shared/fonts/NotoSansSC-Bold.ttf') format('truetype');
-    font-weight: 700;
-  }
-
+  /* 移除无效 @font-face 声明(字体文件本就缺失),直接依赖系统字体回退链 */
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'NotoSans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-family: 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
     background: var(--bg);
     color: var(--ink);
     line-height: 1.8;

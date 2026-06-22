@@ -85,7 +85,7 @@ flowchart TD
 | 代码审查或 PR Review | [`.agents/workflows/pr-review.md`](.agents/workflows/pr-review.md) |
 | 前端或 UI 开发 | [`.agents/rules/frontend.md`](.agents/rules/frontend.md)，如项目已有前端模块还需优先参考现有代码 |
 | 后端或 API 开发 | [`.agents/rules/backend.md`](.agents/rules/backend.md)，如项目已有后端模块还需优先参考现有代码 |
-| 网页内容抓取或 defuddle | 使用 `defuddle parse <url> --md -o <output>`，输出位置遵循文档治理规则 |
+| 网页内容抓取或 defuddle | [`.agents/rules/browser-agent.md`](.agents/rules/browser-agent.md)，静态优先使用 defuddle；SPA、交互渲染或浏览器复用按该规则执行 |
 | 多世界继承、子世界覆盖、AGENTS.md 层级管理 | [`.agents/rules/world-hierarchy.md`](.agents/rules/world-hierarchy.md) |
 | 大型评估选品测试、容器化环境选择 | [`.agents/rules/containerization.md`](.agents/rules/containerization.md) |
 | AgentForge 规范查阅、标准约定、Layer 归属判断 | [`specs/agentforge-spec-v0.2.md`](specs/agentforge-spec-v0.2.md) |

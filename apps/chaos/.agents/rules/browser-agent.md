@@ -6,7 +6,7 @@ paths:
 
 # 浏览器代理调度规则 (Browser Agent Guidelines)
 
-本文档定义调度浏览器代理（Browser subagent）时的标准化指令规范，避免因措辞模糊导致代理拒绝执行或产物落地错误。
+本文档定义网页内容抓取、浏览器自动化与浏览器代理（Browser subagent）调度时的标准化规则，避免因工具选择错误、浏览器缺失或指令措辞模糊导致执行失败、代理拒绝执行或产物落地错误。
 
 ## 1. 截图输出路径
 
@@ -42,7 +42,40 @@ paths:
 - 开源项目的 README 或 Changelog
 - 技术博客的公开文章（无付费限制）
 
-## 3. 反模式提醒
+## 3. 抓取策略与浏览器复用
+
+### 3.1 工具选择顺序
+
+- 静态页面、公开文档、无需交互的正文提取：优先使用 `defuddle parse <url> --md -o <output>`。
+- SPA（React / Vue / Next.js）、静态抓取只返回空壳、或需要执行 JS / 点击 / 登录 / 表单交互：升级为浏览器自动化或浏览器代理。
+- 不要因为默认 Chrome 缺失就直接判定工具不可用；优先复用本机已有 Chromium 内核浏览器。
+
+### 3.2 浏览器复用原则
+
+- Windows 环境优先复用 Microsoft Edge。
+- 如项目明确依赖 Chrome，再使用本机 Chrome。
+- 通过 `--executable-path` 或等价配置显式指定浏览器可执行文件，禁止隐式依赖工具默认下载的浏览器。
+
+常见路径：
+
+```text
+C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+C:\Program Files\Microsoft\Edge\Application\msedge.exe
+C:\Program Files\Google\Chrome\Application\chrome.exe
+C:\Program Files (x86)\Google\Chrome\Application\chrome.exe
+```
+
+### 3.3 最小验证要求
+
+正式执行抓取、截图或自动化流程前，必须至少完成以下一项最小验证：
+
+- 打开目标页面
+- 读取页面标题
+- 截图一次
+
+若最小验证失败，先排查浏览器路径、参数名、权限与页面可访问性，再排查脚本逻辑。
+
+## 4. 反模式提醒
 
 以下指令措辞易导致代理以版权顾虑拒绝，**应避免**：
 
@@ -53,7 +86,7 @@ paths:
 | 不说明页面性质直接给 URL | 代理无法判断是否受保护 | 补充说明页面类型和访问权限 |
 | "帮我下载这个文档" | "下载"触发安全策略 | "读取并总结文档要点" |
 
-## 4. 与临时产物规范的关系
+## 5. 与临时产物规范的关系
 
 截图属于任务中间产物，适用 `.agents/rules/documentation.md` § 3 中的临时产物规则：
 

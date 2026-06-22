@@ -18,6 +18,7 @@ gtm-strategy-playbook
 landing-page-zero-barrier-signup
 optimization-patterns
 optimization-patterns-cases
+kimi-webbridge-notes
 docker-ci-troubleshooting-patterns
 research-plan-agentforge-competitor-analysis
 sync-summary-agentforge-competitor-analysis

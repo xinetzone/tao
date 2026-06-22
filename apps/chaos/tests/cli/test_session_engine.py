@@ -354,7 +354,7 @@ def test_acquire_expired_lock(state_dir: Path) -> None:
     far_future = datetime.now(UTC).astimezone() + timedelta(hours=1)
 
     # datetime 是不可变 C 类型，直接 patch datetime.now 会失败；
-    # 因此将 session_engine 模块中的 datetime 整个替换为 mock 对象。
+    # 因此将 time_utils 和 lock_manager 模块中的 datetime 替换为 mock 对象。
     class MockDatetime:
         @staticmethod
         def now(tz=None):
@@ -364,9 +364,15 @@ def test_acquire_expired_lock(state_dir: Path) -> None:
         timezone = timezone
         timedelta = timedelta
 
-    with patch(
-        "taolib.cli._world_engines.session_engine.datetime",
-        MockDatetime(),
+    with (
+        patch(
+            "taolib.cli._world_engines.time_utils.datetime",
+            MockDatetime(),
+        ),
+        patch(
+            "taolib.cli._world_engines.lock_manager.datetime",
+            MockDatetime(),
+        ),
     ):
         new_lock = acquire_lock(session_dir, surface="web")
         assert new_lock.surface == "web"

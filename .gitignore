@@ -22,3 +22,6 @@ venv/
 Thumbs.db
 *.swp
 *.swo
+
+# 临时
+.agents/skills/tuyaopen/

@@ -39,6 +39,13 @@
     外部引用检查的扫描根目录。默认为 Source 的父目录。
     仅在 -CheckExternalRefs 启用时生效。
 
+.PARAMETER LogFile
+    归档日志文件路径(可选)。启用后:
+      - robocopy 通过 /LOG+ 追加其原生统计日志到该文件
+      - 脚本各阶段(Write-Stage)的输出同步追加到该文件
+      - 结果对象返回 LogFile 字段,便于审计追溯
+    若父目录不存在会自动创建。默认覆盖式写入(同次调用内部追加)。
+
 .EXAMPLE
     .\Archive-Folder.ps1 -Source "D:\work\react-survey" -Destination "D:\archive\docs"
     # 复制到 D:\archive\docs\react-survey,验证后保留源
@@ -55,12 +62,17 @@
     .\Archive-Folder.ps1 -Source "D:\work\module-a" -Destination "D:\archive" -DeleteSource -CheckExternalRefs -RefCheckRoot "D:\work"
     # 归档并删除源,删除前检查 D:\work 下是否有文件引用 module-a 内的资源
 
+.EXAMPLE
+    .\Archive-Folder.ps1 -Source "D:\work\module-a" -Destination "D:\archive" -LogFile "D:\archive\logs\module-a-20260622.log"
+    # 归档并将 robocopy 与脚本日志写入指定文件,便于审计
+
 .OUTPUTS
     PSCustomObject,包含字段:
       Source, Destination, TargetPath
       FilesCopied, DirsCopied, BytesCopied
       Verified (bool), Mismatches (array)
       SourceDeleted (bool), ExternalRefs (array), RefCheckSkipped (bool)
+      LogFile (string, 未启用时为 $null)
       Duration (timespan), ExitCode (int)
 #>
 [CmdletBinding(SupportsShouldProcess)]
@@ -81,14 +93,62 @@ param(
 
     [switch]$CheckExternalRefs,
 
-    [string]$RefCheckRoot
+    [string]$RefCheckRoot,
+
+    [switch]$CheckDeclConsistency,
+
+    [string]$LogFile,
+
+    [string]$LogDir,
+
+    [switch]$LogAppend
 )
 
 $ErrorActionPreference = 'Stop'
 
+# 初始化日志文件:若指定则确保父目录存在
+# -LogFile: 显式指定日志文件路径(优先级高于 -LogDir)
+# -LogDir: 指定日志目录,自动生成文件名 <src-name>-<yyyyMMdd>.log
+# -LogAppend: 追加模式(默认覆盖),跨次调用追加到同一文件
+# 注意:日志写入使用 .NET API 绕过 SupportsShouldProcess,确保 -WhatIf 模式下也能记录预演过程
+$script:LogFileEnabled = $false
+$script:LogFilePath = $null
+$script:LogEncoding = [System.Text.Encoding]::UTF8
+
+# 解析最终日志文件路径
+$resolvedLogFile = $null
+if ($LogFile) {
+    $resolvedLogFile = $LogFile
+} elseif ($LogDir) {
+    $srcName = Split-Path $Source -Leaf
+    $dateStr = Get-Date -Format 'yyyyMMdd'
+    $resolvedLogFile = Join-Path $LogDir "$srcName-$dateStr.log"
+}
+
+if ($resolvedLogFile) {
+    $logParentDir = Split-Path $resolvedLogFile -Parent
+    if ($logParentDir -and -not (Test-Path -LiteralPath $logParentDir)) {
+        [System.IO.Directory]::CreateDirectory($logParentDir) | Out-Null
+    }
+    $script:LogFilePath = $resolvedLogFile
+    $script:LogFileEnabled = $true
+    $timestamp = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
+    if ($LogAppend -and (Test-Path -LiteralPath $resolvedLogFile)) {
+        $header = "`r`n===== Archive-Folder 追加 $timestamp =====`r`n"
+        [System.IO.File]::AppendAllText($resolvedLogFile, $header, $script:LogEncoding)
+    } else {
+        $header = "===== Archive-Folder 日志 开始 $timestamp =====`r`n"
+        [System.IO.File]::WriteAllText($resolvedLogFile, $header, $script:LogEncoding)
+    }
+}
+
 function Write-Stage {
     param([string]$Stage, [string]$Message, [string]$Color = 'Cyan')
-    Write-Host "[$Stage] $Message" -ForegroundColor $Color
+    $line = "[$Stage] $Message"
+    Write-Host $line -ForegroundColor $Color
+    if ($script:LogFileEnabled) {
+        [System.IO.File]::AppendAllText($script:LogFilePath, "$line`r`n", $script:LogEncoding)
+    }
 }
 
 function Test-PathSafe {
@@ -215,6 +275,8 @@ $result = [PSCustomObject]@{
     SourceDeleted   = $false
     ExternalRefs    = @()
     RefCheckSkipped = $true
+    DeclIssues      = @()
+    LogFile         = if ($script:LogFileEnabled) { $script:LogFilePath } else { $null }
     Duration        = $null
     ExitCode        = 0
 }
@@ -248,6 +310,55 @@ try {
         New-Item -ItemType Directory -Path $Destination -Force | Out-Null
     }
 
+    # ========== 阶段 0.5:HTML 声明一致性检查(可选,归档前) ==========
+    $declIssues = @()
+    if ($CheckDeclConsistency) {
+        Write-Stage '0.5-DeclCheck' '开始 HTML 声明一致性检查'
+        $htmlFiles = Get-ChildItem -LiteralPath $Source -Recurse -File | Where-Object { $_.Extension -in @('.html', '.htm') }
+        if ($htmlFiles.Count -eq 0) {
+            Write-Stage '0.5-DeclCheck' '未发现 HTML 文件,跳过声明检查' 'Yellow'
+        } else {
+            Write-Stage '0.5-DeclCheck' "发现 $($htmlFiles.Count) 个 HTML 文件"
+            $dq = [char]34
+            $sq = [char]39
+            $declPatterns = @(
+                "(?i)<script[^>]+src=[$dq$sq]([^$dq$sq]+)[$dq$sq]",
+                "(?i)<img[^>]+src=[$dq$sq]([^$dq$sq]+)[$dq$sq]",
+                "(?i)<link[^>]+href=[$dq$sq]([^$dq$sq]+)[$dq$sq]",
+                "(?i)url\([$dq$sq]?([^$dq$sq)]+)[$dq$sq]?\)"
+            )
+            foreach ($html in $htmlFiles) {
+                $content = $null
+                try { $content = [System.IO.File]::ReadAllText($html.FullName, [System.Text.Encoding]::UTF8) }
+                catch { $content = Get-Content $html.FullName -Raw -ErrorAction SilentlyContinue }
+                if (-not $content) { continue }
+                foreach ($pat in $declPatterns) {
+                    foreach ($m in [regex]::Matches($content, $pat)) {
+                        $ref = $m.Groups[1].Value
+                        if ($ref -match '^(https?:)?//' -or $ref -match '^#' -or $ref -match '^data:' -or $ref -match '^javascript:' -or $ref -match '^mailto:' -or $ref -match '^tel:') { continue }
+                        $refPath = $ref -replace '[?#].*$','' -replace '^\./',''
+                        $absPath = Join-Path $Source $refPath
+                        if (-not (Test-Path -LiteralPath $absPath -PathType Leaf)) {
+                            $declIssues += [PSCustomObject]@{
+                                HtmlFile = $html.Name
+                                Declared = $ref
+                            }
+                        }
+                    }
+                }
+            }
+            if ($declIssues.Count -gt 0) {
+                Write-Stage '0.5-DeclCheck' "⚠️ 发现 $($declIssues.Count) 处声明但缺失(不阻止归档,仅警告)" 'Yellow'
+                foreach ($issue in $declIssues) {
+                    Write-Stage '0.5-DeclCheck' "  $($issue.HtmlFile) -> $($issue.Declared)" 'Yellow'
+                }
+            } else {
+                Write-Stage '0.5-DeclCheck' '✅ 所有声明引用均存在' 'Green'
+            }
+        }
+        $result.DeclIssues = $declIssues
+    }
+
     # ========== 阶段 1:robocopy 复制 ==========
     Write-Stage '1-Copy' '开始 robocopy 复制(保留属性/时间戳/空目录)'
     $robocopyArgs = @(
@@ -262,6 +373,11 @@ try {
         '/NFL'         # 不列文件名(用日志解析更清晰)
         '/NDL'         # 不列目录名
     )
+    # 启用日志文件时,robocopy 通过 /LOG+ 追加其原生统计到同一文件
+    if ($script:LogFileEnabled) {
+        $robocopyArgs += "/LOG+:$($script:LogFilePath)"
+        Write-Stage '1-Copy' "robocopy 日志将追加到: $($script:LogFilePath)"
+    }
     if ($PSCmdlet.ShouldProcess("$Source -> $targetPath", 'robocopy')) {
         $rcOutput = & robocopy @robocopyArgs 2>&1
         $rcExit = $LASTEXITCODE
@@ -404,6 +520,11 @@ try {
 } finally {
     $result.Duration = (Get-Date) - $startTime
     Write-Stage 'Done' "耗时: $($result.Duration.ToString('mm\:ss\.fff'))" 'Cyan'
+    # 日志收尾:追加结束标记,便于审计分段
+    if ($script:LogFileEnabled) {
+        $footer = "===== Archive-Folder 日志 结束 $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') ExitCode=$($result.ExitCode) =====`r`n"
+        [System.IO.File]::AppendAllText($script:LogFilePath, $footer, $script:LogEncoding)
+    }
 }
 
 # 输出结果对象(便于管道消费)

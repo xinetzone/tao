@@ -44,6 +44,8 @@
 |------|------|---------------|
 | Skill Creator | 技能开发工具链 | [.agents/skills/skill-creator/CHANGELOG.md](.agents/skills/skill-creator/CHANGELOG.md) |
 | Task Execution Summary | 任务执行总结报告生成器 | [.agents/skills/task-execution-summary/CHANGELOG.md](.agents/skills/task-execution-summary/CHANGELOG.md) |
+| Archive Folder | Windows 文件夹三段式可验证归档 | [.agents/skills/archive-folder/CHANGELOG.md](.agents/skills/archive-folder/CHANGELOG.md) |
+| Asset Redundancy Analyzer | 静态资产冗余分析 | [.agents/skills/asset-redundancy-analyzer/CHANGELOG.md](.agents/skills/asset-redundancy-analyzer/CHANGELOG.md) |
 
 ## 项目级变更日志索引
 
@@ -51,6 +53,7 @@
 
 | 时间 | 说明 | CHANGELOG 路径 |
 |------|------|---------------|
+| 2026-06 | 2026年6月项目级变更（archive-folder v1.3.0 + asset-redundancy-analyzer v1.0.0 + react-survey 字体治理 + 参考文档沉淀） | [tests/project_changelogs/CHANGELOG_2026-06.md](tests/project_changelogs/CHANGELOG_2026-06.md) |
 | 2026-05 | 2026年5月项目级变更（[未发布]） | [tests/project_changelogs/CHANGELOG_2026-05.md](tests/project_changelogs/CHANGELOG_2026-05.md) |
 
 > 说明：上述路径为变更记录的**真实数据源**。文档站点（Sphinx）通过 [`docs/tech/changelog.md`](../../docs/tech/changelog.md) 与 [`docs/tech/changelogs/`](../../docs/tech/changelogs/) 下的镜像页 `{include}` 引用渲染，请勿直接编辑镜像页。

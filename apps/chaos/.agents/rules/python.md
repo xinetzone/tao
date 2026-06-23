@@ -4,6 +4,13 @@ paths:
   - "pyproject.toml"
   - "uv.lock"
   - "mise.toml"
+usage_feedback:
+  total_invocations: 0
+  success_count: 0
+  failure_count: 0
+  last_invoked: null
+  failure_reasons: []
+  agent_notes: []
 ---
 
 # Python 开发与版本适配规则

@@ -15,7 +15,7 @@
 
 - 关联模块：`.agents/docs/templates/`、`.agents/docs/references/`、`.agents/docs/superpowers/specs/`、`.agents/docs/superpowers/retrospectives/`
 - 常见触发场景：任务后沉淀稳定经验、复盘后归纳模式、多个规则出现张力、用户要求做梦式归纳
-- 优先检查文件：`.agents/docs/superpowers/specs/2026-05-24-agent-memory-dream-protocol-design.md`
+- 优先检查文件：`.agents/docs/superpowers/specs/agent-system/2026-05-24-agent-memory-dream-protocol-design.md`
 
 ## Trigger Phrases
 
@@ -145,11 +145,11 @@ flowchart LR
 
 - [`../templates/agent-memory-entry-template.md`](../templates/agent-memory-entry-template.md)
 - [`../templates/agent-dream-session-template.md`](../templates/agent-dream-session-template.md)
-- [`../superpowers/specs/2026-05-24-agent-memory-dream-protocol-design.md`](../superpowers/specs/2026-05-24-agent-memory-dream-protocol-design.md)
+- [`../superpowers/specs/agent-system/2026-05-24-agent-memory-dream-protocol-design.md`](../superpowers/specs/agent-system/2026-05-24-agent-memory-dream-protocol-design.md)
 - [`knowledge-driven-exploration-protocol.md`](knowledge-driven-exploration-protocol.md)
 
 ## Sources
 
-- 设计来源：`.agents/docs/superpowers/specs/2026-05-24-agent-memory-dream-protocol-design.md`
+- 设计来源：`.agents/docs/superpowers/specs/agent-system/2026-05-24-agent-memory-dream-protocol-design.md`
 - 版本：2026-05-24
 - 抓取时间：不适用

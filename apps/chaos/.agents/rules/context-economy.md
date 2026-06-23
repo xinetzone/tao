@@ -63,4 +63,4 @@ flowchart LR
 - 当前任务进度使用任务列表管理，不写入长期知识库。
 - 项目稳定约定、长期规则、复用方法可沉淀到 `.agents/docs/` 或 `.agents/rules/`。
 - 复盘报告统一放入 `.agents/docs/superpowers/retrospectives/`。
-- 上下文优化方法参考 `.agents/docs/superpowers/plans/2026-05-24-agent-token-reduction-guide.md`。
+- 上下文优化方法参考 `.agents/docs/superpowers/plans/agent-system/2026-05-24-agent-token-reduction-guide.md`。

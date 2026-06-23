@@ -79,6 +79,6 @@ flowchart LR
 
 ## Sources
 
-- 设计来源：`.agents/docs/superpowers/specs/2026-05-23-dao-business-mapping-framework-design.md`
+- 设计来源：`.agents/docs/superpowers/specs/misc/2026-05-23-dao-business-mapping-framework-design.md`
 - 版本：2026-05-23
 - 抓取时间：不适用

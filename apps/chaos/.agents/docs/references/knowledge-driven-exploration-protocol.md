@@ -15,7 +15,7 @@
 
 - 关联模块：`.agents/docs/templates/`、`.agents/docs/superpowers/specs/`、`.agents/docs/superpowers/retrospectives/`、`.trae/specs/`
 - 常见触发场景：规划新的探索方向、设计最小试点、沉淀执行模板、复盘并升级规则
-- 优先检查文件：`.agents/docs/superpowers/specs/2026-05-24-knowledge-driven-exploration-foundation-design.md`
+- 优先检查文件：`.agents/docs/superpowers/specs/misc/2026-05-24-knowledge-driven-exploration-foundation-design/index.md`
 
 ## Trigger Phrases
 
@@ -91,6 +91,6 @@ flowchart LR
 
 ## Sources
 
-- 设计来源：`.agents/docs/superpowers/specs/2026-05-24-knowledge-driven-exploration-foundation-design.md`
+- 设计来源：`.agents/docs/superpowers/specs/misc/2026-05-24-knowledge-driven-exploration-foundation-design/index.md`
 - 版本：2026-05-24
 - 抓取时间：不适用

@@ -48,7 +48,7 @@ mise run init → mise trust → mise install → mise run sync → mise run che
 ### 阶段一：设计与规划
 
 - 通过 brainstorming 技能收敛需求，确认聚焦「命令内闭环」
-- 编写实施计划 `.agents/docs/superpowers/plans/2026-05-23-init-onboarding-output.md`
+- 编写实施计划 `.agents/docs/superpowers/plans/docs-governance/2026-05-23-init-onboarding-output.md`
 - 定义 7 个实施任务，从测试先行到主流程接入
 
 ### 阶段二：核心实现

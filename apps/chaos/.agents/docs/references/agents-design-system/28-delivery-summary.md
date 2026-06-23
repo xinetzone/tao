@@ -9,7 +9,7 @@
    - AgentForge 在此基础上提供渐进可选的扩展层
    - Markdown ≈ CommonMark 类比
 
-2. **[Spec v0.2 规范文档](file://d:/spaces/AgentForge/apps/chaos/.agents/docs/superpowers/specs/2026-05-28-agentforge-spec-v0.2-three-layer-architecture.md)** 新增 §1.0 节，用表格明确划分：
+2. **[Spec v0.2 规范文档](file://d:/spaces/AgentForge/apps/chaos/specs/agentforge-spec-v0.2.md)** 新增 §1.0 节，用表格明确划分：
    - 定义方、核心约定、最低门槛、独立性、适用范围
    - 结论句：**"AgentForge 不再要求标准采纳者接受它的世界观"**
 

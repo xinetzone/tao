@@ -478,3 +478,42 @@ python .agents/scripts/check_doc_links.py
 - 占位 README（`orphan: true`）适用于骨架预设阶段。
 - 一旦目录有正式内容并需要进入主导航，应升级为 `index.md`：重命名同时移除 `orphan: true` 并加入子 `toctree`。
 - 不允许 README.md 与 index.md 同时存在于同一子目录（避免入口歧义）。
+
+## 12. 原子提交引用完整性检查
+
+提交修改文件前，必须检查 diff 中是否引用了未跟踪（untracked）文件。若引用了未跟踪文件，须一并暂存后提交，避免产生断链。
+
+### 12.1 问题场景
+
+当文件 A 被修改并新增了对文件 B 的引用（相对路径、Markdown 链接、`{include}` 指令等），但文件 B 尚未被 git 跟踪时，若仅提交文件 A，则引用方已入库但被引用方未入库，形成断链。
+
+### 12.2 检查流程
+
+```mermaid
+flowchart TD
+    A["git add 目标文件"] --> B["git diff --cached"]
+    B --> C{"diff 中是否出现<br/>路径/链接引用？"}
+    C -->|否| F["直接 commit"]
+    C -->|是| D["git status 确认<br/>被引用文件是否 untracked"]
+    D -->|已跟踪| F
+    D -->|未跟踪| E["一并 git add<br/>被引用文件"]
+    E --> F
+```
+
+### 12.3 自检锚点
+
+在每次 `git commit` 前，必须自问并显式自答：
+
+1. 本次提交的修改文件中，是否新增了对其他文件的路径引用（相对路径、Markdown 链接、`{include}`/`{doc}` 指令）？—— 若否，可直接提交。
+2. 若有引用，被引用文件是否已在 git 跟踪中？—— 若未跟踪，必须一并 `git add` 后再提交。
+
+### 12.4 常见引用类型
+
+| 引用形式 | 示例 | 检查方式 |
+|----------|------|----------|
+| Markdown 链接 | `[文档](path/to/file.md)` | grep `\[.*\]\(` |
+| 相对路径文本 | `详见 path/to/file.md` | grep `\.md` |
+| `{include}` 指令 | `{include} path/to/file.md` | grep `{include}` |
+| `{doc}` 指令 | `{doc}path/to/file` | grep `{doc}` |
+
+**来源**：`wechat-archive-and-commits-summary-20260623.md` 复盘报告。3 次原子提交中 2 次涉及引用完整性补充（CHANGELOG 引用技能 CHANGELOG、rule-evolution 引用模板文件），占比 67%。

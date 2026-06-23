@@ -17,6 +17,13 @@ rule-lifecycle
 layered-development-practice
 weakness-as-strength-api-design
 container-build-insights
+designer-deviation
+doc-ahead-of-implementation
+governance-gap
+extraction-methodology
+philosophy-as-dao
+skeleton-vs-runtime
+retrospective-rethinking
 ```
 
 ## 内容概览
@@ -32,6 +39,13 @@ container-build-insights
 | `layered-development-practice` | 开发者、AI Agent | 宇宙/世界/生长通道三层架构如何指导日常开发决策？接到任务时怎样用分层思维做判断？ |
 | `weakness-as-strength-api-design` | 架构师、API 设计者 | 「弱者道之用」如何映射为 API 设计的柔性哲学？最少假设如何成就最强适应力？ |
 | `container-build-insights` | 开发者、DevOps 工程师 | 容器构建实践中的生态趋势、格式兼容性与调试模式洞察 |
+| `designer-deviation` | 架构师、核心贡献者 | 设计哲学的提出者为何会偏离自己的设计？如何机制化约束？ |
+| `doc-ahead-of-implementation` | 文档维护者、架构师 | 文档领先于实现如何制造虚假完成感？如何标注未实现资产？ |
+| `governance-gap` | 项目管理者、治理设计者 | 制度完备但执行空缺时如何产生合规幻觉？任命优先于制度完善？ |
+| `extraction-methodology` | 架构师、迁移决策者 | "萃取 ≠ 重命名"如何成为从个人到社区的通用转化范式？ |
+| `philosophy-as-dao` | 架构师、哲学驱动者 | 哲学何时从赋能变为门槛？如何将显性哲学转为隐性约束？ |
+| `skeleton-vs-runtime` | 架构师、技术负责人 | 未经验证的架构骨架是假设还是架构？验证优先于定义？ |
+| `retrospective-rethinking` | 项目管理者、复盘执行者 | 复盘的元价值是总结还是再思考？如何通过决策审计推翻错误决策？ |
 
 ## 边界
 

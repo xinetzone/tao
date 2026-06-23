@@ -1,11 +1,23 @@
 # Memories: 长期记忆条目
 
-本目录存储从复盘报告中提取的、已验证可复用的长期知识条目。
+> **维护责任人**：Leader Agent
+> **模块化日期**：2026-06-23
+
+本目录存储从复盘报告中提取的、已验证可复用的长期知识条目。经模块化重构后，记忆条目按类型分为 **principles/、experiences/、constraints/、methodologies/** 四个模块。
 
 ## 定位
 
 - **memories/** 关注"为什么这样做" — 记录决策依据、经验教训、约束边界
 - **references/** 关注"怎样使用" — 快速参考、命令、配置
+
+## 模块导航
+
+| 模块 | 类型 | 文件数 | 说明 | 入口 |
+|------|------|--------|------|------|
+| `principles/` | 原则 | 4 | 记录项目设计、知识构建、外部知识入库的通用原则 | [README](./principles/README.md) |
+| `experiences/` | 经验 | 2 | 记录文档维护、知识图谱构建的实战经验 | [README](./experiences/README.md) |
+| `constraints/` | 约束 | 1 | 记录 MyST 跨目录链接等技术约束 | [README](./constraints/README.md) |
+| `methodologies/` | 方法论 | 1 | 记录文档债务治理等可复用方法论 | [README](./methodologies/README.md) |
 
 ## 命名规范
 
@@ -17,7 +29,7 @@ YYYY-MM-DD-<记忆主题>-<类型>.md
 - `2026-05-25-doc-maintenance-5-steps-experience.md`
 - `2026-05-25-myst-cross-directory-link-constraint.md`
 
-类型后缀（可选）：`experience` / `constraint` / `principle` / `fact`
+类型后缀：`experience` / `constraint` / `principle` / `methodology` / `fact`
 
 ## 入选条件（Gate Rules）
 
@@ -47,3 +59,23 @@ YYYY-MM-DD-<记忆主题>-<类型>.md
 ```
 
 详见 [`../../references/agent-memory-dream-protocol.md`](../../references/agent-memory-dream-protocol.md)。
+
+## 元数据文档
+
+| 文档 | 用途 |
+|------|------|
+| [`_meta/naming-convention.md`](./_meta/naming-convention.md) | 命名规范 |
+| [`_meta/module-catalog.md`](./_meta/module-catalog.md) | 模块目录清单 |
+| [`_meta/dependency-graph.md`](./_meta/dependency-graph.md) | 依赖关系图谱 |
+| [`_meta/migration-log.md`](./_meta/migration-log.md) | 迁移日志 |
+
+## 检索指南
+
+| 需求 | 去向 |
+|------|------|
+| 查找设计原则、通用规则 | `principles/` |
+| 查找实战经验、最佳实践 | `experiences/` |
+| 查找技术约束、边界条件 | `constraints/` |
+| 查找可复用方法论、流程 | `methodologies/` |
+| 了解模块间引用关系 | `_meta/dependency-graph.md` |
+| 查看迁移完整性 | `_meta/migration-log.md` |

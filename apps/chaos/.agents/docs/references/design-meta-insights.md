@@ -184,7 +184,7 @@ flowchart LR
 - [`agent-collaboration-metamodel.md`](./agent-collaboration-metamodel.md) — Team/Role/Agent 元模型
 - [`agent-memory-dream-protocol.md`](./agent-memory-dream-protocol.md) — 记忆与梦境协议
 - [`../../../../../docs/tech/world-session-spec.md`](../../../../../docs/tech/world-session-spec.md) — World Session 规约（本文档原始触发场景）
-- [`../superpowers/retrospectives/task-summary-world-multi-surface-exploration-20260527.md`](../superpowers/retrospectives/task-summary-world-multi-surface-exploration-20260527.md) — 触发本文档的设计探索复盘
+- [`../superpowers/retrospectives/task-summaries/world-cli/task-summary-world-multi-surface-exploration-20260527.md`](../superpowers/retrospectives/task-summaries/world-cli/task-summary-world-multi-surface-exploration-20260527.md) — 触发本文档的设计探索复盘
 
 ---
 

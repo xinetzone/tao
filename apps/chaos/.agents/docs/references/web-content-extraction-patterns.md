@@ -110,7 +110,7 @@ flowchart LR
 | Browser Agent 行为 | 大多数情况成功；少数需登录态文章会跳引导 |
 | 备选 | `search_web` 可拿摘要 + 用户粘贴全文 |
 
-> 详见 [`task-summary-zhihu-integration-20260526.md`](../superpowers/retrospectives/task-summary-zhihu-integration-20260526.md)。
+> 详见 [`task-summary-zhihu-integration-20260526.md`](../superpowers/retrospectives/task-summaries/misc/task-summary-zhihu-integration-20260526.md)。
 
 ---
 
@@ -161,9 +161,9 @@ defuddle parse <反爬 URL> --md  ❌ 同样会被拒
 
 - [`design-meta-insights.md`](./design-meta-insights.md) — 元层级判断框架（道）
 - [`routing-protocol.md`](./routing-protocol.md) — 上下文路由协议
-- [`../superpowers/retrospectives/task-summary-zhihu-integration-20260526.md`](../superpowers/retrospectives/task-summary-zhihu-integration-20260526.md) — 知乎抓取经验
-- [`../superpowers/retrospectives/task-summary-world-multi-surface-exploration-20260527.md`](../superpowers/retrospectives/task-summary-world-multi-surface-exploration-20260527.md) — 微信公众号抓取（本文档触发场景）
-- [`../superpowers/retrospectives/task-summary-spa-content-extraction-20260621.md`](../superpowers/retrospectives/task-summary-spa-content-extraction-20260621.md) — SPA 三阶段抓取法（TRAE / Cursor / Bolt / Replit 四案例）
+- [`../superpowers/retrospectives/task-summaries/misc/task-summary-zhihu-integration-20260526.md`](../superpowers/retrospectives/task-summaries/misc/task-summary-zhihu-integration-20260526.md) — 知乎抓取经验
+- [`../superpowers/retrospectives/task-summaries/world-cli/task-summary-world-multi-surface-exploration-20260527.md`](../superpowers/retrospectives/task-summaries/world-cli/task-summary-world-multi-surface-exploration-20260527.md) — 微信公众号抓取（本文档触发场景）
+- [`../superpowers/retrospectives/task-summaries/exploration/task-summary-spa-content-extraction-20260621.md`](../superpowers/retrospectives/task-summaries/exploration/task-summary-spa-content-extraction-20260621.md) — SPA 三阶段抓取法（TRAE / Cursor / Bolt / Replit 四案例）
 
 ---
 

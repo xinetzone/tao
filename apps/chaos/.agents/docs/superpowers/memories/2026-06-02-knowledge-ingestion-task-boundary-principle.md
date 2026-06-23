@@ -36,7 +36,7 @@
 ## Source
 
 - 来源类型：复盘 / 实施 / 用户偏好
-- 来源位置：`.agents/docs/superpowers/retrospectives/task-summary-deepagents-overview-extraction-20260602.md`
+- 来源位置：`.agents/docs/superpowers/retrospectives/task-summaries/exploration/task-summary-deepagents-overview-extraction-20260602.md`
 - 相关任务：DeepAgents overview 教程萃取、复盘归档、用户追加要求“此次任务有何洞察，并归档洞察”
 - 相关提交：`e7613ce docs(deepagents): extract overview tutorial knowledge`、`6ec7539 fix(docs): repair internal linkcheck failures`、`ddbdda3 style(docs): normalize markdown formatting`、`ea5a60f docs(memory): capture external knowledge ingestion principle`
 - 形成日期：2026-06-02

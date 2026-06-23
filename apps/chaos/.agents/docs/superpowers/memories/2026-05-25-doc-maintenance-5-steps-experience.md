@@ -25,7 +25,7 @@
 ## Source
 
 - 来源类型：复盘
-- 来源位置：`.agents/docs/superpowers/retrospectives/task-summary-doc-governance-closure-20260525.md`
+- 来源位置：`.agents/docs/superpowers/retrospectives/task-summaries/documentation/task-summary-doc-governance-closure-20260525.md`
 - 形成日期：2026-05-25
 
 ## Expiration Conditions

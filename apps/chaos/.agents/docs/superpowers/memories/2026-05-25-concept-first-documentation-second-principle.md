@@ -24,7 +24,7 @@
 ## Source
 
 - 来源类型：复盘
-- 来源位置：`.agents/docs/superpowers/retrospectives/task-summary-psi-philosophy-docs-20260525.md` §8 方法论
+- 来源位置：`.agents/docs/superpowers/retrospectives/task-summaries/documentation/task-summary-psi-philosophy-docs-20260525.md` §8 方法论
 - 形成日期：2026-05-25
 
 ## Expiration Conditions

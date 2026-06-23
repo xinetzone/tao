@@ -38,7 +38,7 @@
 ## Source
 
 - 来源类型：复盘 / 实施 / 用户偏好
-- 来源位置：`.agents/docs/superpowers/retrospectives/task-summary-memory-debt-governance-full-cycle-20260611.md`
+- 来源位置：`.agents/docs/superpowers/retrospectives/task-summaries/documentation/task-summary-memory-debt-governance-full-cycle-20260611.md`
 - 相关任务：superpowers/ 记忆债务审计治理全周期
 - 相关提交：`edbbe20`、`ceb4de0`、`7f32d6d`、`4ad283a`、`41e0fff`、`b4de8b0`
 - 形成日期：2026-06-11

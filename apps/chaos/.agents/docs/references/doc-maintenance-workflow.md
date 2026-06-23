@@ -106,4 +106,4 @@ flowchart LR
 
 - [`.agents/rules/documentation.md`](../../rules/documentation.md) — 文档治理规则（含真实源 vs 镜像页规范）。
 - [`.agents/scripts/check_doc_links.py`](../../scripts/check_doc_links.py) — 内链校验脚本参考实现。
-- [`.agents/docs/superpowers/retrospectives/task-summary-readme-changelog-sync-20260525.md`](../superpowers/retrospectives/task-summary-readme-changelog-sync-20260525.md) — 本流程的实战复盘原型。
+- [`.agents/docs/superpowers/retrospectives/task-summaries/documentation/task-summary-readme-changelog-sync-20260525.md`](../superpowers/retrospectives/task-summaries/documentation/task-summary-readme-changelog-sync-20260525.md) — 本流程的实战复盘原型。

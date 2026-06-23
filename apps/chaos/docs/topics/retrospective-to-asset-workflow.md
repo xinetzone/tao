@@ -2,7 +2,7 @@
 
 > **类型**：经验层（topic）· 候选规则
 >
-> **触发来源**：[`task-summary-spa-content-extraction-20260621.md`](../superpowers/retrospectives/task-summary-spa-content-extraction-20260621.md)
+> **触发来源**：[`task-summary-spa-content-extraction-20260621.md`](../superpowers/retrospectives/task-summaries/exploration/task-summary-spa-content-extraction-20260621.md)
 >
 > **关联规则**：[`../.agents/rules/rule-evolution.md`](../rules/rule-evolution.md) · [`../.agents/docs/superpowers/memories/2026-05-25-doc-architecture-three-layers-principle.md`](../docs/superpowers/memories/2026-05-25-doc-architecture-three-layers-principle.md)
 
@@ -92,7 +92,7 @@ flowchart LR
 
 | 关系 | 文档 |
 |------|------|
-| 父流程 | [`task-summary-spa-content-extraction-20260621.md`](../superpowers/retrospectives/task-summary-spa-content-extraction-20260621.md) |
+| 父流程 | [`task-summary-spa-content-extraction-20260621.md`](../superpowers/retrospectives/task-summaries/exploration/task-summary-spa-content-extraction-20260621.md) |
 | 工具层 | [`../.agents/docs/references/web-content-extraction-patterns.md`](../docs/references/web-content-extraction-patterns.md) |
 | 规则层（待定） | `../.agents/rules/experience-distillation.md`（**未创建**，需 ≥ 3 次独立触发） |
 | 文档三层 | [`../.agents/docs/superpowers/memories/2026-05-25-doc-architecture-three-layers-principle.md`](../docs/superpowers/memories/2026-05-25-doc-architecture-three-layers-principle.md) |

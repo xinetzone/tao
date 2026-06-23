@@ -46,8 +46,9 @@
 |---|---------|------|--------|
 | 1 | `_meta/naming-convention.md` | 命名规范 | Leader Agent |
 | 2 | `_meta/module-catalog.md` | 模块目录清单（本文件） | Leader Agent |
-| 3 | `_meta/dependency-graph.md` | 依赖关系图谱 | Leader Agent |
-| 4 | `_meta/migration-log.md` | 迁移日志 | Leader Agent |
+| 3 | `_meta/module-mindmap.md` | 模块化结构思维导图（可视化） | Leader Agent |
+| 4 | `_meta/dependency-graph.md` | 依赖关系图谱 | Leader Agent |
+| 5 | `_meta/migration-log.md` | 迁移日志 | Leader Agent |
 
 ## 统计摘要
 
@@ -59,5 +60,5 @@
 | 原子化目录数 | 5 |
 | 原子单元文件总数 | 47 |
 | 模块 README 总数 | 15 |
-| 元数据文档总数 | 4 |
+| 元数据文档总数 | 5 |
 | 迁移完成率 | 100% (72/72) |

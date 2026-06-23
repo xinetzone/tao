@@ -49,6 +49,7 @@
 |------|------|
 | [`_meta/naming-convention.md`](./_meta/naming-convention.md) | 命名规范（目录名、文件名、日期格式） |
 | [`_meta/module-catalog.md`](./_meta/module-catalog.md) | 模块目录清单（路径、功能、文件数、维护者） |
+| [`_meta/module-mindmap.md`](./_meta/module-mindmap.md) | 模块化结构思维导图（可视化层级关系） |
 | [`_meta/dependency-graph.md`](./_meta/dependency-graph.md) | 依赖关系图谱（正向/反向依赖、模块间关系） |
 | [`_meta/migration-log.md`](./_meta/migration-log.md) | 迁移日志（72 份原始文件迁移记录） |
 

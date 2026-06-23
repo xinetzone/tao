@@ -53,6 +53,21 @@
 | [`_meta/dependency-graph.md`](./_meta/dependency-graph.md) | 依赖关系图谱（正向/反向依赖、模块间关系） |
 | [`_meta/migration-log.md`](./_meta/migration-log.md) | 迁移日志（72 份原始文件迁移记录） |
 
+## 统计摘要
+
+| 指标 | 数值 |
+|------|------|
+| 原始文件总数 | 72 |
+| 一级模块数 | 6 |
+| 二级子模块数 | 9 |
+| 原子化目录数 | 5 |
+| 原子单元文件总数 | 47 |
+| 模块 README 总数 | 15 |
+| 元数据文档总数 | 5 |
+| 迁移完成率 | 100% (72/72) |
+
+> 完整模块清单与维护者信息见 [`_meta/module-catalog.md`](./_meta/module-catalog.md)。
+
 ## 命名规范摘要
 
 - **目录名**：纯 ASCII 英文 kebab-case

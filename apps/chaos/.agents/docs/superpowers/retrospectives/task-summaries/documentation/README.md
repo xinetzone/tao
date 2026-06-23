@@ -37,3 +37,5 @@
 | `task-summary-rename-and-rule-evolution-20260611.md` | 重命名与规则演化任务总结（2026-06-11） |
 | `task-summary-review-framework-20260611.md` | 评审框架任务总结（2026-06-11） |
 | `task-summary-sphinx-autoapi-warnings-clearance-20260523.md` | Sphinx autoapi 警告清理任务总结（2026-05-23） |
+| `task-summary-retrospectives-modularization-20260623.md` | retrospectives 目录模块化重构任务总结（2026-06-23） |
+| `task-summary-superpowers-plans-specs-atomization-20260623.md` | superpowers plans/specs 文档原子化处理任务总结（2026-06-23） |

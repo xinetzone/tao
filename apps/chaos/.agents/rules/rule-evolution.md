@@ -92,6 +92,59 @@ stateDiagram-v2
 | **废弃** | 标记 `deprecated` 并指向替代规则，**保留链接** | 被新规则完全包含 |
 | **分裂** | 拆分为多条带条件的子规则 | 单一规则承载了互斥意图 |
 
+### 2.5 规则使用反馈闭环
+
+规则固化后,需要持续收集 Agent 实际使用信号,形成"使用 → 反馈 → 改进"闭环。规则文件的 `usage_feedback` frontmatter 字段承载这一信号,作为 `Challenged` 状态判定的数据依据。
+
+#### 2.5.1 字段定义
+
+完整字段说明见 [`docs/templates/rule-frontmatter-template.md`](../docs/templates/rule-frontmatter-template.md)。核心字段:
+
+| 字段 | 作用 | 维护方 |
+|------|------|--------|
+| `total_invocations` | 规则被引用总次数 | Agent 自动累加 |
+| `success_count` / `failure_count` | 应用后任务成功 / 失败次数 | Agent 自动累加 |
+| `last_invoked` | 最后一次引用日期 | Agent 自动更新 |
+| `failure_reasons` | 失败原因明细(含 workaround) | Agent 记录 |
+| `agent_notes` | 规则缺口或过时内容标注 | Agent 主动标注 |
+
+#### 2.5.2 Agent 更新时机
+
+Agent 在以下场景必须更新所引用规则的 `usage_feedback` 字段:
+
+| 场景 | 更新动作 |
+|------|----------|
+| 引用规则后任务成功 | `total_invocations` +1,`success_count` +1,`last_invoked` 设为今日 |
+| 引用规则后任务失败 | `total_invocations` +1,`failure_count` +1,`last_invoked` 设为今日,追加 `failure_reasons` 条目 |
+| 发现规则缺口或过时内容 | 追加 `agent_notes` 条目(含 timestamp、agent、note) |
+| 发现既有 `failure_reasons` 的 workaround | 更新对应条目的 `workaround` 字段 |
+
+#### 2.5.3 更新原则
+
+- **数据必须来自 Agent 实际使用**,禁止人工编造(编造数据会误导规则演化决策)。
+- **`failure_reasons` 比 `success_count` 更有价值**——失败信号驱动改进,成功信号只用于统计。
+- **`agent_notes` 是规则演化的种子**——累积到一定数量后,应触发 §2.3 的 `Challenged` 状态判定。
+- **`agent_notes` 应定期归档**——超过 3 个月的 notes 应迁移到 retrospective,避免 frontmatter 无限膨胀。
+
+#### 2.5.4 反馈数据与演化触发的关系
+
+`usage_feedback` 数据为 §2.3 的演化触发条件提供量化依据:
+
+```mermaid
+flowchart LR
+    A["Agent 使用规则"] --> B["更新 usage_feedback"]
+    B --> C{"failure_count / total ≥ 20%?"}
+    C -->|否| D["维持 Active"]
+    C -->|是| E["进入 Challenged 候选"]
+    E --> F{"agent_notes ≥ 3 条<br/>指向同一缺口?"}
+    F -->|是| G["启动演化<br/>缩窄/泛化/分裂"]
+    F -->|否| H["继续观察"]
+```
+
+#### 2.5.5 试点范围
+
+当前试点规则:`python.md`。试点稳定后,逐步推广到 `documentation.md`、`context-economy.md` 等高频规则。推广顺序见 [`docs/templates/rule-frontmatter-template.md`](../docs/templates/rule-frontmatter-template.md) 的 Adoption Roadmap 章节。
+
 ## 3. 哲学映射
 
 > **为学日益，为道日损。**

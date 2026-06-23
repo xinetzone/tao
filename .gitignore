@@ -16,6 +16,15 @@ venv/
 # IDE
 .idea/
 .vscode/
+# Trae IDE 工作区产物（specs/skills/settings），属临时性质，不应纳入版本控制
+# 来源：task-summary-workspace-file-restore-verification-20260623.md P4 建议
+.trae/
+
+# 临时/备份文件（避免 merge 冲突残留、编辑器备份等被误跟踪）
+*.orig
+*.bak
+*.tmp
+*.rej
 
 # OS
 .DS_Store

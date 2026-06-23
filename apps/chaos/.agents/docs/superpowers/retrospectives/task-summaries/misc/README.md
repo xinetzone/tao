@@ -30,5 +30,6 @@
 | `task-summary-pdf-tools-full-evaluation-20260527.md` | PDF 转 Markdown 工具链全流程评估任务总结（2026-05-26 至 2026-05-27，跨 3 个会话） |
 | `task-summary-project-comprehensive-review-20260521.md` | AgentForge 工程化建设与技能架构演进全面复盘（2026-05-21），项目里程碑总结 |
 | `task-summary-routing-system-20260528.md` | 构建结构化路由系统任务总结（2026-05-28），声明式规则 → 角色结构化 → 可执行引擎 |
+| `task-summary-workspace-file-restore-verification-20260623.md` | 工作区文件恢复与完整性验证任务总结（2026-06-23），1266 个文件被删除后的恢复与 5 重校验，含 Windows 中文路径编码误报排查 |
 | `task-summary-zhihu-full-session-20260526.md` | 知乎开源活动推广全流程延续会话任务复盘（2026-05-26） |
 | `task-summary-zhihu-integration-20260526.md` | 知乎开源活动推广与开发者平台集成任务复盘（2026-05-25 至 2026-05-26） |

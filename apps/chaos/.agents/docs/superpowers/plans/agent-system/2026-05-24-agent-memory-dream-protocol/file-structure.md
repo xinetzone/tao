@@ -1,0 +1,22 @@
+# File Structure
+
+- Existing: `.agents/docs/superpowers/specs/agent-system/2026-05-24-agent-memory-dream-protocol-design.md`
+  - 作用：已批准的设计规格，是本计划的单一设计来源。
+- Existing: `.agents/docs/references/agent-memory-dream-protocol.md`
+  - 作用：稳定参考协议页，供未来智能体快速理解触发条件、输入输出与回流位置。
+- Existing: `.agents/docs/templates/agent-memory-entry-template.md`
+  - 作用：长期记忆条目模板，约束记忆字段和进入条件。
+- Existing: `.agents/docs/templates/agent-dream-session-template.md`
+  - 作用：做梦会话模板，约束输入记忆、重组问题、洞见候选、遗忘建议与回流动作。
+- Modify: `.agents/docs/README.md`
+  - 作用：把记忆做梦协议接入 AI 文档场景导航，降低未来检索成本。
+- Modify: `.agents/docs/references/README.md`
+  - 作用：把参考协议页加入 `references/` 当前入口列表。
+- Create: `.trae/specs/agent-memory-dream-protocol-pilot/spec.md`
+  - 作用：承载一次最小试点的执行期 spec，验证协议是否低摩擦、可回流、可遗忘。
+- Create: `.trae/specs/agent-memory-dream-protocol-pilot/tasks.md`
+  - 作用：承载试点任务列表与依赖关系。
+- Create: `.trae/specs/agent-memory-dream-protocol-pilot/checklist.md`
+  - 作用：承载试点验收清单。
+- Future optional: `.agents/docs/superpowers/retrospectives/2026-05-24-agent-memory-dream-protocol-pilot.md`
+  - 作用：试点完成后沉淀复盘。只有执行试点并形成结果后才创建。

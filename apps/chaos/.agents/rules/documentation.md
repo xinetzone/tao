@@ -25,7 +25,7 @@ flowchart LR
 | 技能设计 spec | `.agents/docs/superpowers/specs/<skill-name>/` |
 | 通用技术方案 | `.agents/docs/` 下对应主题目录 |
 | 实施计划 | `.agents/docs/superpowers/plans/` |
-| 复盘报告 | `.agents/docs/superpowers/retrospectives/` |
+| 复盘报告 | `.agents/docs/superpowers/retrospectives/`（按 §2.5 模块化归档） |
 | AI 参考资料 | `.agents/docs/references/` 或 `.agents/docs/sources/` |
 | 人类说明文档 | `README.md` 或 `docs/` |
 
@@ -264,6 +264,58 @@ flowchart LR
 2. 是否包含"最终版""完整版"等模糊后缀？
 
 **来源**：`tech-debt-governance-checklist.md` §4 重复文档治理。本会话中发现多份复盘报告（`task-execution-summary.md`、`task-summary-trae-competition-research-20260621.md`）命名不一致，内容重叠度高，占用维护心智。统一命名规范可降低检索成本和维护复杂度。
+
+### 2.5 复盘报告模块化归档
+
+`retrospectives/` 目录已实施模块化重构，新增复盘报告必须按以下规则归档到对应一级模块，**禁止直接写入 `retrospectives/` 根目录**。
+
+**一级模块归类**：
+
+| 一级模块 | 归档条件 | 示例 |
+|---|---|---|
+| `project-reviews/` | 项目级复盘、里程碑回顾、整体项目总结 | `retrospective-agentforge-project-20260601.md` |
+| `audit-reports/` | 质量审计、技术债评估、合规检查 | `mise-knowledge-base-quality-audit-20260518.md` |
+| `insights/` | 技术洞察、经验提炼、方法论总结 | `insights-containerrun-refactor-20260610.md` |
+| `session-reviews/` | 单次会话复盘、交互回顾 | `session-retrospective-doc-governance-full-cycle-20260611.md` |
+| `task-summaries/` | 任务执行总结（按二级主题细分，见下表） | `task-summary-pdm-backend-migration-20260527.md` |
+| `misc/` | 不属于上述类别的其他复盘 | `zhihu-promotion-content-20260525.md` |
+
+> **注**：示例均为单文件归档。若文档 >500 行且覆盖多主题，应按 SOP 进行原子化拆分为目录（含 `index.md` + 原子单元），归档位置同样遵循上表。
+
+**二级子模块归类**（仅适用于 `task-summaries/`）：
+
+| 二级子模块 | 归档条件 | 示例 |
+|---|---|---|
+| `ci-cd/` | CI/CD 流水线、lint、format、pre-commit | `task-summary-ci-lint-linkcheck-fix-20260609.md` |
+| `documentation/` | 文档治理、归档、目录重构、SOP 沉淀 | `task-summary-retrospectives-modularization-20260623.md` |
+| `python-environment/` | Python 环境、依赖管理、版本适配 | `task-summary-pdm-backend-migration-20260527.md` |
+| `skills/` | 技能开发、技能规范调整 | `task-summary-skill-creator-windows-compat-fix-20260520.md` |
+| `releases/` | 版本发布、发布改进 | `task-summary-v070-release-20260527.md` |
+| `exploration/` | 技术调研、可行性验证、POC | `task-summary-deepagents-overview-extraction-20260602.md` |
+| `world-cli/` | world CLI、多世界继承、AGENTS.md 层级 | `task-summary-world-cli-distribution-system-20260526.md` |
+| `refactoring/` | 代码重构、架构调整、模块化改造 | `task-summary-refactor-init-invoke-cross-platform-20260522.md` |
+| `misc/` | 不属于上述主题的其他任务总结 | `task-summary-dao-framework-postmortem-20260523.md` |
+
+**归类优先级**（当文档跨主题时）：
+
+1. 优先按文档的**主要目的**归类（如 `v0.3.0-release-and-ci-docs-hardening` 主要目的是发布，归入 `releases/` 而非 `ci-cd/`）。
+2. 若主要目的不明确，按**执行内容**归类。
+3. 若仍无法判断，归入 `misc/`。
+
+**归档后必做事项**：
+
+1. 更新 `_meta/migration-log.md`，追加迁移记录。
+2. 更新 `_meta/dependency-graph.md`，记录引用关系。
+3. 更新对应一级模块的 `README.md` 文件清单。
+4. 若为 `task-summaries/` 下的文档，还需更新对应二级子模块的 `README.md` 文件清单。
+
+**自检锚点**：在写入复盘报告前，必须自问并显式自答：
+
+1. 该报告属于哪个一级模块？—— 按主要目的判断。
+2. 若为 `task-summaries/`，属于哪个二级子模块？—— 按执行内容判断。
+3. 是否直接写入了 `retrospectives/` 根目录？—— **禁止**，必须归入对应子模块。
+
+**来源**：`task-summary-retrospectives-modularization-20260623.md` v3 风险预警处理。重构完成后，新增复盘若未按模块化归档，将破坏目录结构一致性，回到扁平化混乱状态。
 
 ## 3. 临时产物
 

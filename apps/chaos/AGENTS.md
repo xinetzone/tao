@@ -88,6 +88,8 @@ flowchart TD
 | 网页内容抓取或 defuddle | [`.agents/rules/browser-agent.md`](.agents/rules/browser-agent.md)，静态优先使用 defuddle；SPA、交互渲染或浏览器复用按该规则执行 |
 | 多世界继承、子世界覆盖、AGENTS.md 层级管理 | [`.agents/rules/world-hierarchy.md`](.agents/rules/world-hierarchy.md) |
 | 大型评估选品测试、容器化环境选择 | [`.agents/rules/containerization.md`](.agents/rules/containerization.md) |
+| 文档目录系统性重构、原子化拆分、模块化分类 | [`.agents/workflows/documentation-refactor-sop.md`](.agents/workflows/documentation-refactor-sop.md) |
+| 文档重构任务复盘报告查阅 ✅ 已完成 | [`.agents/docs/superpowers/retrospectives/task-summaries/documentation/task-summary-retrospectives-modularization-20260623.md`](.agents/docs/superpowers/retrospectives/task-summaries/documentation/task-summary-retrospectives-modularization-20260623.md)（v4 风险处理版，含 12 阶段执行全景、6 大方法论、6 条规则候选，所有风险预警均已防范） |
 | AgentForge 规范查阅、标准约定、Layer 归属判断 | [`specs/agentforge-spec-v0.2.md`](specs/agentforge-spec-v0.2.md) |
 | 治理流程、RFC 提交流程、维护者权责 | [`GOVERNANCE.md`](GOVERNANCE.md) |
 

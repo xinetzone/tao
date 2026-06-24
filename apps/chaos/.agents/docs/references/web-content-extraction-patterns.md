@@ -244,4 +244,85 @@ flowchart LR
 
 ---
 
-*版本：v1.2 · 2026-05-27 初版 · 2026-06-21 增量：TRAE/Cursor/Bolt/Replit 四案例 + SPA 三阶段法 + 工作流骨架*
+## 12. Skill 级降级链（2026-06-24 增量）
+
+> **缘起**：使用 `content-parser` skill 提取微信文章时，API 超时 + `shared/` 配置缺失，降级到 `defuddle` 成功。补充 skill 级降级路径。
+
+### 12.1 三级降级链
+
+```
+URL 内容提取
+│
+├─ Tier 1：content-parser skill（API 级，支持摘要/评分/多模态）
+│  ├─ 依赖：LISTENHUB_API_KEY 环境变量 + shared/ 配置文件
+│  ├─ 可用 → POST /v1/content/extract → 轮询 → 保存
+│  └─ 不可用（API 超时/依赖缺失）→ 降级
+│
+├─ Tier 2：defuddle CLI（本地提取，无需 API Key）
+│  ├─ 依赖：npm install -g defuddle
+│  ├─ 可用 → defuddle parse <url> --md -o <file>
+│  │  └─ 后处理：清理微信尾部噪声（见 §12.3）
+│  └─ 未安装 → 降级
+│
+└─ Tier 3：WebFetch / Browser Agent（兜底）
+```
+
+### 12.2 与 §3 降级链的关系
+
+| 维度 | §3 抓取降级链 | §12 Skill 级降级链 |
+|------|-------------|-------------------|
+| 层级 | 工具级（fetch_content / Browser Agent） | Skill 级（content-parser / defuddle / WebFetch） |
+| 场景 | 反爬绕过、动态渲染 | API 不可用、依赖缺失 |
+| 策略 | 并行试探 | 串行降级（依赖检查失败 → 立即降级） |
+| 共性 | 降级不卡在报错上 | 同左 |
+
+### 12.3 微信尾部噪声清理
+
+`defuddle` 提取微信公众号文章后，末尾包含 UI 噪声文本：
+
+```
+微信扫一扫
+使用小程序
+
+： ， ， ， ， ， ， ， ， ， ， ， 。 视频 小程序 赞 ，轻点两下取消赞 在看 ，轻点两下取消在看 分享 留言 收藏 听过
+```
+
+清理规则（PowerShell）：
+
+```powershell
+$content = Get-Content $file -Raw
+$cleaned = $content -replace '(?ms)(微信扫一扫.*$)', ''
+Set-Content $file -Value $cleaned.TrimEnd() -Encoding UTF8
+```
+
+### 12.4 当前工具状态（2026-06-24）
+
+| 工具 | 状态 | 备注 |
+|------|------|------|
+| content-parser | ⚠️ API 超时 | API Key 存在但 `api.marswave.ai` 响应超时，`shared/` 配置缺失 |
+| defuddle | ✅ v0.18.1 | 稳定，微信文章提取效果极佳 |
+| WebFetch | ✅ 可用 | 内置兜底 |
+
+---
+
+## 13. URL → 学习摘要 SOP（2026-06-24 增量）
+
+> **缘起**：本次微信文章提取任务复盘后固化的 8 步标准流程。
+
+```
+Step 0: 读 AGENTS.md → 确认产物路径和命名规范
+Step 1: 确认报告格式（默认 Markdown，除非用户明确指定其他）
+Step 2: 技能选择（按 §12 降级链）
+Step 3: 工具验证（--version / --help）
+Step 4: 预览提取（stdout 先看质量）
+Step 5: 持久化（-o 保存到 .temp/）
+Step 6: 后处理（清理尾部噪声，见 §12.3）
+Step 7: 结构化总结（分板块 + 表格 + 洞察）
+Step 8: 洞察提炼（2-4 个可迁移洞察 + 原文依据）
+```
+
+> **关联**：[`../../../docs/tech/task-summary-force-conf-recap-20260624.md`](../../../docs/tech/task-summary-force-conf-recap-20260624.md) · [`../../../docs/topics/session-recap-force-conf-20260624.md`](../../../docs/topics/session-recap-force-conf-20260624.md)
+
+---
+
+*版本：v1.3 · 2026-05-27 初版 · 2026-06-21 增量：TRAE/Cursor/Bolt/Replit 四案例 + SPA 三阶段法 + 工作流骨架 · 2026-06-24 增量：Skill 级降级链 + 微信噪声清理 + URL→学习摘要 SOP*

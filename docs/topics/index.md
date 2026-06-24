@@ -24,6 +24,9 @@ extraction-methodology
 philosophy-as-dao
 skeleton-vs-runtime
 retrospective-rethinking
+content-extraction-rule-candidates
+insight-density-metric
+ai-product-insights
 ```
 
 ## 内容概览
@@ -46,6 +49,9 @@ retrospective-rethinking
 | `philosophy-as-dao` | 架构师、哲学驱动者 | 哲学何时从赋能变为门槛？如何将显性哲学转为隐性约束？ |
 | `skeleton-vs-runtime` | 架构师、技术负责人 | 未经验证的架构骨架是假设还是架构？验证优先于定义？ |
 | `retrospective-rethinking` | 项目管理者、复盘执行者 | 复盘的元价值是总结还是再思考？如何通过决策审计推翻错误决策？ |
+| `content-extraction-rule-candidates` | 规则治理者、技能维护者 | 单次复盘提炼的规则候选如何处置？经验如何在不污染规则层的前提下保留可追溯性？ |
+| `insight-density-metric` | 复盘执行者、规则治理者 | "洞察浓度"如何从口号转化为可操作指标？L1-L4 分层如何区分产出质量？ |
+| `ai-product-insights` | AI 产品决策者、技术选型者 | 从行业事件萃取的 5 条可迁移模式：产品杠杆、水桶胜出、权限分级、信息保真、自我演化 |
 
 ## 边界
 

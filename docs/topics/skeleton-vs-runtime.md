@@ -120,4 +120,4 @@ flowchart TD
 - [文档领先于实现](doc-ahead-of-implementation.md)：文档如何制造虚假完成感
 - [复盘的元价值](retrospective-rethinking.md)：骨架验证的审计环节
 
-> 来源：[综合复盘报告](../../../apps/chaos/.agents/docs/superpowers/retrospectives/retrospective-agentforge-comprehensive-20260623.md)（2026-06-23）
+> 来源：综合复盘报告（`retrospective-agentforge-comprehensive-20260623.md`）（2026-06-23）

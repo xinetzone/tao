@@ -128,4 +128,4 @@ flowchart TD
 - [复盘的元价值](retrospective-rethinking.md)：决策审计与执行审计
 - [文档领先于实现](doc-ahead-of-implementation.md)：文档如何制造虚假完成感
 
-> 来源：[综合复盘报告](../../../apps/chaos/.agents/docs/superpowers/retrospectives/retrospective-agentforge-comprehensive-20260623.md)（2026-06-23）
+> 来源：综合复盘报告（`retrospective-agentforge-comprehensive-20260623.md`）（2026-06-23）

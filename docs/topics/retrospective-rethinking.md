@@ -140,4 +140,4 @@ flowchart LR
 - [文档领先于实现](doc-ahead-of-implementation.md)：决策前提的虚假性
 - [萃取方法论](extraction-methodology.md)：决策方法论的正确性
 
-> 来源：[综合复盘报告](../../../apps/chaos/.agents/docs/superpowers/retrospectives/retrospective-agentforge-comprehensive-20260623.md)（2026-06-23）
+> 来源：综合复盘报告（`retrospective-agentforge-comprehensive-20260623.md`）（2026-06-23）

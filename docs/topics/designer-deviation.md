@@ -72,7 +72,7 @@ flowchart LR
 
 ### 3.2 机制化约束的三层防护
 
-设计哲学需要机制化约束，不能仅靠设计者的自觉。这正是 [`rebirth-extraction.md`](../../../apps/chaos/.agents/rules/rebirth-extraction.md) 规则存在的根本理由：
+设计哲学需要机制化约束，不能仅靠设计者的自觉。这正是 `rebirth-extraction.md` 规则存在的根本理由：
 
 | 防护层 | 机制 | 作用 |
 |--------|------|------|
@@ -103,4 +103,4 @@ flowchart LR
 - [复盘的元价值](retrospective-rethinking.md)：决策审计作为复盘的标准环节
 - [规则生命周期](rule-lifecycle.md)：规则如何诞生、成长、衰老、重生
 
-> 来源：[综合复盘报告](../../../apps/chaos/.agents/docs/superpowers/retrospectives/retrospective-agentforge-comprehensive-20260623.md)（2026-06-23）
+> 来源：综合复盘报告（`retrospective-agentforge-comprehensive-20260623.md`）（2026-06-23）

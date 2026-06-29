@@ -122,7 +122,7 @@ flowchart LR
 ## 四、对项目的启示
 
 1. **萃取方法论应上升为脱胎态的通用原则**：不仅适用于包名迁移，也适用于模块、文档、规则、技能的迁移。
-2. **[`rebirth-extraction.md`](../../../apps/chaos/.agents/rules/rebirth-extraction.md) 规则应被严格执行**：它不是建议，而是脱胎态的硬约束。
+2. **`rebirth-extraction.md` 规则应被严格执行**：它不是建议，而是脱胎态的硬约束。
 3. **萃取决策应回溯到设计意图**：避免 [设计者偏离](designer-deviation.md) 描述的范畴误判。
 4. **脱胎态资产应标注"萃取来源"**：明确记录从哪个混沌态资产萃取，便于溯源。
 5. **萃取过程本身应被复盘**：作为 [复盘的元价值](retrospective-rethinking.md) 中的"决策审计"环节。
@@ -136,4 +136,4 @@ flowchart LR
 - [复盘的元价值](retrospective-rethinking.md)：萃取决策的审计
 - [规则生命周期](rule-lifecycle.md)：萃取产出的规则如何进入生命周期
 
-> 来源：[综合复盘报告](../../../apps/chaos/.agents/docs/superpowers/retrospectives/retrospective-agentforge-comprehensive-20260623.md)（2026-06-23）
+> 来源：综合复盘报告（`retrospective-agentforge-comprehensive-20260623.md`）（2026-06-23）

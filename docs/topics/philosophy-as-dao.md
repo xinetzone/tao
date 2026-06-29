@@ -133,4 +133,4 @@ flowchart LR
 - [萃取方法论](extraction-methodology.md)：哲学在萃取过程中的处理
 - [设计者偏离](designer-deviation.md)：哲学约束失效的案例
 
-> 来源：[综合复盘报告](../../../apps/chaos/.agents/docs/superpowers/retrospectives/retrospective-agentforge-comprehensive-20260623.md)（2026-06-23）
+> 来源：综合复盘报告（`retrospective-agentforge-comprehensive-20260623.md`）（2026-06-23）

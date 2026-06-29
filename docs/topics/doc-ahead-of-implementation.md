@@ -114,4 +114,4 @@ flowchart TD
 - [萃取方法论](extraction-methodology.md)：从个人到社区的转化范式
 - [规则生命周期](rule-lifecycle.md)：规则如何避免空转
 
-> 来源：[综合复盘报告](../../../apps/chaos/.agents/docs/superpowers/retrospectives/retrospective-agentforge-comprehensive-20260623.md)（2026-06-23）
+> 来源：综合复盘报告（`retrospective-agentforge-comprehensive-20260623.md`）（2026-06-23）

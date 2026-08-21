@@ -29,13 +29,6 @@ from importlib.metadata import PackageNotFoundError
 from importlib.metadata import version as _dist_version
 from pathlib import Path
 
-# === Platform-Specific Configuration ===
-if sys.platform == "win32":
-    import asyncio
-
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-
-
 # === Path Setup ===
 def get_project_root():
     return Path(__file__).resolve().parents[1]

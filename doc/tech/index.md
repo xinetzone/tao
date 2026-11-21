@@ -9,6 +9,7 @@
 intro
 quickstart
 features
+font-configuration
 world-registry-protocol
 world-cli-spec
 world-session-spec
@@ -35,6 +36,7 @@ jupyterlite
 | `intro.md` | 项目介绍与定位 |
 | `quickstart.md` | 环境初始化与首次接入 |
 | `features.md` | 核心功能与 `.agents/` 详解 |
+| `font-configuration.md` | 字体配置子系统：安装、使用、异常与后端扩展 |
 | `world-registry-protocol.md` | World Registry 分发协议接口规格 |
 | `world-cli-spec.md` | World CLI 工具完整规格（含兼容性校验引擎设计） |
 | `world-session-spec.md` | World Session 多端协同上下文容器协议（Draft v0.1） |

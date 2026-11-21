@@ -4,7 +4,7 @@
 #
 # 本文件是 Sphinx 文档构建系统的核心配置入口（conf.py）。
 # 使用场景：
-# 1) 本地开发：在 docs/ 目录下通过 `uv run --group dev --group docs invoke ...`
+# 1) 本地开发：在 doc/ 目录下通过 `uv run --group dev --group docs invoke ...`
 #    触发文档构建时读取本配置，用于控制扩展加载、主题外观、国际化、
 #    API 文档生成策略等。
 # 2) CI / 文档托管平台：在 GitHub Actions、Read the Docs 等环境中构建文档时，
@@ -199,12 +199,14 @@ suppress_warnings = ["myst.xref_missing"]
 templates_path = ["_templates"]
 
 # ================================= AutoAPI 配置 =================================
-# 通过 sphinx-autoapi 静态解析 src/taolib/ 源码，自动生成 API 文档。
+# 通过 sphinx-autoapi 静态解析仓库根发行版的 src/taolib 源码，自动生成 API 文档。
 # 无需导入包，CI 与本地构建一致；新增模块时无需手写文档。
+# 注意：此处必须指向仓库根的 src/taolib（taolib 发行版真实源码），
+# 而非 apps/chaos/src/taolib（旧快照，与发行版解耦且部分实现已移除）。
 if _has("autoapi.extension"):
     autoapi_type = "python"
-    autoapi_dirs = [str(ROOT / "apps" / "chaos" / "src" / "taolib")]
-    autoapi_root = "tech/api"  # 输出目录：docs/tech/api/（与技术文档分类路径对齐）
+    autoapi_dirs = [str(ROOT / "src" / "taolib")]
+    autoapi_root = "tech/api"  # 输出目录：doc/tech/api/（与技术文档分类路径对齐）
     autoapi_add_toctree_entry = False  # 由 index.md 显式管控 toctree，避免重复
     autoapi_keep_files = False  # 构建时清理旧产物
     autoapi_python_class_content = (
@@ -221,6 +223,7 @@ if _has("autoapi.extension"):
         "*/__pycache__/*",
         "*/tests/*",
         "*/flowkit/*",
+        "*/_deps.py",  # 内部延迟导入垫片，不属于公开 API
     ]
 
 # ================================= Napoleon 配置 =================================

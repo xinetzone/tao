@@ -101,7 +101,10 @@ jobs:
         run: |
           VERSION="${{ needs.validate.outputs.version }}"
           TAG="${{ needs.validate.outputs.version }}"
-          PREVIOUS_TAG=$(git tag --sort=-version:refname | head -1 || echo "")
+          # 只取 v 前缀的版本标签：world-phase-* 等主题标签在 version 排序中高于
+          # v0.7.x，若不限定模式会被选成「上一个版本」，导致变更日志退化为数百条
+          # 无关提交。
+          PREVIOUS_TAG=$(git tag --sort=-version:refname --list 'v[0-9]*' | head -1 || echo "")
 
           echo "Generating changelog for ${TAG}..."
           echo "Previous tag: ${PREVIOUS_TAG:-none}"

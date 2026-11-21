@@ -219,11 +219,13 @@ if _has("autoapi.extension"):
         "show-inheritance",
         "show-module-summary",
     ]
+    # 注意：不要忽略 fonts/_deps.py。matplotlib 与 registry 会静态导入该垫片，
+    # 一旦忽略，AutoAPI 无法解析此导入并触发 autoapi.python_import_resolution
+    # 警告（-W 下直接导致构建失败）；模块名以下划线已表明其为内部实现。
     autoapi_ignore = [
         "*/__pycache__/*",
         "*/tests/*",
         "*/flowkit/*",
-        "*/_deps.py",  # 内部延迟导入垫片，不属于公开 API
     ]
 
 # ================================= Napoleon 配置 =================================

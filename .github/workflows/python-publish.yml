@@ -1,49 +1,96 @@
-# This workflow will upload a Python Package using Twine when a release is created
-# For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
+# 发布 taolib 到 PyPI（从仓库根构建，源码仍来自 apps/chaos/src/taolib）
+#
+# 触发方式：
+#   1. release.yml 的 publish job 通过 workflow_call 调用（主链路）；
+#   2. Actions 页面手工 workflow_dispatch 指定 ref（补发历史版本）。
+#
+# 注意：不要再挂 `release: published` 触发器。release.yml 用
+# secrets.GITHUB_TOKEN 创建 Release，而 GitHub 不会让 GITHUB_TOKEN 产生的
+# 事件触发新的 workflow 运行，这正是 v0.7.x 未进入 PyPI 的根因。
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+name: Publish Python Package
 
-name: Upload Python Package
 on:
-  release:
-    types: [published]
-
-env:
-  MISE_EXPERIMENTAL: "1"
+  workflow_call:
+    inputs:
+      ref:
+        description: "待构建并发布的 git ref（通常是 release tag，如 v0.7.2）"
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "待构建并发布的 git ref（通常是 release tag，如 v0.7.2）"
+        required: true
+        type: string
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: apps/chaos
     steps:
-      - uses: actions/checkout@v5
+      - name: Checkout
+        uses: actions/checkout@v5
         with:
-          fetch-depth: 0 # 获取完整 git 历史（含 tags），供 PDM SCM 版本使用
-      - name: Set up mise
-        uses: jdx/mise-action@v4
-      - name: Install managed tools
-        run: mise install
-      - name: Install test dependencies
-        run: mise run install-test-deps
-      - name: Run tests before publish
-        run: mise run test-release
-      - name: Verify clean working tree before build
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0 # 完整历史与 tags，供 setuptools-scm 派生版本
+
+      # 必须在任何安装步骤之前检查：mise/uv 可能改写 uv.lock 等受控文件。
+      - name: Verify clean working tree
         run: |
           if [ -n "$(git status --porcelain)" ]; then
-            echo "::error::Working tree is dirty before build. PDM SCM version would be polluted with +d<date> local segment, leading to PyPI rejection."
+            echo "::error::Working tree is dirty. setuptools-scm would emit a +d<date> local segment and PyPI would reject the upload."
             git status
             exit 1
           fi
-          echo "::notice::Working tree is clean; PDM SCM version will derive cleanly from the tag."
-      - name: Build package
-        run: mise run package-build
+          echo "::notice::Working tree is clean; version derives from ${GITHUB_REF_NAME}."
+
+      # 发布前回归测试沿用原有门禁（任务定义在 apps/chaos/mise.toml）。
+      - name: Set up mise
+        uses: jdx/mise-action@v4
+
+      - name: Install managed tools
+        working-directory: apps/chaos
+        run: mise install
+
+      - name: Install test dependencies
+        working-directory: apps/chaos
+        run: mise run install-test-deps
+
+      - name: Run tests before publish
+        working-directory: apps/chaos
+        run: mise run test-release
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install build backend
+        run: python -m pip install --upgrade build
+
+      # sdist 与 wheel 分别从源码树构建：若用 `python -m build`（默认两者），
+      # wheel 会从 sdist 构建，而 sdist 内没有 .git，版本将回退 0.0.0。
+      - name: Build sdist
+        run: python -m build --sdist
+
+      - name: Build wheel
+        run: python -m build --wheel
+
+      - name: Verify built artifacts
+        run: |
+          ls -l dist/
+          if ls dist/ | grep -q '0\.0\.0'; then
+            echo "::error::Version fell back to 0.0.0 — setuptools-scm could not derive the tag."
+            exit 1
+          fi
+          if ! ls dist/ | grep -q 'py3-none-any\.whl'; then
+            echo "::error::Expected a pure-Python py3-none-any wheel; check [tool.scikit-build.wheel] platlib setting."
+            exit 1
+          fi
+
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
+          packages-dir: dist/

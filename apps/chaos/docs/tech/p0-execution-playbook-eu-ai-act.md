@@ -1,8 +1,8 @@
 # P0 级任务执行作战手册（EU AI Act 合规整改）
 
-**文档版本**: v1.0  
-**适用范围**: AgentForge EU AI Act P0 合规整改任务  
-**编制时间**: 2026-06-22  
+**文档版本**: v1.0
+**适用范围**: AgentForge EU AI Act P0 合规整改任务
+**编制时间**: 2026-06-22
 **关联文档**: [EU AI Act 合规整改清单](./eu-ai-act-remediation-checklist.md)、[任务执行总结报告](./task-summary-eu-ai-act-remediation-20260622.md)
 
 ---

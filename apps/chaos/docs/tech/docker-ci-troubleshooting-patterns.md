@@ -1,6 +1,6 @@
 # Docker CI 故障排查模式 — 萃取自 Containerfile.test 构建修复
 
-> **来源**：`task-summary-docker-ci-build-fix-20260609.md`  
+> **来源**：`task-summary-docker-ci-build-fix-20260609.md`
 > **场景**：Docker 构建失败、CI 流水线报错、Python 项目容器化
 
 ---

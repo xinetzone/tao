@@ -1,8 +1,8 @@
 # 内容提取工作流：三条规则候选
 
-> **状态**：Candidate（候选）  
-> **来源**：单次任务复盘 — 微信文章内容提取（2026-06-24）  
-> **溯源**：[`task-summary-force-conf-recap-20260624.md`](../../apps/chaos/.agents/docs/superpowers/retrospectives/task-summaries/exploration/task-summary-force-conf-recap-20260624.md)  
+> **状态**：Candidate（候选）
+> **来源**：单次任务复盘 — 微信文章内容提取（2026-06-24）
+> **溯源**：[`task-summary-force-conf-recap-20260624.md`](../../apps/chaos/.agents/docs/superpowers/retrospectives/task-summaries/exploration/task-summary-force-conf-recap-20260624.md)
 > **准入进度**：未达 [`rule-evolution.md`](../../apps/chaos/.agents/rules/rule-evolution.md) §1.1 的"≥3 次独立触发"频率门槛，当前停留在 `doc/topics/` 经验层，等待后续印证累积。
 
 本文记录一次内容提取任务后提炼出的三条规则候选。它们尚未取得正式规则身份——按 [`rule-evolution.md`](../../apps/chaos/.agents/rules/rule-evolution.md) 的五维准入检验，频率维度 R-01/R-02 为 1/3，R-03 已累积至 2/3。在此公开候选，是为了让后续同类任务能对照印证，待触发次数累积到位后上升为 `.agents/rules/` 正式规则。
@@ -21,7 +21,7 @@
 
 ### 1.3 候选规则草案
 
-> **候选 R-01：技能自包含校验**  
+> **候选 R-01：技能自包含校验**
 > 任何 `SKILL.md` 引用的 `shared/`、`references/`、`schemas/` 等内部依赖，**MUST** 在技能目录内实际存在。技能加载前**SHOULD**执行依赖完整性校验，缺失依赖时**MUST**降级到备选技能并记录降级原因，而非直接报错中断。
 
 ### 1.4 五维准入初判
@@ -53,7 +53,7 @@
 
 ### 2.3 候选规则草案
 
-> **候选 R-02：内容提取平台适配器**  
+> **候选 R-02：内容提取平台适配器**
 > 针对高频内容源（微信公众号、知乎、掘金、小红书等），**SHOULD**建立平台适配器清单，记录各平台的特化噪声模式与清理策略。提取后**MAY**按平台执行尾部/头部噪声清理，而非依赖通用提取器的默认行为。
 
 ### 2.4 五维准入初判
@@ -85,7 +85,7 @@
 
 ### 3.3 候选规则草案
 
-> **候选 R-03：洞察浓度指标**  
+> **候选 R-03：洞察浓度指标**
 > 学习类/研读类任务的复盘**SHOULD**增加"洞察浓度"指标，定义为"每千字可迁移洞察数"（insights per 1000 words）。耗时与达成度作为辅助指标，不作为唯一评估维度。洞察浓度低于阈值时**SHOULD**追问"为什么"的因果链，而非停留在事实陈述。
 
 ### 3.4 五维准入初判

@@ -1,8 +1,8 @@
 # AgentForge 竞品分析报告 2026
 
-> **分析日期**：2026-06-21  
-> **基于**：[session-meta-recap.md](session-meta-recap.md) 全会话知识资产 + 实时市场数据  
-> **分析方法**：五维框架（参照 [research-methodology-template](research-methodology-template.md) §2）  
+> **分析日期**：2026-06-21
+> **基于**：[session-meta-recap.md](session-meta-recap.md) 全会话知识资产 + 实时市场数据
+> **分析方法**：五维框架（参照 [research-methodology-template](research-methodology-template.md) §2）
 > **口径基准**：许可证 / 商业化 / 自托管 / 锁定风险的统一引用口径见 [agentforge-standard-reference-matrix.md](agentforge-standard-reference-matrix.md)
 
 ---

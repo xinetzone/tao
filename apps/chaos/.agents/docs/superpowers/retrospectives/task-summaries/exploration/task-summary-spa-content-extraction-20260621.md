@@ -146,8 +146,8 @@ flowchart LR
 | skill-creator | 技能创建 | 1 | 一键生成 SKILL.md 框架 |
 | check_skill.py | 自动校验 | 3 | 修复 description 长度 + H1 误报 |
 
-**总耗时**：约 3 天（中间间隔多次对话）  
-**Token 消耗**：中等（大量 innerText 输出）  
+**总耗时**：约 3 天（中间间隔多次对话）
+**Token 消耗**：中等（大量 innerText 输出）
 **重试次数**：5+（defuddle 失败 → 浏览器；浏览器 timeout → 静态）
 
 ---

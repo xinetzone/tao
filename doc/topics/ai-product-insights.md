@@ -1,7 +1,7 @@
 # AI 产品行业洞察：从基模竞争到自我演化
 
-> **来源**：萃取自 [`task-summary-force-conf-insight-extraction-20260624.md`](../../apps/chaos/.agents/docs/superpowers/retrospectives/task-summaries/exploration/task-summary-force-conf-insight-extraction-20260624.md)（火山引擎 FORCE 大会报道学习）  
-> **方法**：按 [`extraction-methodology.md`](extraction-methodology.md) 的"筛选与净化"原则，剥离具体场景与个人色彩，保留可迁移内核  
+> **来源**：萃取自 [`task-summary-force-conf-insight-extraction-20260624.md`](../../apps/chaos/.agents/docs/superpowers/retrospectives/task-summaries/exploration/task-summary-force-conf-insight-extraction-20260624.md)（火山引擎 FORCE 大会报道学习）
+> **方法**：按 [`extraction-methodology.md`](extraction-methodology.md) 的"筛选与净化"原则，剥离具体场景与个人色彩，保留可迁移内核
 > **定位**：AI 产品/模型行业的可迁移模式，非项目设计哲学
 
 本文是 [`extraction-methodology.md`](extraction-methodology.md) "萃取 = 筛选与净化"原则的实践样本——从一篇行业报道中萃取 5 条跨场景可迁移的模式，剥离了具体产品名、个人项目细节与时效性数据，保留因果链与决策指导价值。

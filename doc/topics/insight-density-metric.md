@@ -1,7 +1,7 @@
 # 洞察浓度指标：从抽象理念到可操作测量
 
-> **状态**：Active（R-03 候选的操作化定义）  
-> **来源**：[`content-extraction-rule-candidates.md`](content-extraction-rule-candidates.md) 候选 R-03  
+> **状态**：Active（R-03 候选的操作化定义）
+> **来源**：[`content-extraction-rule-candidates.md`](content-extraction-rule-candidates.md) 候选 R-03
 > **设计目标**：将"洞察浓度"从口号转化为可测量、可评判、可对照的指标
 
 [`rule-lifecycle.md`](rule-lifecycle.md) 指出"规则是被印证出来的，不是被设计出来的"。但"印证"本身需要一把尺子——没有可操作的测量定义，就无法判断"这次比上次更深入"。本文为 R-03 候选"洞察浓度指标"提供操作化定义，让"快但浅 vs 慢但深"的判断从主观感觉变为可量化对照。

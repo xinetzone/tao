@@ -1,7 +1,7 @@
 # Kimi WebBridge 技术学习笔记
 
-> 来源页面：<https://www.kimi.com/zh-cn/features/webbridge>  
-> 学习日期：2026-06-22  
+> 来源页面：<https://www.kimi.com/zh-cn/features/webbridge>
+> 学习日期：2026-06-22
 > 文档定位：浏览器 Agent 能力研究、产品方案对比、技术选型参考
 
 ## 1. 概述

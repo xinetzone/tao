@@ -24,4 +24,3 @@ research-plan-agentforge-competitor-analysis
 sync-summary-agentforge-competitor-analysis
 team-sync-agentforge-competitor-analysis
 ```
-

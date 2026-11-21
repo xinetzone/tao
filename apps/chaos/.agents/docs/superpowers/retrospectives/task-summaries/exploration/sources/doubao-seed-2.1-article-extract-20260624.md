@@ -1,9 +1,9 @@
 # 豆包 Seed-2.1 FORCE 大会报道 — 原文提取
 
-> **归档说明**：本文为微信公众号文章原文提取，原位于 `.temp/`，现迁移至 `sources/` 作为长期溯源产物。  
-> **来源链接**：https://mp.weixin.qq.com/s/p10dn6zpSR4D5u9BOF9FeQ  
-> **作者**：卡兹克、tashi  
-> **提取时间**：2026-06-24  
+> **归档说明**：本文为微信公众号文章原文提取，原位于 `.temp/`，现迁移至 `sources/` 作为长期溯源产物。
+> **来源链接**：https://mp.weixin.qq.com/s/p10dn6zpSR4D5u9BOF9FeQ
+> **作者**：卡兹克、tashi
+> **提取时间**：2026-06-24
 > **提取工具**：defuddle CLI v0.18.1
 
 ---

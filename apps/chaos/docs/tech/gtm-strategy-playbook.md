@@ -1,6 +1,6 @@
 # AI 工具 GTM 策略建议 — 基于四工具竞品洞察
 
-> **来源**：Cursor / Bolt.new / Replit / Trae 四工具运营动作对比 + TRAE 大赛研究项目  
+> **来源**：Cursor / Bolt.new / Replit / Trae 四工具运营动作对比 + TRAE 大赛研究项目
 > **使用方式**：按当前阶段对号入座，选择匹配的策略组合
 
 ---

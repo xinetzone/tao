@@ -1,7 +1,7 @@
 # 技术研究项目方法论模板
 
-> **用途**：启动任何竞品分析 / 技术调研 / 框架构建类项目时，按本模板执行四阶段流水线。  
-> **来源**：萃取自 TRAE AI 创造力大赛研究项目的完整复盘。  
+> **用途**：启动任何竞品分析 / 技术调研 / 框架构建类项目时，按本模板执行四阶段流水线。
+> **来源**：萃取自 TRAE AI 创造力大赛研究项目的完整复盘。
 > **使用方式**：复制本文件，将 `{占位符}` 替换为实际内容。
 
 ---
@@ -312,8 +312,8 @@
 - 「需要对齐」段是摘要的核心价值——不是汇报已完成的工作，而是抛出待决策的问题
 - 每条对齐项应该是选择题（A or B），而非开放式讨论
 
-> 完整计划示例：[research-plan-agentforge-competitor-analysis.md](research-plan-agentforge-competitor-analysis.md)  
-> 同步摘要示例：[sync-summary-agentforge-competitor-analysis.md](sync-summary-agentforge-competitor-analysis.md)  
+> 完整计划示例：[research-plan-agentforge-competitor-analysis.md](research-plan-agentforge-competitor-analysis.md)
+> 同步摘要示例：[sync-summary-agentforge-competitor-analysis.md](sync-summary-agentforge-competitor-analysis.md)
 > 团队同步文档示例：[team-sync-agentforge-competitor-analysis.md](team-sync-agentforge-competitor-analysis.md)
 
 ---

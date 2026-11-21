@@ -1,6 +1,6 @@
 # 可复用模式库 — 萃取自 TRAE 大赛研究项目
 
-> **来源**：`track-prize-optimization-report.md` + `trae-guests.md`  
+> **来源**：`track-prize-optimization-report.md` + `trae-guests.md`
 > **定位**：实施推进 + 风险管控 + UX 引导 + 赛事阵容设计
 
 ---

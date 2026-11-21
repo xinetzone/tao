@@ -1,7 +1,7 @@
 # 示例研究计划：AI Agent 框架竞品分析
 
-> **用途**：演示如何使用 `research-methodology-template.md` 生成实际研究计划。  
-> **研究目标**：对 AgentForge 及其主要竞品（LangChain、CrewAI、AutoGen、Dify）进行系统化评估，识别差异化定位和优化方向。  
+> **用途**：演示如何使用 `research-methodology-template.md` 生成实际研究计划。
+> **研究目标**：对 AgentForge 及其主要竞品（LangChain、CrewAI、AutoGen、Dify）进行系统化评估，识别差异化定位和优化方向。
 > **预计周期**：3 天（数据采集 0.5 天 + 洞察分析 0.5 天 + 框架构建 1 天 + 优化评估 1 天）
 
 ---

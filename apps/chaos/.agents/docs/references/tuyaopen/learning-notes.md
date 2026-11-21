@@ -842,23 +842,23 @@ flowchart TD
     Start["开始"] --> Setup["环境搭建<br/>git clone + export.sh"]
     Setup --> Check["环境检查<br/>tos.py check"]
     Check --> Choice{"开发场景"}
-    
+
     Choice -->|"快速体验"| Prebuilt["下载预编译固件"]
     Prebuilt --> Flash["烧录固件<br/>tos.py flash"]
-    
+
     Choice -->|"标准开发"| Config["配置选择<br/>tos.py config choice"]
     Config --> Build["编译项目<br/>tos.py build"]
     Build --> Flash
-    
+
     Choice -->|"硬件适配"| NewPlat["创建新平台<br/>tos.py new platform"]
     NewPlat --> TKL["TKL适配<br/>驱动/网络/Flash"]
     TKL --> NewBoard["创建开发板<br/>tos.py new board"]
     NewBoard --> BoardAPI["适配 board_com_api.c"]
     BoardAPI --> Config
-    
+
     Choice -->|"新建项目"| NewProj["创建项目<br/>tos.py new project"]
     NewProj --> Config
-    
+
     Flash --> Auth{"授权方式"}
     Auth -->|"CLI方式"| CLI_Auth["tos.py monitor<br/>auth uuidxx keyxx"]
     Auth -->|"头文件方式"| HDR_Auth["修改 tuya_config.h<br/>TUYA_OPENSDK_UUID/AUTHKEY"]

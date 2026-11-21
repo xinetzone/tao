@@ -1,8 +1,8 @@
 # 深度洞察与知识萃取 — 豆包 Seed-2.1 FORCE 大会
 
-> **归档说明**：本文的 5 条萃取知识（K-01~K-05）已去场景化归档至 [`docs/topics/ai-product-insights.md`](../../../../../../../../docs/topics/ai-product-insights.md)。本文件保留完整场景分析、6 条深度洞察与因果链图，作为溯源产物。  
-> **来源**：[`doubao-seed-2.1-article-extract-20260624.md`](sources/doubao-seed-2.1-article-extract-20260624.md)（微信公众号文章原文提取）  
-> **方法**：事实层 → 模式层 → 萃取层（筛选与净化）  
+> **归档说明**：本文的 5 条萃取知识（K-01~K-05）已去场景化归档至 [`docs/topics/ai-product-insights.md`](../../../../../../../../docs/topics/ai-product-insights.md)。本文件保留完整场景分析、6 条深度洞察与因果链图，作为溯源产物。
+> **来源**：[`doubao-seed-2.1-article-extract-20260624.md`](sources/doubao-seed-2.1-article-extract-20260624.md)（微信公众号文章原文提取）
+> **方法**：事实层 → 模式层 → 萃取层（筛选与净化）
 > **关联**：本文超越 [`task-summary-force-conf-recap-20260624.md`](task-summary-force-conf-recap-20260624.md) 的 4 条基础洞察，向下挖掘因果链与可迁移模式
 
 ---
@@ -33,7 +33,7 @@ flowchart LR
 
 > 原文："一个非常综合的水桶级模型……他强就强在，水桶。"
 
-**表层事实**：Seed-2.1-Pro Coding 不如 Claude，但综合能力强。  
+**表层事实**：Seed-2.1-Pro Coding 不如 Claude，但综合能力强。
 **深层模式**：在**真实业务场景**（而非 benchmark），水桶模型胜过长板模型。
 
 | 维度 | 长板模型（DeepSeek/GLM） | 水桶模型（Seed-2.1-Pro） |
@@ -49,7 +49,7 @@ flowchart LR
 
 > 原文：豆包办公模式执行任务时，依次申请"文件访问权限 + 脚本执行权限 + 飞书文档编辑权限"。
 
-**表层事实**：Agent 会分级申请权限。  
+**表层事实**：Agent 会分级申请权限。
 **深层模式**：Agent 进入企业市场的关键不是能力，而是**权限治理**。豆包展示的权限设计模式：
 
 ```mermaid
@@ -69,7 +69,7 @@ flowchart TD
 
 > 原文："我直接把 Claude Code 里面的模型，用 CC switch 换成了 Seed-2.1-Pro，让他自己来开发自己。"
 
-**表层事实**：作者用 Seed-2.1-Pro 在 Claude Code 里开发 AIHOT 的多模态摘要功能。  
+**表层事实**：作者用 Seed-2.1-Pro 在 Claude Code 里开发 AIHOT 的多模态摘要功能。
 **深层模式**：这是**Agent 自我演化**的雏形——模型用于开发依赖该模型的功能。作者把"我想让 AIHOT 支持多模态评分"这段话直接当 Prompt，模型自己设计对抗性审查方案、风险应对、图片缓存流程。
 
 **飞轮效应**：

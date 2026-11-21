@@ -1,9 +1,9 @@
 # AGENTS.md 标准落地实施路线图 — 面向技术团队
 
-> **基于**：[agentforge-competitive-analysis-2026.md](agentforge-competitive-analysis-2026.md) 竞品分析结论  
-> **适用对象**：技术负责人、架构师、工程经理  
-> **预期周期**：4 周达到 Level 2，12 周达到 Level 4  
-> **核心理念**：渐进式采用——今天下午就能跑通 Level 0，不阻塞任何现有工作流  
+> **基于**：[agentforge-competitive-analysis-2026.md](agentforge-competitive-analysis-2026.md) 竞品分析结论
+> **适用对象**：技术负责人、架构师、工程经理
+> **预期周期**：4 周达到 Level 2，12 周达到 Level 4
+> **核心理念**：渐进式采用——今天下午就能跑通 Level 0，不阻塞任何现有工作流
 > **口径基准**：许可证 / 商业化 / 自托管 / 锁定风险的统一引用口径见 [agentforge-standard-reference-matrix.md](agentforge-standard-reference-matrix.md)
 
 ---
@@ -774,9 +774,9 @@ flowchart TD
 
 ## 九、EU AI Act 合规落地时间表（距 2026.8.2 截止日倒计时）
 
-> **适用对象**：有 EU 市场业务或计划进入 EU 市场的技术团队  
-> **截止日期**：2026 年 8 月 2 日（EU AI Act 强制执行日）  
-> **违规处罚**：最高 €1,500 万或全球年营收 3%（取高者）  
+> **适用对象**：有 EU 市场业务或计划进入 EU 市场的技术团队
+> **截止日期**：2026 年 8 月 2 日（EU AI Act 强制执行日）
+> **违规处罚**：最高 €1,500 万或全球年营收 3%（取高者）
 > **核心理念**：合规不是一次性项目，而是分层建设——**先建立声明基础设施（治理声明层），再接入校验工具（校验扫描层）**
 
 ```mermaid

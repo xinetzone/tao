@@ -284,5 +284,5 @@ mise run package-build
 | `mise.toml` | 工具链版本锁定、mise 任务定义、环境变量 |
 | `uv.lock` | 依赖解析锁定文件，确保可复现安装 |
 | `.pre-commit-config.yaml` | pre-commit hooks 配置（ruff、代码格式化等） |
-| `docs/conf.py` | Sphinx 文档构建配置 |
-| `docs/_config.toml` | Sphinx 主题选项配置 |
+| `doc/conf.py` | Sphinx 文档构建配置 |
+| `doc/_config.toml` | Sphinx 主题选项配置 |

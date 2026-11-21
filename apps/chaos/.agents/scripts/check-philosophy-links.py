@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check N×N cross-links between philosophy documents.
 
-Scans docs/general/philosophy/ for all .md files (excluding index.md
+Scans doc/general/philosophy/ for all .md files (excluding index.md
 and cultivation/ subdirectory), then verifies that each document's
 "延伸阅读" section contains links to every other philosophy document.
 

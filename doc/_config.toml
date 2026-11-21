@@ -13,7 +13,7 @@ repository_branch = "main"  # 仓库分支
 use_source_button = true  # 显示 "查看源代码" 按钮
 use_edit_page_button = true  # 显示 "编辑此页" 按钮
 use_issues_button = true  # 显示 "报告问题" 按钮
-path_to_docs = "docs"  # 文档目录路径
+path_to_docs = "doc"  # 文档目录路径
 
 # 界面布局设置
 toc_title = "目录"  # 目录标题

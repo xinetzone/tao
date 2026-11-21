@@ -269,7 +269,7 @@ intents = [
     "philosophy-alignment",  # 项目哲学一致性核查
 ]
 phases = ["planning", "review"]
-file_patterns = ["docs/tech/*-spec.md", "docs/superpowers/specs/**", "docs/superpowers/plans/**"]
+file_patterns = ["doc/tech/*-spec.md", "docs/superpowers/specs/**", "docs/superpowers/plans/**"]
 
 [[routing.rules]]
 id = "web-content-extraction"

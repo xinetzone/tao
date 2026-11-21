@@ -919,7 +919,7 @@ flowchart TD
 
 ### 与 world-operations.md（evolve() 原语）的关系
 
-本文档实现了 `docs/general/philosophy/engineering/world-operations.md` 中定义的 **`evolve()` 原语**：
+本文档实现了 `doc/general/philosophy/engineering/world-operations.md` 中定义的 **`evolve()` 原语**：
 
 > `evolve()` — 进化：向世界注入新的 skills、workflows、rules 等能力单元，使世界能够承载更复杂的智能体任务。
 

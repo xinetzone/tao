@@ -428,7 +428,7 @@ Skill 在 active session 中被触发时：
 [fragments.world-session]
 version = "0.1.0"
 includes = [
-    "docs/tech/world-session-spec.md",
+    "doc/tech/world-session-spec.md",
 ]
 optional = true
 description = "World Session 多端协同协议（v0.1 草案）"
@@ -465,7 +465,7 @@ flowchart LR
 
 | 阶段 | 关键产出 | 验收 |
 |---|---|---|
-| **P1** | 本规约 v0.1 落库 | 文档进入 `docs/tech/index.md` |
+| **P1** | 本规约 v0.1 落库 | 文档进入 `doc/tech/index.md` |
 | **P2** | `taolib world session *` 全部子命令 | 单元测试 + E2E：CLI 起手 → suspend → resume |
 | **P3** | 改造 1 个 Skill（推荐 `pdf-to-markdown`） | 同一 session 跨命令复用产物 |
 | **P4** | `apps/web/` 最小 session 续作器 | E2E：CLI 新建 → Web 浏览 events → Web 续作 |

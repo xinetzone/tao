@@ -5,7 +5,7 @@ import sys
 REQUIRED_ENTRIES = [
     '.temp/',
     '.archive/',
-    'docs/_build/',
+    'doc/_build/',
     '__pycache__/',
     '*.pyc',
     '.venv/',
@@ -21,7 +21,7 @@ REQUIRED_ENTRIES = [
 EXPECTED_DIRS = [
     ('.temp/', 'temporary files'),
     ('.archive/', 'archived projects'),
-    ('docs/_build/', 'Sphinx build output'),
+    ('doc/_build/', 'Sphinx build output'),
     ('__pycache__/', 'Python bytecode cache'),
     ('.venv/', 'virtual environment'),
 ]

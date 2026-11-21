@@ -18,7 +18,7 @@
 AgentForge/
 ├── AGENTS.md                    ← 本文件：全局路由入口
 ├── README.md                    ← 人类开发者入口
-├── docs/                        ← 人类文档（tech/ + general/ 双轨）
+├── doc/                         ← 人类文档（tech/ + general/ 双轨）
 ├── .github/workflows/           ← CI/CD 流水线
 ├── apps/
 │   ├── .agents/                 ← 仓库级 AI 配置骨架
@@ -74,7 +74,7 @@ flowchart TD
 
 ## 5. 文档边界
 
-- `README.md` + `docs/` 面向人类；`.agents/docs/` 面向 AI 智能体；`specs/` 为人与 AI 公约数。
+- `README.md` + `doc/` 面向人类；`.agents/docs/` 面向 AI 智能体；`specs/` 为人与 AI 公约数。
 - 任务中间产物放入 `.temp/`。项目内引用必须使用相对路径。
 - 详见 [`apps/chaos/.agents/rules/document-boundaries.md`](apps/chaos/.agents/rules/document-boundaries.md) 和 [`apps/chaos/.agents/rules/documentation.md`](apps/chaos/.agents/rules/documentation.md)。
 

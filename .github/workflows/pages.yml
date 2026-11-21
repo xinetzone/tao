@@ -60,19 +60,19 @@ jobs:
         run: mise run docs-strict
       - name: 🧹 Clean up unnecessary files
         run: |
-          if [ -f "docs/_build/html/environment.pickle" ]; then
-            rm "docs/_build/html/environment.pickle"
+          if [ -f "doc/_build/html/environment.pickle" ]; then
+            rm "doc/_build/html/environment.pickle"
             echo "Removed environment.pickle"
           fi
-          find "docs/_build/html" -name "*.doctree" -type f -delete
-          find "docs/_build/html" -name "*.pyc" -type f -delete
-          find "docs/_build/html" -type d -empty -delete
+          find "doc/_build/html" -name "*.doctree" -type f -delete
+          find "doc/_build/html" -name "*.pyc" -type f -delete
+          find "doc/_build/html" -type d -empty -delete
       - name: Setup Pages
         uses: actions/configure-pages@v6
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: 'docs/_build/html/'
+          path: 'doc/_build/html/'
       - name: 🚀 Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5

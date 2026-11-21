@@ -2,7 +2,7 @@
 .temp/
 __pycache__/
 .git-rewrite/
-docs/_build/
+doc/_build/
 .archive/
 apps/chaos/compliance-report.json
 

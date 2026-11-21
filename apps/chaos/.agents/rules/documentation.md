@@ -7,13 +7,13 @@
 ```mermaid
 flowchart LR
     A["文档需求"] --> B{"面向对象"}
-    B -->|人类开发者| C["README.md / docs/"]
+    B -->|人类开发者| C["README.md / doc/"]
     B -->|AI 智能体| D[".agents/docs/"]
     B -->|任务规划| E[".trae/ 或 .agents/docs/superpowers/plans/"]
     B -->|复盘总结| F[".agents/docs/superpowers/retrospectives/"]
 ```
 
-- `README.md` 与 `docs/` 面向人类开发者。
+- `README.md` 与 `doc/` 面向人类开发者。
 - `.agents/docs/` 面向 AI 智能体，用于知识库、架构分析、参考资料和长期沉淀。
 - `.agents/rules/` 面向 AI 智能体，用于高频执行规则。
 - `.agents/workflows/` 面向 AI 智能体，用于流程化任务指南。
@@ -27,7 +27,7 @@ flowchart LR
 | 实施计划 | `.agents/docs/superpowers/plans/` |
 | 复盘报告 | `.agents/docs/superpowers/retrospectives/`（按 §2.5 模块化归档） |
 | AI 参考资料 | `.agents/docs/references/` 或 `.agents/docs/sources/` |
-| 人类说明文档 | `README.md` 或 `docs/` |
+| 人类说明文档 | `README.md` 或 `doc/` |
 
 ### 2.1 命名审计
 
@@ -107,7 +107,7 @@ flowchart LR
 
 | 引用文件 | 引用位置 | 处理状态 |
 |----------|----------|----------|
-| `docs/tech/index.md` | L45 | ✅ 已更新 |
+| `doc/tech/index.md` | L45 | ✅ 已更新 |
 | `.agents/docs/README.md` | L12 | ✅ 已更新 |
 | — | — | ✅ 无其他引用 |
 
@@ -196,7 +196,7 @@ flowchart LR
 
 | 文件 | 行号 | 引用内容 |
 |------|------|----------|
-| `docs/tech/index.md` | L45 | `[methodology](methodology-essentials.md)` |
+| `doc/tech/index.md` | L45 | `[methodology](methodology-essentials.md)` |
 | `.agents/docs/README.md` | L12 | `详见 methodology-essentials.md` |
 
 **建议操作**：
@@ -347,7 +347,7 @@ flowchart LR
 | 每周 | `.gitignore` 覆盖检查 | `.agents/scripts/check_gitignore.py` | 确保运行时目录被正确忽略 |
 | 每周 | `.temp/` 编码扫描 | `.agents/scripts/scan_temp_encoding.py` | 检测非 UTF-8 文件 |
 | 每月 | 文档死链扫描 | `.agents/scripts/check_doc_links.py` | 校验相对路径引用有效性 |
-| 每月 | 技术债治理清单审计 | `docs/tech/tech-debt-governance-checklist.md` | 勾选完成项，升级未完成 P1 为 P0 |
+| 每月 | 技术债治理清单审计 | `doc/tech/tech-debt-governance-checklist.md` | 勾选完成项，升级未完成 P1 为 P0 |
 
 **执行方式**：
 
@@ -371,7 +371,7 @@ python .agents/scripts/check_doc_links.py
 
 ## 7. 双向同步
 
-当 `AGENTS.md`、`.agents/README.md` 或 `.agents/` 目录结构发生结构性变化时，应评估是否需要同步更新面向人类的 `README.md` 或 `docs/`。
+当 `AGENTS.md`、`.agents/README.md` 或 `.agents/` 目录结构发生结构性变化时，应评估是否需要同步更新面向人类的 `README.md` 或 `doc/`。
 
 同步判断标准：
 
@@ -389,13 +389,13 @@ python .agents/scripts/check_doc_links.py
 | 类别 | 位置示例 | 性质 | 编辑约束 |
 |---|---|---|---|
 | **真实源 (SSOT)** | `tests/project_changelogs/CHANGELOG_<年月>.md`、`.agents/skills/<skill>/CHANGELOG.md` | 实际编辑与维护点 | ✅ 仅在此处编辑变更内容 |
-| **Sphinx 镜像页** | `docs/tech/changelogs/<topic>.md` | 通过 `{include}` 引用真实源进行文档站渲染 | ❌ 禁止直接编辑内容；仅维护 include 路径与标题 |
-| **导航索引页** | 根 `CHANGELOG.md`、`docs/tech/changelog.md` | 指向真实源或镜像页的入口表格 | ⚠️ 修改时遵循「指向规则」 |
+| **Sphinx 镜像页** | `doc/tech/changelogs/<topic>.md` | 通过 `{include}` 引用真实源进行文档站渲染 | ❌ 禁止直接编辑内容；仅维护 include 路径与标题 |
+| **导航索引页** | 根 `CHANGELOG.md`、`doc/tech/changelog.md` | 指向真实源或镜像页的入口表格 | ⚠️ 修改时遵循「指向规则」 |
 
 ### 7.1 指向规则
 
 - **根目录索引**（`CHANGELOG.md`、`README.md`）→ 必须指向**真实源**，确保 GitHub 浏览体验直达数据。
-- **Sphinx 站内索引**（`docs/tech/changelog.md`）→ 指向同站镜像页（相对路径），借助 Sphinx 渲染管线。
+- **Sphinx 站内索引**（`doc/tech/changelog.md`）→ 指向同站镜像页（相对路径），借助 Sphinx 渲染管线。
 - **同一字段不要同时挂两条链接**，避免维护双份引用。
 
 ### 7.2 新增镜像页流程
@@ -403,30 +403,30 @@ python .agents/scripts/check_doc_links.py
 为新模块新增变更日志时：
 
 1. 在真实源位置创建 `CHANGELOG.md`（或月度文件）。
-2. 在 `docs/tech/changelogs/<topic>.md` 创建镜像页，仅含一级标题 + `{include}` 块。
-3. 在 `docs/tech/changelog.md` 索引表追加镜像页相对路径。
+2. 在 `doc/tech/changelogs/<topic>.md` 创建镜像页，仅含一级标题 + `{include}` 块。
+3. 在 `doc/tech/changelog.md` 索引表追加镜像页相对路径。
 4. 在根 `CHANGELOG.md` 索引表追加**真实源**绝对/相对路径。
-5. 在 `docs/tech/changelog.md` 顶部 `toctree` 中登记镜像页。
+5. 在 `doc/tech/changelog.md` 顶部 `toctree` 中登记镜像页。
 
 ### 7.3 禁止事项
 
-- ❌ 不得在根 `CHANGELOG.md`、`README.md` 中将链接指向 `docs/tech/changelogs/` 镜像页。
-- ❌ 不得在 `docs/tech/changelogs/<topic>.md` 镜像页中直接添加变更内容（应改写真实源）。
+- ❌ 不得在根 `CHANGELOG.md`、`README.md` 中将链接指向 `doc/tech/changelogs/` 镜像页。
+- ❌ 不得在 `doc/tech/changelogs/<topic>.md` 镜像页中直接添加变更内容（应改写真实源）。
 - ❌ 不得删除真实源而仅保留镜像页，会导致 Sphinx 构建失败。
 
-## 9. `docs/` 双轨分类
+## 9. `doc/` 双轨分类
 
-`docs/` 下采用「项目技术文档」与「通用知识」双轨分类，两类内容物理隔离、互不混入：
+`doc/` 下采用「项目技术文档」与「通用知识」双轨分类，两类内容物理隔离、互不混入：
 
 | 子目录 | 承载内容 | 边界 |
 |---|---|---|
-| `docs/tech/` | 项目源码相关：API 参考、集成指南、部署、构建约定、变更日志等 | 与本项目源码/工程化直接相关 |
-| `docs/general/` | 通用知识：传统文化（如《道德经》映射）、数学、跨学科常识等 | 与项目无直接耦合，但对协作或开发哲学有滋养 |
+| `doc/tech/` | 项目源码相关：API 参考、集成指南、部署、构建约定、变更日志等 | 与本项目源码/工程化直接相关 |
+| `doc/general/` | 通用知识：传统文化（如《道德经》映射）、数学、跨学科常识等 | 与项目无直接耦合，但对协作或开发哲学有滋养 |
 
 ### 8.1 入口结构
 
-- `docs/index.md` 是父入口，仅引用两个子入口（嵌套 toctree）。
-- `docs/tech/index.md` 与 `docs/general/index.md` 是子入口，各自展开自己的 toctree。
+- `doc/index.md` 是父入口，仅引用两个子入口（嵌套 toctree）。
+- `doc/tech/index.md` 与 `doc/general/index.md` 是子入口，各自展开自己的 toctree。
 - 子入口 **不得带 `orphan: true`**，必须进入主导航。
 
 ### 8.2 新增文档流程
@@ -434,17 +434,17 @@ python .agents/scripts/check_doc_links.py
 1. 判定归属类目（技术 / 通用）。
 2. 放入对应子目录（必要时按领域再建子目录，如 `philosophy/`、`math/`）。
 3. 在所在目录的 `index.md` 的 `toctree` 中追加文档名（**不带子目录前缀**，因为 toctree 项相对当前 `index.md` 解析）。
-4. 不得直接在 `docs/index.md` 父级 toctree 中添加业务文档。
+4. 不得直接在 `doc/index.md` 父级 toctree 中添加业务文档。
 
 ### 8.3 边界隔离原则
 
-- 技术资产（源码、配置、API、构建与发布）严禁进入 `docs/general/`。
-- 通用知识（哲学、数学、传统文化）严禁进入 `docs/tech/`。
+- 技术资产（源码、配置、API、构建与发布）严禁进入 `doc/general/`。
+- 通用知识（哲学、数学、传统文化）严禁进入 `doc/tech/`。
 - 跨轨互链使用相对路径（如 `../tech/index.md` ↔ `../general/index.md`）。
 
 ### 8.4 `general/` 子目录命名约定
 
-为防止 `docs/general/` 发散后出现命名分歧，统一采用「单数英文小写 · 学科/领域名 · 不缩写」三原则：
+为防止 `doc/general/` 发散后出现命名分歧，统一采用「单数英文小写 · 学科/领域名 · 不缩写」三原则：
 
 | 子目录 | 承载内容 | 状态 |
 |---|---|---|
@@ -461,15 +461,15 @@ python .agents/scripts/check_doc_links.py
 
 ## 10. MyST 跨目录引用三段式校验
 
-在 `docs/` 内进行文档迁移、重命名或跨目录互链时，必须分别校验三类引用——它们的解析规则不同：
+在 `doc/` 内进行文档迁移、重命名或跨目录互链时，必须分别校验三类引用——它们的解析规则不同：
 
-| 引用类型 | 路径解析 | 跨 docs 树外文件 | 典型陷阱 |
+| 引用类型 | 路径解析 | 跨 doc 树外文件 | 典型陷阱 |
 |---|---|---|---|
 | `{doc}` 指令 | docname（无后缀），相对当前文档目录或源根 | ❌ 不允许 | 跨目录后绝对/相对 docname 易混淆 |
 | `{include}` 指令 | 文件系统相对路径 | ✅ 允许 | 上移/下移目录后 `../` 层级需调整 |
-| Markdown hyperlink | 必须指向 docs 源树内的 `.md` 文档 | ❌ 触发 `myst.xref_missing` | `.agents/`、`src/` 等树外文件不能用 hyperlink |
+| Markdown hyperlink | 必须指向 doc 源树内的 `.md` 文档 | ❌ 触发 `myst.xref_missing` | `.agents/`、`src/` 等树外文件不能用 hyperlink |
 
-### 9.1 跨 docs 树外文件的引用约定
+### 9.1 跨 doc 树外文件的引用约定
 
 - ❌ 禁止：`[规则](.agents/rules/context-economy.md)` —— 触发 `myst.xref_missing`。
 - ✅ 推荐：内联代码 `` `.agents/rules/context-economy.md` ``。
@@ -481,7 +481,7 @@ python .agents/scripts/check_doc_links.py
 |---|---|
 | 文档上移一层目录 | `{include}` 路径 `../` 层级 -1 |
 | 文档下移一层目录 | `{include}` 路径 `../` 层级 +1 |
-| 跨目录互链 `.md` | 确认目标仍在 docs 树内；否则改为内联代码 |
+| 跨目录互链 `.md` | 确认目标仍在 doc 树内；否则改为内联代码 |
 | `{doc}` 引用 | 首选相对当前目录的 docname（如 `<api/taolib/index>`而非 `<tech/api/...>`）|
 
 ### 9.3 已知工具链兼容性
@@ -513,17 +513,17 @@ python .agents/scripts/check_doc_links.py
 
 ### 11.1 AutoAPI 输出路径
 
-- `docs/conf.py` 中 `autoapi_root` 决定 sphinx-autoapi 的输出位置，应与技术文档子目录路径对齐：`autoapi_root = "tech/api"`。
-- API 生成产物位于 `docs/tech/api/`，必须在 `.gitignore` 中排除，不得提交进仓。
+- `doc/conf.py` 中 `autoapi_root` 决定 sphinx-autoapi 的输出位置，应与技术文档子目录路径对齐：`autoapi_root = "tech/api"`。
+- API 生成产物位于 `doc/tech/api/`，必须在 `.gitignore` 中排除，不得提交进仓。
 - 调整 `autoapi_root` 后无需手工迁移生成产物，下次构建会自动重生成。
 
 ### 11.2 嵌套 toctree docname 口径
 
 | 位置 | toctree 项写法 | 例 |
 |---|---|---|
-| `docs/index.md`（父入口） | 相对源根 | `tech/index`、`general/index` |
-| `docs/tech/index.md`（子入口） | 相对当前目录（**不加 `tech/` 前缀**） | `intro`、`api/taolib/index` |
-| `docs/general/index.md`（子入口） | 相对当前目录（**不加 `general/` 前缀**） | `philosophy/tao-minimalist-principles` |
+| `doc/index.md`（父入口） | 相对源根 | `tech/index`、`general/index` |
+| `doc/tech/index.md`（子入口） | 相对当前目录（**不加 `tech/` 前缀**） | `intro`、`api/taolib/index` |
+| `doc/general/index.md`（子入口） | 相对当前目录（**不加 `general/` 前缀**） | `philosophy/tao-minimalist-principles` |
 
 ### 11.3 README → index 升级时机
 

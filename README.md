@@ -112,7 +112,7 @@ AgentForge/
 │       ├── specs/         ← AgentForge Spec v0.2
 │       └── src/taolib/    ← world CLI + 参考实现
 │
-├── docs/                  ← 人类文档（tech/ + general/ 双轨）
+├── doc/                   ← 人类文档（tech/ + general/ 双轨）
 ├── .github/workflows/     ← CI/CD 流水线
 │
 └── rebirth/               ← 脱胎态：WorldSprout 标准（git submodule）
@@ -128,6 +128,7 @@ AgentForge/
 - **约束即代码**：`constraints.toml` 声明式协议 + CI 自动校验
 - **World CLI 工具链**：`world init` 脚手架 / `world guide` 诊断推荐 / `world fragment` 打包分发
 - **GitHub App 令牌服务**：自动化 Token 管理与事件处理
+- **字体配置子系统**：`taolib.fonts` 以“发现 → 注册 → 生效”三道闸门管理字体资源，matplotlib 为当前后端并按需延迟导入（可选依赖 `taolib[fonts]`）
 - **双平台 CI**：GitHub Actions + GitCode 流水线，Sphinx 文档零警告
 
 ## 技术栈

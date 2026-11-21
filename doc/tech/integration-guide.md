@@ -271,7 +271,7 @@ flowchart TD
 AGENTS.md
 .agents/
 .trae/
-docs/
+doc/
 mise.toml
 pyproject.toml
 tasks.py

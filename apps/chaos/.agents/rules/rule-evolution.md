@@ -158,4 +158,4 @@ flowchart LR
 
 - [`world-hierarchy.md`](world-hierarchy.md)
 - [`core-principles.md`](core-principles.md)
-- [`../../../../docs/topics/code-architecture-insights.md`](../../../../docs/topics/code-architecture-insights.md)
+- [`../../../../doc/topics/code-architecture-insights.md`](../../../../doc/topics/code-architecture-insights.md)

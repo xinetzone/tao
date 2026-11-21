@@ -168,7 +168,7 @@ jobs:
       - name: Check internal documentation links
         run: mise run docs-internal-linkcheck
 
-      - name: Check docs/ structure (dual-track)
+      - name: Check doc/ structure (dual-track)
         run: mise run docs-structure-check
 
       - name: Validate skill SKILL.md compliance

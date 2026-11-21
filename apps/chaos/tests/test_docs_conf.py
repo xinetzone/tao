@@ -6,15 +6,15 @@ import pytest
 
 
 def _get_docs_conf() -> Path | None:
-    """Search upward from the test file to locate docs/conf.py.
+    """Search upward from the test file to locate doc/conf.py.
 
     Works in both monorepo (tests/ nested under apps/chaos/) and
     container (tests/ directly under /app/) layouts.
-    Returns None if not found (e.g., container without docs/).
+    Returns None if not found (e.g., container without doc/).
     """
     current = Path(__file__).resolve().parent
     for _ in range(10):
-        candidate = current / "docs" / "conf.py"
+        candidate = current / "doc" / "conf.py"
         if candidate.exists():
             return candidate
         current = current.parent
@@ -27,7 +27,7 @@ DOCS_CONF = _get_docs_conf()
 def _load_conf_module():
     if DOCS_CONF is None:
         pytest.skip(
-            "docs/conf.py not found (likely running in container without docs/)"
+            "doc/conf.py not found (likely running in container without doc/)"
         )
     conf_path = DOCS_CONF
     spec = spec_from_file_location("docs_conf", conf_path)

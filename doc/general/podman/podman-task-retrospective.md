@@ -4,7 +4,7 @@
 
 - **起始需求**：学习并萃取 https://acntxq6xf8pe.aiforce.cloud/app/app_4jwk79sp6p8gg（妙搭平台上的 Podman 开源项目知识库应用）
 - **演进路径**：萃取网页内容 → 构建完整参考资料库 → 归档到项目文档 → 修复 toctree → 提交
-- **最终产出**：`docs/general/podman/` 下 15 个结构化文档（含索引），共 3705 行
+- **最终产出**：`doc/general/podman/` 下 15 个结构化文档（含索引），共 3705 行
 - **附带产出**：Windows 下 Podman 挂载网络驱动器的技术问答（drvfs / CIFS / NFS 方案）
 
 ## 二、执行时间线
@@ -16,7 +16,7 @@
 | 3. 深度研究 | Research Agent (Alex) 收集官方文档深度技术资料（命令参考、网络、存储、安全、Quadlet、配置文件） | 12000+ 行官方文档收集 |
 | 4. 深度研究 | Research Agent (Sam) 收集高级主题资料（CI/CD、多架构、Machine、供应链安全、性能、迁移） | 高级场景与实战资料 |
 | 5. 资料库构建 | 4 个 Coding Agent 并行构建（Taylor: 索引+基础 / Felix: 命令+网络+存储 / Jay: 安全+K8s+Quadlet / Robin: 高级+迁移+故障+配置） | 13 章节 + README 索引 |
-| 6. 归档 | Coding Agent (Jimmy) 移动文件到 `docs/general/podman/`、更新索引、清理临时文件 | 正式归档 |
+| 6. 归档 | Coding Agent (Jimmy) 移动文件到 `doc/general/podman/`、更新索引、清理临时文件 | 正式归档 |
 | 7. 修复 | Leader 直接修复 README.md 添加 `{toctree}` 指令 | Sphinx 文档树完整 |
 | 8. 提交 | git commit（16 files, 3705 insertions） | `55d6cdf` |
 
@@ -84,7 +84,7 @@ flowchart TD
 - ✅ 所有文件包含 YAML frontmatter
 - ✅ 使用 Sphinx-compatible Markdown（MyST）
 - ✅ README.md 使用 `{toctree}` 指令
-- ✅ `docs/general/index.md` 已更新索引条目
+- ✅ `doc/general/index.md` 已更新索引条目
 - ✅ 相对路径引用
 
 ## 五、经验与改进点

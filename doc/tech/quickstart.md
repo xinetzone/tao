@@ -127,6 +127,6 @@ mise run sync
 - **进入仓库后版本未切换**：优先执行 `mise trust`，然后运行 `mise doctor`。
 - **`uv` 或 `python` 版本不符合预期**：执行 `mise current`、`mise ls`，必要时重新运行 `mise install --force`。
 - **外部工具缺失**：运行 `mise run init-check` 查看缺失项（跨平台，Windows/Linux/macOS 均可使用）。
-- **文档构建失败**：先执行 `mise run install-docs-deps`，再运行 `mise run docs-html` 或进入 `docs/` 目录手动调用 `uv run invoke`。
+- **文档构建失败**：先执行 `mise run install-docs-deps`，再运行 `mise run docs-html` 或进入 `doc/` 目录手动调用 `uv run invoke`。
 
-如果问题仍未解决，请继续阅读 `docs/tech/build-conventions.md`、`docs/tech/contributing.md` 与 `docs/tech/deploy.md` 中的环境说明。
+如果问题仍未解决，请继续阅读 `doc/tech/build-conventions.md`、`doc/tech/contributing.md` 与 `doc/tech/deploy.md` 中的环境说明。

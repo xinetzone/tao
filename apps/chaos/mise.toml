@@ -68,12 +68,12 @@ depends = ["check-env"]
 
 [tasks.docs-html]
 description = "构建 HTML 文档"
-run = "uv run invoke --search-root ../../docs build --target html --sourcedir ../../docs --builddir ../../docs/_build"
+run = "uv run invoke --search-root ../../doc build --target html --sourcedir ../../doc --builddir ../../doc/_build"
 depends = ["check-env"]
 
 [tasks.docs-linkcheck]
 description = "执行文档外链校验"
-run = "uv run invoke --search-root ../../docs linkcheck --sourcedir ../../docs --builddir ../../docs/_build"
+run = "uv run invoke --search-root ../../doc linkcheck --sourcedir ../../doc --builddir ../../doc/_build"
 depends = ["check-env"]
 
 [tasks.docs-internal-linkcheck]
@@ -81,8 +81,8 @@ description = "校验 README/CHANGELOG/AGENTS 中的相对路径引用是否有�
 run = "python .agents/scripts/check_doc_links.py --root ../.. && python .agents/scripts/check_doc_links.py --root . --files CHANGELOG.md --dirs .agents/docs .agents/rules"
 
 [tasks.docs-structure-check]
-description = "校验 docs/ 目录结构遵循 tech/general 双轨分类规范"
-run = "python .agents/scripts/check_docs_structure.py --docs-dir ../../docs"
+description = "校验 doc/ 目录结构遵循 tech/general 双轨分类规范"
+run = "python .agents/scripts/check_docs_structure.py --docs-dir ../../doc"
 
 [tasks.world-hierarchy-check]
 description = "校验多世界层级结构遵循 world-hierarchy 规范"
@@ -90,13 +90,13 @@ run = "python .agents/scripts/check_world_hierarchy.py"
 
 [tasks.docs-build]
 description = "CI 文档构建入口"
-run = "uv run invoke --search-root ../../docs build --target html --sourcedir ../../docs --builddir ../../docs/_build"
+run = "uv run invoke --search-root ../../doc build --target html --sourcedir ../../doc --builddir ../../doc/_build"
 depends = ["check-env"]
 
 [tasks.docs-strict]
 description = "严格模式构建文档：警告即失败（CI 与 GitHub Pages 部署入口）"
 env = { SPHINXOPTS = "-W --keep-going" }
-run = "uv run invoke --search-root ../../docs build --target html --sourcedir ../../docs --builddir ../../docs/_build"
+run = "uv run invoke --search-root ../../doc build --target html --sourcedir ../../doc --builddir ../../doc/_build"
 depends = ["check-env", "py-syntax-check", "docs-structure-check"]
 
 [tasks.init]

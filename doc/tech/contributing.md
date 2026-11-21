@@ -30,7 +30,7 @@ uv run ruff check .
 mise run fmt
 ```
 
-如果本次修改涉及文档，还应在 `docs/` 目录下执行：
+如果本次修改涉及文档，还应在 `doc/` 目录下执行：
 
 ```bash
 mise run docs-html
@@ -41,7 +41,7 @@ mise run docs-html
 如果你的改动涉及 Python、`uv` 或其他开发工具版本，请遵循以下原则：
 
 1. 优先更新 `mise` 侧的工具声明，确保本地与 CI 共用同一套版本基线。
-2. 再同步 `pyproject.toml`、脚本、README 与 `docs/` 中的人类文档说明。
+2. 再同步 `pyproject.toml`、脚本、README 与 `doc/` 中的人类文档说明。
 3. 升级后执行 `mise install --force` 与 `mise run sync`。
 4. 至少补跑测试、Lint 与文档构建，确认没有环境漂移。
 

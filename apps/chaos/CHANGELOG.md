@@ -56,4 +56,4 @@
 | 2026-06 | 2026年6月项目级变更（archive-folder v1.3.0 + asset-redundancy-analyzer v1.0.0 + react-survey 字体治理 + 参考文档沉淀） | [tests/project_changelogs/CHANGELOG_2026-06.md](tests/project_changelogs/CHANGELOG_2026-06.md) |
 | 2026-05 | 2026年5月项目级变更（[未发布]） | [tests/project_changelogs/CHANGELOG_2026-05.md](tests/project_changelogs/CHANGELOG_2026-05.md) |
 
-> 说明：上述路径为变更记录的**真实数据源**。文档站点（Sphinx）通过 [`docs/tech/changelog.md`](../../docs/tech/changelog.md) 与 [`docs/tech/changelogs/`](../../docs/tech/changelogs/) 下的镜像页 `{include}` 引用渲染，请勿直接编辑镜像页。
+> 说明：上述路径为变更记录的**真实数据源**。文档站点（Sphinx）通过 [`doc/tech/changelog.md`](../../doc/tech/changelog.md) 与 [`doc/tech/changelogs/`](../../doc/tech/changelogs/) 下的镜像页 `{include}` 引用渲染，请勿直接编辑镜像页。

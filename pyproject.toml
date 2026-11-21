@@ -42,7 +42,7 @@ Repository = "https://github.com/xinetzone/tao"
 
 [tool.scikit-build]
 # explicit 模式要求 minimum-version ≥ 1.0：sdist 成员只由 sdist.include 决定，
-# 不再把 git 已跟踪的整个 monorepo（docs 图片、apps/chaos、.agents 等）卷进
+# 不再把 git 已跟踪的整个 monorepo（doc 图片、apps/chaos、.agents 等）卷进
 # PyPI 归档。
 minimum-version = "1.0"
 sdist.inclusion-mode = "explicit"

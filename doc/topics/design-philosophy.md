@@ -160,7 +160,7 @@ If any command fails, fix the issue or explain why it is unrelated.
 ```
 AGENTS.md           → 只放稳定、关键、高频规则
 .agents/context/    → 放低频但重要的背景资料
-docs/               → 放人类文档
+doc/                → 放人类文档
 代码自身             → 作为最终事实来源
 ```
 
@@ -277,7 +277,7 @@ Level 4 → + 多世界继承 + roles/teams（协作元模型）
 2. **向下兼容**：Level 0 兼容 OpenAI Codex CLI
 3. **向上扩展**：高级特性不破坏低级用法
 4. **工具无关**：纯文件约定，不绑定特定 AI 工具
-5. **物理隔离**：人类文档（`docs/`）与 AI 知识库（`.agents/docs/`）分离
+5. **物理隔离**：人类文档（`doc/`）与 AI 知识库（`.agents/docs/`）分离
 
 ---
 
@@ -337,8 +337,8 @@ Team → Role → Agent → Task → Workflow → Handoff
 
 | 受众 | 目录 | 内容 |
 |------|------|------|
-| 人类 | `docs/tech/` | API 文档、部署指南、构建规范 |
-| 人类 | `docs/general/` | 哲学、数学、通用知识 |
+| 人类 | `doc/tech/` | API 文档、部署指南、构建规范 |
+| 人类 | `doc/general/` | 哲学、数学、通用知识 |
 | AI | `.agents/docs/` | AI 专属知识库、架构摘要 |
 | AI | `.agents/rules/` | 高频执行规则、约定 |
 | 人+AI | `specs/` | 规范文档（公约数） |
@@ -373,7 +373,7 @@ flowchart LR
 |------|---------|------------|
 | 契约形式 | 自由文本 Markdown | 路由表 + 结构化 TOML |
 | 规则组织 | 散落文件 + Glob | kernel/fragments/capabilities 分层 |
-| 文档边界 | 无区分 | docs/（人）↔ .agents/（AI）物理隔离 |
+| 文档边界 | 无区分 | doc/（人）↔ .agents/（AI）物理隔离 |
 | 能力分发 | 几乎无 | Registry + fragments 包管理 |
 | 协作模型 | 单 Agent | 完整 Team/Role/Agent 元模型 |
 
@@ -402,7 +402,7 @@ flowchart LR
 
 `context-economy.md` 不只是给 AI 的操作指南，它在**约束整个项目的信息架构**：
 
-- 为什么 `docs/tech/` 和 `docs/general/` 必须物理隔离？——因为 AI 需要"检索定位"领域
+- 为什么 `doc/tech/` 和 `doc/general/` 必须物理隔离？——因为 AI 需要"检索定位"领域
 - 为什么规则拆成多个独立文件？——因为 AI 应该"只读取相关片段"
 - 为什么有长期沉淀目录？——因为"稳定知识应沉淀到规则文件中"
 
@@ -456,7 +456,7 @@ workflow_owns_no_knowledge = true
 3. **规则要可执行** — checklist 优于"best practices"宣言
 4. **风险边界要明确** — 命令分级（Safe / Confirmation Required / Forbidden）
 5. **命令要具体** — 给出可复制运行的精确命令
-6. **上下文要分层** — AGENTS.md（高频）→ .agents/context/（低频）→ docs/（人类参考）
+6. **上下文要分层** — AGENTS.md（高频）→ .agents/context/（低频）→ doc/（人类参考）
 7. **项目规范应版本化** — 可审查、可共享、可迁移，不应只存在 Agent memory
 8. **越靠近代码，规则越具体** — 子目录 AGENTS.md 覆盖父目录规则
 9. **中立源头** — AGENTS.md 做通用规范，其他工具引用或同步

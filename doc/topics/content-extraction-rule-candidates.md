@@ -3,7 +3,7 @@
 > **状态**：Candidate（候选）  
 > **来源**：单次任务复盘 — 微信文章内容提取（2026-06-24）  
 > **溯源**：[`task-summary-force-conf-recap-20260624.md`](../../apps/chaos/.agents/docs/superpowers/retrospectives/task-summaries/exploration/task-summary-force-conf-recap-20260624.md)  
-> **准入进度**：未达 [`rule-evolution.md`](../../apps/chaos/.agents/rules/rule-evolution.md) §1.1 的"≥3 次独立触发"频率门槛，当前停留在 `docs/topics/` 经验层，等待后续印证累积。
+> **准入进度**：未达 [`rule-evolution.md`](../../apps/chaos/.agents/rules/rule-evolution.md) §1.1 的"≥3 次独立触发"频率门槛，当前停留在 `doc/topics/` 经验层，等待后续印证累积。
 
 本文记录一次内容提取任务后提炼出的三条规则候选。它们尚未取得正式规则身份——按 [`rule-evolution.md`](../../apps/chaos/.agents/rules/rule-evolution.md) 的五维准入检验，频率维度 R-01/R-02 为 1/3，R-03 已累积至 2/3。在此公开候选，是为了让后续同类任务能对照印证，待触发次数累积到位后上升为 `.agents/rules/` 正式规则。
 
@@ -149,7 +149,7 @@ flowchart LR
 
 > 规则不是写出来的，是被"世界事件"反复冲刷之后，凝结到通道壁上的结晶。
 
-本次复盘是一次"世界事件"，三条候选是"结晶的雏形"。它们是否最终凝结为规则，取决于后续是否被独立印证。在此期间，它们以候选身份停留在 `docs/topics/`，既不污染 `.agents/rules/` 的严肃性，也不丢失经验本身。
+本次复盘是一次"世界事件"，三条候选是"结晶的雏形"。它们是否最终凝结为规则，取决于后续是否被独立印证。在此期间，它们以候选身份停留在 `doc/topics/`，既不污染 `.agents/rules/` 的严肃性，也不丢失经验本身。
 
 这本身就是 [`rule-evolution.md`](../../apps/chaos/.agents/rules/rule-evolution.md) §1.3 反模式清单中"一次性救火经验"的正确处置——不直接上升为规则，但记录在案，等待复现。
 

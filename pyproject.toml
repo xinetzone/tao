@@ -1,0 +1,69 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# tao 仓库根发行版：taolib
+#
+# 源码位于本目录的 src/taolib，与 apps/chaos 下的旧实现完全解耦——不引用其
+# 任何路径、依赖项或入口点。apps/chaos 仅作为临时版本保留，不参与本发行版
+# 的构建与发布。
+#
+# 因此仓库根可直接用于安装与打包：
+#
+#   pip install git+https://github.com/xinetzone/tao.git
+#   uv add "taolib @ git+https://github.com/xinetzone/tao.git@vX.Y.Z"
+#   uv build                # 或 python -m build --sdist / --wheel
+#
+# 版本：由仓库根的 git tag 经 setuptools-scm 派生（tag 形如 vX.Y.Z）。
+# 不设置 version_file，构建过程不向源码树写入文件；运行期版本由
+# taolib/__init__.py 通过 importlib.metadata 读取发行版元数据。
+# ─────────────────────────────────────────────────────────────────────────────
+
+[build-system]
+build-backend = "scikit_build_core.build"
+requires = ["scikit-build-core[pyproject]>=1.0", "setuptools-scm>=8"]
+
+[project]
+name = "taolib"
+dynamic = ["version"]
+description = "道可道，非恒道"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.14"
+authors = [{ name = "xinetzone", email = "735613050@qq.com" }]
+maintainers = [{ name = "xinetzone", email = "735613050@qq.com" }]
+dependencies = []
+
+[project.urls]
+Documentation = "https://taolib.readthedocs.io/"
+Repository = "https://github.com/xinetzone/tao"
+
+[tool.scikit-build]
+# explicit 模式要求 minimum-version ≥ 1.0：sdist 成员只由 sdist.include 决定，
+# 不再把 git 已跟踪的整个 monorepo（docs 图片、apps/chaos、.agents 等）卷进
+# PyPI 归档。
+minimum-version = "1.0"
+sdist.inclusion-mode = "explicit"
+# 路径按 gitignore 语法解析：带前导 "/" 才是锚定到仓库根，否则 README.md /
+# LICENSE / pyproject.toml 会在任意深度（如 apps/chaos/）再命中一次。
+sdist.include = ["/README.md", "/LICENSE", "/pyproject.toml", "src/taolib"]
+sdist.exclude = [
+    "src/taolib/**/__pycache__/**",
+    "src/taolib/**/*.pyc",
+    "src/taolib/**/*.pyo",
+]
+sdist.cmake = false
+# 纯 Python 包：没有 CMake / 原生扩展，产出平台无关的 py3-none-any wheel。
+wheel.cmake = false
+wheel.platlib = false
+wheel.packages = ["src/taolib"]
+# 显式给出 CMake 版本下限，免去 scikit-build-core 因找不到 CMakeLists.txt
+# 而回退到 3.15 并打印告警（本包不使用 CMake）。
+cmake.version = ">=3.15"
+
+[tool.setuptools_scm]
+fallback_version = "0.0.0"
+
+# 版本由 git tag 派生：dynamic-metadata 0.3 的顶层写法，取代已被 scikit-build-core
+# 1.x 弃用的 [tool.scikit-build.metadata] 表。本 provider 只产出 version 字段，
+# 且不接受内联参数，具体配置仍由上面的 [tool.setuptools_scm] 提供。
+[[tool.dynamic-metadata]]
+provider = "scikit_build_core.metadata.setuptools_scm"

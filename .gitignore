@@ -12,6 +12,10 @@ apps/chaos/compliance-report.json
 .pytest_cache/
 .venv/
 venv/
+# 根目录发行版（taolib 代理打包）的构建产物
+/dist/
+/build/
+/*.egg-info/
 
 # IDE
 .idea/

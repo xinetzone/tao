@@ -26,9 +26,7 @@ DOCS_CONF = _get_docs_conf()
 
 def _load_conf_module():
     if DOCS_CONF is None:
-        pytest.skip(
-            "doc/conf.py not found (likely running in container without doc/)"
-        )
+        pytest.skip("doc/conf.py not found (likely running in container without doc/)")
     conf_path = DOCS_CONF
     spec = spec_from_file_location("docs_conf", conf_path)
     assert spec is not None

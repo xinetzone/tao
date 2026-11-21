@@ -24,9 +24,9 @@ from pathlib import Path
 from typing import Any
 
 # Windows 终端 UTF-8 编码支持
-if sys.platform == 'win32':
-    sys.stdout.reconfigure(encoding='utf-8')
-    sys.stderr.reconfigure(encoding='utf-8')
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
 
 try:
     import tomllib
@@ -107,9 +107,7 @@ class ComplianceReport:
         effective_checks = self.total_checks - self.skipped
         if effective_checks == 0:
             return 100
-        score = (
-            (self.passed * 100 + self.warnings * 50) / effective_checks
-        )
+        score = (self.passed * 100 + self.warnings * 50) / effective_checks
         return int(score)
 
 
@@ -218,7 +216,9 @@ def check_article_14(strong: dict[str, Any]) -> list[ComplianceCheck]:
             requirement="Agent 必须通过 Role 进入规范性协作体系",
             constraint_key="constraints.strong.agent_requires_role",
             status=STATUS_PASS if agent_requires_role else STATUS_WARN,
-            details="已启用 Role 绑定" if agent_requires_role else "未启用 Role 绑定（建议启用）",
+            details="已启用 Role 绑定"
+            if agent_requires_role
+            else "未启用 Role 绑定（建议启用）",
             severity=SEVERITY_MEDIUM,
         )
     )
@@ -231,7 +231,9 @@ def check_article_14(strong: dict[str, Any]) -> list[ComplianceCheck]:
             requirement="Task 必须归属于某个 Mission（可追溯性）",
             constraint_key="constraints.strong.task_requires_mission",
             status=STATUS_PASS if task_requires_mission else STATUS_WARN,
-            details="已启用 Mission 归属" if task_requires_mission else "未启用 Mission 归属（建议启用）",
+            details="已启用 Mission 归属"
+            if task_requires_mission
+            else "未启用 Mission 归属（建议启用）",
             severity=SEVERITY_MEDIUM,
         )
     )
@@ -251,7 +253,9 @@ def check_article_15(strong: dict[str, Any]) -> list[ComplianceCheck]:
             requirement="所有用户输入必须在到达 LLM 前净化",
             constraint_key="constraints.strong.sanitize_llm_input",
             status=STATUS_PASS if sanitize_input else STATUS_FAIL,
-            details="已启用输入净化" if sanitize_input else "未启用输入净化（存在 Prompt Injection 风险）",
+            details="已启用输入净化"
+            if sanitize_input
+            else "未启用输入净化（存在 Prompt Injection 风险）",
             severity=SEVERITY_HIGH,
         )
     )

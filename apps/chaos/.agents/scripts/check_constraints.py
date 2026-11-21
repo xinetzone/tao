@@ -10,9 +10,9 @@ import sys
 from pathlib import Path
 
 # Windows 终端 UTF-8 编码支持
-if sys.platform == 'win32':
-    sys.stdout.reconfigure(encoding='utf-8')
-    sys.stderr.reconfigure(encoding='utf-8')
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
 
 try:
     import tomllib

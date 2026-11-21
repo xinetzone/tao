@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Invoke-only tasks for building the Sphinx documentation."""
+
 import os
 import shlex
 import subprocess

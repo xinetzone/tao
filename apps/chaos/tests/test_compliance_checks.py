@@ -12,14 +12,14 @@ from __future__ import annotations
 import sys
 import tempfile
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 
 # 添加脚本目录到路径
 sys.path.insert(0, str(Path(__file__).parent.parent / ".agents" / "scripts"))
 
-from check_constraints import check_constraints, find_agents_dir as find_agents_dir_constraints
+from check_constraints import check_constraints
+from check_constraints import find_agents_dir as find_agents_dir_constraints
 from check_eu_ai_act import (
     STATUS_FAIL,
     STATUS_PASS,
@@ -31,10 +31,8 @@ from check_eu_ai_act import (
     check_article_14,
     check_article_15,
     check_eu_ai_act_compliance,
-    find_agents_dir as find_agents_dir_eu,
     load_constraints,
 )
-
 
 # ============================================================
 # Fixtures
@@ -45,7 +43,9 @@ from check_eu_ai_act import (
 def temp_project():
     """创建临时项目目录结构。"""
     with tempfile.TemporaryDirectory() as tmpdir:
-        project_root = Path(tmpdir)
+        # 解析为真实路径：macOS 的 /var 与 Windows 的 8.3 短名（RUNNER~1）
+        # 都会在 resolve() 时被改写，而被测函数返回的正是解析后的路径。
+        project_root = Path(tmpdir).resolve()
         agents_dir = project_root / ".agents"
         agents_dir.mkdir()
 
@@ -180,21 +180,21 @@ class TestCheckConstraints:
 
     def test_valid_constraints(self, temp_project, valid_constraints_content):
         """测试有效的约束配置。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
         constraints_path.write_text(valid_constraints_content, encoding="utf-8")
 
-        error_count, errors, warnings = check_constraints(constraints_path, agents_dir)
+        error_count, errors, _ = check_constraints(constraints_path, agents_dir)
 
         assert error_count == 0
         assert len(errors) == 0
 
     def test_missing_constraints_file(self, temp_project):
         """测试缺少 constraints.toml 文件。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
 
-        error_count, errors, warnings = check_constraints(constraints_path, agents_dir)
+        error_count, _, warnings = check_constraints(constraints_path, agents_dir)
 
         assert error_count == 0
         assert len(warnings) == 1
@@ -202,32 +202,36 @@ class TestCheckConstraints:
 
     def test_invalid_toml_syntax(self, temp_project):
         """测试无效的 TOML 语法。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
         constraints_path.write_text("invalid [toml syntax", encoding="utf-8")
 
-        error_count, errors, warnings = check_constraints(constraints_path, agents_dir)
+        error_count, errors, _ = check_constraints(constraints_path, agents_dir)
 
         assert error_count == 1
         assert "解析失败" in errors[0]
 
-    def test_missing_strong_constraints(self, temp_project, minimal_constraints_content):
+    def test_missing_strong_constraints(
+        self, temp_project, minimal_constraints_content
+    ):
         """测试缺少部分强约束。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
 
         # 移除部分强约束
         content = minimal_constraints_content.replace("handoff_explicit = true", "")
         constraints_path.write_text(content, encoding="utf-8")
 
-        error_count, errors, warnings = check_constraints(constraints_path, agents_dir)
+        error_count, errors, _ = check_constraints(constraints_path, agents_dir)
 
         assert error_count >= 1
         assert any("缺少强约束" in e for e in errors)
 
-    def test_disabled_strong_constraint(self, temp_project, minimal_constraints_content):
+    def test_disabled_strong_constraint(
+        self, temp_project, minimal_constraints_content
+    ):
         """测试强约束被禁用。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
 
         # 将强约束设为 false
@@ -236,35 +240,37 @@ class TestCheckConstraints:
         )
         constraints_path.write_text(content, encoding="utf-8")
 
-        error_count, errors, warnings = check_constraints(constraints_path, agents_dir)
+        _, errors, _ = check_constraints(constraints_path, agents_dir)
 
         assert any("强约束被禁用" in e for e in errors)
 
     def test_missing_weak_constraints(self, temp_project, minimal_constraints_content):
         """测试缺少弱约束（应产生警告）。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
         constraints_path.write_text(minimal_constraints_content, encoding="utf-8")
 
-        error_count, errors, warnings = check_constraints(constraints_path, agents_dir)
+        error_count, _, warnings = check_constraints(constraints_path, agents_dir)
 
         # 弱约束缺失应产生警告，不是错误
         assert error_count == 0
         assert any("缺少弱约束声明" in w for w in warnings)
 
-    def test_missing_parallel_constraints(self, temp_project, minimal_constraints_content):
+    def test_missing_parallel_constraints(
+        self, temp_project, minimal_constraints_content
+    ):
         """测试缺少并行约束。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
         constraints_path.write_text(minimal_constraints_content, encoding="utf-8")
 
-        error_count, errors, warnings = check_constraints(constraints_path, agents_dir)
+        _, _, warnings = check_constraints(constraints_path, agents_dir)
 
         assert any("缺少并行隔离约束" in w for w in warnings)
 
     def test_role_binding_missing_rule(self, temp_project, minimal_constraints_content):
         """测试 Role 绑定的规则文件不存在。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
         constraints_path.write_text(minimal_constraints_content, encoding="utf-8")
 
@@ -279,13 +285,15 @@ rules = ["rules/nonexistent.md"]
 """
         (roles_dir / "test.toml").write_text(role_content, encoding="utf-8")
 
-        error_count, errors, warnings = check_constraints(constraints_path, agents_dir)
+        _, errors, _ = check_constraints(constraints_path, agents_dir)
 
         assert any("绑定规则不存在" in e for e in errors)
 
-    def test_role_binding_missing_reference(self, temp_project, minimal_constraints_content):
+    def test_role_binding_missing_reference(
+        self, temp_project, minimal_constraints_content
+    ):
         """测试 Role 绑定的引用文件不存在。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
         constraints_path.write_text(minimal_constraints_content, encoding="utf-8")
 
@@ -300,13 +308,15 @@ references = ["docs/nonexistent.md"]
 """
         (roles_dir / "test.toml").write_text(role_content, encoding="utf-8")
 
-        error_count, errors, warnings = check_constraints(constraints_path, agents_dir)
+        _, errors, _ = check_constraints(constraints_path, agents_dir)
 
         assert any("绑定引用不存在" in e for e in errors)
 
-    def test_world_toml_kernel_reference(self, temp_project, minimal_constraints_content):
+    def test_world_toml_kernel_reference(
+        self, temp_project, minimal_constraints_content
+    ):
         """测试 world.toml 内核引用检查。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
         constraints_path.write_text(minimal_constraints_content, encoding="utf-8")
 
@@ -317,13 +327,15 @@ rules = ["rules/nonexistent.md"]
 """
         (agents_dir / "world.toml").write_text(world_content, encoding="utf-8")
 
-        error_count, errors, warnings = check_constraints(constraints_path, agents_dir)
+        _, errors, _ = check_constraints(constraints_path, agents_dir)
 
         assert any("kernel.rules 引用不存在" in e for e in errors)
 
-    def test_world_toml_kernel_references_not_exist(self, temp_project, minimal_constraints_content):
+    def test_world_toml_kernel_references_not_exist(
+        self, temp_project, minimal_constraints_content
+    ):
         """测试 world.toml kernel.references 引用不存在。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
         constraints_path.write_text(minimal_constraints_content, encoding="utf-8")
 
@@ -335,44 +347,54 @@ references = ["docs/nonexistent.md"]
 """
         (agents_dir / "world.toml").write_text(world_content, encoding="utf-8")
 
-        error_count, errors, warnings = check_constraints(constraints_path, agents_dir)
+        _, errors, _ = check_constraints(constraints_path, agents_dir)
 
         assert any("kernel.references 引用不存在" in e for e in errors)
 
     def test_world_toml_parse_failure(self, temp_project, minimal_constraints_content):
         """测试 world.toml 解析失败。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
         constraints_path.write_text(minimal_constraints_content, encoding="utf-8")
 
         # 创建无效的 world.toml
         (agents_dir / "world.toml").write_text("invalid [toml", encoding="utf-8")
 
-        error_count, errors, warnings = check_constraints(constraints_path, agents_dir)
+        _, _, warnings = check_constraints(constraints_path, agents_dir)
 
         assert any("world.toml 解析失败" in w for w in warnings)
 
-    def test_missing_partial_parallel_constraints(self, temp_project, minimal_constraints_content):
+    def test_missing_partial_parallel_constraints(
+        self, temp_project, minimal_constraints_content
+    ):
         """测试缺少部分并行约束。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
 
         # 只定义部分并行约束
-        content = minimal_constraints_content + """
+        content = (
+            minimal_constraints_content
+            + """
 [constraints.parallel]
 file_isolation = true
 # 缺少 module_boundary, integration_serial, conflict_strategy
 """
+        )
         constraints_path.write_text(content, encoding="utf-8")
 
-        error_count, errors, warnings = check_constraints(constraints_path, agents_dir)
+        _, _, warnings = check_constraints(constraints_path, agents_dir)
 
-        assert any("缺少并行约束: constraints.parallel.module_boundary" in w for w in warnings)
-        assert any("缺少并行约束: constraints.parallel.integration_serial" in w for w in warnings)
+        assert any(
+            "缺少并行约束: constraints.parallel.module_boundary" in w for w in warnings
+        )
+        assert any(
+            "缺少并行约束: constraints.parallel.integration_serial" in w
+            for w in warnings
+        )
 
     def test_role_file_parse_failure(self, temp_project, minimal_constraints_content):
         """测试 Role 文件解析失败。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
         constraints_path.write_text(minimal_constraints_content, encoding="utf-8")
 
@@ -380,13 +402,15 @@ file_isolation = true
         roles_dir = agents_dir / "roles"
         (roles_dir / "invalid.toml").write_text("invalid [toml", encoding="utf-8")
 
-        error_count, errors, warnings = check_constraints(constraints_path, agents_dir)
+        _, errors, _ = check_constraints(constraints_path, agents_dir)
 
         assert any("Role 文件解析失败" in e for e in errors)
 
-    def test_role_rules_must_exist_without_bindings(self, temp_project, minimal_constraints_content):
+    def test_role_rules_must_exist_without_bindings(
+        self, temp_project, minimal_constraints_content
+    ):
         """测试 Role 声明 rules_must_exist=true 但未绑定任何规则。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
         constraints_path.write_text(minimal_constraints_content, encoding="utf-8")
 
@@ -404,7 +428,7 @@ rules_must_exist = true
 """
         (roles_dir / "test.toml").write_text(role_content, encoding="utf-8")
 
-        error_count, errors, warnings = check_constraints(constraints_path, agents_dir)
+        _, _, warnings = check_constraints(constraints_path, agents_dir)
 
         assert any("rules_must_exist=true 但未绑定任何规则" in w for w in warnings)
 
@@ -451,24 +475,36 @@ class TestComplianceReport:
         """测试完美合规分数。"""
         report = ComplianceReport()
         for _ in range(5):
-            report.add_check(ComplianceCheck(
-                article="Art 12",
-                requirement="测试",
-                constraint_key="test",
-                status=STATUS_PASS,
-            ))
+            report.add_check(
+                ComplianceCheck(
+                    article="Art 12",
+                    requirement="测试",
+                    constraint_key="test",
+                    status=STATUS_PASS,
+                )
+            )
 
         assert report.get_compliance_score() == 100
 
     def test_compliance_score_with_warnings(self):
         """测试有警告的合规分数。"""
         report = ComplianceReport()
-        report.add_check(ComplianceCheck(
-            article="Art 12", requirement="测试", constraint_key="test", status=STATUS_PASS
-        ))
-        report.add_check(ComplianceCheck(
-            article="Art 12", requirement="测试", constraint_key="test", status=STATUS_WARN
-        ))
+        report.add_check(
+            ComplianceCheck(
+                article="Art 12",
+                requirement="测试",
+                constraint_key="test",
+                status=STATUS_PASS,
+            )
+        )
+        report.add_check(
+            ComplianceCheck(
+                article="Art 12",
+                requirement="测试",
+                constraint_key="test",
+                status=STATUS_WARN,
+            )
+        )
 
         # (1 * 100 + 1 * 50) / 2 = 75
         assert report.get_compliance_score() == 75
@@ -476,12 +512,22 @@ class TestComplianceReport:
     def test_compliance_score_with_failures(self):
         """测试有失败的合规分数。"""
         report = ComplianceReport()
-        report.add_check(ComplianceCheck(
-            article="Art 12", requirement="测试", constraint_key="test", status=STATUS_PASS
-        ))
-        report.add_check(ComplianceCheck(
-            article="Art 12", requirement="测试", constraint_key="test", status=STATUS_FAIL
-        ))
+        report.add_check(
+            ComplianceCheck(
+                article="Art 12",
+                requirement="测试",
+                constraint_key="test",
+                status=STATUS_PASS,
+            )
+        )
+        report.add_check(
+            ComplianceCheck(
+                article="Art 12",
+                requirement="测试",
+                constraint_key="test",
+                status=STATUS_FAIL,
+            )
+        )
 
         # (1 * 100 + 0 * 50) / 2 = 50
         assert report.get_compliance_score() == 50
@@ -489,12 +535,22 @@ class TestComplianceReport:
     def test_compliance_score_with_skips(self):
         """测试有跳过的合规分数。"""
         report = ComplianceReport()
-        report.add_check(ComplianceCheck(
-            article="Art 12", requirement="测试", constraint_key="test", status=STATUS_PASS
-        ))
-        report.add_check(ComplianceCheck(
-            article="Art 12", requirement="测试", constraint_key="test", status=STATUS_SKIP
-        ))
+        report.add_check(
+            ComplianceCheck(
+                article="Art 12",
+                requirement="测试",
+                constraint_key="test",
+                status=STATUS_PASS,
+            )
+        )
+        report.add_check(
+            ComplianceCheck(
+                article="Art 12",
+                requirement="测试",
+                constraint_key="test",
+                status=STATUS_SKIP,
+            )
+        )
 
         # 跳过不计入，所以 100/1 = 100
         assert report.get_compliance_score() == 100
@@ -663,7 +719,7 @@ class TestLoadConstraints:
 
     def test_load_valid_file(self, temp_project, valid_constraints_content):
         """测试加载有效的 constraints.toml。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
         constraints_path.write_text(valid_constraints_content, encoding="utf-8")
 
@@ -674,7 +730,7 @@ class TestLoadConstraints:
 
     def test_load_missing_file(self, temp_project):
         """测试加载不存在的文件。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
 
         data = load_constraints(constraints_path)
@@ -683,7 +739,7 @@ class TestLoadConstraints:
 
     def test_load_invalid_toml(self, temp_project):
         """测试加载无效的 TOML 文件。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
         constraints_path.write_text("invalid [toml", encoding="utf-8")
 
@@ -702,7 +758,7 @@ class TestCheckEuAiActCompliance:
 
     def test_full_compliance_check(self, temp_project, valid_constraints_content):
         """测试完整的合规检查流程。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
         constraints_path.write_text(valid_constraints_content, encoding="utf-8")
 
@@ -713,7 +769,7 @@ class TestCheckEuAiActCompliance:
 
     def test_compliance_check_missing_file(self, temp_project):
         """测试缺少 constraints.toml 的检查。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
 
         report = check_eu_ai_act_compliance(constraints_path)
@@ -722,7 +778,7 @@ class TestCheckEuAiActCompliance:
 
     def test_compliance_check_minimal(self, temp_project, minimal_constraints_content):
         """测试最小配置的合规检查。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
         constraints_path.write_text(minimal_constraints_content, encoding="utf-8")
 
@@ -803,7 +859,7 @@ class TestIntegration:
 
     def test_end_to_end_compliance_check(self, temp_project, valid_constraints_content):
         """端到端测试：从文件创建到报告生成。"""
-        project_root, agents_dir = temp_project
+        _, agents_dir = temp_project
         constraints_path = agents_dir / "constraints.toml"
         constraints_path.write_text(valid_constraints_content, encoding="utf-8")
 
@@ -832,7 +888,7 @@ references = []
         (roles_dir / "test.toml").write_text(role_content, encoding="utf-8")
 
         # 运行约束检查
-        error_count, errors, warnings = check_constraints(constraints_path, agents_dir)
+        error_count, _, _ = check_constraints(constraints_path, agents_dir)
         assert error_count == 0
 
         # 运行 EU AI Act 检查

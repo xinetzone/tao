@@ -30,11 +30,7 @@ def iter_font_files(directory: str | Path) -> list[Path]:
     if not root.is_dir():
         raise FontConfigError(f"字体目录不存在或不是目录：{root}")
 
-    files = sorted(
-        path
-        for path in root.rglob("*")
-        if path.is_file() and path.suffix.lower() in FONT_EXTENSIONS
-    )
+    files = sorted(path for path in root.rglob("*") if path.is_file() and path.suffix.lower() in FONT_EXTENSIONS)
     if not files:
         raise FontConfigError(f"字体目录中没有字体文件：{root}")
     return files

@@ -12,23 +12,25 @@
 
 from __future__ import annotations
 
-import time
-from dataclasses import dataclass
-from typing import Any, Callable
-
 # 添加父目录到路径
 import sys
+import time
+from collections.abc import Callable
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
+
 sys.path.insert(0, str(Path(__file__).parent))
 
-from audit_logger import AuditLogger, AuditLogLevel, create_audit_logger
-
+from audit_logger import AuditLogger, create_audit_logger
 
 # === 示例 Agent 定义 ===
+
 
 @dataclass
 class Task:
     """任务定义。"""
+
     action: str
     input_data: dict[str, Any]
     agent_id: str = "demo-agent"
@@ -37,6 +39,7 @@ class Task:
 @dataclass
 class AgentResult:
     """Agent 执行结果。"""
+
     success: bool
     output_data: dict[str, Any]
     error: str | None = None
@@ -64,6 +67,7 @@ class DemoAgent:
 
 # === 审计装饰器 ===
 
+
 def with_audit(audit_logger: AuditLogger):
     """审计装饰器工厂。
 
@@ -72,6 +76,7 @@ def with_audit(audit_logger: AuditLogger):
         def my_agent_function(agent, task):
             return agent.run(task)
     """
+
     def decorator(func: Callable) -> Callable:
         def wrapper(agent, task: Task, **kwargs) -> AgentResult:
             start_time = time.time()
@@ -119,10 +124,12 @@ def with_audit(audit_logger: AuditLogger):
                 raise
 
         return wrapper
+
     return decorator
 
 
 # === 审计执行器 ===
+
 
 class AuditedAgentExecutor:
     """带审计功能的 Agent 执行器。"""
@@ -186,6 +193,7 @@ class AuditedAgentExecutor:
 
 # === 批量执行器 ===
 
+
 class BatchExecutor:
     """批量任务执行器（带审计）。"""
 
@@ -201,7 +209,7 @@ class BatchExecutor:
     ) -> list[AgentResult]:
         """批量执行任务。"""
         # 开始会话
-        session_id = self.audit.start_session()
+        self.audit.start_session()
 
         results = []
         for i, task in enumerate(tasks, 1):
@@ -210,14 +218,16 @@ class BatchExecutor:
             try:
                 result = self.executor.execute(agent, task, user_id)
                 results.append(result)
-                print(f"   状态: 成功")
+                print("   状态: 成功")
             except Exception as e:
                 print(f"   状态: 失败 - {e}")
-                results.append(AgentResult(
-                    success=False,
-                    output_data={},
-                    error=str(e),
-                ))
+                results.append(
+                    AgentResult(
+                        success=False,
+                        output_data={},
+                        error=str(e),
+                    )
+                )
 
         # 结束会话
         self.audit.end_session()
@@ -226,6 +236,7 @@ class BatchExecutor:
 
 
 # === 演示函数 ===
+
 
 def demo_basic_usage():
     """演示基础用法。"""
@@ -331,7 +342,7 @@ def demo_error_handling():
     )
 
     try:
-        result = executor.execute(agent, task)
+        executor.execute(agent, task)
     except Exception as e:
         print(f"\n预期错误: {e}")
 

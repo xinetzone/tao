@@ -24,9 +24,8 @@ import gzip
 import hashlib
 import json
 import logging
-import os
 import shutil
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
 from pathlib import Path
@@ -35,6 +34,7 @@ from typing import Any
 
 class AuditLogLevel(Enum):
     """审计日志级别。"""
+
     INFO = "INFO"
     WARNING = "WARNING"
     ERROR = "ERROR"
@@ -44,6 +44,7 @@ class AuditLogLevel(Enum):
 @dataclass
 class AuditEntry:
     """审计日志条目。"""
+
     timestamp: str
     agent_id: str
     action: str
@@ -119,8 +120,8 @@ class AuditLogger:
         """设置文件处理器。"""
         log_file = self.log_dir / f"audit_{datetime.now().strftime('%Y%m')}.log"
 
-        handler = logging.FileHandler(log_file, encoding='utf-8')
-        handler.setFormatter(logging.Formatter('%(message)s'))
+        handler = logging.FileHandler(log_file, encoding="utf-8")
+        handler.setFormatter(logging.Formatter("%(message)s"))
 
         self.logger.addHandler(handler)
         self.current_log_file = log_file
@@ -135,7 +136,7 @@ class AuditLogger:
             self._rotate_log_file()
 
         # 检查月份变化
-        current_month = datetime.now().strftime('%Y%m')
+        current_month = datetime.now().strftime("%Y%m")
         expected_file = self.log_dir / f"audit_{current_month}.log"
 
         if self.current_log_file != expected_file:
@@ -143,8 +144,8 @@ class AuditLogger:
 
     def _rotate_log_file(self) -> None:
         """轮转日志文件。"""
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        rotated_file = self.current_log_file.with_suffix(f'.{timestamp}.log')
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        rotated_file = self.current_log_file.with_suffix(f".{timestamp}.log")
 
         # 关闭当前处理器
         for handler in self.logger.handlers:
@@ -178,7 +179,9 @@ class AuditLogger:
         Returns:
             会话 ID
         """
-        self.session_id = session_id or f"session_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        self.session_id = (
+            session_id or f"session_{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        )
         return self.session_id
 
     def end_session(self) -> None:
@@ -333,15 +336,15 @@ class AuditLogger:
 
         for log_file in log_files:
             # 处理压缩文件
-            if log_file.suffix == '.gz':
+            if log_file.suffix == ".gz":
                 open_func = gzip.open
-                mode = 'rt'
+                mode = "rt"
             else:
                 open_func = open
-                mode = 'r'
+                mode = "r"
 
             try:
-                with open_func(log_file, mode, encoding='utf-8') as f:
+                with open_func(log_file, mode, encoding="utf-8") as f:
                     for line in f:
                         try:
                             data = json.loads(line.strip())
@@ -421,7 +424,9 @@ class AuditLogger:
             "unique_actions": len(actions),
             "human_approved_count": human_approved_count,
             "error_count": error_count,
-            "human_approval_rate": human_approved_count / len(entries) if entries else 0,
+            "human_approval_rate": human_approved_count / len(entries)
+            if entries
+            else 0,
             "error_rate": error_count / len(entries) if entries else 0,
         }
 
@@ -444,11 +449,11 @@ class AuditLogger:
             try:
                 # 提取文件日期
                 file_name = log_file.stem
-                if log_file.suffix == '.gz':
-                    file_name = log_file.stem.replace('.log', '')
+                if log_file.suffix == ".gz":
+                    file_name = log_file.stem.replace(".log", "")
 
                 # 尝试解析日期（格式：audit_YYYYMM 或 audit_YYYYMMDD_HHMMSS）
-                parts = file_name.split('_')
+                parts = file_name.split("_")
                 if len(parts) >= 2:
                     date_str = parts[1][:6]  # YYYYMM
                     file_date = datetime.strptime(date_str, "%Y%m")
@@ -462,7 +467,7 @@ class AuditLogger:
                         continue
 
                     # 检查是否需要压缩
-                    if file_date < compress_date and log_file.suffix != '.gz':
+                    if file_date < compress_date and log_file.suffix != ".gz":
                         self._compress_file(log_file)
                         stats["compressed_files"] += 1
 
@@ -473,11 +478,13 @@ class AuditLogger:
 
     def _compress_file(self, file_path: Path) -> None:
         """压缩日志文件。"""
-        compressed_path = file_path.with_suffix(file_path.suffix + '.gz')
+        compressed_path = file_path.with_suffix(file_path.suffix + ".gz")
 
-        with open(file_path, 'rb') as f_in:
-            with gzip.open(compressed_path, 'wb') as f_out:
-                shutil.copyfileobj(f_in, f_out)
+        with (
+            open(file_path, "rb") as f_in,
+            gzip.open(compressed_path, "wb") as f_out,
+        ):
+            shutil.copyfileobj(f_in, f_out)
 
         file_path.unlink()
 
@@ -505,37 +512,48 @@ class AuditLogger:
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
         if format == "json":
-            with open(output_path, 'w', encoding='utf-8') as f:
+            with open(output_path, "w", encoding="utf-8") as f:
                 for entry in entries:
-                    f.write(entry.to_json() + '\n')
+                    f.write(entry.to_json() + "\n")
 
         elif format == "csv":
             import csv
 
-            with open(output_path, 'w', encoding='utf-8', newline='') as f:
+            with open(output_path, "w", encoding="utf-8", newline="") as f:
                 writer = csv.writer(f)
 
                 # 写入表头
-                writer.writerow([
-                    "timestamp", "agent_id", "action", "input_hash",
-                    "output_hash", "human_approved", "level", "session_id",
-                    "user_id", "duration_ms"
-                ])
+                writer.writerow(
+                    [
+                        "timestamp",
+                        "agent_id",
+                        "action",
+                        "input_hash",
+                        "output_hash",
+                        "human_approved",
+                        "level",
+                        "session_id",
+                        "user_id",
+                        "duration_ms",
+                    ]
+                )
 
                 # 写入数据
                 for entry in entries:
-                    writer.writerow([
-                        entry.timestamp,
-                        entry.agent_id,
-                        entry.action,
-                        entry.input_hash,
-                        entry.output_hash,
-                        entry.human_approved,
-                        entry.level,
-                        entry.session_id,
-                        entry.user_id,
-                        entry.duration_ms,
-                    ])
+                    writer.writerow(
+                        [
+                            entry.timestamp,
+                            entry.agent_id,
+                            entry.action,
+                            entry.input_hash,
+                            entry.output_hash,
+                            entry.human_approved,
+                            entry.level,
+                            entry.session_id,
+                            entry.user_id,
+                            entry.duration_ms,
+                        ]
+                    )
 
         return len(entries)
 

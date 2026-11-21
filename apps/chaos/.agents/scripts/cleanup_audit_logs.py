@@ -67,12 +67,8 @@ def cleanup_logs(
         print(f"[INFO] 干运行模式: {dry_run}")
         print()
 
-    if dry_run:
-        # 干运行模式：只统计，不实际清理
-        stats = _dry_run_cleanup(audit, verbose)
-    else:
-        # 实际清理
-        stats = audit.cleanup_old_logs()
+    # 干运行模式只统计，不实际清理
+    stats = _dry_run_cleanup(audit, verbose) if dry_run else audit.cleanup_old_logs()
 
     return stats
 
@@ -80,7 +76,6 @@ def cleanup_logs(
 def _dry_run_cleanup(audit: AuditLogger, verbose: bool) -> dict[str, int]:
     """干运行清理（只统计，不实际删除）。"""
     from datetime import timedelta
-    import os
 
     cutoff_date = datetime.now() - timedelta(days=audit.retention_days)
     compress_date = datetime.now() - timedelta(days=audit.compress_after_days)
@@ -95,10 +90,10 @@ def _dry_run_cleanup(audit: AuditLogger, verbose: bool) -> dict[str, int]:
         try:
             # 提取文件日期
             file_name = log_file.stem
-            if log_file.suffix == '.gz':
-                file_name = log_file.stem.replace('.log', '')
+            if log_file.suffix == ".gz":
+                file_name = log_file.stem.replace(".log", "")
 
-            parts = file_name.split('_')
+            parts = file_name.split("_")
             if len(parts) >= 2:
                 date_str = parts[1][:6]
                 file_date = datetime.strptime(date_str, "%Y%m")
@@ -113,7 +108,7 @@ def _dry_run_cleanup(audit: AuditLogger, verbose: bool) -> dict[str, int]:
                         print(f"[DELETE] {log_file.name} ({file_size / 1024:.1f} KB)")
 
                 # 检查是否需要压缩
-                elif file_date < compress_date and log_file.suffix != '.gz':
+                elif file_date < compress_date and log_file.suffix != ".gz":
                     stats["compressed_files"] += 1
 
                     if verbose:
@@ -136,7 +131,7 @@ def print_report(stats: dict[str, int], verbose: bool = False) -> None:
     print(f"压缩文件数: {stats['compressed_files']}")
     print(f"释放空间: {stats['freed_bytes'] / 1024 / 1024:.2f} MB")
 
-    if stats['deleted_files'] > 0 or stats['compressed_files'] > 0:
+    if stats["deleted_files"] > 0 or stats["compressed_files"] > 0:
         print("\n状态: [OK] 清理完成")
     else:
         print("\n状态: [SKIP] 无需清理")

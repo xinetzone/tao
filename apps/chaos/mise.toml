@@ -3,7 +3,7 @@ PYTHONUTF8 = "1"
 
 [tools]
 python = "3.13"
-uv = "0.11.16"
+uv = "0.13.9"
 node = { version = "22.22.3", postinstall = "corepack enable" }
 "npm:defuddle" = { version = "0.18.1", depends = ["node"] }
 ruff = "0.15.14"

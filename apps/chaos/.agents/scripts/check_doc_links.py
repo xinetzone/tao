@@ -30,6 +30,13 @@ _LINK_PATTERN = re.compile(
     r"\[(?P<text>[^\]]*)\]\((?P<url>[^()\s]+(?:\([^()]*\))?[^()\s]*)(?:\s+\"[^\"]*\")?\)"
 )
 
+# 行内代码片段（成对反引号）。文档常以 ``[文本](路径)`` 形式演示链接语法，
+# 这类示例不是真实引用，校验前需先屏蔽。
+_INLINE_CODE_PATTERN = re.compile(r"`[^`]*`")
+
+# 围栏代码块起始/结束标记（``` 或 ~~~，允许缩进）。
+_FENCE_PATTERN = re.compile(r"^\s*(```|~~~)")
+
 # 默认要扫描的文件相对路径（相对项目根目录）
 _DEFAULT_TARGETS: tuple[str, ...] = ("README.md", "AGENTS.md")
 
@@ -171,8 +178,21 @@ def check_file(source: Path, project_root: Path) -> list[LinkRecord]:
 
     submodule_paths = _get_submodule_paths(project_root)
 
+    in_fence = False
     for line_no, line in enumerate(text.splitlines(), start=1):
-        for match in _LINK_PATTERN.finditer(line):
+        # 围栏代码块内的内容属于示例，不能当作真实引用校验。
+        if _FENCE_PATTERN.match(line):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+
+        # 屏蔽行内代码，保留列偏移，避免把 ``[文本](路径)`` 演示语法当作链接。
+        masked_line = _INLINE_CODE_PATTERN.sub(
+            lambda match: " " * len(match.group(0)), line
+        )
+
+        for match in _LINK_PATTERN.finditer(masked_line):
             url = match.group("url").strip()
             if not url or _is_external(url):
                 continue

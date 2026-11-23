@@ -286,7 +286,7 @@ TRAE 品牌从"SOLO（程序员 IDE）"升级为"Work（AI 工作助手）"，�
 | 评估产品机会优先级 | 四象限筛选法 | §8 |
 | 设计赛事代言人+评委阵容 | 代言+评审双轨人格结构 | §9 |
 | 设计 AI 工具的获客/定价/社区策略 | AI 工具获客三路径与阶段匹配 | §10 |
-| 项目收尾技术债治理 | 7 类技术债治理行动清单 | [tech-debt-governance-checklist](../../../../docs/tech/tech-debt-governance-checklist) |
+| 项目收尾技术债治理 | 7 类技术债治理行动清单 | [tech-debt-governance-checklist](../../../../../docs/tech/tech-debt-governance-checklist.md) |
 
 ---
 

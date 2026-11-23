@@ -103,7 +103,7 @@
 
 ### 3.2 约束定义
 
-约束详细定义见 [`.agents/constraints.toml`](.agents/constraints.toml)。
+约束详细定义见 [`.agents/constraints.toml`](../../constraints.toml)。
 
 **强约束 (strong)** - 不可违反:
 

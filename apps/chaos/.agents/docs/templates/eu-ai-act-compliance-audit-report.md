@@ -484,14 +484,14 @@ Art 15
 
 ### C.2 内部文档
 
-- [AGENTS.md 实施路线图](../../docs/tech/agents-md-implementation-roadmap.md)
-- [竞品分析](../../docs/tech/agentforge-competitive-analysis-2026.md)
+- [AGENTS.md 实施路线图](../../../docs/tech/agents-md-implementation-roadmap.md)
+- [竞品分析](../../../docs/tech/agentforge-competitive-analysis-2026.md)
 - [合规工作流部署文档](./eu-ai-act-compliance-deployment-guide.md)
 
 ### C.3 检查工具
 
-- [check_constraints.py](../scripts/check_constraints.py)
-- [check_eu_ai_act.py](../scripts/check_eu_ai_act.py)
+- [check_constraints.py](../../scripts/check_constraints.py)
+- [check_eu_ai_act.py](../../scripts/check_eu_ai_act.py)
 - [test_compliance_checks.py](../../../tests/test_compliance_checks.py)
 
 ---

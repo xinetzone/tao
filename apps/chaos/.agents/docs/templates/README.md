@@ -37,4 +37,4 @@
 3. **角色定义**: 复制 `eu-ai-act-role-template.toml` 到 `.agents/roles/`，定义角色权限
 4. **CI 工作流**: 复制 `eu-ai-act-compliance-workflow-template.yml` 到 `.github/workflows/`，配置自动化扫描
 
-完整实施路线见 [`../../docs/tech/agents-md-implementation-roadmap.md`](../../docs/tech/agents-md-implementation-roadmap.md)。
+完整实施路线见 [`../../../docs/tech/agents-md-implementation-roadmap.md`](../../../docs/tech/agents-md-implementation-roadmap.md)。

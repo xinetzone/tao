@@ -593,9 +593,9 @@ jobs:
 
 ### 11.1 内部文档
 
-- [AGENTS.md 实施路线图](../../docs/tech/agents-md-implementation-roadmap.md)
-- [竞品分析](../../docs/tech/agentforge-competitive-analysis-2026.md)
-- [约束定义规范](../rules/constraints.md)
+- [AGENTS.md 实施路线图](../../../docs/tech/agents-md-implementation-roadmap.md)
+- [竞品分析](../../../docs/tech/agentforge-competitive-analysis-2026.md)
+- [约束定义规范（constraints.toml）](../../constraints.toml)
 
 ### 11.2 外部资源
 

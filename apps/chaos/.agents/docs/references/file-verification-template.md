@@ -187,7 +187,7 @@ A: 修改 `Get-FolderSignature` 中的 `Get-ChildItem -Filter "*.md"` 或用 `-I
 
 ## 10. 参考
 
-- 源任务复盘:[task-summary-archive-migration-20260622.md](../../../docs/tech/task-summary-archive-migration-20260622.md)
+- 源任务复盘:[task-summary-archive-and-cleanup-20260622.md](../../../docs/tech/task-summary-archive-and-cleanup-20260622.md)
 - 归档技能:[`archive-folder/SKILL.md`](../../skills/archive-folder/SKILL.md)
 - 技能规范:[`rules/skills.md`](../../rules/skills.md)
 - PowerShell `Get-FileHash`:[Microsoft Learn](https://learn.microsoft.com/powershell/module/microsoft.powershell.utility/get-filehash)

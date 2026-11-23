@@ -15,5 +15,7 @@ def require_matplotlib() -> tuple[Any, Any]:
     try:
         from matplotlib import font_manager, rcParams
     except ImportError as exc:
-        raise FontConfigError("配置 matplotlib 字体需要 matplotlib，请安装 taolib[fonts]") from exc
+        raise FontConfigError(
+            "配置 matplotlib 字体需要 matplotlib，请安装 taolib[fonts]"
+        ) from exc
     return font_manager, rcParams
